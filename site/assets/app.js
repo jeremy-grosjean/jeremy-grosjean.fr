@@ -1321,5 +1321,6 @@
     if (!isOnline()) setTimeout(() => toast(t('netCached')), 1800);
   });
   setInterval(() => safe('heure', tick), 1000);
-  safe('animation', () => { if (!x) throw new Error('canvas indisponible'); setup(); requestAnimationFrame(frame); });
+  /* L'animation démarre à l'image suivante : les mesures de l'écran se font après le premier affichage (pas de recalcul forcé) */
+  safe('animation', () => { if (!x) throw new Error('canvas indisponible'); requestAnimationFrame(() => safe('animation', () => { setup(); requestAnimationFrame(frame); })); });
 })();

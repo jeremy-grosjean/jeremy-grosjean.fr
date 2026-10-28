@@ -26,7 +26,8 @@ Site personnel de **Jérémy Grosjean**, technicien informatique, disponible pou
 
 - **0 cookie, 0 traceur, 0 requête vers un autre site, aucun formulaire** : le site ne collecte aucune donnée.
 - En-têtes stricts : **CSP** `default-src 'none'` sans `unsafe-*`, **Trusted Types**, **HSTS**, COOP/COEP/CORP, `X-Frame-Options`, `Referrer-Policy: no-referrer`, `Permissions-Policy`.
-- Aucun script ou style en ligne, aucune bibliothèque externe : **HTML, CSS et JavaScript écrits à la main**, sans framework ni dépendance.
+- Aucun script en ligne. La feuille de style est intégrée à la page d'accueil au moment de la préparation (affichage plus rapide) et autorisée **uniquement par son empreinte SHA-256** dans la CSP : tout autre style injecté est bloqué.
+- Aucune bibliothèque externe : **HTML, CSS et JavaScript écrits à la main**, sans framework ni dépendance.
 - Adresse e-mail assemblée par le script (non lisible par les robots qui lisent le HTML).
 - Serveur en **lecture seule** : seules les requêtes `GET` et `HEAD` sont acceptées, tout le reste est refusé (`405`).
 - Domaine : **DNSSEC**, **SPF**, **DKIM**, **DMARC** (`quarantine`), **TLS-RPT**, **CAA** (seul Let's Encrypt peut émettre un certificat), fichier [`security.txt`](https://jeremy-grosjean.fr/.well-known/security.txt).
@@ -42,7 +43,7 @@ site/                     le site, tel qu'il est publié (version lisible)
   sw.js                   service worker (mode hors ligne)
   .htaccess               en-têtes de sécurité et redirections (Apache)
 outils/
-  preparer.py             minifie, versionne et crée le zip de mise en ligne
+  preparer.py             minifie, intègre la feuille de style (empreinte CSP), versionne et crée le zip
   empreintes.py           empreintes ?v=… anti-cache + génération du service worker
   publier.sh              tout en une commande : préparer, envoyer, vérifier
   mettre-a-jour-site.sh   mise en ligne par SFTP, vérifications et annulation automatique
