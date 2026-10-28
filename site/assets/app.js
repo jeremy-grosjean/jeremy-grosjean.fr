@@ -67,7 +67,7 @@
     $('langLabel').textContent = t('langLabel');
     $('termClose').setAttribute('aria-label', t('close'));
     tick(); setSoundUI(); setThemeUI(); buildSecSoon(); heroLang(); netUI();
-    if (typeof MAIL !== 'undefined') $('openMail').href = mailHref();
+    if (typeof MAIL !== 'undefined') { $('openMail').href = mailHref(); webmailHrefs(); if (document.body.classList.contains('rec-on')) fillRec(); }
     { const el = $('loadT'); if (el.dataset && el.dataset.v) el.textContent = ' · ' + t('loadedIn')(el.dataset.v); }
     if (typeof htopOn !== 'undefined' && htopOn) htopDraw();
     updLine();
@@ -684,7 +684,15 @@
   const MAIL = ['contact', 'jeremy-grosjean.fr'].join('@');
   $('mailAddr').textContent = MAIL;
   function mailHref() { return 'mailto:' + MAIL + '?subject=' + encodeURIComponent(t('mailSubject')) + '&body=' + encodeURIComponent(t('mailBody')); }
-  $('openMail').href = mailHref();
+  /* Webmails : brouillon déjà rempli dans le compte du visiteur (simples liens, aucune donnée ne passe par ce site) */
+  function webmailHrefs() {
+    const q = encodeURIComponent, to = q(MAIL), su = q(t('mailSubject')), bo = q(t('mailBody'));
+    $('wmGmail').href = `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${su}&body=${bo}`;
+    $('wmOutlook').href = `https://outlook.live.com/mail/0/deeplink/compose?to=${to}&subject=${su}&body=${bo}`;
+    $('wmPro').href = `https://outlook.office.com/mail/deeplink/compose?to=${to}&subject=${su}&body=${bo}`;
+    $('wmYahoo').href = `https://compose.mail.yahoo.com/?to=${to}&subject=${su}&body=${bo}`;
+  }
+  $('openMail').href = mailHref(); webmailHrefs();
   function copyText(txt) {
     if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(txt).then(() => true, () => legacyCopy(txt));
     return Promise.resolve(legacyCopy(txt));
@@ -803,8 +811,8 @@
   /* ================= Terminal ================= */
   const term = $('term'), out = $('termOut'), input = $('termInput');
   const hist = []; let hIdx = 0, greeted = false;
-  const COMMANDS = ['help', 'boot', 'legal', 'device', 'neofetch', 'secrets', 'htop', 'support', 'status', 'dig', 'ipcalc', 'install', 'tour', 'matrix', 'whoami', 'about', 'security', 'ping', 'date', 'lang', 'theme', 'play', 'konami', 'contact', 'clear', 'exit'];
-  const ALIAS = { aide: 'help', top: 'htop', fps: 'htop', ticket: 'support', tickets: 'support', supervision: 'status', nslookup: 'dig', host: 'dig', installer: 'install', visite: 'tour', appareil: 'device', sysinfo: 'device', fastfetch: 'neofetch', secret: 'secrets', mentions: 'legal', legales: 'legal', 'légales': 'legal', privacy: 'legal', demarrage: 'boot', 'démarrage': 'boot', journal: 'boot', dmesg: 'boot', apropos: 'about', 'à-propos': 'about', securite: 'security', 'sécurité': 'security', jouer: 'play', effacer: 'clear', cls: 'clear', quitter: 'exit', quit: 'exit', langue: 'lang', theme: 'theme', 'thème': 'theme', ls: 'help', man: 'help' };
+  const COMMANDS = ['help', 'boot', 'legal', 'device', 'neofetch', 'secrets', 'htop', 'support', 'status', 'dig', 'ipcalc', 'install', 'tour', 'matrix', 'whoami', 'about', 'security', 'ping', 'date', 'lang', 'theme', 'play', 'konami', 'contact', 'cv', 'projets', 'print', 'a11y', 'clear', 'exit'];
+  const ALIAS = { aide: 'help', top: 'htop', fps: 'htop', ticket: 'support', tickets: 'support', supervision: 'status', nslookup: 'dig', host: 'dig', installer: 'install', visite: 'tour', appareil: 'device', sysinfo: 'device', fastfetch: 'neofetch', secret: 'secrets', mentions: 'legal', legales: 'legal', 'légales': 'legal', privacy: 'legal', demarrage: 'boot', 'démarrage': 'boot', journal: 'boot', dmesg: 'boot', apropos: 'about', 'à-propos': 'about', securite: 'security', 'sécurité': 'security', jouer: 'play', effacer: 'clear', cls: 'clear', quitter: 'exit', quit: 'exit', langue: 'lang', theme: 'theme', 'thème': 'theme', ls: 'help', man: 'help', recruteur: 'cv', recruiter: 'cv', resume: 'cv', imprimer: 'print', pdf: 'print', accessibilite: 'a11y', 'accessibilité': 'a11y', accessibility: 'a11y', mail: 'contact', email: 'contact' };
   function line(text, cls) { const d = document.createElement('div'); if (cls) d.className = cls; d.textContent = text; out.append(d); out.scrollTop = out.scrollHeight; return d; }
   function openTerm() {
     closePanels(); document.body.classList.add('term-open');
@@ -897,7 +905,10 @@
     const a = (args[0] || '').toLowerCase();
     switch (cmd) {
       case 'help': for (const [k, d] of t('tHelp')) line(`  ${k.padEnd(18)} ${d}`); break;
-      case 'whoami': line(t('tWhoami')); break;
+      case 'whoami':
+        line(t('tWhoami'));
+        if (a === '--long' || a === '-l') for (const [k, v] of t('brief')) line(`  ${k} : ${v}`, 'c');
+        break;
       case 'legal': line(t('legalLink') + ' →', 'c'); setTimeout(() => { location.href = '/mentions-legales.html'; }, 400); break;
       case 'device': device(); break;
       case 'neofetch': neofetch(); found('neofetch'); break;
@@ -933,13 +944,19 @@
       case 'dig': dig(args); break;
       case 'konami': closeTerm(); setTimeout(konami, 150); break;
       case 'contact': {
+        const wm = { gmail: 'wmGmail', outlook: 'wmOutlook', pro: 'wmPro', '365': 'wmPro', yahoo: 'wmYahoo' }[a];
+        if (wm) { line(t('tWmOpen')($(wm).textContent.trim()), 'g'); $(wm).click(); break; }
         const d = line(t('tContact') + ' '), link = document.createElement('a');
-        link.href = 'mailto:' + MAIL; link.textContent = MAIL; d.append(link); break;
+        link.href = mailHref(); link.textContent = MAIL; d.append(link);
+        line(t('tWmHint'), 'd'); break;
       }
+      case 'cv': line(t('tRecOpen'), 'g'); setTimeout(openRec, 250); break;
+      case 'print': line(t('tPrint'), 'g'); setTimeout(() => window.print(), 250); break;
+      case 'a11y': line(t('a11yLink') + ' →', 'c'); setTimeout(() => { location.href = '/accessibilite.html'; }, 400); break;
       case 'clear': out.textContent = ''; break;
       case 'exit': closeTerm(); break;
       case 'sudo': line(t('tSudo'), 'r'); found('sudo'); break;
-      case 'competences': case 'compétences': case 'skills': case 'projets': case 'projects': case 'cv': line(t('tSoon'), 'd'); break;
+      case 'competences': case 'compétences': case 'skills': case 'projets': case 'projects': line(t('tSoon'), 'd'); break;
       default: line(t('tUnknown')(c0), 'r');
     }
   }
@@ -986,7 +1003,7 @@
     const typing = e.target === input || menuOpen();
     if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); termOpen() ? closeTerm() : openTerm(); return; }
     if (!typing && (e.code === 'Backquote' || e.key === '²' || e.key === '`')) { e.preventDefault(); termOpen() ? closeTerm() : openTerm(); return; }
-    if (e.key === 'Escape') { if (termOpen()) closeTerm(); else if (G.on) quitGame(); else closePanels(); return; }
+    if (e.key === 'Escape') { if (termOpen()) closeTerm(); else if (G.on) quitGame(); else if (recOn() && !document.querySelector('.panel.open')) closeRec(); else closePanels(); return; }
     if (typing) return;
     const k = e.key.toLowerCase();
     if (k === KONAMI[kIdx]) { kIdx++; if (kIdx === KONAMI.length) { kIdx = 0; if (!G.on) konami(); } }
@@ -1000,6 +1017,35 @@
     closeTerm(); openPanel('briefPanel', 'briefContact');
   }
   $('availBtn').addEventListener('click', openBrief);
+
+  /* ================= Vue recruteur : une page sobre (lien direct : /#recruteur), aussi utilisée pour l'impression ================= */
+  const REC_HASH = ['#recruteur', '#recruiter', '#cv'];
+  function fillRec() {
+    $('recRole').textContent = t('title').split(' · ')[1] || t('whoRole');
+    const dl = $('recBrief'); dl.textContent = '';
+    for (const [k, v] of t('brief')) { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; dl.append(dt, dd); }
+    const ul = $('recTags'); ul.textContent = '';
+    for (const d of t('domains')) { const li = document.createElement('li'); li.textContent = d; ul.append(li); }
+    const a = $('recMail'); a.href = mailHref(); a.textContent = MAIL;
+  }
+  function recOn() { return document.body.classList.contains('rec-on'); }
+  function openRec() {
+    closeTerm(); closePanels(); fillRec();
+    $('recView').hidden = false; document.body.classList.add('rec-on');
+    if (!REC_HASH.includes(location.hash)) history.replaceState(null, '', '#recruteur');
+    $('recName').setAttribute('tabindex', '-1'); $('recName').focus();
+  }
+  function closeRec() {
+    $('recView').hidden = true; document.body.classList.remove('rec-on');
+    if (REC_HASH.includes(location.hash)) history.replaceState(null, '', location.pathname + location.search);
+  }
+  $('briefRec').addEventListener('click', openRec);
+  $('recExit').addEventListener('click', closeRec);
+  $('recContact').addEventListener('click', () => $('contactBtn').click());
+  $('recPrint').addEventListener('click', () => window.print());
+  window.addEventListener('beforeprint', fillRec);
+  window.addEventListener('hashchange', () => { if (REC_HASH.includes(location.hash)) openRec(); else if (recOn()) closeRec(); });
+  if (REC_HASH.includes(location.hash)) setTimeout(openRec, 0);
   $('briefClose').addEventListener('click', closePanels);
   $('briefContact').addEventListener('click', () => $('contactBtn').click());
 

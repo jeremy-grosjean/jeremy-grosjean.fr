@@ -9,19 +9,26 @@
 <title>Page introuvable · jeremy-grosjean.fr</title>
 <link rel="icon" href="/favicon.ico?v=5d8dad93ca" sizes="48x48">
 <link rel="icon" href="/favicon.svg?v=c653120d20" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/404.css?v=efa3fdcacf">
-<script src="/assets/404.js?v=dd39247bb9" defer></script>
+<link rel="stylesheet" href="/assets/404.css?v=608d9756c5">
+<script src="/assets/404.js?v=f69e4adc89" defer></script>
 </head>
 <body>
 <main class="box">
   <p class="brand"><span class="mark" aria-hidden="true">JG</span><span>jeremy-grosjean.fr</span></p>
   <h1 class="code">404</h1>
-  <div class="term" aria-hidden="true">
+  <div class="term" id="term" aria-hidden="true">
     <div><span class="pr">$</span> traceroute <span id="path">/page</span></div>
     <div class="d">1&nbsp;&nbsp;jeremy-grosjean.fr&nbsp;&nbsp;0.4 ms</div>
     <div class="d">2&nbsp;&nbsp;* * *&nbsp;&nbsp;<span class="lost" id="lost">paquet perdu</span></div>
+    <div id="hops"></div>
   </div>
   <p class="msg" id="msg">Cette page n'existe pas, ou plus. Page not found.</p>
+  <section class="game" id="game" hidden aria-labelledby="gTitle">
+    <h2 class="g-title" id="gTitle"></h2>
+    <p class="g-q" id="gQ" aria-live="polite"></p>
+    <div class="g-opts" id="gOpts"></div>
+    <p class="g-fb" id="gFb" role="status"></p>
+  </section>
   <a class="btn" href="/" id="back">← Retour à l'accueil</a>
 </main>
 </body>

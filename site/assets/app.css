@@ -311,6 +311,16 @@ body.playing .quit { display: inline-block; }
 .sec-list span { font-size: .88rem; color: var(--dim); line-height: 1.45; }
 
 /* Carte de contact + QR code */
+.card .wm-lbl { margin: 1rem 0 .5rem; color: var(--dim); font-size: .88rem; }
+.webmail { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+.wm { display: flex; align-items: center; gap: .5rem; min-height: 44px; padding: .5rem .8rem; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--surface); color: var(--ink); text-decoration: none; font-size: .92rem; font-weight: 600; text-align: left; flex-wrap: wrap; }
+.wm small { flex-basis: 100%; margin: -.15rem 0 0 1.1rem; color: var(--dim); font-size: .74rem; font-weight: 400; }
+.wm:hover { border-color: var(--line-accent); }
+.wm:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.wm-dot { width: .6rem; height: .6rem; border-radius: 50%; flex: none; }
+.wm-dot.g { background: #EA4335; } .wm-dot.o { background: #0F78D4; } .wm-dot.p { background: #5B5FC7; } .wm-dot.y { background: #7E1FFF; }
+.card .wm-note { margin: .55rem 0 0; color: var(--dim); font-size: .78rem; line-height: 1.4; }
 .contact-extra { margin: 1rem 0 1.1rem; display: flex; gap: 1rem; align-items: center; justify-content: center; text-align: left; }
 .contact-extra .qr { width: 120px; height: 120px; border-radius: 12px; background: #fff; padding: 0; flex: none; box-shadow: 0 4px 16px rgba(0, 0, 0, .18); }
 .contact-side { display: flex; flex-direction: column; gap: .6rem; align-items: flex-start; }
@@ -544,3 +554,40 @@ body.playing .hint, body.term-open .hint { display: none; }
 /* heure du visiteur affichée : on laisse la place sous l'horloge sur téléphone */
 @media (max-width: 560px) { body.has-local main { padding-top: calc(max(16px, env(safe-area-inset-top)) + 116px); } }
 @media (max-width: 560px) and (max-height: 700px) { body.has-local main { padding-top: calc(max(16px, env(safe-area-inset-top)) + 112px); padding-bottom: calc(max(16px, env(safe-area-inset-bottom)) + 44px); } body.has-local .bootlog { margin-top: .5rem; } }
+
+/* Vue recruteur : une page sobre, lisible, imprimable */
+.rec { position: fixed; z-index: 2; top: 0; right: 0; bottom: 0; left: 0; overflow-y: auto; background: var(--bg-2);
+  padding: max(76px, calc(env(safe-area-inset-top) + 60px)) 16px max(32px, env(safe-area-inset-bottom));
+  cursor: auto; touch-action: auto; -webkit-user-select: text; user-select: text; }
+body.rec-on #net, body.rec-on main, body.rec-on .clock, body.rec-on .dock, body.rec-on .hint { display: none; }
+.rec-page { width: min(44rem, 100%); margin: 0 auto; padding: 1.8rem 1.6rem; border: 1px solid var(--line); border-radius: 20px; background: var(--surface-strong); }
+.rec-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: .8rem 1.5rem; padding-bottom: 1.1rem; border-bottom: 1px solid var(--line); }
+.rec-name:focus { outline: none; }
+.rec-name { margin: 0; font-size: clamp(1.7rem, 5vw, 2.3rem); letter-spacing: -0.02em; }
+.rec-role { margin: .2rem 0 0; color: var(--dim); font-size: 1.05rem; }
+.rec-avail { margin: 0; display: inline-flex; align-items: center; gap: .5rem; font-weight: 600; color: var(--ok); font-size: .95rem; }
+.rec h3 { margin: 1.4rem 0 .6rem; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
+.rec-brief { margin: 0; font-size: .98rem; }
+.rec-tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .45rem; }
+.rec-tags li { padding: .3rem .7rem; border: 1px solid var(--line-accent); border-radius: 999px; font-size: .88rem; }
+.rec-contact { margin: 0; font-size: 1rem; }
+.rec-contact a { color: var(--cyan); }
+.rec-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.6rem; }
+.rec-print { display: none; }
+@media (max-width: 520px) { .rec-page { padding: 1.3rem 1.1rem; } .rec-brief { grid-template-columns: 1fr; gap: .1rem; } .rec-brief dd { margin-bottom: .5rem; } }
+
+/* Impression : seule la fiche est imprimée, en noir sur blanc */
+@media print {
+  @page { margin: 16mm; }
+  :root, :root[data-theme] { color-scheme: light; background: #fff !important; --ink: #000; --dim: #444; --line: #bbb; --line-accent: #888; --ok: #0a6b3d; --cyan: #000; --surface-strong: #fff; --bg-2: #fff; }
+  html, body { height: auto; overflow: visible; background: #fff !important; color: #000; }
+  body > *:not(#recView) { display: none !important; }
+  #recView, #recView[hidden] { display: block !important; position: static; padding: 0; overflow: visible; background: #fff; }
+  .rec-page { border: 0; padding: 0; width: 100%; }
+  .rec-actions { display: none; }
+  .rec-print { display: flex; gap: 1rem; align-items: center; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #bbb; break-inside: avoid; }
+  .rec-print p { margin: 0; color: #444; font-size: .9rem; line-height: 1.5; }
+  .rec-print b { color: #000; }
+  .rec-tags li { border-color: #888; }
+  .rec-contact a { text-decoration: none; }
+}

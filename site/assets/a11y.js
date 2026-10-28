@@ -1,0 +1,43 @@
+/* jeremy-grosjean.fr — déclaration d'accessibilité : langue et thème du visiteur (compatible CSP, contenu inséré avec textContent) */
+(() => {
+  'use strict';
+  const L = {"fr": {"lang": "fr", "title": "Déclaration d'accessibilité", "back": "← Retour à l'accueil", "updated": "Déclaration établie le 28 octobre 2026.", "sections": [["Engagement", ["Ce site personnel n'est pas soumis à l'obligation légale d'accessibilité (RGAA), mais je veux qu'il soit utilisable par tout le monde. L'objectif est le niveau AA des règles internationales WCAG 2.2."]], ["État de conformité", ["Le site n'a pas fait l'objet d'un audit officiel. Par prudence, il est déclaré « partiellement conforme »."]], ["Ce qui a été vérifié", ["Score d'accessibilité Lighthouse (Google PageSpeed) : 100/100, sur mobile et sur ordinateur.", "Tout se fait au clavier : Tab pour avancer, Échap pour fermer, Ctrl + K pour le terminal, ? pour la liste des raccourcis.", "Contrastes des textes vérifiés, avec un mode « contraste renforcé », une taille de texte réglable et un espacement de lecture.", "Les animations s'arrêtent si votre appareil demande de réduire les animations.", "La langue de chaque page est déclarée (6 langues), pour que les lecteurs d'écran prononcent correctement.", "Les fenêtres sont annoncées aux lecteurs d'écran par leur rôle et leur titre ; l'animation de fond, décorative, leur est masquée.", "Une version sur une page, sans animation, est disponible : {rec}."]], ["Limites connues", ["Le jeu « Protéger le serveur » demande des gestes rapides. Les jeux de support N1 et N2, au tour par tour, sont une alternative sans limite de temps.", "Le site n'a pas encore été testé avec tous les lecteurs d'écran."]], ["Signaler un problème", ["Si un contenu vous est inaccessible, écrivez-moi à {mail} : je vous répondrai et vous donnerai l'information sous une autre forme."]]]}, "en": {"lang": "en", "title": "Accessibility statement", "back": "← Back to home", "updated": "Statement written on 28 October 2026.", "sections": [["Commitment", ["This personal site is not legally required to meet the French accessibility standard (RGAA), but I want everyone to be able to use it. The goal is level AA of the international WCAG 2.2 guidelines."]], ["Compliance status", ["The site has not had an official audit. To be safe, it is declared “partially compliant”."]], ["What has been checked", ["Lighthouse accessibility score (Google PageSpeed): 100/100 on mobile and desktop.", "Everything works with a keyboard: Tab to move, Esc to close, Ctrl + K for the terminal, ? for the list of shortcuts.", "Text contrast checked, with a “high contrast” mode, adjustable text size and reading spacing.", "Animations stop if your device asks for reduced motion.", "Each page declares its language (6 languages), so screen readers pronounce it correctly.", "Dialogs are announced to screen readers by their role and title; the decorative background animation is hidden from them.", "A one-page version without animation is available: {rec}."]], ["Known limitations", ["The “Protect the server” game needs quick gestures. The turn-based level 1 and level 2 support games are an alternative with no time limit.", "The site has not yet been tested with every screen reader."]], ["Report a problem", ["If some content is not accessible to you, write to {mail}: I will reply and give you the information in another form."]]]}, "zh-Hans": {"lang": "zh-Hans", "title": "无障碍声明", "back": "← 返回首页", "updated": "本声明撰写于 2026 年 10 月 28 日。", "sections": [["承诺", ["本个人网站不受法国无障碍法规（RGAA）的强制约束，但我希望每个人都能使用它。目标是达到国际 WCAG 2.2 标准的 AA 级。"]], ["符合情况", ["本网站尚未经过正式审核。出于谨慎，声明为“部分符合”。"]], ["已检查的内容", ["Lighthouse（Google PageSpeed）无障碍得分：手机和电脑均为 100/100。", "所有功能都可用键盘操作：Tab 前进，Esc 关闭，Ctrl + K 打开终端，? 查看快捷键列表。", "文字对比度已检查，并提供“高对比度”模式、可调文字大小和阅读间距。", "如果您的设备要求减少动态效果，动画会停止。", "每个页面都声明了语言（6 种语言），让屏幕阅读器正确朗读。", "对话框会以角色和标题告知屏幕阅读器；装饰性的背景动画对其隐藏。", "提供无动画的单页版本：{rec}。"]], ["已知限制", ["“保护服务器”游戏需要快速操作。回合制的一线、二线支持游戏没有时间限制，可作为替代。", "本网站尚未用所有屏幕阅读器测试。"]], ["报告问题", ["如果某些内容您无法访问，请写信至 {mail}：我会回复您，并以其他形式提供信息。"]]]}, "zh-Hant": {"lang": "zh-Hant", "title": "無障礙聲明", "back": "← 返回首頁", "updated": "本聲明撰寫於 2026 年 10 月 28 日。", "sections": [["承諾", ["本個人網站不受法國無障礙法規（RGAA）的強制約束，但我希望每個人都能使用它。目標是達到國際 WCAG 2.2 標準的 AA 級。"]], ["符合情況", ["本網站尚未經過正式稽核。為求謹慎，聲明為「部分符合」。"]], ["已檢查的項目", ["Lighthouse（Google PageSpeed）無障礙分數：手機與電腦皆為 100/100。", "所有功能皆可用鍵盤操作：Tab 前進，Esc 關閉，Ctrl + K 開啟終端機，? 查看快捷鍵列表。", "文字對比已檢查，並提供「高對比」模式、可調整的文字大小與閱讀間距。", "若您的裝置要求減少動態效果，動畫會停止。", "每個頁面都宣告了語言（6 種語言），讓螢幕閱讀器正確朗讀。", "對話框會以角色與標題告知螢幕閱讀器；裝飾性的背景動畫對其隱藏。", "提供無動畫的單頁版本：{rec}。"]], ["已知限制", ["「保護伺服器」遊戲需要快速操作。回合制的一線、二線支援遊戲沒有時間限制，可作為替代。", "本網站尚未以所有螢幕閱讀器測試。"]], ["回報問題", ["若某些內容您無法存取，請寫信至 {mail}：我會回覆您，並以其他形式提供資訊。"]]]}, "yue": {"lang": "yue-Hant-HK", "title": "無障礙聲明", "back": "← 返去主頁", "updated": "呢份聲明喺 2026 年 10 月 28 日寫成。", "sections": [["承諾", ["呢個個人網站唔受法國無障礙法規（RGAA）強制約束，但我想個個都用得到。目標係達到國際 WCAG 2.2 標準嘅 AA 級。"]], ["符合情況", ["網站未做過正式審核。為咗穩陣，聲明為「部分符合」。"]], ["檢查過嘅嘢", ["Lighthouse（Google PageSpeed）無障礙分數：手機同電腦都係 100/100。", "所有嘢都可以用鍵盤做：Tab 向前，Esc 閂，Ctrl + K 開終端機，? 睇快捷鍵。", "文字對比檢查過，仲有「高對比」模式、可以調校嘅字體大小同閱讀間距。", "如果你部機要求減少動畫，動畫會停。", "每一頁都有標明語言（6 種），等螢幕閱讀器讀得啱。", "對話框會用角色同標題話俾螢幕閱讀器知；裝飾性嘅背景動畫會收埋唔讀。", "有一個冇動畫嘅單頁版：{rec}。"]], ["已知限制", ["「保護伺服器」遊戲要好快手。輪流作答嘅一線、二線支援遊戲冇時間限制，可以代替。", "網站未用晒所有螢幕閱讀器測試。"]], ["報告問題", ["如果有內容你用唔到，請寫信去 {mail}：我會回覆你，用第二種方式俾資料你。"]]]}, "ko": {"lang": "ko", "title": "접근성 선언", "back": "← 홈으로 돌아가기", "updated": "2026년 10월 28일 작성.", "sections": [["약속", ["이 개인 사이트는 프랑스 접근성 법규(RGAA)의 의무 대상은 아니지만, 누구나 사용할 수 있기를 바랍니다. 목표는 국제 WCAG 2.2 지침의 AA 등급입니다."]], ["준수 상태", ["이 사이트는 공식 감사를 받지 않았습니다. 신중을 기해 ‘부분 준수’로 선언합니다."]], ["확인한 사항", ["Lighthouse(Google PageSpeed) 접근성 점수: 모바일과 데스크톱 모두 100/100.", "모든 기능을 키보드로 사용할 수 있습니다: Tab으로 이동, Esc로 닫기, Ctrl + K로 터미널, ?로 단축키 목록.", "텍스트 대비를 확인했으며, ‘고대비’ 모드, 글자 크기 조절, 읽기 간격 설정을 제공합니다.", "기기에서 동작 줄이기를 요청하면 애니메이션이 멈춥니다.", "각 페이지는 언어(6개 언어)를 선언하여 화면 낭독기가 올바르게 읽습니다.", "대화 상자는 역할과 제목으로 화면 낭독기에 알려지며, 장식용 배경 애니메이션은 숨겨집니다.", "애니메이션 없는 한 페이지 버전을 이용할 수 있습니다: {rec}."]], ["알려진 제한 사항", ["‘서버 지키기’ 게임은 빠른 조작이 필요합니다. 턴제 방식의 1·2단계 지원 게임은 시간 제한이 없는 대안입니다.", "아직 모든 화면 낭독기로 테스트하지는 않았습니다."]], ["문제 신고", ["접근할 수 없는 콘텐츠가 있으면 {mail}(으)로 알려 주세요. 답장을 드리고 다른 형태로 정보를 제공하겠습니다."]]]}};
+  const MAIL = ['contact', 'jeremy-grosjean.fr'].join('@');
+  const get = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  function detect() {
+    const s = get('jg-lang'); if (L[s]) return s;
+    for (const raw of (navigator.languages || [navigator.language || ''])) {
+      const l = (raw || '').toLowerCase();
+      if (l.startsWith('fr')) return 'fr';
+      if (l.startsWith('yue') || l === 'zh-hk' || l === 'zh-mo' || /^zh-hant-(hk|mo)$/.test(l)) return 'yue';
+      if (l.startsWith('zh-hant') || l === 'zh-tw') return 'zh-Hant';
+      if (l.startsWith('zh')) return 'zh-Hans';
+      if (l.startsWith('ko')) return 'ko';
+      if (l.startsWith('en')) return 'en';
+    }
+    return 'fr';
+  }
+  const th = get('jg-theme'); if (th === 'light' || th === 'dark') document.documentElement.dataset.theme = th;
+  const code = detect(), T = L[code];
+  const mailLink = () => { const a = document.createElement('a'); a.href = 'mailto:' + MAIL; a.textContent = MAIL; return a; };
+  const link = (href, txt, ext) => { const a = document.createElement('a'); a.href = href; a.textContent = txt; if (ext) a.rel = 'noopener noreferrer'; return a; };
+  function fill(p, text) {
+    for (const part of text.split(/(\{mail\}|\{rec\})/)) {
+      if (part === '{mail}') p.append(mailLink());
+      else if (part === '{rec}') p.append(link('/#recruteur', 'jeremy-grosjean.fr/#recruteur'));
+      else if (part) p.append(document.createTextNode(part));
+    }
+  }
+  if (code === 'fr') { document.querySelectorAll('[data-mail]').forEach(s => s.replaceWith(mailLink())); return; }
+  document.documentElement.lang = T.lang;
+  document.title = T.title + ' · jeremy-grosjean.fr';
+  const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+  set('title', T.title); set('updated', T.updated); set('back', T.back);
+  const note = document.getElementById('note'); if (note && T.note) { note.textContent = T.note; note.hidden = false; }
+  const box = document.getElementById('content'); box.textContent = '';
+  for (const [h, items] of T.sections) {
+    const s = document.createElement('section'), h2 = document.createElement('h2'); h2.textContent = h; s.append(h2);
+    for (const it of items) { const p = document.createElement('p'); fill(p, it); s.append(p); }
+    box.append(s);
+  }
+})();

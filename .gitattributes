@@ -2,3 +2,5 @@
 * text=auto
 # vCard : la norme (RFC 6350) exige des fins de ligne CRLF, le fichier est garde tel quel
 *.vcf -text
+# Politique MTA-STS : la norme (RFC 8461) demande des fins de ligne CRLF
+docs/.well-known/mta-sts.txt -text

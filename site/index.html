@@ -26,10 +26,10 @@
 <link rel="icon" href="/favicon.svg?v=c653120d20" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=ea10cf004d">
 <link rel="manifest" href="/site.webmanifest?v=1170d79b15">
-<link rel="stylesheet" href="/assets/app.css?v=53f614abb8">
-<script src="/assets/i18n.js?v=c0f0be498f" defer></script>
+<link rel="stylesheet" href="/assets/app.css?v=b094c066c8">
+<script src="/assets/i18n.js?v=f9cf1dee22" defer></script>
 <script src="/assets/status.js" defer></script>
-<script src="/assets/app.js?v=cac3e8b181" defer></script>
+<script src="/assets/app.js?v=77e5386e04" defer></script>
 </head>
 <body>
 <canvas id="net" aria-hidden="true"></canvas>
@@ -59,6 +59,33 @@
     <p class="keys"><span data-i="keysHint">Terminal :</span> <kbd id="kbdMod" title="Ctrl">Ctrl</kbd> + <kbd>K</kbd><span class="keys-sep" aria-hidden="true"> · </span><button class="keys-help" id="keysBtn" type="button"><kbd>?</kbd> <span data-i="keysHelp">raccourcis</span></button></p>
   </div>
 </main>
+
+<section class="rec" id="recView" hidden aria-labelledby="recName">
+  <div class="rec-page">
+    <header class="rec-head">
+      <div>
+        <h2 class="rec-name" id="recName">Jérémy Grosjean</h2>
+        <p class="rec-role" id="recRole">Technicien informatique</p>
+      </div>
+      <p class="rec-avail"><span class="avail-dot" aria-hidden="true"></span><span data-i="availLine">Disponible immédiatement pour une alternance</span></p>
+    </header>
+    <h3 data-i="recProfile">Profil</h3>
+    <dl class="brief rec-brief" id="recBrief"></dl>
+    <h3 data-i="recAreas">Domaines</h3>
+    <ul class="rec-tags" id="recTags"></ul>
+    <h3 data-i="recContactH">Contact</h3>
+    <p class="rec-contact"><a id="recMail" href="#">contact [at] jeremy-grosjean.fr</a><span aria-hidden="true"> · </span><span>jeremy-grosjean.fr</span></p>
+    <div class="rec-actions">
+      <button class="btn" id="recContact" type="button" data-i="contactBtn">Me contacter</button>
+      <button class="btn-ghost" id="recPrint" type="button" data-i="recPrint">Imprimer ou PDF</button>
+      <button class="btn-ghost" id="recExit" type="button" data-i="recExit">← Version animée</button>
+    </div>
+    <div class="rec-print">
+      <img src="/qr.svg" width="84" height="84" alt="">
+      <p><span data-i="recPrintNote">Version interactive, jeux et démonstrations :</span><br><b>https://jeremy-grosjean.fr</b></p>
+    </div>
+  </div>
+</section>
 
 <p class="clock"><b id="cTime">--:--</b><span id="cDate">Paris</span><span class="c-local" id="cLocal" hidden></span></p>
 
@@ -103,7 +130,7 @@
       <span class="lbl" data-i="termBtn">Terminal</span>
     </button>
   </div>
-  <p class="dock-mid"><span class="privacy" data-i="privacyLine">0 cookie · 0 traceur</span><span class="loadt" id="loadT" hidden></span><span class="sep" aria-hidden="true"> · </span><a class="legal-link" href="/mentions-legales.html" data-i="legalLink">Mentions légales</a><span class="upd" id="updLine" hidden></span></p>
+  <p class="dock-mid"><span class="privacy" data-i="privacyLine">0 cookie · 0 traceur</span><span class="loadt" id="loadT" hidden></span><span class="sep" aria-hidden="true"> · </span><a class="legal-link" href="/mentions-legales.html" data-i="legalLink">Mentions légales</a><span class="sep" aria-hidden="true"> · </span><a class="legal-link" href="/accessibilite.html" data-i="a11yLink">Accessibilité</a><span class="upd" id="updLine" hidden></span></p>
   <button class="pill sound" id="sound" type="button" aria-pressed="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path id="sWave" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" opacity=".25"/></svg>
     <span class="lbl" id="sLabel">Activer le son</span>
@@ -174,6 +201,14 @@
     <h2 id="contactTitle" data-i="contactTitle">Me contacter</h2>
     <p data-i="contactIntro">Pour une alternance, une question ou un échange, écrivez-moi :</p>
     <p class="mail-box"><span id="mailAddr">contact [at] jeremy-grosjean.fr</span></p>
+    <p class="wm-lbl" data-i="wmLabel">Écrire en un clic avec :</p>
+    <div class="webmail">
+      <a class="wm" id="wmGmail" href="#" target="_blank" rel="noopener noreferrer"><i class="wm-dot g" aria-hidden="true"></i><span>Gmail</span></a>
+      <a class="wm" id="wmOutlook" href="#" target="_blank" rel="noopener noreferrer"><i class="wm-dot o" aria-hidden="true"></i><span>Outlook</span></a>
+      <a class="wm" id="wmPro" href="#" target="_blank" rel="noopener noreferrer"><i class="wm-dot p" aria-hidden="true"></i><span data-i="wmPro">Outlook pro</span><small>Microsoft 365</small></a>
+      <a class="wm" id="wmYahoo" href="#" target="_blank" rel="noopener noreferrer"><i class="wm-dot y" aria-hidden="true"></i><span>Yahoo Mail</span></a>
+    </div>
+    <p class="wm-note" data-i="wmNote">Le message s'ouvre déjà rempli dans votre compte. Rien ne passe par ce site.</p>
     <div class="contact-extra">
       <img class="qr" src="/qr.svg" width="120" height="120" alt="QR code : https://jeremy-grosjean.fr" id="qrImg">
       <div class="contact-side">
@@ -217,7 +252,7 @@
   <div class="card">
     <h2 id="briefTitle" data-i="briefTitle">En 30 secondes</h2>
     <dl class="brief" id="briefList"></dl>
-    <div class="actions"><button class="btn" id="briefContact" type="button" data-i="contactBtn">Me contacter</button><button class="btn-ghost" id="briefClose" type="button" data-i="close">Fermer</button></div>
+    <div class="actions"><button class="btn" id="briefContact" type="button" data-i="contactBtn">Me contacter</button><button class="btn-ghost" id="briefRec" type="button" data-i="recOpen">Vue sur une page</button><button class="btn-ghost" id="briefClose" type="button" data-i="close">Fermer</button></div>
   </div>
 </div>
 

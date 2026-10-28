@@ -12,3 +12,6 @@ dist/
 .env
 *.key
 *.pem
+*.rev
+*secret*.asc
+*private*.asc

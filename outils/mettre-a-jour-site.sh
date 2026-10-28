@@ -55,6 +55,18 @@ done
 NB="$(cd "$TMP/site" && find . -type f | wc -l | tr -d ' ')"
 ok "Contenu du zip vérifié ($NB fichiers)"
 
+# security.txt : rappel avant sa date d'expiration (la norme RFC 9116 impose une date « Expires »)
+EXP="$(grep -m1 '^Expires:' "$TMP/site/.well-known/security.txt" | cut -d' ' -f2 | tr -d '\r')"
+JOURS="$(python3 -c 'import sys, datetime as d; e = d.datetime.fromisoformat(sys.argv[1].replace("Z", "+00:00")); print((e - d.datetime.now(d.timezone.utc)).days)' "$EXP" 2>/dev/null)"
+if [ -z "$JOURS" ]; then printf '%s! security.txt : date « Expires » illisible%s\n' "$ROUGE" "$FIN"
+elif [ "$JOURS" -lt 0 ]; then stop "security.txt a expiré depuis $(( -JOURS )) jours : mettez à jour la ligne Expires (et la signature)."
+elif [ "$JOURS" -lt 60 ]; then printf '%s! security.txt expire dans %s jours : pensez à le renouveler (et à le re-signer)%s\n' "$ROUGE" "$JOURS" "$FIN"
+else ok "security.txt valable encore $JOURS jours"; fi
+if grep -q 'BEGIN PGP SIGNED MESSAGE' "$TMP/site/.well-known/security.txt"; then
+  if command -v gpg >/dev/null && gpg --verify "$TMP/site/.well-known/security.txt" >/dev/null 2>&1; then ok "security.txt : signature PGP valide"
+  else printf '%s! security.txt : signature PGP non vérifiée (clé absente ou fichier modifié après signature)%s\n' "$ROUGE" "$FIN"; fi
+fi
+
 if [ "$AVEC_HTACCESS" = 1 ]; then info "Mode : envoi complet, avec .htaccess"; else info "Mode : sans .htaccess"; fi
 printf '\nEnvoyer sur le serveur ? [o/N] '
 read -r REP
@@ -130,7 +142,7 @@ else
   fi
   exit 1
 fi
-for f in assets/app.css assets/app.js assets/i18n.js .well-known/security.txt favicon.ico favicon.svg apple-touch-icon.png site.webmanifest og.jpg 404.html assets/404.css assets/404.js mentions-legales.html assets/legal.css assets/legal.js sw.js qr.svg contact.vcf assets/status.js; do
+for f in assets/app.css assets/app.js assets/i18n.js .well-known/security.txt favicon.ico favicon.svg apple-touch-icon.png site.webmanifest og.jpg 404.html assets/404.css assets/404.js mentions-legales.html accessibilite.html assets/legal.css assets/legal.js assets/a11y.js sw.js qr.svg contact.vcf assets/status.js; do
   C="$(curl -s -o /dev/null -w '%{http_code}' "$SITE/$f")"
   [ "$C" = "200" ] && ok "$f (HTTP 200)" || printf '%s✗ %s (code %s)%s\n' "$ROUGE" "$f" "$C" "$FIN"
 done

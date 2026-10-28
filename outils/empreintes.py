@@ -17,10 +17,11 @@ def versionner(page, fichiers):
 versionner('index.html', ['assets/app.css', 'assets/i18n.js', 'assets/app.js', 'favicon.ico', 'favicon.svg', 'apple-touch-icon.png', 'site.webmanifest'])
 versionner('404.html', ['assets/404.css', 'assets/404.js', 'favicon.ico', 'favicon.svg'])
 versionner('mentions-legales.html', ['assets/legal.css', 'assets/legal.js', 'favicon.ico', 'favicon.svg'])
+versionner('accessibilite.html', ['assets/legal.css', 'assets/a11y.js', 'favicon.ico', 'favicon.svg'])
 
 # Service worker : liste des fichiers gardés hors ligne + version = empreinte de tout le site
-urls = ['/', '/mentions-legales.html', '/404.html']
-for page in ['index.html', 'mentions-legales.html', '404.html']:
+urls = ['/', '/mentions-legales.html', '/accessibilite.html', '/404.html']
+for page in ['index.html', 'mentions-legales.html', 'accessibilite.html', '404.html']:
     for u in re.findall(r'(?:href|src)="(/[^"#]+)"', (RACINE / page).read_text()):
         if u.endswith('.html') or u == '/' or u.startswith('/.well-known') or u.endswith('.vcf'):
             continue

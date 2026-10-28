@@ -941,3 +941,39 @@ window.JG_I18N = {
   const T = { fr: 'Visite guidée', en: 'Guided tour', 'zh-Hans': '导览', 'zh-Hant': '導覽', yue: '導賞', ko: '둘러보기' };
   for (const k in T) if (L[k]) L[k].tourTitle = T[k];
 })(window.JG_I18N || {});
+
+/* Lot 8 : webmails dans « Me contacter », vue recruteur sur une page, impression, accessibilité, nouvelles commandes */
+(function (L) {
+  const add = (k, o, h) => {
+    if (!L[k]) return; Object.assign(L[k], o);
+    const H = L[k].tHelp; if (!H) return;
+    const set = (cmd, key, desc) => { const e = H.find(x => x[0] === cmd); if (e) { e[0] = key; e[1] = desc; } };
+    set('whoami', 'whoami [--long]', h.who); set('contact', 'contact [gmail…]', h.contact);
+    const at = H.findIndex(x => x[0] === 'clear');
+    H.splice(at < 0 ? H.length : at, 0, ['cv', h.cv], ['print', h.print], ['a11y', h.a11y]);
+  };
+  add('fr', { wmLabel: 'Écrire en un clic avec :', wmPro: 'Outlook pro', wmNote: "Le message s'ouvre déjà rempli dans votre compte. Rien ne passe par ce site.",
+    recProfile: 'Profil', recAreas: 'Domaines', recContactH: 'Contact', recPrint: 'Imprimer ou PDF', recExit: '← Version animée', recPrintNote: 'Version interactive, jeux et démonstrations :', recOpen: 'Vue sur une page',
+    tWmOpen: n => `Ouverture de ${n}…`, tWmHint: 'Astuce : contact gmail, contact outlook, contact pro ou contact yahoo ouvre un message prêt.', tRecOpen: 'Ouverture de la vue recruteur…', tPrint: 'Impression de la fiche…', a11yLink: 'Accessibilité' },
+    { who: 'qui êtes-vous ? (--long : le profil)', contact: 'e-mail (ajoutez gmail, outlook, pro ou yahoo)', cv: 'fiche recruteur sur une page', print: "imprimer la fiche ou l'enregistrer en PDF", a11y: "déclaration d'accessibilité" });
+  add('en', { wmLabel: 'Write in one click with:', wmPro: 'Outlook work', wmNote: 'The message opens pre-filled in your own account. Nothing goes through this site.',
+    recProfile: 'Profile', recAreas: 'Areas', recContactH: 'Contact', recPrint: 'Print or PDF', recExit: '← Animated version', recPrintNote: 'Interactive version, games and demos:', recOpen: 'One-page view',
+    tWmOpen: n => `Opening ${n}…`, tWmHint: 'Tip: contact gmail, contact outlook, contact pro or contact yahoo opens a ready-made message.', tRecOpen: 'Opening the recruiter view…', tPrint: 'Printing the profile…', a11yLink: 'Accessibility' },
+    { who: 'who are you? (--long: profile)', contact: 'email (add gmail, outlook, pro or yahoo)', cv: 'one-page recruiter profile', print: 'print the profile or save it as PDF', a11y: 'accessibility statement' });
+  add('zh-Hans', { wmLabel: '一键写信：', wmPro: 'Outlook 工作版', wmNote: '邮件会在您自己的账户中预先填好打开，不经过本网站。',
+    recProfile: '简介', recAreas: '领域', recContactH: '联系方式', recPrint: '打印或 PDF', recExit: '← 动画版', recPrintNote: '互动版、游戏和演示：', recOpen: '单页视图',
+    tWmOpen: n => `正在打开 ${n}…`, tWmHint: '提示：contact gmail、contact outlook、contact pro 或 contact yahoo 可打开预先填好的邮件。', tRecOpen: '正在打开招聘者视图…', tPrint: '正在打印简介…', a11yLink: '无障碍' },
+    { who: '你是谁？（--long：简介）', contact: '电子邮件（可加 gmail、outlook、pro 或 yahoo）', cv: '单页招聘者简介', print: '打印简介或保存为 PDF', a11y: '无障碍声明' });
+  add('zh-Hant', { wmLabel: '一鍵寫信：', wmPro: 'Outlook 工作版', wmNote: '郵件會在您自己的帳戶中預先填好開啟，不經過本網站。',
+    recProfile: '簡介', recAreas: '領域', recContactH: '聯絡方式', recPrint: '列印或 PDF', recExit: '← 動畫版', recPrintNote: '互動版、遊戲與示範：', recOpen: '單頁檢視',
+    tWmOpen: n => `正在開啟 ${n}…`, tWmHint: '提示：contact gmail、contact outlook、contact pro 或 contact yahoo 可開啟預先填好的郵件。', tRecOpen: '正在開啟招募者檢視…', tPrint: '正在列印簡介…', a11yLink: '無障礙' },
+    { who: '你是誰？（--long：簡介）', contact: '電子郵件（可加 gmail、outlook、pro 或 yahoo）', cv: '單頁招募者簡介', print: '列印簡介或儲存為 PDF', a11y: '無障礙聲明' });
+  add('yue', { wmLabel: '撳一下就寫信：', wmPro: 'Outlook 公司版', wmNote: '封信會喺你自己個戶口度預先填好打開，唔會經過呢個網站。',
+    recProfile: '簡介', recAreas: '範疇', recContactH: '聯絡', recPrint: '打印或者 PDF', recExit: '← 動畫版', recPrintNote: '互動版、遊戲同示範：', recOpen: '單頁版',
+    tWmOpen: n => `開緊 ${n}…`, tWmHint: '貼士：contact gmail、contact outlook、contact pro 或者 contact yahoo 會打開預先寫好嘅信。', tRecOpen: '開緊招聘版…', tPrint: '打印緊簡介…', a11yLink: '無障礙' },
+    { who: '你係邊個？（--long：簡介）', contact: '電郵（可以加 gmail、outlook、pro 或者 yahoo）', cv: '單頁招聘簡介', print: '打印簡介或者存做 PDF', a11y: '無障礙聲明' });
+  add('ko', { wmLabel: '클릭 한 번으로 메일 쓰기:', wmPro: 'Outlook 업무용', wmNote: '메시지가 내 계정에서 미리 작성된 상태로 열립니다. 이 사이트를 거치지 않습니다.',
+    recProfile: '프로필', recAreas: '분야', recContactH: '연락처', recPrint: '인쇄 또는 PDF', recExit: '← 애니메이션 버전', recPrintNote: '인터랙티브 버전, 게임, 데모:', recOpen: '한 페이지 보기',
+    tWmOpen: n => `${n} 여는 중…`, tWmHint: '팁: contact gmail, contact outlook, contact pro, contact yahoo로 미리 작성된 메일을 엽니다.', tRecOpen: '채용 담당자용 보기를 여는 중…', tPrint: '프로필 인쇄 중…', a11yLink: '접근성' },
+    { who: '당신은 누구? (--long: 프로필)', contact: '이메일 (gmail, outlook, pro, yahoo 추가 가능)', cv: '한 페이지 채용 프로필', print: '프로필 인쇄 또는 PDF 저장', a11y: '접근성 선언' });
+})(window.JG_I18N);
