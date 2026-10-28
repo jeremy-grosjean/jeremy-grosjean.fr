@@ -1062,6 +1062,8 @@
     rows.push([S.dmarc, pol || '?', pol === 'reject' || pol === 'quarantine' ? 'ok' : pol ? 'warn' : 'bad']);
     rows.push([S.tlsrpt, st.tlsrpt ? 'OK' : '?', st.tlsrpt ? 'ok' : 'warn']);
     rows.push([S.dnssec, st.dnssec ? t('supSigned') : '?', st.dnssec ? 'ok' : 'warn']);
+    if ('caa' in st) rows.push([S.caa || 'CAA', /letsencrypt\.org/.test(st.caa || '') ? 'Let’s Encrypt' : '?', /letsencrypt\.org/.test(st.caa || '') ? 'ok' : 'warn']);
+    if ('methods' in st) rows.push([S.methods || 'HTTP', st.methods === 405 || st.methods === 403 ? t('supReadOnly') : '?', st.methods === 405 || st.methods === 403 ? 'ok' : 'warn']);
     return rows;
   }
   function openSup() {

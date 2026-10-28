@@ -47,6 +47,8 @@ nettoyer() {
 }
 trap nettoyer EXIT
 unzip -q -o "$ZIP" -d "$TMP/site" || stop "Le zip est illisible."
+# Droits standard d'un site : lecture pour tous, écriture pour le propriétaire seulement (644 / 755)
+chmod -R u=rwX,go=rX "$TMP/site"
 for f in index.html assets/app.css assets/app.js assets/i18n.js .well-known/security.txt .htaccess; do
   [ -s "$TMP/site/$f" ] || stop "Fichier manquant dans le zip : $f"
 done
@@ -77,17 +79,22 @@ if command -v dig >/dev/null 2>&1; then
   TLSRPT="$(dig +short TXT "_smtp._tls.$DOM" | nettoie | grep -i 'v=tlsrptv1' | head -n 1)"
   DS="$(dig +short DS "$DOM" | head -n 1 | nettoie)"
   A_REC="$(dig +short A "$DOM" | head -n 1 | nettoie)"
+  CAA="$(dig +short CAA "$DOM" | nettoie | tr '\n' ';' | sed 's/;$//')"
 else
-  MX_JSON=""; SPF=""; DMARC=""; TLSRPT=""; DS=""; A_REC=""
+  MX_JSON=""; SPF=""; DMARC=""; TLSRPT=""; DS=""; A_REC=""; CAA=""
 fi
 DNSSEC=false; [ -n "$DS" ] && DNSSEC=true
 CHECKED="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+METHODS="$(curl -s -o /dev/null -m 15 -w '%{http_code}' -X POST "https://$DOM/")"; METHODS=$((10#${METHODS:-0}))
 mkdir -p "$TMP/site/assets"
-cat > "$TMP/site/assets/status.js" <<STATUS
+ecrire_status() {
+  cat > "$TMP/site/assets/status.js" <<STATUS
 /* Supervision : relevés publics faits par le script de mise à jour le $CHECKED */
-window.JG_STATUS = {"checked":"$CHECKED","https":$HTTPS_CODE,"tlsDays":$TLS_DAYS,"mx":[$MX_JSON],"spf":"$SPF","dmarc":"$DMARC","tlsrpt":"$TLSRPT","dnssec":$DNSSEC,"ds":"$DS","a":"$A_REC"};
+window.JG_STATUS = {"checked":"$CHECKED","https":$HTTPS_CODE,"tlsDays":$TLS_DAYS,"mx":[$MX_JSON],"spf":"$SPF","dmarc":"$DMARC","tlsrpt":"$TLSRPT","dnssec":$DNSSEC,"ds":"$DS","a":"$A_REC","caa":"$CAA","methods":$METHODS};
 STATUS
-ok "Supervision : HTTPS $HTTPS_CODE · certificat $( [ "$TLS_DAYS" = null ] && echo "?" || echo "$TLS_DAYS j") · MX $( [ -n "$MX_JSON" ] && echo OK || echo '?') · DMARC $( [ -n "$DMARC" ] && echo OK || echo '?') · DNSSEC $DNSSEC"
+}
+ecrire_status
+ok "Supervision : HTTPS $HTTPS_CODE · certificat $( [ "$TLS_DAYS" = null ] && echo "?" || echo "$TLS_DAYS j") · MX $( [ -n "$MX_JSON" ] && echo OK || echo '?') · DMARC $( [ -n "$DMARC" ] && echo OK || echo '?') · DNSSEC $DNSSEC · CAA $( [ -n "$CAA" ] && echo OK || echo '?')"
 
 # 3. Envoi par SFTP (le mot de passe est demandé ici) --------------------------
 SSHOPTS=(-o ControlMaster=auto -o ControlPath="$CP" -o ControlPersist=180 -o ConnectTimeout=15)
@@ -138,6 +145,14 @@ if [ "$AVEC_HTACCESS" = 1 ]; then
   R2="$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "https://www.jeremy-grosjean.fr/")"
   case "$R1" in 301\ https://jeremy-grosjean.fr/*) ok "Redirection http → https" ;; *) printf '%s✗ Redirection http : %s%s\n' "$ROUGE" "$R1" "$FIN" ;; esac
   case "$R2" in 301\ https://jeremy-grosjean.fr/*) ok "Redirection www → sans www" ;; *) printf '%s✗ Redirection www : %s%s\n' "$ROUGE" "$R2" "$FIN" ;; esac
+  # Site statique : un envoi de données (POST) doit être refusé (405)
+  NEW_METHODS="$(curl -s -o /dev/null -w '%{http_code}' -X POST "$SITE/")"; NEW_METHODS=$((10#${NEW_METHODS:-0}))
+  if [ "$NEW_METHODS" = 405 ]; then ok "Méthodes HTTP : lecture seule (POST refusé, code 405)"; else printf '%s✗ Méthodes HTTP : POST renvoie %s (405 attendu)%s\n' "$ROUGE" "$NEW_METHODS" "$FIN"; fi
+  # Mettre la supervision à jour avec ce nouveau relevé (même connexion, pas de nouveau mot de passe)
+  if [ "$NEW_METHODS" != "$METHODS" ]; then
+    METHODS="$NEW_METHODS"; ecrire_status
+    echo "put \"$TMP/site/assets/status.js\" www/assets/status.js" | sftp "${SSHOPTS[@]}" -q "$UTILISATEUR@$HOTE" >/dev/null 2>&1 && ok "Supervision mise à jour (méthodes HTTP)"
+  fi
 fi
 
 printf '\n%sTerminé.%s %s\n\n' "$GRAS" "$FIN" "$SITE"

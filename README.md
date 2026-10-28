@@ -18,7 +18,7 @@ Site personnel de **Jérémy Grosjean**, technicien informatique, disponible pou
 - Page d'accueil animée (réseau interactif à la souris et au doigt), en **6 langues** : français, anglais, chinois simplifié et traditionnel, cantonais, coréen.
 - **Deux mini-jeux** : « Protéger le serveur » (malware, DDoS, hameçonnage) et un **simulateur de support N1/N2** (tickets réalistes : DHCP, DNS, Active Directory, GPO, droits NTFS…).
 - **Terminal caché** (`Ctrl/⌘ + K`) : `help`, `ipcalc`, `dig`, `device`, `neofetch`, `htop`, `secrets`…
-- **Supervision** : état du certificat TLS, des e-mails (MX, SPF, DMARC, TLS-RPT) et de DNSSEC, relevé automatiquement à chaque mise en ligne.
+- **Supervision** : état du certificat TLS, des e-mails (MX, SPF, DMARC, TLS-RPT), de DNSSEC, du CAA et des méthodes HTTP, relevé automatiquement à chaque mise en ligne, avec un lien vers la [disponibilité en direct](https://stats.uptimerobot.com/gHB6v8KF6j) (UptimeRobot).
 - **Audit de sécurité animé**, mesures réelles de poids et de chargement, réglages d'accessibilité (taille du texte, contraste).
 - Fonctionne **hors ligne** après une première visite, et s'installe comme une application.
 
@@ -28,7 +28,8 @@ Site personnel de **Jérémy Grosjean**, technicien informatique, disponible pou
 - En-têtes stricts : **CSP** `default-src 'none'` sans `unsafe-*`, **Trusted Types**, **HSTS**, COOP/COEP/CORP, `X-Frame-Options`, `Referrer-Policy: no-referrer`, `Permissions-Policy`.
 - Aucun script ou style en ligne, aucune bibliothèque externe : **HTML, CSS et JavaScript écrits à la main**, sans framework ni dépendance.
 - Adresse e-mail assemblée par le script (non lisible par les robots qui lisent le HTML).
-- Domaine : **DNSSEC**, **SPF**, **DKIM**, **DMARC** (`quarantine`), **TLS-RPT**, fichier [`security.txt`](https://jeremy-grosjean.fr/.well-known/security.txt).
+- Serveur en **lecture seule** : seules les requêtes `GET` et `HEAD` sont acceptées, tout le reste est refusé (`405`).
+- Domaine : **DNSSEC**, **SPF**, **DKIM**, **DMARC** (`quarantine`), **TLS-RPT**, **CAA** (seul Let's Encrypt peut émettre un certificat), fichier [`security.txt`](https://jeremy-grosjean.fr/.well-known/security.txt).
 
 ## Organisation du dépôt
 

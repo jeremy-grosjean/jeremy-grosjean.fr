@@ -388,6 +388,11 @@ body.playing .quit { display: inline-block; }
 .sdot { width: .55rem; height: .55rem; border-radius: 50%; }
 .sdot.ok { background: var(--ok); box-shadow: 0 0 0 3px rgba(var(--ok-rgb), .2); } .sdot.warn { background: rgb(var(--warn-rgb)); } .sdot.bad { background: var(--threat); }
 .sup-list b.ok { color: var(--ok); } .sup-list b.warn { color: rgb(var(--warn-rgb)); } .sup-list b.bad { color: var(--threat); }
+.sup-links { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin: 0 0 .5rem; }
+.sup-links a { color: var(--cyan); text-decoration: none; font-size: .88rem; padding: .45rem .75rem; border-radius: 10px; border: 1px solid rgba(var(--node-rgb), .18); }
+.sup-links a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.sup-links a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.sup-note { margin: 0 0 1rem; color: var(--dim); font-size: .75rem; }
 
 /* Affichage */
 .a11y { display: grid; gap: .55rem; text-align: left; margin: 0 0 1.2rem; }

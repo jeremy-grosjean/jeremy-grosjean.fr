@@ -11,6 +11,13 @@ AddType "text/vcard; charset=utf-8" .vcf
 DirectoryIndex index.html
 ErrorDocument 404 /404.html
 
+# Site statique : seules les lectures (GET, HEAD) sont acceptées, tout le reste est refusé (405)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_METHOD} !^(GET|HEAD)$
+  RewriteRule ^ - [R=405,L]
+</IfModule>
+
 # Une seule adresse propre : https://jeremy-grosjean.fr (HTTPS obligatoire, sans www)
 <IfModule mod_rewrite.c>
   RewriteEngine On

@@ -924,3 +924,14 @@ window.JG_I18N = {
   add('ko', { localTime: (v, c) => `현지 시간: ${v} (${c})`, scoresTitle: '2026년 10월 28일 받은 점수, 클릭 한 번으로 확인 가능', extTitle: '외부 도구 점수', loadedIn: v => `⚡ ${v}초 만에 로드`, mb: 'MB',
     htopL: { fps: '초당 프레임', nodes: '네트워크 노드', packets: '패킷', mem: 'JS 메모리', weight: '로드된 용량', up: '머문 시간', cpu: '코어' }, ipNot: '원칙상 수집하지 않음 🔒' }, 'IP 주소', 'htop 발견', '모니터: FPS, 메모리, 네트워크');
 })(window.JG_I18N || {});
+
+/* Lot 6 : liens de la supervision (page de statut, code source), lignes CAA et méthodes HTTP */
+(function (L) {
+  const add = (k, o, caa, methods) => { if (!L[k]) return; Object.assign(L[k], o); if (L[k].supLabels) Object.assign(L[k].supLabels, { caa, methods }); };
+  add('fr', { supLiveLink: 'Disponibilité en direct (UptimeRobot) ↗', supCodeLink: 'Code source sur GitHub ↗', supExtNote: 'Liens vers des sites externes, qui ont leurs propres règles de confidentialité.', supReadOnly: 'lecture seule' }, 'Certificats autorisés (CAA)', 'Méthodes HTTP');
+  add('en', { supLiveLink: 'Live uptime (UptimeRobot) ↗', supCodeLink: 'Source code on GitHub ↗', supExtNote: 'Links to external sites, which have their own privacy policies.', supReadOnly: 'read-only' }, 'Allowed certificates (CAA)', 'HTTP methods');
+  add('zh-Hans', { supLiveLink: '实时可用性（UptimeRobot）↗', supCodeLink: 'GitHub 上的源代码 ↗', supExtNote: '指向外部网站的链接，这些网站有各自的隐私政策。', supReadOnly: '只读' }, '允许的证书（CAA）', 'HTTP 方法');
+  add('zh-Hant', { supLiveLink: '即時可用性（UptimeRobot）↗', supCodeLink: 'GitHub 上的原始碼 ↗', supExtNote: '指向外部網站的連結，這些網站有各自的隱私權政策。', supReadOnly: '唯讀' }, '允許的憑證（CAA）', 'HTTP 方法');
+  add('yue', { supLiveLink: '即時運作狀態（UptimeRobot）↗', supCodeLink: 'GitHub 上面嘅原始碼 ↗', supExtNote: '連去外部網站，佢哋有自己嘅私隱政策。', supReadOnly: '淨係讀' }, '准許嘅證書（CAA）', 'HTTP 方法');
+  add('ko', { supLiveLink: '실시간 가동 상태 (UptimeRobot) ↗', supCodeLink: 'GitHub 소스 코드 ↗', supExtNote: '자체 개인정보 처리방침이 있는 외부 사이트로 연결됩니다.', supReadOnly: '읽기 전용' }, '허용된 인증서 (CAA)', 'HTTP 메서드');
+})(window.JG_I18N || {});
