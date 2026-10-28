@@ -1,2 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+# vCard : la norme (RFC 6350) exige des fins de ligne CRLF, le fichier est garde tel quel
+*.vcf -text
