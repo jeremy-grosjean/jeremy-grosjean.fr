@@ -69,6 +69,7 @@ outils/
   verifier.py             vérifications automatiques (HTML, liens, JS, traductions, secrets, poids)
   test_jeux.py            test des pages et des jeux dans un navigateur
   signer-security-txt.sh  signe security.txt avec ma clé PGP (source : outils/security.txt)
+  cle-uptime.sh           enregistre la clé UptimeRobot en lecture seule (vérifiée, jamais affichée)
 ```
 
 ## Mise en ligne
