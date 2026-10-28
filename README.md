@@ -44,14 +44,22 @@ site/                     le site, tel qu'il est publié (version lisible)
 outils/
   preparer.py             minifie, versionne et crée le zip de mise en ligne
   empreintes.py           empreintes ?v=… anti-cache + génération du service worker
+  publier.sh              tout en une commande : préparer, envoyer, vérifier
   mettre-a-jour-site.sh   mise en ligne par SFTP, vérifications et annulation automatique
   qr.py                   générateur de QR code (sans dépendance)
 ```
 
 ## Mise en ligne
 
-1. `python3 outils/preparer.py` crée `~/Downloads/jeremy-grosjean-site.zip`.
-2. `outils/mettre-a-jour-site.sh` envoie le site par **SFTP** (le mot de passe est demandé à chaque fois et n'est jamais enregistré), relève la supervision, puis vérifie en ligne les fichiers, les en-têtes, les redirections et la page 404. En cas de panne, il retire automatiquement le `.htaccess`.
+Une seule commande :
+
+```
+bash outils/publier.sh
+```
+
+Elle prépare la version en ligne (minification avec esbuild si présent, empreintes anti-cache, service worker), l'envoie par **SFTP** (le mot de passe est demandé à chaque fois et n'est jamais enregistré), relève la supervision, puis vérifie en ligne les fichiers, les en-têtes, les redirections, la page 404 et le refus des requêtes autres que `GET`/`HEAD`. En cas de panne, le `.htaccess` est retiré automatiquement. Pour finir, elle signale si GitHub n'est pas à jour.
+
+Les deux étapes existent aussi séparément : `outils/preparer.py` puis `outils/mettre-a-jour-site.sh`.
 
 L'hôte et l'identifiant SFTP ne sont **pas** dans ce dépôt : le script les lit dans un fichier privé, `~/.config/jeremy-grosjean/site.conf`, qui reste sur l'ordinateur.
 
