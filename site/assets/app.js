@@ -338,7 +338,7 @@
     $('hScore').textContent = G.score; $('hBreach').textContent = G.breach + '/3'; $('hTime').textContent = Math.ceil(G.time);
   }
   const server = () => ({ x: W / 2, y: H / 2, s: Math.min(64, Math.max(46, W / 22)) });
-  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'briefPanel', 'supPanel'];
+  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel'];
   function closePanels() { panels.forEach(p => $(p).classList.remove('open')); }
   function openPanel(id, focusId) { closePanels(); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (focusId) $(focusId).focus(); }
   function openIntro() { closeTerm(); openPanel('intro', 'start'); }
@@ -820,8 +820,8 @@
   /* ================= Terminal ================= */
   const term = $('term'), out = $('termOut'), input = $('termInput');
   const hist = []; let hIdx = 0, greeted = false;
-  const COMMANDS = ['help', 'boot', 'legal', 'device', 'neofetch', 'secrets', 'htop', 'support', 'status', 'dig', 'ipcalc', 'install', 'tour', 'matrix', 'whoami', 'about', 'security', 'ping', 'date', 'lang', 'theme', 'play', 'konami', 'contact', 'cv', 'projets', 'panne', 'quiz', 'print', 'a11y', 'clear', 'exit'];
-  const ALIAS = { aide: 'help', top: 'htop', fps: 'htop', ticket: 'support', tickets: 'support', supervision: 'status', nslookup: 'dig', host: 'dig', installer: 'install', visite: 'tour', appareil: 'device', sysinfo: 'device', fastfetch: 'neofetch', secret: 'secrets', mentions: 'legal', legales: 'legal', 'légales': 'legal', privacy: 'legal', demarrage: 'boot', 'démarrage': 'boot', journal: 'boot', dmesg: 'boot', apropos: 'about', 'à-propos': 'about', securite: 'security', 'sécurité': 'security', jouer: 'play', effacer: 'clear', cls: 'clear', quitter: 'exit', quit: 'exit', langue: 'lang', theme: 'theme', 'thème': 'theme', ls: 'help', man: 'help', recruteur: 'cv', recruiter: 'cv', resume: 'cv', imprimer: 'print', pdf: 'print', accessibilite: 'a11y', 'accessibilité': 'a11y', accessibility: 'a11y', mail: 'contact', email: 'contact', 'rétro': 'retro', crt: 'retro', phosphore: 'retro', vt100: 'retro', diagnostic: 'panne', depannage: 'panne', 'dépannage': 'panne', fault: 'panne', ad: 'quiz', gpo: 'quiz' };
+  const COMMANDS = ['help', 'boot', 'legal', 'device', 'neofetch', 'secrets', 'htop', 'support', 'status', 'dig', 'ipcalc', 'install', 'tour', 'matrix', 'whoami', 'about', 'security', 'ping', 'date', 'lang', 'theme', 'play', 'konami', 'contact', 'cv', 'projets', 'panne', 'quiz', 'changelog', 'print', 'a11y', 'clear', 'exit'];
+  const ALIAS = { aide: 'help', top: 'htop', fps: 'htop', ticket: 'support', tickets: 'support', supervision: 'status', nslookup: 'dig', host: 'dig', installer: 'install', visite: 'tour', appareil: 'device', sysinfo: 'device', fastfetch: 'neofetch', secret: 'secrets', mentions: 'legal', legales: 'legal', 'légales': 'legal', privacy: 'legal', demarrage: 'boot', 'démarrage': 'boot', journal: 'boot', dmesg: 'boot', apropos: 'about', 'à-propos': 'about', securite: 'security', 'sécurité': 'security', jouer: 'play', effacer: 'clear', cls: 'clear', quitter: 'exit', quit: 'exit', langue: 'lang', theme: 'theme', 'thème': 'theme', ls: 'help', man: 'help', recruteur: 'cv', recruiter: 'cv', resume: 'cv', imprimer: 'print', pdf: 'print', accessibilite: 'a11y', 'accessibilité': 'a11y', accessibility: 'a11y', mail: 'contact', email: 'contact', 'rétro': 'retro', crt: 'retro', phosphore: 'retro', vt100: 'retro', diagnostic: 'panne', depannage: 'panne', 'dépannage': 'panne', fault: 'panne', ad: 'quiz', gpo: 'quiz', news: 'changelog', nouveautes: 'changelog', 'nouveautés': 'changelog', quoideneuf: 'changelog' };
   function line(text, cls) { const d = document.createElement('div'); if (cls) d.className = cls; d.textContent = text; out.append(d); out.scrollTop = out.scrollHeight; return d; }
   function openTerm() {
     closePanels(); document.body.classList.add('term-open');
@@ -969,6 +969,7 @@
         line(t('tWmHint'), 'd'); break;
       }
       case 'retro': retro(); break;
+      case 'changelog': closeTerm(); setTimeout(openNews, 150); break;
       case 'cv': line(t('tRecOpen'), 'g'); setTimeout(openRec, 250); break;
       case 'panne': line(t('tPanne'), 'g'); setTimeout(openPanne, 350); break;
       case 'quiz': line(t('tQuiz'), 'g'); setTimeout(openQuiz, 350); break;
@@ -1259,6 +1260,23 @@
   });
   $('qzQuit').addEventListener('click', closePanels);
 
+  /* ================= Journal « Quoi de neuf » : généré depuis les commits au moment de la mise en ligne ================= */
+  function openNews() {
+    const ul = $('newsList'), N = Array.isArray(window.JG_NEWS) ? window.JG_NEWS : [], tags = t('newsTags');
+    ul.textContent = '';
+    if (!N.length) { const li = document.createElement('li'); li.textContent = t('newsEmpty'); ul.append(li); }
+    let f; try { f = new Intl.DateTimeFormat(regionLocale(lang), { day: '2-digit', month: '2-digit', timeZone: 'UTC' }); } catch (e) { f = null; }
+    for (const n of N) {
+      const li = document.createElement('li'), d = document.createElement('time'), k = document.createElement('span'), x = document.createElement('span');
+      d.dateTime = n.d; d.textContent = f ? f.format(new Date(n.d + 'T12:00:00Z')) : n.d;
+      k.className = 'news-tag ' + (tags[n.k] ? n.k : 'misc'); k.textContent = tags[n.k] || tags.misc; x.textContent = n.t;
+      li.append(d, k, x); ul.append(li);
+    }
+    closeTerm(); openPanel('newsPanel', 'newsClose');
+  }
+  $('newsBtn').addEventListener('click', openNews);
+  $('newsClose').addEventListener('click', closePanels);
+
   /* ================= Supervision : relevés faits par le script à chaque mise en ligne ================= */
   const ST = () => window.JG_STATUS || null;
   function fmtDate(iso, withTime) {
@@ -1284,7 +1302,18 @@
     rows.push([S.dnssec, st.dnssec ? t('supSigned') : '?', st.dnssec ? 'ok' : 'warn']);
     if ('caa' in st) rows.push([S.caa || 'CAA', /letsencrypt\.org/.test(st.caa || '') ? 'Let’s Encrypt' : '?', /letsencrypt\.org/.test(st.caa || '') ? 'ok' : 'warn']);
     if ('methods' in st) rows.push([S.methods || 'HTTP', st.methods === 405 || st.methods === 403 ? t('supReadOnly') : '?', st.methods === 405 || st.methods === 403 ? 'ok' : 'warn']);
+    if (typeof st.uptime30 === 'number') rows.push([S.uptime || 'Uptime', String(st.uptime30).replace('.', lang === 'fr' ? ',' : '.') + ' %', st.uptime30 >= 99.5 ? 'ok' : st.uptime30 >= 98 ? 'warn' : 'bad']);
     return rows;
+  }
+  /* 30 barres, une par jour : relevées sur UptimeRobot par le script de mise en ligne (le visiteur ne le contacte pas) */
+  function upBars(st) {
+    const old = $('upBox'); if (old) old.remove();
+    const days = st && Array.isArray(st.uptimeDays) ? st.uptimeDays.slice(-30) : null; if (!days || !days.length) return;
+    const box = document.createElement('div'), bars = document.createElement('div'), cap = document.createElement('div'), a = document.createElement('span'), b = document.createElement('span');
+    box.id = 'upBox'; bars.className = 'up-bars'; bars.setAttribute('role', 'img'); bars.setAttribute('aria-label', t('supBarsAria')(days.filter(x => typeof x === 'number').length));
+    for (const v of days) { const i = document.createElement('i'); i.className = typeof v !== 'number' ? 'none' : v >= 99.5 ? '' : v >= 98 ? 'warn' : 'bad'; i.title = typeof v === 'number' ? v + ' %' : '—'; bars.append(i); }
+    cap.className = 'up-cap'; a.textContent = t('supBars30'); b.textContent = t('supBarsToday'); cap.append(a, b);
+    box.append(bars, cap); $('supList').after(box);
   }
   function openSup() {
     const st = ST(), ul = $('supList'); ul.textContent = '';
@@ -1294,6 +1323,7 @@
       const li = document.createElement('li'), d = document.createElement('span'), a = document.createElement('span'), b = document.createElement('b');
       d.className = 'sdot ' + c; d.setAttribute('aria-hidden', 'true'); a.textContent = k; b.textContent = v; b.className = c; li.append(d, a, b); ul.append(li);
     }
+    upBars(st);
     closeTerm(); openPanel('supPanel', 'supClose');
   }
   $('supBtn').addEventListener('click', openSup);

@@ -20,6 +20,8 @@ CONFIG="${JG_CONFIG:-$HOME/.config/jeremy-grosjean/site.conf}"
 lire_conf() { [ -f "$CONFIG" ] && grep -E "^$1=" "$CONFIG" | tail -n 1 | cut -d= -f2- | tr -d '"[:space:]'; }
 HOTE="${JG_HOTE:-$(lire_conf JG_HOTE)}"
 UTILISATEUR="${JG_UTILISATEUR:-$(lire_conf JG_UTILISATEUR)}"
+# Facultatif : clé UptimeRobot en LECTURE SEULE (JG_UPTIME_KEY) pour afficher la disponibilité sur 30 jours
+UPTIME_KEY="${JG_UPTIME_KEY:-$(lire_conf JG_UPTIME_KEY)}"
 SITE="${JG_SITE:-https://jeremy-grosjean.fr}"
 DOSSIER_ZIP="$HOME/Downloads"
 AVEC_HTACCESS=1
@@ -100,15 +102,37 @@ DNSSEC=false; [ -n "$DS" ] && DNSSEC=true
 CHECKED="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
 # Un vrai envoi de formulaire (avec des données), comme le ferait un robot ou un attaquant
 METHODS="$(curl -s -o /dev/null -m 15 -w '%{http_code}' --data 'test=1' "https://$DOM/")"; METHODS=$((10#${METHODS:-0}))
+# Disponibilité : relevée chez UptimeRobot avec une clé en lecture seule (jamais affichée ni enregistrée ailleurs)
+UPTIME30="null"; UPTIME_DAYS="null"
+if [ -n "$UPTIME_KEY" ]; then
+  RANGES="$(python3 -c 'import time; j = 86400; t = int(time.time()) // j * j; print("-".join(f"{t - k * j}_{t - (k - 1) * j - 1}" for k in range(29, -1, -1)))')"
+  REP_UP="$(printf 'api_key=%s&format=json&custom_uptime_ratios=30&custom_uptime_ranges=%s' "$UPTIME_KEY" "$RANGES" | curl -s -m 20 --data @- https://api.uptimerobot.com/v2/getMonitors)"
+  LU="$(printf '%s' "$REP_UP" | python3 -c '
+import json, sys
+try:
+    d = json.load(sys.stdin); m = [x for x in d.get("monitors", []) if "jeremy-grosjean.fr" in x.get("url", "")][0]
+    r = float(str(m.get("custom_uptime_ratio", "")).split("-")[0])
+    days = [round(float(v), 3) if v not in ("", None) else None for v in str(m.get("custom_uptime_ranges", "")).split("-")]
+    created = m.get("create_datetime") or 0
+    import time; t = int(time.time()) // 86400 * 86400
+    days = [None if created and t - (29 - i) * 86400 + 86399 < created else v for i, v in enumerate(days)]
+    print(round(r, 3)); print(json.dumps(days))
+except Exception:
+    print("null"); print("null")
+')"
+  UPTIME30="$(printf '%s\n' "$LU" | sed -n 1p)"; UPTIME_DAYS="$(printf '%s\n' "$LU" | sed -n 2p)"
+  [ -n "$UPTIME30" ] || UPTIME30="null"; [ -n "$UPTIME_DAYS" ] || UPTIME_DAYS="null"
+fi
+unset UPTIME_KEY REP_UP
 mkdir -p "$TMP/site/assets"
 ecrire_status() {
   cat > "$TMP/site/assets/status.js" <<STATUS
 /* Supervision : relevés publics faits par le script de mise à jour le $CHECKED */
-window.JG_STATUS = {"checked":"$CHECKED","https":$HTTPS_CODE,"tlsDays":$TLS_DAYS,"mx":[$MX_JSON],"spf":"$SPF","dmarc":"$DMARC","tlsrpt":"$TLSRPT","dnssec":$DNSSEC,"ds":"$DS","a":"$A_REC","caa":"$CAA","methods":$METHODS};
+window.JG_STATUS = {"checked":"$CHECKED","https":$HTTPS_CODE,"tlsDays":$TLS_DAYS,"mx":[$MX_JSON],"spf":"$SPF","dmarc":"$DMARC","tlsrpt":"$TLSRPT","dnssec":$DNSSEC,"ds":"$DS","a":"$A_REC","caa":"$CAA","methods":$METHODS,"uptime30":$UPTIME30,"uptimeDays":$UPTIME_DAYS};
 STATUS
 }
 ecrire_status
-ok "Supervision : HTTPS $HTTPS_CODE · certificat $( [ "$TLS_DAYS" = null ] && echo "?" || echo "$TLS_DAYS j") · MX $( [ -n "$MX_JSON" ] && echo OK || echo '?') · DMARC $( [ -n "$DMARC" ] && echo OK || echo '?') · DNSSEC $DNSSEC · CAA $( [ -n "$CAA" ] && echo OK || echo '?')"
+ok "Supervision : HTTPS $HTTPS_CODE · certificat $( [ "$TLS_DAYS" = null ] && echo "?" || echo "$TLS_DAYS j") · MX $( [ -n "$MX_JSON" ] && echo OK || echo '?') · DMARC $( [ -n "$DMARC" ] && echo OK || echo '?') · DNSSEC $DNSSEC · CAA $( [ -n "$CAA" ] && echo OK || echo '?')$( [ "$UPTIME30" != null ] && echo " · disponibilité 30 j $UPTIME30 %")"
 
 # 3. Envoi par SFTP (le mot de passe est demandé ici) --------------------------
 SSHOPTS=(-o ControlMaster=auto -o ControlPath="$CP" -o ControlPersist=180 -o ConnectTimeout=15)
@@ -142,7 +166,7 @@ else
   fi
   exit 1
 fi
-for f in assets/app.css assets/app.js assets/i18n.js assets/labs.js .well-known/security.txt favicon.ico favicon.svg apple-touch-icon.png site.webmanifest og.jpg 404.html assets/404.css assets/404.js mentions-legales.html accessibilite.html assets/legal.css assets/legal.js assets/a11y.js sw.js qr.svg contact.vcf assets/status.js; do
+for f in assets/app.css assets/app.js assets/i18n.js assets/labs.js assets/news.js .well-known/security.txt favicon.ico favicon.svg apple-touch-icon.png site.webmanifest og.jpg 404.html assets/404.css assets/404.js mentions-legales.html accessibilite.html assets/legal.css assets/legal.js assets/a11y.js sw.js qr.svg contact.vcf assets/status.js; do
   C="$(curl -s -o /dev/null -w '%{http_code}' "$SITE/$f")"
   [ "$C" = "200" ] && ok "$f (HTTP 200)" || printf '%s✗ %s (code %s)%s\n' "$ROUGE" "$f" "$C" "$FIN"
 done

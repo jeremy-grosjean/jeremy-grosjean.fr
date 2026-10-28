@@ -996,3 +996,32 @@ window.JG_I18N = {
   };
   for (const k in T) if (L[k]) { if (L[k].secretNames) L[k].secretNames.retro = T[k][0]; L[k].tRetroOn = T[k][1]; L[k].tRetroOff = T[k][2]; }
 })(window.JG_I18N || {});
+
+/* Lot 12 : journal « Quoi de neuf » et disponibilité sur 30 jours */
+(function (L) {
+  const T = {
+    fr: { newsLink: 'Nouveautés', newsTitle: 'Quoi de neuf', newsSub: 'Les dernières évolutions du site', newsGh: 'Tout l’historique sur GitHub ↗', newsEmpty: 'Le journal sera disponible à la prochaine mise en ligne.',
+      newsTags: { new: 'Nouveau', fix: 'Correction', perf: 'Vitesse', sec: 'Sécurité', misc: 'Amélioration' }, uptime: 'Disponibilité 30 jours',
+      supBars30: 'il y a 30 jours', supBarsToday: 'aujourd’hui', supBarsAria: n => `Disponibilité jour par jour, ${n} jours mesurés`, help: 'journal des nouveautés' },
+    en: { newsLink: 'What’s new', newsTitle: 'What’s new', newsSub: 'The latest changes to the site', newsGh: 'Full history on GitHub ↗', newsEmpty: 'The log will be available after the next update.',
+      newsTags: { new: 'New', fix: 'Fix', perf: 'Speed', sec: 'Security', misc: 'Improvement' }, uptime: 'Uptime, 30 days',
+      supBars30: '30 days ago', supBarsToday: 'today', supBarsAria: n => `Day-by-day uptime, ${n} days measured`, help: 'what’s new on the site' },
+    'zh-Hans': { newsLink: '更新日志', newsTitle: '最新动态', newsSub: '网站最近的更新', newsGh: '在 GitHub 查看完整历史 ↗', newsEmpty: '下次发布后即可查看更新日志。',
+      newsTags: { new: '新增', fix: '修复', perf: '提速', sec: '安全', misc: '改进' }, uptime: '30 天可用率',
+      supBars30: '30 天前', supBarsToday: '今天', supBarsAria: n => `每日可用率，已记录 ${n} 天`, help: '更新日志' },
+    'zh-Hant': { newsLink: '更新日誌', newsTitle: '最新動態', newsSub: '網站最近的更新', newsGh: '在 GitHub 查看完整歷史 ↗', newsEmpty: '下次發布後即可查看更新日誌。',
+      newsTags: { new: '新增', fix: '修正', perf: '加速', sec: '安全', misc: '改進' }, uptime: '30 天可用率',
+      supBars30: '30 天前', supBarsToday: '今天', supBarsAria: n => `每日可用率，已記錄 ${n} 天`, help: '更新日誌' },
+    yue: { newsLink: '更新紀錄', newsTitle: '最新消息', newsSub: '網站最近嘅更新', newsGh: '喺 GitHub 睇晒所有紀錄 ↗', newsEmpty: '下次更新網站之後就睇到。',
+      newsTags: { new: '新功能', fix: '修正', perf: '加快', sec: '安全', misc: '改善' }, uptime: '30 日可用率',
+      supBars30: '30 日前', supBarsToday: '今日', supBarsAria: n => `每日可用率，記錄咗 ${n} 日`, help: '更新紀錄' },
+    ko: { newsLink: '새 소식', newsTitle: '새 소식', newsSub: '사이트의 최근 변경 사항', newsGh: 'GitHub에서 전체 기록 보기 ↗', newsEmpty: '다음 업데이트 후 기록을 볼 수 있습니다.',
+      newsTags: { new: '새 기능', fix: '수정', perf: '속도', sec: '보안', misc: '개선' }, uptime: '30일 가동률',
+      supBars30: '30일 전', supBarsToday: '오늘', supBarsAria: n => `일별 가동률, ${n}일 측정됨`, help: '새 소식' }
+  };
+  for (const k in T) {
+    if (!L[k]) continue; const { uptime, help, ...o } = T[k]; Object.assign(L[k], o);
+    if (L[k].supLabels) L[k].supLabels.uptime = uptime;
+    const H = L[k].tHelp; if (H && !H.some(h => h[0] === 'changelog')) { const at = H.findIndex(x => x[0] === 'print'); H.splice(at < 0 ? H.length : at, 0, ['changelog', help]); }
+  }
+})(window.JG_I18N || {});

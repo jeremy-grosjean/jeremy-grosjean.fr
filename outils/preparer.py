@@ -37,6 +37,31 @@ if lien.search(html) and '</style' not in css:
     ht.write_text(regles.replace("style-src 'self';", "style-src 'self' 'sha256-" + empreinte + "';"))
     print('Feuille de style intégrée à la page, autorisée par son empreinte sha256-' + empreinte[:12] + '…')
 
+# Journal « Quoi de neuf » : les derniers commits du dépôt, rangés par type (feat, fix, perf, sec)
+import json
+TYPES = {'feat': 'new', 'fix': 'fix', 'perf': 'perf', 'sec': 'sec', 'security': 'sec'}
+IGNORES = ('docs', 'chore', 'test', 'tests', 'ci', 'refactor', 'style', 'build')
+try:
+    sortie = subprocess.run(['git', '-C', str(ICI.parent), 'log', '--no-merges', '-n', '40', '--format=%cs%x09%s'],
+                            capture_output=True, text=True, check=True).stdout
+    news = []
+    for ligne in sortie.splitlines():
+        date, _, sujet = ligne.partition('\t')
+        m = re.match(r'^(\w+)(\([^)]*\))?!?:\s*(.+)$', sujet)
+        if m and m.group(1).lower() in IGNORES:
+            continue
+        if sujet.lower().startswith(('initial commit', 'merge')):
+            continue
+        genre, texte = (TYPES.get(m.group(1).lower(), 'misc'), m.group(3)) if m else ('misc', sujet)
+        news.append({'d': date, 'k': genre, 't': texte[:1].upper() + texte[1:]})
+        if len(news) == 8:
+            break
+    (DIST / 'assets' / 'news.js').write_text('/* Journal des nouveautés, généré le ' + news[0]['d'] + ' */\nwindow.JG_NEWS = '
+                                             + json.dumps(news, ensure_ascii=False) + ';\n' if news else (DIST / 'assets' / 'news.js').read_text())
+    print('Journal des nouveautés :', len(news), 'entrées')
+except (OSError, subprocess.CalledProcessError, IndexError):
+    print('Journal des nouveautés : git indisponible, journal inchangé')
+
 subprocess.run([sys.executable, str(ICI / 'empreintes.py'), str(DIST)], check=True)
 ZIP.parent.mkdir(parents=True, exist_ok=True)
 with zipfile.ZipFile(ZIP, 'w', zipfile.ZIP_DEFLATED) as z:

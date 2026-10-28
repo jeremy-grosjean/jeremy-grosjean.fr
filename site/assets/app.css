@@ -622,3 +622,18 @@ html[data-retro] body::after { content: ""; position: fixed; inset: 0; z-index: 
 html[data-retro] .btn { background: var(--ink); color: var(--on-accent); text-shadow: none; }
 html[data-retro] .brand-mark, html[data-retro] .contact-extra .qr { filter: grayscale(1) sepia(1) hue-rotate(70deg) saturate(3); }
 @media print { html[data-retro] body::after { display: none; } html[data-retro] body { text-shadow: none; } }
+
+/* Journal « Quoi de neuf » */
+button.legal-link { font: inherit; background: none; border: 0; cursor: pointer; }
+.news-list { list-style: none; margin: 0 0 1.1rem; padding: 0; display: grid; gap: .55rem; text-align: left; }
+.news-list li { display: grid; grid-template-columns: 3.4rem 6rem minmax(0, 1fr); gap: .5rem; align-items: baseline; font-size: .9rem; line-height: 1.4; }
+.news-list time { font: .78rem ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: var(--dim); }
+.news-tag { font: 600 .66rem ui-monospace, "SF Mono", Menlo, Consolas, monospace; text-transform: uppercase; letter-spacing: .04em; padding: .15rem .35rem; border-radius: 6px; text-align: center; }
+.news-tag.new { background: rgba(var(--ok-rgb), .14); color: var(--ok); } .news-tag.fix { background: rgba(var(--warn-rgb), .16); color: rgb(var(--warn-rgb)); }
+.news-tag.perf { background: rgba(var(--cyan-rgb), .14); color: var(--cyan); } .news-tag.sec, .news-tag.misc { background: rgba(var(--violet-rgb), .16); color: var(--violet); }
+@media (max-width: 420px) { .news-list li { grid-template-columns: auto 1fr; } .news-list li span:last-child { grid-column: 1 / -1; } }
+/* Disponibilité 30 jours dans la Supervision */
+.up-bars { display: grid; grid-template-columns: repeat(30, 1fr); gap: 2px; height: 1.1rem; margin: .2rem 0 .2rem; }
+.up-bars i { border-radius: 2px; background: var(--ok); opacity: .85; }
+.up-bars i.warn { background: rgb(var(--warn-rgb)); } .up-bars i.bad { background: var(--threat); } .up-bars i.none { background: var(--line); opacity: 1; }
+.up-cap { display: flex; justify-content: space-between; margin: 0 0 1rem; font: .7rem ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: var(--dim); }

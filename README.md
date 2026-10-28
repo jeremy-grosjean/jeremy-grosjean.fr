@@ -4,6 +4,8 @@ Site personnel de **Jérémy Grosjean**, technicien informatique, disponible pou
 
 **➜ [jeremy-grosjean.fr](https://jeremy-grosjean.fr)**
 
+[![Vérifications](https://github.com/jeremy-grosjean/jeremy-grosjean.fr/actions/workflows/verifier.yml/badge.svg)](https://github.com/jeremy-grosjean/jeremy-grosjean.fr/actions/workflows/verifier.yml)
+
 | Test | Note |
 |---|---|
 | [SSL Labs](https://www.ssllabs.com/ssltest/analyze.html?d=jeremy-grosjean.fr) | A+ |
@@ -22,7 +24,8 @@ Site personnel de **Jérémy Grosjean**, technicien informatique, disponible pou
 - **Me contacter** : e-mail déjà rempli en un clic dans Gmail, Outlook, Outlook pro (Microsoft 365) ou Yahoo Mail, ou dans la messagerie de l'appareil. Ce sont de simples liens : rien ne passe par le site.
 - **Page 404 jouable** : trois questions réseau pour que le paquet retrouve sa route.
 - **[Déclaration d'accessibilité](https://jeremy-grosjean.fr/accessibilite.html)** (objectif WCAG 2.2 AA).
-- **Supervision** : état du certificat TLS, des e-mails (MX, SPF, DMARC, TLS-RPT), de DNSSEC, du CAA et des méthodes HTTP, relevé automatiquement à chaque mise en ligne, avec un lien vers la [disponibilité en direct](https://stats.uptimerobot.com/gHB6v8KF6j) (UptimeRobot).
+- **Supervision** : état du certificat TLS, des e-mails (MX, SPF, DMARC, TLS-RPT), de DNSSEC, du CAA et des méthodes HTTP, relevé automatiquement à chaque mise en ligne, avec la disponibilité sur 30 jours (UptimeRobot, relevée au moment de la mise en ligne) et un lien vers la [page de statut en direct](https://stats.uptimerobot.com/gHB6v8KF6j).
+- **Quoi de neuf** : journal des évolutions, généré automatiquement depuis les commits à chaque mise en ligne.
 - **Audit de sécurité animé**, mesures réelles de poids et de chargement, réglages d'accessibilité (taille du texte, contraste).
 - Fonctionne **hors ligne** après une première visite, et s'installe comme une application.
 
@@ -35,6 +38,15 @@ Site personnel de **Jérémy Grosjean**, technicien informatique, disponible pou
 - Adresse e-mail assemblée par le script (non lisible par les robots qui lisent le HTML).
 - Serveur en **lecture seule** : seules les requêtes `GET` et `HEAD` sont acceptées, tout le reste est refusé (`405`).
 - Domaine : **DNSSEC**, **SPF**, **DKIM**, **DMARC** (`quarantine`), **TLS-RPT**, **MTA-STS** (e-mails reçus obligatoirement chiffrés), **CAA** (seul Let's Encrypt peut émettre un certificat), fichier [`security.txt`](https://jeremy-grosjean.fr/.well-known/security.txt) dont la date d'expiration est contrôlée à chaque mise en ligne.
+
+## Vérifications automatiques
+
+À chaque envoi sur GitHub, [GitHub Actions](.github/workflows/verifier.yml) lance :
+
+- `outils/verifier.py` : HTML (langue, titre, identifiants uniques, textes alternatifs, aucun script ni style en ligne, comme l'exige la CSP), liens internes, syntaxe JavaScript, traductions complètes dans les 6 langues, recherche de mots de passe, jetons ou clés privées, poids du site ;
+- `outils/test_jeux.py` : ouverture des pages, des fenêtres et des 4 jeux dans un vrai navigateur (Chromium), sur ordinateur et sur mobile, sans aucune erreur JavaScript.
+
+Aucun mot de passe ni clé n'est confié à GitHub.
 
 ## Organisation du dépôt
 
@@ -54,6 +66,8 @@ outils/
   publier.sh              tout en une commande : préparer, envoyer, vérifier
   mettre-a-jour-site.sh   mise en ligne par SFTP, vérifications et annulation automatique
   qr.py                   générateur de QR code (sans dépendance)
+  verifier.py             vérifications automatiques (HTML, liens, JS, traductions, secrets, poids)
+  test_jeux.py            test des pages et des jeux dans un navigateur
   signer-security-txt.sh  signe security.txt avec ma clé PGP (source : outils/security.txt)
 ```
 
@@ -69,7 +83,7 @@ Elle prépare la version en ligne (minification avec esbuild si présent, emprei
 
 Les deux étapes existent aussi séparément : `outils/preparer.py` puis `outils/mettre-a-jour-site.sh`.
 
-L'hôte et l'identifiant SFTP ne sont **pas** dans ce dépôt : le script les lit dans un fichier privé, `~/.config/jeremy-grosjean/site.conf`, qui reste sur l'ordinateur.
+L'hôte et l'identifiant SFTP ne sont **pas** dans ce dépôt : le script les lit dans un fichier privé, `~/.config/jeremy-grosjean/site.conf`, qui reste sur l'ordinateur. Le même fichier peut contenir, en option, une clé UptimeRobot **en lecture seule** (`JG_UPTIME_KEY`) pour afficher la disponibilité sur 30 jours.
 
 ## Droits
 

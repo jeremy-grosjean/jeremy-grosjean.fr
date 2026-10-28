@@ -1,0 +1,48 @@
+# Vérifications automatiques à chaque envoi sur GitHub : HTML, liens, JavaScript, traductions, secrets, poids,
+# puis test des pages et des jeux dans un vrai navigateur. Aucun mot de passe ni clé n'est utilisé.
+name: Vérifier le site
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verifier-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verifier:
+    name: Vérifier le site
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: HTML, liens, JavaScript, traductions, secrets et poids
+        run: python3 outils/verifier.py
+
+      - name: Installer le navigateur de test
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.63.0
+          python -m playwright install --with-deps chromium
+
+      - name: Pages et jeux dans un vrai navigateur
+        run: python3 outils/test_jeux.py
