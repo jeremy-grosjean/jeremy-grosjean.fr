@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0A0F24" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F7F9FF" media="(prefers-color-scheme: light)">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="Jérémy Grosjean, technicien informatique. Disponible immédiatement pour une alternance Technicien informatique (Bac+2).">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="jeremy-grosjean.fr">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:url" content="https://jeremy-grosjean.fr/">
+<meta property="og:title" content="Jérémy Grosjean · Technicien informatique">
+<meta property="og:description" content="Disponible immédiatement pour une alternance Technicien informatique (Bac+2) · 12 mois, 4 jours en entreprise et 1 jour en formation.">
+<meta property="og:image" content="https://jeremy-grosjean.fr/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Jérémy Grosjean, technicien informatique, recherche une alternance">
+<meta name="twitter:card" content="summary_large_image">
+<title>Jérémy Grosjean · Technicien informatique</title>
+<link rel="icon" href="/favicon.ico?v=5d8dad93ca" sizes="48x48">
+<link rel="icon" href="/favicon.svg?v=c653120d20" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=ea10cf004d">
+<link rel="manifest" href="/site.webmanifest?v=1170d79b15">
+<link rel="stylesheet" href="/assets/app.css?v=75b4160e04">
+<script src="/assets/i18n.js?v=9cb0ba0d1d" defer></script>
+<script src="/assets/status.js" defer></script>
+<script src="/assets/app.js?v=b91726ab44" defer></script>
+</head>
+<body>
+<canvas id="net" aria-hidden="true"></canvas>
+
+<main>
+  <div class="stack" id="stack">
+    <p class="brand"><span class="brand-mark" aria-hidden="true">JG</span><span>jeremy-grosjean.fr</span></p>
+    <h1 class="domain" id="domain"><span class="sr">Jérémy Grosjean</span><span id="nameFx" aria-hidden="true">Jérémy Grosjean</span></h1>
+    <p class="typeline who-line" aria-hidden="true"><span class="pr">$</span> <span id="who">whoami → technicien informatique</span><span class="cur" id="whoCur"></span></p>
+    <p class="typeline rot-line" id="rotLine" aria-hidden="true"><span class="pr">$</span> <span data-i="domainsLbl">domaines :</span> <span class="rot" id="rot">support utilisateurs</span><span class="cur"></span></p>
+    <p class="avail-wrap"><button class="avail" id="availBtn" type="button" aria-haspopup="dialog"><span class="avail-dot" aria-hidden="true"></span><span data-i="availLine">Disponible immédiatement pour une alternance</span><span class="avail-more" aria-hidden="true">›</span></button></p>
+    <ul class="bootlog" id="bootlog">
+      <li><span class="st ok">[  OK  ]</span> <span>Titre professionnel TAI (niveau 4) obtenu</span></li>
+      <li><span class="st wait">[  ..  ]</span> <span>Recherche une alternance Technicien informatique (Bac+2)</span></li>
+      <li><span class="st info">[ INFO ]</span> <span>12 mois · 4 jours en entreprise, 1 jour en formation</span></li>
+      <li><span class="st info">[ INFO ]</span> <span>Titre RNCP de niveau 5</span></li>
+    </ul>
+    <div class="cta">
+      <button class="btn" id="contactBtn" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span data-i="contactBtn">Me contacter</span></button>
+      <button class="btn-ghost play" id="openGame" type="button" data-i="play">Jouer : protéger le serveur</button>
+    </div>
+    <p class="scores" id="scores">
+      <a class="score" href="https://www.ssllabs.com/ssltest/analyze.html?d=jeremy-grosjean.fr" target="_blank" rel="noopener noreferrer"><b>A+</b><span>SSL Labs</span></a>
+      <a class="score" href="https://developer.mozilla.org/fr/observatory/analyze?host=jeremy-grosjean.fr" target="_blank" rel="noopener noreferrer"><b>A+</b><span>Mozilla</span></a>
+      <a class="score" href="https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fjeremy-grosjean.fr" target="_blank" rel="noopener noreferrer"><b>100</b><span>PageSpeed</span></a>
+    </p>
+    <p class="keys"><span data-i="keysHint">Terminal :</span> <kbd id="kbdMod" title="Ctrl">Ctrl</kbd> + <kbd>K</kbd><span class="keys-sep" aria-hidden="true"> · </span><button class="keys-help" id="keysBtn" type="button"><kbd>?</kbd> <span data-i="keysHelp">raccourcis</span></button></p>
+  </div>
+</main>
+
+<p class="clock"><b id="cTime">--:--</b><span id="cDate">Paris</span><span class="c-local" id="cLocal" hidden></span></p>
+
+<div class="topbar">
+  <span class="net-pill" id="netPill" role="status" aria-live="polite"><i aria-hidden="true"></i><span class="net-lbl" id="netTxt">En ligne</span></span>
+  <button class="icon-btn" id="themeBtn" type="button" aria-label="Thème : automatique" title="Thème : automatique">
+    <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg>
+  </button>
+  <div class="lang" id="langBox">
+    <span class="sr" id="langLabel">Langue</span>
+    <button class="lang-btn" id="langBtn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="langLabel langCur">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>
+      <span id="langCur">Français</span>
+      <svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5"/></svg>
+    </button>
+    <div class="lang-pop" id="langPop" hidden>
+      <span class="lang-hl" id="langHl" aria-hidden="true"></span>
+      <ul class="lang-list" id="langList" role="listbox" tabindex="-1" aria-labelledby="langLabel">
+        <li role="option" data-v="fr" lang="fr"><span>Français</span><i>FR</i></li>
+        <li role="option" data-v="en" lang="en"><span>English</span><i>EN</i></li>
+        <li role="option" data-v="zh-Hans" lang="zh-Hans"><span>简体中文</span><i>简</i></li>
+        <li role="option" data-v="zh-Hant" lang="zh-Hant"><span>繁體中文</span><i>繁</i></li>
+        <li role="option" data-v="yue" lang="yue-Hant"><span>粵語</span><i>粵</i></li>
+        <li role="option" data-v="ko" lang="ko"><span>한국어</span><i>한</i></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="dock">
+  <div class="dock-left">
+    <button class="pill" id="secBtn" type="button" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6z"/><path class="ok" d="m9 12 2 2 4-4"/></svg>
+      <span class="lbl" data-i="secBtn">Sécurité</span>
+    </button>
+    <button class="pill" id="supBtn" type="button" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2.5-6 4 12 2.5-6H21"/></svg>
+      <span class="lbl" data-i="supBtn">Supervision</span>
+    </button>
+    <button class="pill mono" id="termBtn" type="button" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 8 4 4-4 4M12 16h7"/></svg>
+      <span class="lbl" data-i="termBtn">Terminal</span>
+    </button>
+  </div>
+  <p class="dock-mid"><span class="privacy" data-i="privacyLine">0 cookie · 0 traceur</span><span class="loadt" id="loadT" hidden></span><span class="sep" aria-hidden="true"> · </span><a class="legal-link" href="/mentions-legales.html" data-i="legalLink">Mentions légales</a><span class="upd" id="updLine" hidden></span></p>
+  <button class="pill sound" id="sound" type="button" aria-pressed="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path id="sWave" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" opacity=".25"/></svg>
+    <span class="lbl" id="sLabel">Activer le son</span>
+  </button>
+</div>
+
+<div class="hud" aria-live="polite">
+  <span class="chip"><span data-i="level">Niveau</span> <b id="hLevel">1/3</b></span>
+  <span class="chip"><span data-i="score">Score</span> <b id="hScore">0</b></span>
+  <span class="chip breach"><span data-i="breaches">Intrusions</span> <b id="hBreach">0/3</b></span>
+  <span class="chip"><span data-i="time">Temps</span> <b id="hTime">25</b></span>
+</div>
+<button class="btn-ghost quit" id="quit" type="button" data-i="quit">Quitter</button>
+
+<div class="panel" id="intro" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+  <div class="card">
+    <h2 id="introTitle" data-i="introTitle">Protégez le serveur</h2>
+    <p><span class="mouse" data-i="introMouse">Des paquets arrivent de tout le réseau vers le serveur.</span><span class="touch" data-i="introTouch">Des paquets arrivent de tout le réseau vers le serveur.</span></p>
+    <p data-i="rules">3 niveaux, 3 intrusions maximum.</p>
+    <div class="actions">
+      <button class="btn" id="start" type="button" data-i="start">Commencer</button>
+      <button class="btn-ghost" id="cancel" type="button" data-i="cancel">Retour</button>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="levelPanel" role="dialog" aria-modal="true" aria-labelledby="lvTitle">
+  <div class="card">
+    <span class="tag" id="lvTag">Niveau 1/3</span>
+    <h2 id="lvTitle">Logiciel malveillant</h2>
+    <p id="lvWhat"></p>
+    <div class="legend" id="lvLegend"></div>
+    <p class="defense" id="lvHow"></p>
+    <div class="actions"><button class="btn" id="lvGo" type="button" data-i="go">C'est parti</button></div>
+  </div>
+</div>
+
+<div class="panel" id="over" role="dialog" aria-modal="true" aria-labelledby="overTitle">
+  <div class="card">
+    <h2 id="overTitle">Fin de la partie</h2>
+    <div class="score-big" id="finalScore">0</div>
+    <p id="finalText">points</p>
+    <div class="actions">
+      <button class="btn" id="again" type="button" data-i="again">Rejouer</button>
+      <button class="btn-ghost" id="back" type="button" data-i="back">Retour au site</button>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="secPanel" role="dialog" aria-modal="true" aria-labelledby="secTitle">
+  <div class="card">
+    <h2 id="secTitle" data-i="secTitle">Ce site est sécurisé</h2>
+    <p data-i="secIntro">Les protections réellement en place sur jeremy-grosjean.fr :</p>
+    <div class="audit-bar" aria-hidden="true"><i id="secBar"></i></div>
+    <ul class="sec-list" id="secList"></ul>
+    <p class="audit-score" id="secScore" aria-live="polite"></p>
+    <h3 class="eco-title" data-i="extTitle">Notes des outils externes</h3>
+    <ul class="ext-list" id="extList"></ul>
+    <h3 class="eco-title" data-i="ecoTitle">Léger et accessible</h3>
+    <ul class="eco-list" id="ecoList"></ul>
+    <p class="eco-note" id="ecoNote"></p>
+    <div class="actions"><button class="btn" id="secRerun" type="button" data-i="secRerun">Relancer l'audit</button><button class="btn-ghost" id="secClose" type="button" data-i="close">Fermer</button></div>
+  </div>
+</div>
+
+<div class="panel" id="contactPanel" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+  <div class="card">
+    <h2 id="contactTitle" data-i="contactTitle">Me contacter</h2>
+    <p data-i="contactIntro">Pour une alternance, une question ou un échange, écrivez-moi :</p>
+    <p class="mail-box"><span id="mailAddr">contact [at] jeremy-grosjean.fr</span></p>
+    <div class="contact-extra">
+      <img class="qr" src="/qr.svg" width="120" height="120" alt="QR code : https://jeremy-grosjean.fr" id="qrImg">
+      <div class="contact-side">
+        <p class="qr-cap" data-i="qrCap">Scannez pour ouvrir le site sur un téléphone</p>
+        <a class="btn-ghost vcf" href="/contact.vcf" id="vcfLink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="3.2"/><path d="M3.5 19c.8-3 3-4.6 5.5-4.6s4.7 1.6 5.5 4.6M17 8v6M14 11h6"/></svg><span data-i="saveContact">Ajouter à mes contacts</span></a>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="copyMail" type="button" data-i="copyMail">Copier l'adresse</button>
+      <a class="btn-ghost" id="openMail" href="#" data-i="openMail">Ouvrir ma messagerie</a>
+      <button class="btn-ghost" id="contactClose" type="button" data-i="close">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="gamesPanel" role="dialog" aria-modal="true" aria-labelledby="gamesTitle">
+  <div class="card">
+    <h2 id="gamesTitle" data-i="gamesTitle">Choisissez un jeu</h2>
+    <div class="game-pick">
+      <button class="pick" id="pickServer" type="button"><b data-i="pickServerT">Protéger le serveur</b><span data-i="pickServerD">Bloquez les attaques : logiciel malveillant, DDoS, hameçonnage.</span></button>
+      <button class="pick" id="pickSupport" type="button"><b data-i="pickSupportT">Support informatique N1</b><span data-i="pickSupportD">Résolvez 5 tickets d'utilisateurs en choisissant le bon diagnostic.</span></button>
+      <button class="pick" id="pickSupport2" type="button"><b data-i="pickSupport2T">Support informatique N2</b><span data-i="pickSupport2D">Niveau avancé : réseau, DHCP, Active Directory, DNS, droits d'accès.</span></button>
+    </div>
+    <div class="actions"><button class="btn-ghost" id="gamesClose" type="button" data-i="close">Fermer</button></div>
+  </div>
+</div>
+
+<div class="panel" id="supportPanel" role="dialog" aria-modal="true" aria-labelledby="tkTitle">
+  <div class="card ticket">
+    <div class="tk-head"><span class="tag" id="tkTag">Ticket 1/5</span><span class="tk-score" id="tkScore">0</span></div>
+    <h2 id="tkTitle">Ticket</h2>
+    <p class="tk-from" id="tkFrom"></p>
+    <blockquote class="tk-msg" id="tkMsg"></blockquote>
+    <div class="tk-opts" id="tkOpts"></div>
+    <p class="tk-expl" id="tkExpl" hidden></p>
+    <div class="actions"><button class="btn" id="tkNext" type="button" hidden data-i="tkNext">Ticket suivant</button><button class="btn-ghost" id="tkQuit" type="button" data-i="quit">Quitter</button></div>
+  </div>
+</div>
+
+<div class="panel" id="briefPanel" role="dialog" aria-modal="true" aria-labelledby="briefTitle">
+  <div class="card">
+    <h2 id="briefTitle" data-i="briefTitle">En 30 secondes</h2>
+    <dl class="brief" id="briefList"></dl>
+    <div class="actions"><button class="btn" id="briefContact" type="button" data-i="contactBtn">Me contacter</button><button class="btn-ghost" id="briefClose" type="button" data-i="close">Fermer</button></div>
+  </div>
+</div>
+
+<div class="panel" id="supPanel" role="dialog" aria-modal="true" aria-labelledby="supTitle">
+  <div class="card">
+    <h2 id="supTitle" data-i="supTitle">Supervision</h2>
+    <p class="sup-intro" id="supIntro"></p>
+    <ul class="sup-list" id="supList"></ul>
+    <div class="actions"><button class="btn-ghost" id="supClose" type="button" data-i="close">Fermer</button></div>
+  </div>
+</div>
+
+<div class="panel" id="keysPanel" role="dialog" aria-modal="true" aria-labelledby="keysTitle">
+  <div class="card">
+    <h2 id="keysTitle" data-i="keysTitle">Raccourcis clavier</h2>
+    <ul class="keys-list" id="keysList"></ul>
+    <h3 class="eco-title" data-i="a11yTitle">Affichage</h3>
+    <div class="a11y">
+      <div class="seg" role="group" aria-labelledby="a11ySizeL"><span class="sr" id="a11ySizeL" data-i="a11ySize">Taille du texte</span>
+        <button type="button" data-size="s" aria-pressed="false">A−</button><button type="button" data-size="m" aria-pressed="true">A</button><button type="button" data-size="l" aria-pressed="false">A+</button></div>
+      <label class="tog"><input type="checkbox" id="a11yContrast"> <span data-i="a11yContrast">Contraste renforcé</span></label>
+      <label class="tog"><input type="checkbox" id="a11yFont"> <span data-i="a11yFont">Texte plus espacé</span></label>
+    </div>
+    <div class="actions"><button class="btn" id="installBtn" type="button" hidden data-i="installBtn">Installer l'application</button><button class="btn-ghost" id="keysClose" type="button" data-i="close">Fermer</button></div>
+    <p class="install-ios" id="installIos" hidden></p>
+  </div>
+</div>
+
+<section class="term" id="term" role="dialog" aria-modal="false" aria-labelledby="termTitle">
+  <div class="term-bar"><i></i><i></i><i></i><span id="termTitle">visiteur@jeremy-grosjean.fr</span><button type="button" id="termClose" aria-label="Fermer">✕</button></div>
+  <div class="term-out" id="termOut" aria-live="polite"></div>
+  <form class="term-in" id="termForm" autocomplete="off">
+    <label for="termInput">~$</label>
+    <input id="termInput" type="text" spellcheck="false" autocapitalize="off" autocorrect="off" enterkeyhint="send" aria-label="Commande">
+  </form>
+</section>
+
+<div class="toast" id="toast" role="status"></div>
+<div class="tour-ring" id="tourRing" hidden></div>
+<div class="tour-tip" id="tourTip" role="dialog" aria-live="polite" hidden><p id="tourText"></p><div class="tour-act"><span id="tourStep"></span><button type="button" class="btn-ghost" id="tourSkip" data-i="tourSkip">Passer</button><button type="button" class="btn" id="tourNext" data-i="tourNext">Suivant</button></div></div>
+<canvas class="matrix" id="matrix" hidden aria-hidden="true"></canvas>
+<aside class="htop" id="htop" hidden aria-label="htop"><div class="htop-head"><span>htop · jeremy-grosjean.fr</span><button type="button" id="htopClose" aria-label="Fermer">✕</button></div><dl id="htopList"></dl></aside>
+<p class="hint" aria-hidden="true"><span class="mouse" data-i="hintMouse">Bougez la souris, cliquez pour envoyer une onde</span><span class="touch" data-i="hintTouch">Glissez le doigt, touchez pour envoyer une onde</span></p>
+<noscript><p class="note">jeremy-grosjean.fr · Site en construction</p></noscript>
+</body>
+</html>

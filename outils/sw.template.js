@@ -1,0 +1,40 @@
+/* jeremy-grosjean.fr — service worker : le site reste disponible sans connexion.
+   Pages : réseau d'abord (toujours la dernière version en ligne), copie locale seulement sans connexion.
+   Fichiers versionnés (?v=…) : copie locale d'abord. Aucune donnée personnelle n'est stockée. */
+'use strict';
+const VERSION = '__VERSION__';
+const CACHE = 'jg-' + VERSION;
+const PRECACHE = __PRECACHE__;
+
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => Promise.all(PRECACHE.map(u => fetch(u, { cache: 'no-cache' }).then(r => {
+    if (!r.ok) throw new Error(u + ' → ' + r.status);
+    return c.put(u, r);
+  })))).then(() => self.skipWaiting()).catch(err => { console.warn('[sw] installation impossible :', err && err.message); throw err; }));
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys()
+    .then(keys => Promise.all(keys.filter(k => k.startsWith('jg-') && k !== CACHE).map(k => caches.delete(k))))
+    .then(() => self.clients.claim()));
+});
+self.addEventListener('fetch', e => {
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;
+  if (req.mode === 'navigate') {
+    e.respondWith(fetch(req).then(res => {
+      if (res.ok && res.type === 'basic') { const copy = res.clone(); caches.open(CACHE).then(c => c.put(url.pathname, copy)); }
+      return res;
+    }).catch(() => caches.match(url.pathname).then(hit => hit || caches.match('/'))));
+    return;
+  }
+  const save = res => { if (res.ok && res.type === 'basic') { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); } return res; };
+  if (url.searchParams.has('v')) {
+    /* fichier versionné : son contenu ne change jamais, la copie locale suffit */
+    e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(save)));
+  } else {
+    /* autres fichiers (relevés de supervision, images…) : réseau d'abord, copie locale sans connexion */
+    e.respondWith(fetch(req).then(save).catch(() => caches.match(req, { ignoreSearch: true })));
+  }
+});

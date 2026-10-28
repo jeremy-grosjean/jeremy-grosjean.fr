@@ -1,0 +1,26 @@
+/* jeremy-grosjean.fr — page 404 (compatible CSP : aucun style en ligne) */
+:root { --bg-1: #141C40; --bg-2: #0A0F24; --ink: #E8ECFF; --dim: #8790C2; --cyan: #5EE7FF; --violet: #8B7CFF; --threat: #FF5C7A;
+  --surface: rgba(10, 15, 36, .6); --line: rgba(232, 236, 255, .16); --on-accent: #0A0F24; color-scheme: dark; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --bg-1: #F7F9FF; --bg-2: #E2E8F8; --ink: #121A3A; --dim: #4F5986;
+  --cyan: #0089B8; --violet: #5B4BDB; --threat: #D6244F; --surface: rgba(255, 255, 255, .72); --line: rgba(18, 26, 58, .14); --on-accent: #FFFFFF; color-scheme: light; } }
+:root[data-theme="light"] { --bg-1: #F7F9FF; --bg-2: #E2E8F8; --ink: #121A3A; --dim: #4F5986;
+  --cyan: #0089B8; --violet: #5B4BDB; --threat: #D6244F; --surface: rgba(255, 255, 255, .72); --line: rgba(18, 26, 58, .14); --on-accent: #FFFFFF; color-scheme: light; }
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { background: radial-gradient(1200px 700px at 50% 30%, var(--bg-1), var(--bg-2)); background-color: var(--bg-2); color: var(--ink);
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  display: flex; align-items: center; justify-content: center; padding: 24px 16px; }
+.box { width: 100%; max-width: 30rem; text-align: center; }
+.brand { margin: 0; display: inline-flex; align-items: center; gap: .55rem; color: var(--dim); font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .85rem; }
+.mark { width: 1.6rem; height: 1.6rem; border-radius: .42rem; display: inline-flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #5EE7FF, #8B7CFF); color: #0A0F24; font-weight: 800; font-size: .72rem; font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.code { margin: 1rem 0 0; font-size: clamp(4.5rem, 22vw, 7.5rem); line-height: 1.1; font-weight: 800; letter-spacing: -.04em;
+  background: linear-gradient(120deg, var(--cyan), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.term { margin: 1rem auto 0; display: table; text-align: left; padding: .8rem 1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: clamp(.78rem, 3vw, .9rem); line-height: 1.7; max-width: 100%; }
+.term div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pr { color: var(--cyan); } .d { color: var(--dim); } .lost { color: var(--threat); font-weight: 600; }
+.msg { margin: 1.3rem 0 0; color: var(--dim); line-height: 1.55; }
+.btn { margin-top: 1.4rem; display: inline-block; text-decoration: none; font-weight: 600; color: var(--on-accent);
+  background: linear-gradient(135deg, var(--cyan), var(--violet)); border-radius: 999px; padding: .75rem 1.3rem; }
+.btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }

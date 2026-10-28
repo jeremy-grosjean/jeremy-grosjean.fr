@@ -1,0 +1,14 @@
+# Fichiers du Mac et temporaires
+.DS_Store
+__pycache__/
+*.pyc
+
+# Version préparée pour la mise en ligne (générée par outils/preparer.py)
+dist/
+*.zip
+
+# Jamais de secrets dans le dépôt
+*.conf
+.env
+*.key
+*.pem
