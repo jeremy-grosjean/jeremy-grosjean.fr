@@ -1300,7 +1300,13 @@
   }
   if (document.readyState === 'complete') setTimeout(showLoad, 0); else window.addEventListener('load', () => setTimeout(showLoad, 0));
   safe('installation', installUI);
-  setTimeout(() => safe('visite', () => startTour(false)), 6500);
+  /* Visite guidée : proposée seulement à un vrai visiteur, 4 s après sa première action volontaire
+     (clic, touche, molette, toucher, défilement). Pas de « pointermove » : le navigateur en envoie un tout seul au chargement. */
+  (function () {
+    const evts = ['pointerdown', 'keydown', 'wheel', 'touchstart', 'scroll'];
+    const go = () => { evts.forEach(e => window.removeEventListener(e, go)); setTimeout(() => safe('visite', () => startTour(false)), 4000); };
+    evts.forEach(e => window.addEventListener(e, go, { passive: true }));
+  })();
   /* Hors ligne : une copie du site est gardée par le navigateur (réseau d'abord, copie seulement sans connexion) */
   safe('hors ligne', () => {
     if ('serviceWorker' in navigator && window.isSecureContext) {

@@ -27,9 +27,9 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=ea10cf004d">
 <link rel="manifest" href="/site.webmanifest?v=1170d79b15">
 <link rel="stylesheet" href="/assets/app.css?v=53f614abb8">
-<script src="/assets/i18n.js?v=5341fb673e" defer></script>
+<script src="/assets/i18n.js?v=c0f0be498f" defer></script>
 <script src="/assets/status.js" defer></script>
-<script src="/assets/app.js?v=714aef8888" defer></script>
+<script src="/assets/app.js?v=dab4b44c76" defer></script>
 </head>
 <body>
 <canvas id="net" aria-hidden="true"></canvas>
@@ -259,7 +259,7 @@
 
 <div class="toast" id="toast" role="status"></div>
 <div class="tour-ring" id="tourRing" hidden></div>
-<div class="tour-tip" id="tourTip" role="dialog" aria-live="polite" hidden><p id="tourText"></p><div class="tour-act"><span id="tourStep"></span><button type="button" class="btn-ghost" id="tourSkip" data-i="tourSkip">Passer</button><button type="button" class="btn" id="tourNext" data-i="tourNext">Suivant</button></div></div>
+<div class="tour-tip" id="tourTip" role="dialog" aria-labelledby="tourTitle" aria-describedby="tourText" aria-live="polite" hidden><h2 class="sr" id="tourTitle" data-i="tourTitle">Visite guidée</h2><p id="tourText"></p><div class="tour-act"><span id="tourStep"></span><button type="button" class="btn-ghost" id="tourSkip" data-i="tourSkip">Passer</button><button type="button" class="btn" id="tourNext" data-i="tourNext">Suivant</button></div></div>
 <canvas class="matrix" id="matrix" hidden aria-hidden="true"></canvas>
 <aside class="htop" id="htop" hidden aria-label="htop"><div class="htop-head"><span>htop · jeremy-grosjean.fr</span><button type="button" id="htopClose" aria-label="Fermer">✕</button></div><dl id="htopList"></dl></aside>
 <p class="hint" aria-hidden="true"><span class="mouse" data-i="hintMouse">Bougez la souris, cliquez pour envoyer une onde</span><span class="touch" data-i="hintTouch">Glissez le doigt, touchez pour envoyer une onde</span></p>

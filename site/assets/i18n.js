@@ -935,3 +935,9 @@ window.JG_I18N = {
   add('yue', { supLiveLink: '即時運作狀態（UptimeRobot）↗', supCodeLink: 'GitHub 上面嘅原始碼 ↗', supExtNote: '連去外部網站，佢哋有自己嘅私隱政策。', supReadOnly: '淨係讀' }, '准許嘅證書（CAA）', 'HTTP 方法');
   add('ko', { supLiveLink: '실시간 가동 상태 (UptimeRobot) ↗', supCodeLink: 'GitHub 소스 코드 ↗', supExtNote: '자체 개인정보 처리방침이 있는 외부 사이트로 연결됩니다.', supReadOnly: '읽기 전용' }, '허용된 인증서 (CAA)', 'HTTP 메서드');
 })(window.JG_I18N || {});
+
+/* Lot 7 : titre accessible de la visite guidée */
+(function (L) {
+  const T = { fr: 'Visite guidée', en: 'Guided tour', 'zh-Hans': '导览', 'zh-Hant': '導覽', yue: '導賞', ko: '둘러보기' };
+  for (const k in T) if (L[k]) L[k].tourTitle = T[k];
+})(window.JG_I18N || {});
