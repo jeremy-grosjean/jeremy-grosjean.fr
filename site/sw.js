@@ -2,9 +2,9 @@
    Pages : réseau d'abord (toujours la dernière version en ligne), copie locale seulement sans connexion.
    Fichiers versionnés (?v=…) : copie locale d'abord. Aucune donnée personnelle n'est stockée. */
 'use strict';
-const VERSION = '1858e75859cb';
+const VERSION = '52f21473af82';
 const CACHE = 'jg-' + VERSION;
-const PRECACHE = ["/", "/mentions-legales.html", "/404.html", "/favicon.ico?v=5d8dad93ca", "/favicon.svg?v=c653120d20", "/apple-touch-icon.png?v=ea10cf004d", "/site.webmanifest?v=1170d79b15", "/assets/app.css?v=53f614abb8", "/assets/i18n.js?v=c0f0be498f", "/assets/status.js", "/assets/app.js?v=c477d9322a", "/qr.svg", "/assets/legal.css?v=81e48507a2", "/assets/legal.js?v=28dde1ef7d", "/assets/404.css?v=efa3fdcacf", "/assets/404.js?v=dd39247bb9", "/icon-192.png", "/og.jpg"];
+const PRECACHE = ["/", "/mentions-legales.html", "/404.html", "/favicon.ico?v=5d8dad93ca", "/favicon.svg?v=c653120d20", "/apple-touch-icon.png?v=ea10cf004d", "/site.webmanifest?v=1170d79b15", "/assets/app.css?v=53f614abb8", "/assets/i18n.js?v=c0f0be498f", "/assets/status.js", "/assets/app.js?v=68c57888b3", "/qr.svg", "/assets/legal.css?v=81e48507a2", "/assets/legal.js?v=28dde1ef7d", "/assets/404.css?v=efa3fdcacf", "/assets/404.js?v=dd39247bb9", "/icon-192.png", "/og.jpg"];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.all(PRECACHE.map(u => fetch(u, { cache: 'no-cache' }).then(r => {

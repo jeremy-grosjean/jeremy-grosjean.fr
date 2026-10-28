@@ -181,7 +181,9 @@
     else document.documentElement.setAttribute('data-theme', themeMode);
     const meta = document.querySelectorAll('meta[name="theme-color"]');
     if (themeMode !== 'auto') meta.forEach(m => m.setAttribute('content', themeMode === 'light' ? '#F7F9FF' : '#0A0F24'));
-    readPalette(); setThemeUI();
+    /* Couleurs de l'animation lues à l'image suivante : les lire tout de suite, juste après le changement de thème,
+       forcerait le navigateur à recalculer les styles (« ajustement forcé de la mise en page ») */
+    requestAnimationFrame(readPalette); setThemeUI();
   }
   function setTheme(m) {
     if (!['auto', 'light', 'dark'].includes(m)) return false;
@@ -1144,7 +1146,7 @@
     store.set('jg-a11y', JSON.stringify(A11Y));
   }
   document.querySelectorAll('.seg [data-size]').forEach(b => b.addEventListener('click', () => { A11Y.size = b.dataset.size; applyA11y(); SND.key(); setup(); }));
-  $('a11yContrast').addEventListener('change', e => { A11Y.contrast = e.target.checked; applyA11y(); readPalette(); });
+  $('a11yContrast').addEventListener('change', e => { A11Y.contrast = e.target.checked; applyA11y(); requestAnimationFrame(readPalette); });
   $('a11yFont').addEventListener('change', e => { A11Y.font = e.target.checked; applyA11y(); });
 
   /* ================= Visite guidée (une seule fois, passable) ================= */
