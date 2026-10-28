@@ -54,6 +54,7 @@ outils/
   publier.sh              tout en une commande : préparer, envoyer, vérifier
   mettre-a-jour-site.sh   mise en ligne par SFTP, vérifications et annulation automatique
   qr.py                   générateur de QR code (sans dépendance)
+  signer-security-txt.sh  signe security.txt avec ma clé PGP (source : outils/security.txt)
 ```
 
 ## Mise en ligne

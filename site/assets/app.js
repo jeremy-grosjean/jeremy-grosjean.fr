@@ -1033,7 +1033,7 @@
     closeTerm(); closePanels(); fillRec();
     $('recView').hidden = false; document.body.classList.add('rec-on');
     if (!REC_HASH.includes(location.hash)) history.replaceState(null, '', '#recruteur');
-    $('recName').setAttribute('tabindex', '-1'); $('recName').focus();
+    $('recView').scrollTop = 0; $('recName').setAttribute('tabindex', '-1'); $('recName').focus({ preventScroll: true });
   }
   function closeRec() {
     $('recView').hidden = true; document.body.classList.remove('rec-on');

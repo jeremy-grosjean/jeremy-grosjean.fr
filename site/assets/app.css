@@ -247,6 +247,7 @@ body.playing .clock, body.playing .topbar, body.playing .dock, body.term-open .d
 .legal-link { pointer-events: auto; color: var(--dim); text-decoration: none; padding: .3rem 0; border-radius: 6px; white-space: nowrap; }
 .legal-link:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 .legal-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.legal-row { display: inline-flex; align-items: center; white-space: nowrap; }
 .dock { position: fixed; z-index: 2; left: 16px; right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); display: flex; justify-content: space-between; gap: .5rem; pointer-events: none; transition: opacity .3s ease; }
 .dock-left { display: flex; gap: .5rem; }
 .pill {
@@ -504,7 +505,8 @@ body.playing .hint, body.term-open .hint { display: none; }
   .pill .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
   .dock-mid { flex-direction: column; font-size: .7rem; }
   .dock-mid .sep { display: none; }
-  .legal-link { padding: .1rem .25rem; }
+  .legal-row { flex-direction: column; }
+  .legal-link { display: inline-flex; align-items: center; justify-content: center; min-height: 24px; min-width: 24px; padding: 0 .3rem; }
   .net-pill { width: 2.2rem; padding: 0; justify-content: center; }
   .net-pill .net-lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .net-pill.off { width: auto; padding: 0 .8rem; }
