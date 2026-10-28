@@ -69,7 +69,8 @@ HTTPS_CODE="$(curl -s -o /dev/null -m 15 -w '%{http_code}' "https://$DOM/")"; HT
 TLS_END="$(echo | avec_delai 15 openssl s_client -servername "$DOM" -connect "$DOM:443" 2>/dev/null | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)"
 TLS_DAYS="null"
 if [ -n "$TLS_END" ]; then
-  END_TS="$(date -j -f '%b %e %T %Y %Z' "$TLS_END" +%s 2>/dev/null || date -d "$TLS_END" +%s 2>/dev/null)"
+  # LC_ALL=C : la date du certificat est en anglais (« Jan »), même sur un Mac réglé en français
+  END_TS="$(LC_ALL=C date -j -f '%b %e %T %Y %Z' "$TLS_END" +%s 2>/dev/null || LC_ALL=C date -d "$TLS_END" +%s 2>/dev/null)"
   [ -n "$END_TS" ] && TLS_DAYS=$(( (END_TS - $(date +%s)) / 86400 ))
 fi
 if command -v dig >/dev/null 2>&1; then
@@ -85,7 +86,8 @@ else
 fi
 DNSSEC=false; [ -n "$DS" ] && DNSSEC=true
 CHECKED="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
-METHODS="$(curl -s -o /dev/null -m 15 -w '%{http_code}' -X POST "https://$DOM/")"; METHODS=$((10#${METHODS:-0}))
+# Un vrai envoi de formulaire (avec des données), comme le ferait un robot ou un attaquant
+METHODS="$(curl -s -o /dev/null -m 15 -w '%{http_code}' --data 'test=1' "https://$DOM/")"; METHODS=$((10#${METHODS:-0}))
 mkdir -p "$TMP/site/assets"
 ecrire_status() {
   cat > "$TMP/site/assets/status.js" <<STATUS
@@ -146,7 +148,7 @@ if [ "$AVEC_HTACCESS" = 1 ]; then
   case "$R1" in 301\ https://jeremy-grosjean.fr/*) ok "Redirection http → https" ;; *) printf '%s✗ Redirection http : %s%s\n' "$ROUGE" "$R1" "$FIN" ;; esac
   case "$R2" in 301\ https://jeremy-grosjean.fr/*) ok "Redirection www → sans www" ;; *) printf '%s✗ Redirection www : %s%s\n' "$ROUGE" "$R2" "$FIN" ;; esac
   # Site statique : un envoi de données (POST) doit être refusé (405)
-  NEW_METHODS="$(curl -s -o /dev/null -w '%{http_code}' -X POST "$SITE/")"; NEW_METHODS=$((10#${NEW_METHODS:-0}))
+  NEW_METHODS="$(curl -s -o /dev/null -m 15 -w '%{http_code}' --data 'test=1' "$SITE/")"; NEW_METHODS=$((10#${NEW_METHODS:-0}))
   if [ "$NEW_METHODS" = 405 ]; then ok "Méthodes HTTP : lecture seule (POST refusé, code 405)"; else printf '%s✗ Méthodes HTTP : POST renvoie %s (405 attendu)%s\n' "$ROUGE" "$NEW_METHODS" "$FIN"; fi
   # Mettre la supervision à jour avec ce nouveau relevé (même connexion, pas de nouveau mot de passe)
   if [ "$NEW_METHODS" != "$METHODS" ]; then
