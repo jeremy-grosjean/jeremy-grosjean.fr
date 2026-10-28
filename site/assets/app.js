@@ -48,7 +48,16 @@
   }
   let lang = LANGS.includes(store.get('jg-lang')) ? store.get('jg-lang') : detectLang();
   const t = k => T[lang][k];
-  let fTime, fDate;
+  let fTime, fDate, fmtLoc = '';
+  /* Démarrage en deux petites tâches : les outils de date du navigateur (Intl) coûtent cher la première fois,
+     ils sont donc préparés juste après, dans une tâche séparée (« booted ») */
+  let booted = false;
+  function fmt() {
+    const loc = regionLocale(lang); if (fTime && fmtLoc === loc) return;
+    fmtLoc = loc;
+    fTime = new Intl.DateTimeFormat(loc, { timeZone: 'Europe/Paris', hour: 'numeric', minute: '2-digit' });
+    fDate = new Intl.DateTimeFormat(loc, { timeZone: 'Europe/Paris', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  }
 
   function applyLang() {
     document.documentElement.lang = t('htmlLang');
@@ -57,10 +66,7 @@
     langUI();
     $('langLabel').textContent = t('langLabel');
     $('termClose').setAttribute('aria-label', t('close'));
-    const loc = regionLocale(lang);
-    fTime = new Intl.DateTimeFormat(loc, { timeZone: 'Europe/Paris', hour: 'numeric', minute: '2-digit' });
-    fDate = new Intl.DateTimeFormat(loc, { timeZone: 'Europe/Paris', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-    tick(); setSoundUI(); setThemeUI(); buildSecList(); heroLang(); netUI();
+    tick(); setSoundUI(); setThemeUI(); buildSecSoon(); heroLang(); netUI();
     if (typeof MAIL !== 'undefined') $('openMail').href = mailHref();
     { const el = $('loadT'); if (el.dataset && el.dataset.v) el.textContent = ' · ' + t('loadedIn')(el.dataset.v); }
     if (typeof htopOn !== 'undefined' && htopOn) htopDraw();
@@ -124,17 +130,19 @@
 
   /* ================= Heure de Paris ================= */
   function tick() {
-    if (!fTime) return;
+    if (!booted) return;
+    fmt();
     const d = new Date();
     $('cTime').textContent = fTime.format(d);
     $('cDate').textContent = t('city') + t('sep') + fDate.format(d);
     localClock(d);
   }
   /* Heure du visiteur, seulement s'il n'est pas dans le même fuseau que Paris (calcul local) */
-  let visTz = ''; try { visTz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+  let visTz = null;
+  const getTz = () => { if (visTz === null) { try { visTz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) { visTz = ''; } } return visTz; };
   function localClock(d) {
     const el = $('cLocal');
-    if (!visTz || !fTime) { el.hidden = true; return; }
+    if (!getTz() || !fTime) { el.hidden = true; return; }
     let vis, par;
     try {
       const o = { hour: 'numeric', minute: '2-digit' };
@@ -253,9 +261,9 @@
     const a = Math.random() * Math.PI * 2, s = (.12 + Math.random() * .18) * DRIFT;
     return { x: px, y: py, vx: Math.cos(a) * s, vy: Math.sin(a) * s, bx: Math.cos(a) * s, by: Math.sin(a) * s, r: Math.random() < .14 ? 2.6 : 1.4, heat: 0, tx: null, ty: null };
   };
-  function setup() {
+  function setup(w, h) {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = window.innerWidth; H = window.innerHeight;
+    W = w || window.innerWidth; H = h || window.innerHeight;
     c.width = W * dpr; c.height = H * dpr;
     baseCount = Math.round(Math.min(95, Math.max(44, (W * H) / 14500)));
     nodes = Array.from({ length: baseCount }, () => makeNode(Math.random() * W, Math.random() * H));
@@ -723,7 +731,16 @@
   }
   function setCk(li, ok) { li.classList.remove('checking'); li.classList.toggle('fail', !ok); li.querySelector('.ck').textContent = ok ? '✓' : '✗'; }
   function scoreText(ok, total) { secScore.textContent = t('secScore')(ok, total); secScore.classList.toggle('bad', ok < total); }
+  /* Liste de sécurité : construite quand le navigateur a un moment libre (pas pendant le démarrage),
+     ou tout de suite si le panneau est ouvert : le démarrage reste découpé en petites tâches */
+  var secStale = true;
+  function buildSecSoon() {
+    secStale = true;
+    if ($('secPanel').classList.contains('open')) { buildSecList(); return; }
+    (window.requestIdleCallback || (f => setTimeout(f, 300)))(() => { if (secStale) safe('sécurité', buildSecList); }, { timeout: 4000 });
+  }
   function buildSecList() {
+    secStale = false;
     secUl.textContent = '';
     const list = t('sec');
     list.forEach(([name, desc], i) => { const li = secItem(name, desc); secUl.append(li); if (auditDone) setCk(li, realCheck(i, list.length)); });
@@ -780,7 +797,7 @@
     $('scores').title = t('scoresTitle');
   }
   $('secRerun').addEventListener('click', () => { buildEco(); runAudit(); });
-  $('secBtn').addEventListener('click', () => { closeTerm(); openPanel('secPanel', 'secClose'); buildEco(); runAudit(); });
+  $('secBtn').addEventListener('click', () => { closeTerm(); if (secStale) buildSecList(); openPanel('secPanel', 'secClose'); buildEco(); runAudit(); });
   $('secClose').addEventListener('click', closePanels);
 
   /* ================= Terminal ================= */
@@ -894,7 +911,7 @@
       case 'about': line(t('tAbout')); break;
       case 'security': line(t('tSecHead'), 'c'); for (const [n, d] of t('sec')) line(`  ✓ ${n}: ${d}`, 'g'); break;
       case 'ping': ping(args.join(' ')); break;
-      case 'date': { const d = new Date(); line(`${fTime.format(d)}  ${t('city')}${t('sep')}${fDate.format(d)}`); break; }
+      case 'date': { fmt(); const d = new Date(); line(`${fTime.format(d)}  ${t('city')}${t('sep')}${fDate.format(d)}`); break; }
       case 'lang': {
         const code = { fr: 'fr', en: 'en', 'zh-hans': 'zh-Hans', 'zh-hant': 'zh-Hant', yue: 'yue', ko: 'ko' }[a];
         if (setLang(code)) line(t('tLangSet')(NATIVE[code]), 'g'); else line(t('tUsageLang'), 'r');
@@ -1048,6 +1065,7 @@
     try { return new Intl.DateTimeFormat(regionLocale(lang), withTime ? { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Europe/Paris' } : { dateStyle: 'long', timeZone: 'Europe/Paris' }).format(new Date(iso)); } catch (e) { return iso; }
   }
   function updLine() {
+    if (!booted) return;
     const st = ST(), el = $('updLine');
     if (!st || !st.checked) { el.hidden = true; return; }
     el.textContent = ' · ' + t('updatedOn')(fmtDate(st.checked, false)); el.hidden = false;
@@ -1287,8 +1305,16 @@
   const safe = (name, fn) => { try { fn(); } catch (e) { if (window.console) console.warn('[jeremy-grosjean.fr] ' + name + ' :', e); } };
   safe('thème', applyTheme);
   safe('langue', applyLang);
-  document.documentElement.dataset.ready = '1';
-  safe('accueil', startHero);
+  /* Puis trois petites tâches séparées, pour qu'aucune ne dépasse 50 ms sur un téléphone lent :
+     1) l'heure (outils de date du navigateur), 2) l'affichage du contenu, masqué jusque-là pour éviter tout saut
+     de mise en page, et l'animation du titre, 3) la date de dernière mise à jour du site */
+  setTimeout(() => {
+    booted = true; safe('heure', tick);
+    setTimeout(() => {
+      document.documentElement.dataset.ready = '1'; safe('accueil', startHero);
+      setTimeout(() => safe('mise à jour', updLine), 0);
+    }, 0);
+  }, 0);
   safe('affichage', applyA11y);
   /* Temps de chargement réel, mesuré par le navigateur du visiteur */
   function showLoad() {
@@ -1323,6 +1349,12 @@
     if (!isOnline()) setTimeout(() => toast(t('netCached')), 1800);
   });
   setInterval(() => safe('heure', tick), 1000);
-  /* L'animation démarre à l'image suivante : les mesures de l'écran se font après le premier affichage (pas de recalcul forcé) */
-  safe('animation', () => { if (!x) throw new Error('canvas indisponible'); requestAnimationFrame(() => safe('animation', () => { setup(); requestAnimationFrame(frame); })); });
+  /* L'animation démarre quand le navigateur donne la taille du canevas (ResizeObserver) : cette taille arrive
+     après sa mise en page normale, au lieu d'être calculée de force pendant le script (« innerWidth ») */
+  safe('animation', () => {
+    if (!x) throw new Error('canvas indisponible');
+    const go = (w, h) => safe('animation', () => { setup(w, h); requestAnimationFrame(frame); });
+    if (window.ResizeObserver) { const ro = new ResizeObserver(es => { ro.disconnect(); const r = es[0].contentRect; go(r.width, r.height); }); ro.observe(c); }
+    else requestAnimationFrame(() => go());
+  });
 })();
