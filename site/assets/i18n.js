@@ -977,3 +977,22 @@ window.JG_I18N = {
     tWmOpen: n => `${n} 여는 중…`, tWmHint: '팁: contact gmail, contact outlook, contact pro, contact yahoo로 미리 작성된 메일을 엽니다.', tRecOpen: '채용 담당자용 보기를 여는 중…', tPrint: '프로필 인쇄 중…', a11yLink: '접근성' },
     { who: '당신은 누구? (--long: 프로필)', contact: '이메일 (gmail, outlook, pro, yahoo 추가 가능)', cv: '한 페이지 채용 프로필', print: '프로필 인쇄 또는 PDF 저장', a11y: '접근성 선언' });
 })(window.JG_I18N);
+
+/* Lot 9 : aucune messagerie installée sur l'ordinateur */
+(function (L) {
+  const T = {"fr": "Aucune messagerie ne s'est ouverte : choisissez Gmail ou Outlook ci-dessus, ou copiez l'adresse.", "en": "No mail app opened: choose Gmail or Outlook above, or copy the address.", "zh-Hans": "没有打开邮件应用：请选择上方的 Gmail 或 Outlook，或复制邮箱地址。", "zh-Hant": "沒有開啟郵件應用程式：請選擇上方的 Gmail 或 Outlook，或複製電郵地址。", "yue": "冇郵件程式打開到：揀上面嘅 Gmail 或者 Outlook，或者複製個地址。", "ko": "메일 앱이 열리지 않았습니다. 위의 Gmail 또는 Outlook을 선택하거나 주소를 복사하세요."};
+  for (const k in T) if (L[k]) L[k].mailNone = T[k];
+})(window.JG_I18N || {});
+
+/* Lot 11 : secret « terminal rétro » */
+(function (L) {
+  const T = {
+    fr: ['Écran vert phosphore', 'Tapez retro pour revenir aux couleurs normales.', 'Couleurs normales rétablies.'],
+    en: ['Green phosphor screen', 'Type retro to go back to normal colours.', 'Normal colours restored.'],
+    'zh-Hans': ['绿色荧光屏', '输入 retro 恢复正常颜色。', '已恢复正常颜色。'],
+    'zh-Hant': ['綠色螢光螢幕', '輸入 retro 恢復正常顏色。', '已恢復正常顏色。'],
+    yue: ['綠色螢光幕', '打 retro 就可以變返正常顏色。', '已經變返正常顏色。'],
+    ko: ['녹색 형광 화면', 'retro를 입력하면 원래 색으로 돌아갑니다.', '원래 색으로 돌아왔습니다.']
+  };
+  for (const k in T) if (L[k]) { if (L[k].secretNames) L[k].secretNames.retro = T[k][0]; L[k].tRetroOn = T[k][1]; L[k].tRetroOff = T[k][2]; }
+})(window.JG_I18N || {});

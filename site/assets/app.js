@@ -173,7 +173,7 @@
   function readPalette() {
     const cs = getComputedStyle(document.documentElement);
     const v = n => cs.getPropertyValue(n).trim();
-    P = { cyan: v('--cyan-rgb'), violet: v('--violet-rgb'), threat: v('--threat-rgb'), node: v('--node-rgb'), warn: v('--warn-rgb'), light: resolvedTheme() === 'light' };
+    P = { cyan: v('--cyan-rgb'), violet: v('--violet-rgb'), threat: v('--threat-rgb'), node: v('--node-rgb'), warn: v('--warn-rgb'), light: resolvedTheme() === 'light' && !document.documentElement.dataset.retro };
     P.blend = P.light ? 'source-over' : 'lighter';
     P.k = P.light ? 1.35 : 1;
   }
@@ -332,15 +332,15 @@
   const G = { on: false, active: false, lv: 0, score: 0, breach: 0, load: 0, time: 0, items: [], spawnIn: 0, last: 0, shake: 0, hit: 0 };
   const getBest = () => +store.get('jg-firewall-best') || 0;
   let toastT;
-  function toast(msg) { const el = $('toast'); el.textContent = msg; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 1500); }
+  function toast(msg, ms) { const el = $('toast'); el.textContent = msg; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), ms || 1500); }
   function hud() {
     $('hLevel').textContent = `${G.lv + 1}/${LEVELS.length}`;
     $('hScore').textContent = G.score; $('hBreach').textContent = G.breach + '/3'; $('hTime').textContent = Math.ceil(G.time);
   }
   const server = () => ({ x: W / 2, y: H / 2, s: Math.min(64, Math.max(46, W / 22)) });
-  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'briefPanel', 'supPanel'];
+  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'briefPanel', 'supPanel'];
   function closePanels() { panels.forEach(p => $(p).classList.remove('open')); }
-  function openPanel(id, focusId) { closePanels(); $(id).classList.add('open'); if (focusId) $(focusId).focus(); }
+  function openPanel(id, focusId) { closePanels(); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (focusId) $(focusId).focus(); }
   function openIntro() { closeTerm(); openPanel('intro', 'start'); }
 
   function legendItem(cls, label) { const s = document.createElement('span'), i = document.createElement('i'); i.className = 'sw ' + cls; s.append(i, label); return s; }
@@ -693,6 +693,15 @@
     $('wmYahoo').href = `https://compose.mail.yahoo.com/?to=${to}&subject=${su}&body=${bo}`;
   }
   $('openMail').href = mailHref(); webmailHrefs();
+  /* Si aucune application d'e-mail ne s'ouvre (fréquent sur ordinateur), on propose les autres solutions */
+  $('openMail').addEventListener('click', () => {
+    let left = false; const away = () => { left = true; };
+    window.addEventListener('blur', away, { once: true }); document.addEventListener('visibilitychange', away, { once: true });
+    setTimeout(() => {
+      window.removeEventListener('blur', away); document.removeEventListener('visibilitychange', away);
+      if (!left && document.visibilityState === 'visible') { toast(t('mailNone'), 6000); $('wmGmail').focus({ preventScroll: true }); }
+    }, 1800);
+  });
   function copyText(txt) {
     if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(txt).then(() => true, () => legacyCopy(txt));
     return Promise.resolve(legacyCopy(txt));
@@ -712,7 +721,7 @@
   $('contactClose').addEventListener('click', closePanels);
 
   /* ================= Secrets à trouver (progression gardée sur l'appareil du visiteur) ================= */
-  const SECRETS = ['term', 'konami', 'win', 'sudo', 'neofetch', 'keys', 'support', 'support2', 'matrix', 'htop'];
+  const SECRETS = ['term', 'konami', 'win', 'sudo', 'neofetch', 'keys', 'support', 'support2', 'matrix', 'htop', 'retro'];
   const foundSet = () => { try { const v = JSON.parse(store.get('jg-secrets') || '[]'); return Array.isArray(v) ? v.filter(x => SECRETS.includes(x)) : []; } catch (e) { return []; } };
   function found(id) {
     const f = foundSet(); if (f.includes(id)) return;
@@ -811,8 +820,8 @@
   /* ================= Terminal ================= */
   const term = $('term'), out = $('termOut'), input = $('termInput');
   const hist = []; let hIdx = 0, greeted = false;
-  const COMMANDS = ['help', 'boot', 'legal', 'device', 'neofetch', 'secrets', 'htop', 'support', 'status', 'dig', 'ipcalc', 'install', 'tour', 'matrix', 'whoami', 'about', 'security', 'ping', 'date', 'lang', 'theme', 'play', 'konami', 'contact', 'cv', 'projets', 'print', 'a11y', 'clear', 'exit'];
-  const ALIAS = { aide: 'help', top: 'htop', fps: 'htop', ticket: 'support', tickets: 'support', supervision: 'status', nslookup: 'dig', host: 'dig', installer: 'install', visite: 'tour', appareil: 'device', sysinfo: 'device', fastfetch: 'neofetch', secret: 'secrets', mentions: 'legal', legales: 'legal', 'légales': 'legal', privacy: 'legal', demarrage: 'boot', 'démarrage': 'boot', journal: 'boot', dmesg: 'boot', apropos: 'about', 'à-propos': 'about', securite: 'security', 'sécurité': 'security', jouer: 'play', effacer: 'clear', cls: 'clear', quitter: 'exit', quit: 'exit', langue: 'lang', theme: 'theme', 'thème': 'theme', ls: 'help', man: 'help', recruteur: 'cv', recruiter: 'cv', resume: 'cv', imprimer: 'print', pdf: 'print', accessibilite: 'a11y', 'accessibilité': 'a11y', accessibility: 'a11y', mail: 'contact', email: 'contact' };
+  const COMMANDS = ['help', 'boot', 'legal', 'device', 'neofetch', 'secrets', 'htop', 'support', 'status', 'dig', 'ipcalc', 'install', 'tour', 'matrix', 'whoami', 'about', 'security', 'ping', 'date', 'lang', 'theme', 'play', 'konami', 'contact', 'cv', 'projets', 'panne', 'quiz', 'print', 'a11y', 'clear', 'exit'];
+  const ALIAS = { aide: 'help', top: 'htop', fps: 'htop', ticket: 'support', tickets: 'support', supervision: 'status', nslookup: 'dig', host: 'dig', installer: 'install', visite: 'tour', appareil: 'device', sysinfo: 'device', fastfetch: 'neofetch', secret: 'secrets', mentions: 'legal', legales: 'legal', 'légales': 'legal', privacy: 'legal', demarrage: 'boot', 'démarrage': 'boot', journal: 'boot', dmesg: 'boot', apropos: 'about', 'à-propos': 'about', securite: 'security', 'sécurité': 'security', jouer: 'play', effacer: 'clear', cls: 'clear', quitter: 'exit', quit: 'exit', langue: 'lang', theme: 'theme', 'thème': 'theme', ls: 'help', man: 'help', recruteur: 'cv', recruiter: 'cv', resume: 'cv', imprimer: 'print', pdf: 'print', accessibilite: 'a11y', 'accessibilité': 'a11y', accessibility: 'a11y', mail: 'contact', email: 'contact', 'rétro': 'retro', crt: 'retro', phosphore: 'retro', vt100: 'retro', diagnostic: 'panne', depannage: 'panne', 'dépannage': 'panne', fault: 'panne', ad: 'quiz', gpo: 'quiz' };
   function line(text, cls) { const d = document.createElement('div'); if (cls) d.className = cls; d.textContent = text; out.append(d); out.scrollTop = out.scrollHeight; return d; }
   function openTerm() {
     closePanels(); document.body.classList.add('term-open');
@@ -895,6 +904,14 @@
     out.append(bar); out.scrollTop = out.scrollHeight;
   }
 
+  /* Secret : vieil écran vert phosphore, le temps de la visite (rien n'est enregistré) */
+  function retro() {
+    const r = document.documentElement, on = !r.dataset.retro;
+    if (on) r.dataset.retro = '1'; else delete r.dataset.retro;
+    requestAnimationFrame(readPalette);
+    if (on) { line('> MODE PHOSPHORE', 'g'); line(t('tRetroOn'), 'd'); found('retro'); tone(440, .08, 'square', .03); setTimeout(() => tone(660, .12, 'square', .025), 90); }
+    else line(t('tRetroOff'), 'g');
+  }
   function run(raw) {
     const cmdLine = raw.trim();
     line(`~$ ${cmdLine}`, 'v');
@@ -929,6 +946,7 @@
         break;
       }
       case 'theme': {
+        if (['retro', 'rétro', 'crt', 'phosphore'].includes(a)) { retro(); break; }
         const m = { auto: 'auto', light: 'light', clair: 'light', dark: 'dark', sombre: 'dark' }[a];
         if (m && setTheme(m)) line(t('tThemeSet')({ auto: t('themeAuto'), light: t('themeLight'), dark: t('themeDark') }[m]), 'g'); else line(t('tUsageTheme'), 'r');
         break;
@@ -950,7 +968,10 @@
         link.href = mailHref(); link.textContent = MAIL; d.append(link);
         line(t('tWmHint'), 'd'); break;
       }
+      case 'retro': retro(); break;
       case 'cv': line(t('tRecOpen'), 'g'); setTimeout(openRec, 250); break;
+      case 'panne': line(t('tPanne'), 'g'); setTimeout(openPanne, 350); break;
+      case 'quiz': line(t('tQuiz'), 'g'); setTimeout(openQuiz, 350); break;
       case 'print': line(t('tPrint'), 'g'); setTimeout(() => window.print(), 250); break;
       case 'a11y': line(t('a11yLink') + ' →', 'c'); setTimeout(() => { location.href = '/accessibilite.html'; }, 400); break;
       case 'clear': out.textContent = ''; break;
@@ -1054,6 +1075,8 @@
   $('pickServer').addEventListener('click', openIntro);
   $('pickSupport').addEventListener('click', () => openSupport(1));
   $('pickSupport2').addEventListener('click', () => openSupport(2));
+  $('pickPanne').addEventListener('click', () => openPanne());
+  $('pickQuiz').addEventListener('click', () => openQuiz());
   $('gamesClose').addEventListener('click', closePanels);
   const SP = { level: 1, list: [], i: 0, score: 0, perfect: 0, answered: false };
   const ROUND = 5;
@@ -1104,6 +1127,137 @@
     SND.end();
   });
   $('tkQuit').addEventListener('click', closePanels);
+
+  /* ================= Mini-jeu « Trouve la panne » : commandes simulées, aucune requête réseau réelle ================= */
+  const PN_NET = {
+    dhcp: { ip: '169.254.3.7', apipa: true, mask: '255.255.0.0', gw: '', dns: '', ping: 'fail', ext: 'fail', ns: 'none' },
+    dns: { ip: '192.168.1.42', mask: '255.255.255.0', gw: '192.168.1.1', dns: '192.168.1.250', ping: 'ok', ext: 'ok', ns: 'timeout' },
+    gw: { ip: '192.168.1.42', mask: '255.255.255.0', gw: '192.168.2.1', dns: '192.168.1.1', ping: 'fail', ext: 'fail', ns: 'ok' },
+    cable: { off: true, ping: 'fail', ext: 'fail', ns: 'none' },
+    dup: { ip: '192.168.1.20', dup: true, mask: '255.255.255.0', gw: '192.168.1.1', dns: '192.168.1.1', ping: 'fail', ext: 'fail', ns: 'none' },
+    isp: { ip: '192.168.1.42', mask: '255.255.255.0', gw: '192.168.1.1', dns: '192.168.1.1', ping: 'ok', ext: 'timeout', ns: 'timeout' }
+  };
+  const PN = { list: [], i: 0, score: 0, perfect: 0, cmds: 0, used: null, wrong: false, answered: false, done: false };
+  const PN_ROUND = 4;
+  const pnCur = () => { const k = PN.list[PN.i].k; return { k, net: PN_NET[k], sc: t('pnScen')[k] }; };
+  function pnLine(txt, cls) { const box = $('pnTerm'), sp = document.createElement('span'); if (cls) sp.className = cls; sp.textContent = txt + '\n'; box.append(sp); box.scrollTop = box.scrollHeight; }
+  const dots = l => { let x = '   ' + l; while (x.length < 38) x += x.length % 2 ? ' ' : '.'; return x + ': '; };
+  function pnRun(id) {
+    const { net } = pnCur(), O = t('pnOut'), gw = net.gw || '192.168.1.1';
+    if (id === 'ip') {
+      pnLine('C:\\> ipconfig /all', 'pr'); pnLine(O.nic); pnLine('');
+      if (net.off) { pnLine(dots(O.media) + O.mediaOff, 'ko'); }
+      else {
+        pnLine(dots(net.apipa ? O.apipa : O.ip) + net.ip + (net.dup ? O.dup : ''), net.apipa || net.dup ? 'ko' : '');
+        pnLine(dots(O.mask) + net.mask); pnLine(dots(O.gw) + net.gw, net.gw === '192.168.2.1' ? 'ko' : ''); pnLine(dots(O.dns) + net.dns);
+      }
+    } else if (id === 'gw' || id === 'ext') {
+      const host = id === 'gw' ? gw : '8.8.8.8', r = id === 'gw' ? net.ping : net.ext;
+      pnLine('C:\\> ping ' + host, 'pr'); pnLine(O.pingHead(host), 'dm');
+      for (let n = 0; n < 4; n++) {
+        if (r === 'ok') pnLine(O.reply(host, id === 'gw' ? 1 + (n % 2) : 14 + n), 'ok');
+        else pnLine(r === 'timeout' ? O.timeout : O.fail, 'ko');
+      }
+      pnLine(O.stats(r === 'ok' ? 4 : 0), 'dm');
+    } else {
+      pnLine('C:\\> nslookup jeremy-grosjean.fr', 'pr');
+      if (net.ns === 'ok') { pnLine(O.nsSrv(net.dns), 'dm'); pnLine(''); pnLine(O.nsOk, 'ok'); }
+      else if (net.ns === 'timeout') pnLine(O.nsTimeout(net.dns), 'ko');
+      else pnLine(O.nsNone, 'ko');
+    }
+    pnLine('');
+    if (!PN.used.has(id)) { PN.used.add(id); PN.cmds++; }
+    $('pnCmds').querySelector(`[data-c="${id}"]`).classList.add('done');
+    $('pnOpts').querySelectorAll('button').forEach(b => { if (!PN.answered && !b.classList.contains('bad')) b.disabled = false; });
+    if (!PN.answered) { const ex = $('pnExpl'); if (ex.dataset.need) { ex.hidden = true; delete ex.dataset.need; } }
+    SND.key();
+  }
+  function openPanne() {
+    closeTerm(); PN.done = false; PN.i = 0; PN.score = 0; PN.perfect = 0; PN.cmds = 0;
+    PN.list = shuffle(Object.keys(PN_NET)).slice(0, PN_ROUND).map(k => ({ k }));
+    pnShow(); openPanel('panPanel', null); SND.level();
+  }
+  function pnShow() {
+    const { k, net, sc } = pnCur(); PN.used = new Set(); PN.wrong = false; PN.answered = false;
+    $('pnTag').textContent = t('pnTag')(PN.i + 1, PN.list.length); $('pnScore').textContent = t('pnPts')(PN.score);
+    $('pnTitle').textContent = t('pnTitle')(3040 + Object.keys(PN_NET).indexOf(k) * 7);
+    $('pnFrom').textContent = t('pnFrom') + ' ' + sc[0]; $('pnFrom').hidden = false; $('pnMsg').textContent = '« ' + sc[1] + ' »'; $('pnMsg').hidden = false;
+    $('pnTerm').textContent = ''; $('pnTerm').hidden = false; pnLine('C:\\>', 'dm'); $('pnCmdsL').hidden = false; $('pnAskL').hidden = false;
+    const cmds = $('pnCmds'); cmds.textContent = ''; cmds.hidden = false;
+    for (const [id, label] of [['ip', 'ipconfig /all'], ['gw', 'ping ' + (net.gw || '192.168.1.1')], ['ext', 'ping 8.8.8.8'], ['dns', 'nslookup']]) {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'pn-cmd'; b.dataset.c = id; b.textContent = label; b.addEventListener('click', () => pnRun(id)); cmds.append(b);
+    }
+    const C = t('pnCauses'), others = shuffle(Object.keys(C).filter(x => x !== k)).slice(0, 3), box = $('pnOpts'); box.textContent = '';
+    for (const c of shuffle([k, ...others])) {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'tk-opt'; b.textContent = C[c]; b.disabled = true;
+      b.addEventListener('click', () => pnAnswer(c === k, b)); box.append(b);
+    }
+    const ex = $('pnExpl'); ex.className = 'tk-expl'; ex.textContent = t('pnNeed'); ex.hidden = false; ex.dataset.need = '1';
+    $('pnNext').hidden = true;
+    setTimeout(() => { const f = cmds.querySelector('button'); if (f) f.focus(); }, 30);
+  }
+  function pnAnswer(good, btn) {
+    if (PN.answered) return;
+    const { sc } = pnCur(), ex = $('pnExpl'); ex.hidden = false; delete ex.dataset.need;
+    if (good) {
+      PN.answered = true; btn.classList.add('good'); SND.block();
+      const pts = PN.wrong ? 20 : Math.max(40, 100 - 15 * Math.max(0, PN.used.size - 2)); PN.score += pts; if (!PN.wrong) PN.perfect++;
+      ex.className = 'tk-expl ok'; ex.textContent = t('pnGood') + ' ' + sc[2];
+      $('pnOpts').querySelectorAll('button').forEach(b => { b.disabled = true; });
+      const nx = $('pnNext'); nx.hidden = false; nx.textContent = PN.i < PN.list.length - 1 ? t('pnNext') : t('pnEnd'); nx.focus();
+    } else { PN.wrong = true; btn.classList.add('bad'); btn.disabled = true; SND.wrong(); ex.className = 'tk-expl ko'; ex.textContent = t('pnBad'); }
+    $('pnScore').textContent = t('pnPts')(PN.score);
+  }
+  $('pnNext').addEventListener('click', () => {
+    if (PN.done) { openPanne(); return; }
+    if (PN.i < PN.list.length - 1) { PN.i++; pnShow(); return; }
+    const total = PN.list.length, max = total * 100, best = Math.max(+store.get('jg-panne-best') || 0, PN.score); store.set('jg-panne-best', String(best));
+    $('pnTag').textContent = t('pnDoneTag'); $('pnTitle').textContent = t('pnDoneTitle')(PN.perfect, total);
+    $('pnFrom').hidden = true; $('pnMsg').textContent = t('pnDoneMsg')(PN.score, max, PN.cmds) + ' ' + t('pnBest')(best);
+    for (const id of ['pnCmds', 'pnTerm', 'pnCmdsL', 'pnAskL']) $(id).hidden = true;
+    $('pnOpts').textContent = ''; $('pnExpl').hidden = true;
+    PN.done = true; const nx = $('pnNext'); nx.hidden = false; nx.textContent = t('again') || '↻'; nx.focus(); SND.end();
+  });
+  $('pnQuit').addEventListener('click', closePanels);
+
+  /* ================= Quiz Active Directory et GPO : 10 questions tirées parmi 12, réponses mélangées ================= */
+  const QZ = { list: [], i: 0, score: 0, perfect: 0, answered: false, wrong: false, done: false };
+  const QZ_ROUND = 10;
+  function openQuiz() {
+    closeTerm(); QZ.done = false; QZ.i = 0; QZ.score = 0; QZ.perfect = 0;
+    QZ.list = shuffle(t('quizAD').map((x, k) => k)).slice(0, QZ_ROUND).map(k => ({ k, order: shuffle([0, 1, 2]) }));
+    qzShow(); openPanel('quizPanel', null); SND.level();
+  }
+  function qzShow() {
+    const it = QZ.list[QZ.i], q = t('quizAD')[it.k]; QZ.answered = false; QZ.wrong = false;
+    $('qzTag').textContent = t('qzTag')(QZ.i + 1, QZ.list.length); $('qzScore').textContent = t('qzPts')(QZ.score);
+    $('qzTitle').textContent = q[0]; $('qzSub').hidden = true;
+    const box = $('qzOpts'); box.textContent = '';
+    it.order.forEach(j => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tk-opt'; b.textContent = q[1][j]; b.addEventListener('click', () => qzAnswer(j === 0, b)); box.append(b); });
+    $('qzExpl').hidden = true; $('qzNext').hidden = true;
+    setTimeout(() => { const f = box.querySelector('button'); if (f) f.focus(); }, 30);
+  }
+  function qzAnswer(good, btn) {
+    if (QZ.answered) return;
+    const q = t('quizAD')[QZ.list[QZ.i].k], ex = $('qzExpl'); ex.hidden = false;
+    if (good) {
+      QZ.answered = true; btn.classList.add('good'); SND.block(); QZ.score += QZ.wrong ? 5 : 10; if (!QZ.wrong) QZ.perfect++;
+      ex.className = 'tk-expl ok'; ex.textContent = t('qzGood') + ' ' + q[2];
+      $('qzOpts').querySelectorAll('button').forEach(b => { b.disabled = true; });
+      const nx = $('qzNext'); nx.hidden = false; nx.textContent = QZ.i < QZ.list.length - 1 ? t('qzNext') : t('qzEnd'); nx.focus();
+    } else { QZ.wrong = true; btn.classList.add('bad'); btn.disabled = true; SND.wrong(); ex.className = 'tk-expl ko'; ex.textContent = t('qzBad') + ' ' + t('qzRetry'); }
+    $('qzScore').textContent = t('qzPts')(QZ.score);
+  }
+  $('qzNext').addEventListener('click', () => {
+    if (QZ.done) { openQuiz(); return; }
+    if (QZ.i < QZ.list.length - 1) { QZ.i++; qzShow(); return; }
+    const total = QZ.list.length, best = Math.max(+store.get('jg-quiz-best') || 0, QZ.score); store.set('jg-quiz-best', String(best));
+    $('qzTag').textContent = t('qzDoneTag'); $('qzTitle').textContent = t('qzDoneTitle')(QZ.perfect, total);
+    const sub = $('qzSub'); sub.textContent = t('qzDoneMsg')(QZ.score, total * 10) + ' ' + t('pnBest')(best); sub.hidden = false;
+    $('qzOpts').textContent = ''; $('qzExpl').hidden = true;
+    QZ.done = true; const nx = $('qzNext'); nx.hidden = false; nx.textContent = t('again') || '↻'; nx.focus(); SND.end();
+  });
+  $('qzQuit').addEventListener('click', closePanels);
 
   /* ================= Supervision : relevés faits par le script à chaque mise en ligne ================= */
   const ST = () => window.JG_STATUS || null;

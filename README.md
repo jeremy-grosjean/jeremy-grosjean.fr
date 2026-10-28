@@ -16,7 +16,7 @@ Site personnel de **Jérémy Grosjean**, technicien informatique, disponible pou
 ## Ce que contient le site
 
 - Page d'accueil animée (réseau interactif à la souris et au doigt), en **6 langues** : français, anglais, chinois simplifié et traditionnel, cantonais, coréen.
-- **Deux mini-jeux** : « Protéger le serveur » (malware, DDoS, hameçonnage) et un **simulateur de support N1/N2** (tickets réalistes : DHCP, DNS, Active Directory, GPO, droits NTFS…).
+- **Quatre mini-jeux** : « Protéger le serveur » (malware, DDoS, hameçonnage), un **simulateur de support N1/N2** (tickets réalistes : DHCP, DNS, Active Directory, GPO, droits NTFS…), **« Trouve la panne »** (diagnostic réseau avec `ipconfig`, `ping` et `nslookup` simulés) et un **quiz Active Directory et GPO**.
 - **Terminal caché** (`Ctrl/⌘ + K`) : `help`, `cv`, `ipcalc`, `dig`, `device`, `neofetch`, `htop`, `secrets`…
 - **Vue recruteur** sur une page, sans animation : [jeremy-grosjean.fr/#recruteur](https://jeremy-grosjean.fr/#recruteur). C'est aussi la fiche A4 imprimée avec `Ctrl/⌘ + P`.
 - **Me contacter** : e-mail déjà rempli en un clic dans Gmail, Outlook, Outlook pro (Microsoft 365) ou Yahoo Mail, ou dans la messagerie de l'appareil. Ce sont de simples liens : rien ne passe par le site.
@@ -82,7 +82,7 @@ L'hôte et l'identifiant SFTP ne sont **pas** dans ce dépôt : le script les li
 Personal website of **Jérémy Grosjean**, IT technician, available for a work-study contract (IT Technician, 2-year degree).
 
 - Hand-written HTML, CSS and JavaScript: **no framework, no dependency, no external request**.
-- **6 languages**, a one-page recruiter view (also the printed A4 sheet), two mini-games (server defense and a **level 1/2 IT support simulator**), a hidden terminal (`ipcalc`, `dig`, `device`, `htop`…), service monitoring, offline mode.
+- **6 languages**, a one-page recruiter view (also the printed A4 sheet), four mini-games (server defense, a **level 1/2 IT support simulator**, a network fault-finding game and an Active Directory quiz), a hidden terminal (`ipcalc`, `dig`, `device`, `htop`…), service monitoring, offline mode.
 - **0 cookies, 0 trackers, no forms.** Strict security headers (CSP without `unsafe-*`, Trusted Types, HSTS, COOP/COEP/CORP).
 - Grades: **A+** on SSL Labs, Mozilla Observatory and securityheaders.com; **100/100/100** on PageSpeed Insights.
 

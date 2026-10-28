@@ -26,10 +26,11 @@
 <link rel="icon" href="/favicon.svg?v=c653120d20" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=ea10cf004d">
 <link rel="manifest" href="/site.webmanifest?v=1170d79b15">
-<link rel="stylesheet" href="/assets/app.css?v=b4c1f1f7dd">
-<script src="/assets/i18n.js?v=f9cf1dee22" defer></script>
+<link rel="stylesheet" href="/assets/app.css?v=667ab3966d">
+<script src="/assets/i18n.js?v=f1b74098c8" defer></script>
+<script src="/assets/labs.js?v=24e840f65d" defer></script>
 <script src="/assets/status.js" defer></script>
-<script src="/assets/app.js?v=f9259f9445" defer></script>
+<script src="/assets/app.js?v=9a06732263" defer></script>
 </head>
 <body>
 <canvas id="net" aria-hidden="true"></canvas>
@@ -231,6 +232,8 @@
       <button class="pick" id="pickServer" type="button"><b data-i="pickServerT">Protéger le serveur</b><span data-i="pickServerD">Bloquez les attaques : logiciel malveillant, DDoS, hameçonnage.</span></button>
       <button class="pick" id="pickSupport" type="button"><b data-i="pickSupportT">Support informatique N1</b><span data-i="pickSupportD">Résolvez 5 tickets d'utilisateurs en choisissant le bon diagnostic.</span></button>
       <button class="pick" id="pickSupport2" type="button"><b data-i="pickSupport2T">Support informatique N2</b><span data-i="pickSupport2D">Niveau avancé : réseau, DHCP, Active Directory, DNS, droits d'accès.</span></button>
+      <button class="pick" id="pickPanne" type="button"><b data-i="pickPanneT">Trouve la panne</b><span data-i="pickPanneD">Un PC n'accède plus au réseau : lancez les bonnes commandes et trouvez la cause.</span></button>
+      <button class="pick" id="pickQuiz" type="button"><b data-i="pickQuizT">Quiz Active Directory et GPO</b><span data-i="pickQuizD">10 questions sur AD, les GPO et le DNS, avec l'explication de chaque réponse.</span></button>
     </div>
     <div class="actions"><button class="btn-ghost" id="gamesClose" type="button" data-i="close">Fermer</button></div>
   </div>
@@ -245,6 +248,33 @@
     <div class="tk-opts" id="tkOpts"></div>
     <p class="tk-expl" id="tkExpl" hidden></p>
     <div class="actions"><button class="btn" id="tkNext" type="button" hidden data-i="tkNext">Ticket suivant</button><button class="btn-ghost" id="tkQuit" type="button" data-i="quit">Quitter</button></div>
+  </div>
+</div>
+
+<div class="panel" id="panPanel" role="dialog" aria-modal="true" aria-labelledby="pnTitle">
+  <div class="card ticket">
+    <div class="tk-head"><span class="tag" id="pnTag">Panne 1/4</span><span class="tk-score" id="pnScore">0</span></div>
+    <h2 id="pnTitle">Incident</h2>
+    <p class="tk-from" id="pnFrom"></p>
+    <blockquote class="tk-msg" id="pnMsg"></blockquote>
+    <p class="pn-lbl" id="pnCmdsL" data-i="pnCmdsL">Lancez des commandes sur le poste :</p>
+    <div class="pn-cmds" id="pnCmds"></div>
+    <pre class="pn-term" id="pnTerm" aria-live="polite" tabindex="0"></pre>
+    <p class="pn-lbl" id="pnAskL" data-i="pnAskL">Votre diagnostic :</p>
+    <div class="tk-opts" id="pnOpts"></div>
+    <p class="tk-expl" id="pnExpl" hidden></p>
+    <div class="actions"><button class="btn" id="pnNext" type="button" hidden data-i="pnNext">Panne suivante</button><button class="btn-ghost" id="pnQuit" type="button" data-i="quit">Quitter</button></div>
+  </div>
+</div>
+
+<div class="panel" id="quizPanel" role="dialog" aria-modal="true" aria-labelledby="qzTitle">
+  <div class="card ticket">
+    <div class="tk-head"><span class="tag" id="qzTag">Question 1/10</span><span class="tk-score" id="qzScore">0</span></div>
+    <h2 class="qz-q" id="qzTitle">Question</h2>
+    <p class="tk-from" id="qzSub" hidden></p>
+    <div class="tk-opts" id="qzOpts"></div>
+    <p class="tk-expl" id="qzExpl" hidden></p>
+    <div class="actions"><button class="btn" id="qzNext" type="button" hidden data-i="qzNext">Question suivante</button><button class="btn-ghost" id="qzQuit" type="button" data-i="quit">Quitter</button></div>
   </div>
 </div>
 

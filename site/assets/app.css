@@ -593,3 +593,32 @@ body.rec-on #net, body.rec-on main, body.rec-on .clock, body.rec-on .dock, body.
   .rec-tags li { border-color: #888; }
   .rec-contact a { text-decoration: none; }
 }
+
+/* Mini-jeu « Trouve la panne » et quiz Active Directory */
+.pn-lbl { margin: .2rem 0 .45rem !important; font-size: .82rem !important; letter-spacing: .04em; text-transform: uppercase; color: var(--dim); text-align: left; }
+.pn-cmds { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .6rem; }
+.pn-cmd { font: 600 .82rem ui-monospace, "SF Mono", Menlo, Consolas, monospace; cursor: pointer; min-height: 36px; padding: .4rem .7rem; border-radius: 9px;
+  border: 1px solid var(--line-accent); background: rgba(var(--cyan-rgb), .06); color: var(--ink); }
+.pn-cmd:hover, .pn-cmd:focus-visible { border-color: var(--cyan); outline: none; }
+.pn-cmd.done { opacity: .6; }
+.pn-term { margin: 0 0 .9rem; min-height: 5.5rem; max-height: 14rem; overflow: auto; padding: .7rem .85rem; border-radius: 10px; text-align: left;
+  background: #070B1C; color: #CFE3FF; border: 1px solid var(--line); font: .78rem/1.5 ui-monospace, "SF Mono", Menlo, Consolas, monospace; white-space: pre-wrap; word-break: break-word; }
+.pn-term .pr { color: #5EE7FF; } .pn-term .ko { color: #FF8FA3; } .pn-term .ok { color: #7EF0B8; } .pn-term .dm { color: #8790C2; }
+.pn-term:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.qz-q { font-size: 1.12rem !important; line-height: 1.4; text-align: left; }
+html[data-contrast] .pn-term { color: #FFFFFF; }
+
+/* Secret « terminal rétro » : vieil écran vert phosphore (commande retro) */
+html:root[data-retro] {
+  --bg-1: #04220B; --bg-2: #010C04; --ink: #4DFF7C; --dim: #2BC25A;
+  --cyan: #4DFF7C; --violet: #2FD866; --threat: #FFB000; --ok: #4DFF7C; --ok-rgb: 77,255,124;
+  --cyan-rgb: 77,255,124; --violet-rgb: 47,216,102; --threat-rgb: 255,176,0; --node-rgb: 77,255,124; --warn-rgb: 255,176,0;
+  --surface: rgba(0, 22, 7, .72); --surface-strong: rgba(1, 16, 5, .97); --line: rgba(77, 255, 124, .25); --line-accent: rgba(77, 255, 124, .5);
+  --on-accent: #011005; --shadow: 0 0 40px rgba(77, 255, 124, .15); --term-bg: rgba(0, 12, 4, .96); color-scheme: dark;
+}
+html[data-retro] body { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; text-shadow: 0 0 5px rgba(77, 255, 124, .45); }
+html[data-retro] body::after { content: ""; position: fixed; inset: 0; z-index: 9; pointer-events: none;
+  background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, .22) 0 1px, transparent 1px 3px), radial-gradient(130% 100% at 50% 50%, transparent 60%, rgba(0, 0, 0, .55)); }
+html[data-retro] .btn { background: var(--ink); color: var(--on-accent); text-shadow: none; }
+html[data-retro] .brand-mark, html[data-retro] .contact-extra .qr { filter: grayscale(1) sepia(1) hue-rotate(70deg) saturate(3); }
+@media print { html[data-retro] body::after { display: none; } html[data-retro] body { text-shadow: none; } }
