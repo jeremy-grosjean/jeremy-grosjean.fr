@@ -26,19 +26,21 @@
 <link rel="icon" href="/favicon.svg?v=c653120d20" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=ea10cf004d">
 <link rel="manifest" href="/site.webmanifest?v=1170d79b15">
-<link rel="stylesheet" href="/assets/app.css?v=47eefc2e2c">
+<link rel="stylesheet" href="/assets/app.css?v=3a36c7a1ec">
 <script src="/assets/i18n.js?v=91faf46deb" defer></script>
 <script src="/assets/labs.js?v=24e840f65d" defer></script>
 <script src="/assets/labs2.js?v=194508f5f9" defer></script>
+<script src="/assets/labs3.js?v=0535249f2f" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=be7eb7d609" defer></script>
+<script src="/assets/app.js?v=cd114655aa" defer></script>
 </head>
 <body>
 <canvas id="net" aria-hidden="true"></canvas>
 
 <main>
   <div class="stack" id="stack">
+    <p class="hello" id="helloLine" hidden><b id="helloTxt"></b><span id="helloSub" data-i="helloSub">Merci de prendre le temps de découvrir mon profil.</span></p>
     <p class="brand"><span class="brand-mark" aria-hidden="true">JG</span><span>jeremy-grosjean.fr</span></p>
     <h1 class="domain" id="domain"><span class="sr">Jérémy Grosjean</span><span id="nameFx" aria-hidden="true">Jérémy Grosjean</span></h1>
     <p class="typeline who-line" aria-hidden="true"><span class="pr">$</span> <span id="who">whoami → technicien informatique</span><span class="cur" id="whoCur"></span></p>
@@ -76,10 +78,14 @@
     <dl class="brief rec-brief" id="recBrief"></dl>
     <h3 data-i="recAreas">Domaines</h3>
     <ul class="rec-tags" id="recTags"></ul>
+    <h3 data-i="skTitle">Ce que je sais faire</h3>
+    <div class="rec-skills" id="recSkills"></div>
     <h3 data-i="recContactH">Contact</h3>
     <p class="rec-contact"><a id="recMail" href="#">contact [at] jeremy-grosjean.fr</a><span aria-hidden="true"> · </span><span>jeremy-grosjean.fr</span></p>
     <div class="rec-actions">
       <button class="btn" id="recContact" type="button" data-i="contactBtn">Me contacter</button>
+      <button class="btn-ghost" id="recSlot" type="button" data-i="slotBtn">Proposer un créneau</button>
+      <button class="btn-ghost" id="recShare" type="button" data-i="shBtn">Partager</button>
       <button class="btn-ghost" id="recPrint" type="button" data-i="recPrint">Imprimer ou PDF</button>
       <button class="btn-ghost" id="recExit" type="button" data-i="recExit">← Version animée</button>
     </div>
@@ -245,6 +251,7 @@
       </div>
     </div>
     <div class="actions">
+      <button class="btn-ghost" id="contactSlot" type="button" data-i="slotBtn">Proposer un créneau</button>
       <button class="btn" id="copyMail" type="button" data-i="copyMail">Copier l'adresse</button>
       <a class="btn-ghost" id="openMail" href="#" data-i="openMail">Ouvrir ma messagerie</a>
       <button class="btn-ghost" id="contactClose" type="button" data-i="close">Fermer</button>
@@ -262,6 +269,11 @@
       <button class="pick" id="pickPanne" type="button"><b data-i="pickPanneT">Trouve la panne</b><span data-i="pickPanneD">Un PC n'accède plus au réseau : lancez les bonnes commandes et trouvez la cause.</span></button>
       <button class="pick" id="pickQuiz" type="button"><b data-i="pickQuizT">Quiz Active Directory et GPO</b><span data-i="pickQuizD">10 questions sur AD, les GPO et le DNS, avec l'explication de chaque réponse.</span></button>
       <button class="pick" id="pickPhish" type="button"><b data-i="pickPhishT">Repère l’hameçonnage</b><span data-i="pickPhishD">6 e-mails : fiables ou pièges ? Les indices s’affichent après chaque réponse.</span></button>
+      <button class="pick" id="pickItil" type="button"><b data-i="pickItilT">Priorise les tickets</b><span data-i="pickItilD"></span></button>
+      <button class="pick" id="pickPs" type="button"><b data-i="pickPsT">Défi PowerShell</b><span data-i="pickPsD"></span></button>
+      <button class="pick" id="pickRj" type="button"><b data-i="pickRjT">Sertis le câble RJ45</b><span data-i="pickRjD"></span></button>
+      <button class="pick" id="pickCall" type="button"><b data-i="pickCallT">Simulateur d’appel</b><span data-i="pickCallD"></span></button>
+      <button class="pick pick-daily" id="pickDaily" type="button"><b data-i="pickDailyT">Défi du jour</b><span data-i="pickDailyD"></span></button>
       <button class="pick" id="pickSubnet" type="button"><b data-i="pickSubnetT">Sous-réseaux express</b><span data-i="pickSubnetD">10 questions chronométrées : adresse du réseau, diffusion, nombre d’appareils.</span></button>
     </div>
     <div class="actions"><button class="btn-ghost" id="scoresBtn" type="button" data-i="scoresBtn">Mes meilleurs scores</button><button class="btn-ghost" id="gamesClose" type="button" data-i="close">Fermer</button></div>
@@ -354,6 +366,131 @@
 </div>
 <div class="gl-tip" id="glTip" role="tooltip" hidden><b id="glTipT"></b><span id="glTipD"></span><button class="gl-more" id="glTipMore" type="button" data-i="glossAll">Tout le glossaire</button></div>
 
+<div class="panel" id="slotPanel" role="dialog" aria-modal="true" aria-labelledby="slotTitle">
+  <div class="card">
+    <h2 id="slotTitle" data-i="slotTitle">Proposer un échange</h2>
+    <p data-i="slotSub"></p>
+    <div class="seg slot-mode" id="slotMode" role="radiogroup" aria-labelledby="slotModeL"><span class="sr" id="slotModeL" data-i="slotModeL">Format</span></div>
+    <div class="slot-days" id="slotDays"></div>
+    <p class="tk-expl" id="slotMsg" hidden></p>
+    <div class="slot-send" id="slotSend" hidden>
+      <div class="actions"><a class="btn" id="slotMail" href="#" data-i="slotSend">Envoyer par e-mail</a><button class="btn-ghost" id="slotIcs" type="button" data-i="slotIcs">Ajouter à mon agenda (.ics)</button></div>
+      <p class="wm-lbl" data-i="slotWith">Ou écrire avec :</p>
+      <div class="webmail"><a class="wm" id="slGmail" href="#" target="_blank" rel="noopener noreferrer"><i class="wm-dot g" aria-hidden="true"></i><span>Gmail</span></a><a class="wm" id="slOutlook" href="#" target="_blank" rel="noopener noreferrer"><i class="wm-dot o" aria-hidden="true"></i><span>Outlook</span></a></div>
+    </div>
+    <p class="wm-note" data-i="slotNote"></p>
+    <div class="actions"><button class="btn-ghost" id="slotClose" type="button" data-i="close">Fermer</button></div>
+  </div>
+</div>
+
+<div class="panel" id="skillsPanel" role="dialog" aria-modal="true" aria-labelledby="skTitle">
+  <div class="card">
+    <h2 id="skTitle" data-i="skTitle">Ce que je sais faire</h2>
+    <p data-i="skSub"></p>
+    <div class="sk-list" id="skList"></div>
+    <div class="actions"><button class="btn" id="skContact" type="button" data-i="contactBtn">Me contacter</button><button class="btn-ghost" id="skClose" type="button" data-i="close">Fermer</button></div>
+  </div>
+</div>
+
+<div class="panel" id="sharePanel" role="dialog" aria-modal="true" aria-labelledby="shTitle">
+  <div class="card">
+    <h2 id="shTitle" data-i="shTitle">Partager ce profil</h2>
+    <p data-i="shSub"></p>
+    <p class="mail-box"><span id="shUrl">https://jeremy-grosjean.fr/#recruteur</span></p>
+    <div class="webmail share-grid">
+      <button class="wm" id="shCopy" type="button"><span data-i="shCopy">Copier le lien</span></button>
+      <a class="wm" id="shMail" href="#"><span data-i="shMail">E-mail</span></a>
+      <a class="wm" id="shTeams" href="#" target="_blank" rel="noopener noreferrer"><span>Microsoft Teams</span></a>
+      <a class="wm" id="shLinkedin" href="#" target="_blank" rel="noopener noreferrer"><span>LinkedIn</span></a>
+    </div>
+    <div class="actions"><button class="btn-ghost" id="shClose" type="button" data-i="close">Fermer</button></div>
+  </div>
+</div>
+
+<div class="panel" id="faqPanel" role="dialog" aria-modal="true" aria-labelledby="faqTitle">
+  <div class="card">
+    <h2 id="faqTitle" data-i="faqTitle">Questions fréquentes</h2>
+    <p data-i="faqSub"></p>
+    <div class="faq-list" id="faqList"></div>
+    <div class="actions"><button class="btn" id="faqSlot" type="button" data-i="slotBtn">Proposer un créneau</button><button class="btn-ghost" id="faqClose" type="button" data-i="close">Fermer</button></div>
+  </div>
+</div>
+
+<div class="panel" id="itPanel" role="dialog" aria-modal="true" aria-labelledby="itTitle">
+  <div class="card ticket">
+    <div class="tk-head"><span class="tag" id="itTag">Ticket 1/8</span><span class="tk-score" id="itScore">0</span></div>
+    <h2 class="qz-q" id="itTitle">Ticket</h2>
+    <p class="tk-from" id="itFrom"></p>
+    <div id="itAsk">
+      <p class="pn-lbl" data-i="itImpact">Impact</p>
+      <div class="tk-opts it-opts" id="itImp"><button class="tk-opt" type="button" data-v="1" data-i="itHigh">Fort</button><button class="tk-opt" type="button" data-v="0" data-i="itLow">Faible</button></div>
+      <p class="pn-lbl" data-i="itUrg">Urgence</p>
+      <div class="tk-opts it-opts" id="itUrgBox"><button class="tk-opt" type="button" data-v="1" data-i="itUrgent">Urgent</button><button class="tk-opt" type="button" data-v="0" data-i="itNot">Pas urgent</button></div>
+    </div>
+    <p class="tk-from it-rule" data-i="itRule"></p>
+    <p class="tk-expl" id="itExpl" hidden></p>
+    <div class="actions"><button class="btn" id="itCheck" type="button" data-i="itCheck" disabled>Valider</button><button class="btn" id="itNext" type="button" hidden data-i="itNext">Ticket suivant</button><button class="btn-ghost" id="itQuit" type="button" data-i="quit">Quitter</button></div>
+  </div>
+</div>
+
+<div class="panel" id="psPanel" role="dialog" aria-modal="true" aria-labelledby="psTitle">
+  <div class="card ticket">
+    <div class="tk-head"><span class="tag" id="psTag">Mission 1/8</span><span class="tk-score" id="psScore">0</span></div>
+    <h2 class="qz-q" id="psTitle">Mission</h2>
+    <p class="pn-lbl" data-i="psAsk">Quelle commande utiliser ?</p>
+    <div class="tk-opts ps-opts" id="psOpts"></div>
+    <pre class="ps-term" id="psTerm" hidden></pre>
+    <p class="tk-expl" id="psExpl" hidden></p>
+    <div class="actions"><button class="btn" id="psNext" type="button" hidden data-i="psNext">Mission suivante</button><button class="btn-ghost" id="psQuit" type="button" data-i="quit">Quitter</button></div>
+  </div>
+</div>
+
+<div class="panel" id="rjPanel" role="dialog" aria-modal="true" aria-labelledby="rjTitle">
+  <div class="card ticket">
+    <div class="tk-head"><span class="tag" id="rjTag">Étape 1/3</span><span class="tk-score" id="rjScore">0</span></div>
+    <h2 class="qz-q" id="rjTitle" data-i="rjSub">Touchez les fils dans l’ordre</h2>
+    <div class="rj-slots" id="rjSlots" aria-live="polite"></div>
+    <div class="rj-wires" id="rjWires"></div>
+    <div class="tk-opts" id="rjOpts" hidden></div>
+    <p class="tk-expl" id="rjExpl" hidden></p>
+    <div class="actions"><button class="btn" id="rjNext" type="button" hidden data-i="rjNext">Étape suivante</button><button class="btn-ghost" id="rjQuit" type="button" data-i="quit">Quitter</button></div>
+  </div>
+</div>
+
+<div class="panel" id="clPanel" role="dialog" aria-modal="true" aria-labelledby="clTitle">
+  <div class="card ticket">
+    <div class="tk-head"><span class="tag" id="clTag">Échange 1/4</span><span class="tk-score" id="clScore"></span></div>
+    <h2 class="qz-q" id="clTitle" data-i="clTitle">Appel entrant</h2>
+    <div class="cl-chat" id="clChat"></div>
+    <div class="tk-opts" id="clOpts"></div>
+    <p class="tk-expl" id="clExpl" hidden></p>
+    <div class="actions"><button class="btn" id="clNext" type="button" hidden data-i="clNext">Suite de l’appel</button><button class="btn-ghost" id="clQuit" type="button" data-i="quit">Quitter</button></div>
+  </div>
+</div>
+
+<div class="panel" id="dyPanel" role="dialog" aria-modal="true" aria-labelledby="dyTitle">
+  <div class="card ticket">
+    <h2 class="qz-q" id="dyTitle">Défi du jour</h2>
+    <p class="tk-from" id="dyQ"></p>
+    <div class="tk-opts" id="dyOpts"></div>
+    <p class="tk-expl" id="dyExpl" hidden></p>
+    <p class="dy-streak" id="dyStreak"></p>
+    <div class="actions"><button class="btn-ghost" id="dyClose" type="button" data-i="close">Fermer</button></div>
+  </div>
+</div>
+
+<div class="forum" id="forum" hidden>
+  <div class="forum-card">
+    <p class="forum-name">Jérémy Grosjean</p>
+    <p class="forum-role" id="fmRole" data-i="fmRole"></p>
+    <img class="forum-qr" src="/qr.svg" width="220" height="220" alt="QR code : https://jeremy-grosjean.fr">
+    <p class="forum-scan" data-i="fmScan"></p>
+    <p class="forum-fact" id="fmFact" aria-live="polite"></p>
+    <p class="forum-touch" data-i="fmTouch"></p>
+  </div>
+  <button class="forum-exit" id="fmExit" type="button" data-i="fmExit">Quitter le mode forum</button>
+</div>
+
 <div class="panel" id="newsPanel" role="dialog" aria-modal="true" aria-labelledby="newsTitle">
   <div class="card">
     <h2 id="newsTitle" data-i="newsTitle">Quoi de neuf</h2>
@@ -367,6 +504,7 @@
   <div class="card">
     <h2 id="briefTitle" data-i="briefTitle">En 30 secondes</h2>
     <dl class="brief" id="briefList"></dl>
+    <div class="brief-more"><button class="chip-btn" id="briefSkills" type="button" data-i="skBtn">Mes compétences</button><button class="chip-btn" id="briefFaq" type="button" data-i="faqBtn">Questions fréquentes</button><button class="chip-btn" id="briefSlot" type="button" data-i="slotBtn">Proposer un créneau</button><button class="chip-btn" id="briefShare" type="button" data-i="shBtn">Partager</button></div>
     <div class="actions"><button class="btn" id="briefContact" type="button" data-i="contactBtn">Me contacter</button><button class="btn-ghost" id="briefRec" type="button" data-i="recOpen">Vue sur une page</button><button class="btn-ghost" id="briefClose" type="button" data-i="close">Fermer</button></div>
   </div>
 </div>

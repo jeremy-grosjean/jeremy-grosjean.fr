@@ -14,7 +14,7 @@ def versionner(page, fichiers):
         html = re.sub(r'(/' + re.escape(f) + r')(\?v=[0-9a-f]+)?"', r'\1?v=' + empreinte(f) + '"', html)
     (RACINE / page).write_text(html)
 
-versionner('index.html', ['assets/app.css', 'assets/i18n.js', 'assets/labs.js', 'assets/labs2.js', 'assets/news.js', 'assets/app.js', 'favicon.ico', 'favicon.svg', 'apple-touch-icon.png', 'site.webmanifest'])
+versionner('index.html', ['assets/app.css', 'assets/i18n.js', 'assets/labs.js', 'assets/labs2.js', 'assets/labs3.js', 'assets/news.js', 'assets/app.js', 'favicon.ico', 'favicon.svg', 'apple-touch-icon.png', 'site.webmanifest'])
 versionner('404.html', ['assets/404.css', 'assets/404.js', 'favicon.ico', 'favicon.svg'])
 versionner('mentions-legales.html', ['assets/legal.css', 'assets/legal.js', 'favicon.ico', 'favicon.svg'])
 versionner('accessibilite.html', ['assets/legal.css', 'assets/a11y.js', 'favicon.ico', 'favicon.svg'])

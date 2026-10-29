@@ -45,13 +45,13 @@ with sync_playwright() as p:
         chev = pg.evaluate("(() => { const a = document.querySelector('.cta').getBoundingClientRect(), d = [...document.querySelectorAll('.dock-left, .dock-mid, #sound')].map(e => e.getBoundingClientRect()); return d.some(b => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom); })()")
         if chev:
             erreurs.append(f'{nom} : les boutons de l’accueil chevauchent la barre du bas')
-        for bouton, panneau in (('pickServer', 'intro'), ('pickSupport', 'supportPanel'), ('pickPanne', 'panPanel'), ('pickQuiz', 'quizPanel'), ('pickPhish', 'phPanel'), ('pickSubnet', 'snPanel')):
+        for bouton, panneau in (('pickServer', 'intro'), ('pickSupport', 'supportPanel'), ('pickPanne', 'panPanel'), ('pickQuiz', 'quizPanel'), ('pickPhish', 'phPanel'), ('pickSubnet', 'snPanel'), ('pickItil', 'itPanel'), ('pickPs', 'psPanel'), ('pickRj', 'rjPanel'), ('pickCall', 'clPanel'), ('pickDaily', 'dyPanel')):
             pg.evaluate("document.getElementById('openGame').click()"); pg.wait_for_timeout(150)
             pg.evaluate(f"document.getElementById('{bouton}').click()"); pg.wait_for_timeout(300)
             if not pg.evaluate(f"document.getElementById('{panneau}').classList.contains('open')"):
                 erreurs.append(f'{nom} : le jeu {bouton} ne s’ouvre pas')
             pg.keyboard.press('Escape'); pg.evaluate("document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open'))")
-        ok(f'{nom} : les 7 jeux s’ouvrent')
+        ok(f'{nom} : les 12 jeux et défis s’ouvrent')
         # Pendant « Protéger le serveur », un clic là où se trouvait « Me contacter » ne doit rien ouvrir
         r = pg.evaluate("(() => { const b = document.getElementById('contactBtn').getBoundingClientRect(); return [b.x + b.width / 2, b.y + b.height / 2]; })()")
         pg.evaluate("document.getElementById('openGame').click(); document.getElementById('pickServer').click(); document.getElementById('start').click()"); pg.wait_for_timeout(150)
@@ -160,6 +160,107 @@ with sync_playwright() as p:
         for page in ('/mentions-legales.html', '/accessibilite.html', '/une-page-qui-n-existe-pas'):
             pg.goto(BASE + page); pg.wait_for_timeout(400)
         ok(f'{nom} : vue recruteur, mentions légales, accessibilité, page 404')
+        pg.goto(BASE + '/'); pg.wait_for_timeout(1200)
+        # Lot 14 : jeux « Priorise les tickets », PowerShell, RJ45, appel, défi du jour, joués jusqu'au bout
+        res = pg.evaluate("""async () => {
+          const $ = id => document.getElementById(id), w = ms => new Promise(r => setTimeout(r, ms)), out = {};
+          const T = window.JG_I18N.fr;
+          // Priorise les tickets : on répond juste à chaque fois
+          $('openGame').click(); await w(80); $('pickItil').click(); await w(120);
+          for (let i = 0; i < 8; i++) {
+            const txt = $('itTitle').textContent.slice(2, -2), tk = T.itTickets.find(x => x[0] === txt);
+            $('itImp').querySelector(`[data-v="${tk[2]}"]`).click(); $('itUrgBox').querySelector(`[data-v="${tk[3]}"]`).click();
+            $('itCheck').click(); await w(20); $('itNext').click(); await w(20);
+          }
+          out.itil = localStorage.getItem('jg-itil-best');
+          $('itQuit').click(); await w(50);
+          // PowerShell : d'abord une erreur, puis la bonne commande
+          $('openGame').click(); await w(80); $('pickPs').click(); await w(120);
+          for (let i = 0; i < 8; i++) {
+            const m = T.ps.findIndex(x => x[0] === $('psTitle').textContent);
+            const bs = [...$('psOpts').querySelectorAll('button')];
+            const good = bs.find(b => !/-Disabled$|^ping|Get-Process|Get-Service$|-Unlock$|Reset-ADPassword|-ResetPassword|-Stopped|Stop-Service|Start-Process|Restart-Computer|gpresult|Get-GPO|System.log|Clear-EventLog|-Inactive 90|Remove-ADComputer|Get-NetTCPConnection|Enable-ADAccount|Get-LocalUser|Get-ADUser -Disabled/.test(b.textContent));
+            if (i === 0) bs.find(b => b !== good).click();
+            good.click(); await w(20); if ($('psTerm').hidden) out.psTerm = 'vide'; $('psNext').click(); await w(20);
+          }
+          out.ps = localStorage.getItem('jg-ps-best');
+          $('psQuit').click(); await w(50);
+          // RJ45 : T568B puis T568A dans l'ordre, puis la question
+          $('openGame').click(); await w(80); $('pickRj').click(); await w(120);
+          for (const order of [[0,1,2,3,4,5,6,7], [2,5,0,3,4,1,6,7]]) {
+            if (order[0] === 0) { const bad = $('rjWires').querySelector('[data-c="7"]'); bad.click(); }
+            for (const c of order) $('rjWires').querySelector(`[data-c="${c}"]`).click();
+            out['rj' + order[0]] = $('rjSlots').querySelectorAll('.full').length;
+            $('rjNext').click(); await w(20);
+          }
+          [...$('rjOpts').querySelectorAll('button')].find(b => b.textContent === T.rjOpts[0]).click(); $('rjNext').click(); await w(20);
+          out.rj = localStorage.getItem('jg-rj45-best');
+          $('rjQuit').click(); await w(50);
+          // Appel : la meilleure réponse à chaque étape
+          $('openGame').click(); await w(80); $('pickCall').click(); await w(120);
+          for (let i = 0; i < T.call.length; i++) {
+            [...$('clOpts').querySelectorAll('button')].find(b => b.textContent === T.call[i][1][0][0]).click(); await w(20); $('clNext').click(); await w(20);
+          }
+          out.call = localStorage.getItem('jg-call-best'); out.bulles = $('clChat').children.length;
+          $('clQuit').click(); await w(50);
+          // Défi du jour : une seule réponse par jour
+          $('openGame').click(); await w(80); $('pickDaily').click(); await w(120);
+          $('dyOpts').querySelector('button').click(); await w(20);
+          out.daily = !!JSON.parse(localStorage.getItem('jg-daily')).d && [...$('dyOpts').querySelectorAll('button')].every(b => b.disabled);
+          $('dyClose').click(); await w(50); $('pickDaily').click(); await w(80);
+          out.daily2 = !$('dyExpl').hidden; $('dyClose').click();
+          return out;
+        }""")
+        if res.get('itil') != '160' or res.get('ps') != '75' or res.get('rj') != '190' or res.get('call') != '16' or res.get('rj0') != 8 or res.get('rj2') != 8 or res.get('bulles') != 8 or not res.get('daily') or not res.get('daily2') or res.get('psTerm'):
+            erreurs.append(f'{nom} : nouveaux jeux {res}')
+        ok(f'{nom} : priorisation, PowerShell, RJ45, appel et défi du jour jouables jusqu’au bout, scores enregistrés')
+        # Lot 14 : créneaux, compétences, partage, FAQ, lien personnalisé
+        res = pg.evaluate("""async () => {
+          const $ = id => document.getElementById(id), w = ms => new Promise(r => setTimeout(r, ms)), out = {};
+          $('briefSlot').click(); await w(80);
+          out.slotOpen = $('slotPanel').classList.contains('open'); out.days = $('slotDays').children.length; out.slots = $('slotDays').querySelectorAll('.slot').length;
+          out.wkend = [...$('slotDays').querySelectorAll('.slot')].some(b => /samedi|dimanche/i.test(b.getAttribute('aria-label')));
+          $('slotMail').click(); out.needPick = !$('slotMsg').hidden;
+          $('slotMode').querySelectorAll('button')[1].click(); $('slotDays').querySelector('.slot').click();
+          out.mail = decodeURIComponent($('slotMail').href); out.gmail = $('slGmail').href.startsWith('https://mail.google.com/');
+          $('slotPanel').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })); $('slotPanel').click(); await w(60); out.slotClosed = !$('slotPanel').classList.contains('open');
+          $('briefSkills').click(); await w(80);
+          out.skills = $('skList').querySelectorAll('.sk-block').length; out.chips = $('skList').querySelectorAll('.chip-btn').length;
+          $('skList').querySelector('.chip-btn').click(); await w(150); out.chipGame = $('supportPanel').classList.contains('open');
+          document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open'));
+          $('briefShare').click(); await w(80);
+          out.share = $('sharePanel').classList.contains('open') && $('shLinkedin').href.includes('linkedin.com/sharing') && $('shTeams').href.includes('teams.microsoft.com');
+          $('shClose').click(); await w(40);
+          $('briefFaq').click(); await w(80); out.faq = $('faqList').querySelectorAll('details').length; out.faqTxt = $('faqList').querySelectorAll('details p')[0].textContent.length > 3;
+          $('faqClose').click();
+          return out;
+        }""")
+        if not (res['slotOpen'] and res['days'] == 8 and res['slots'] == 32 and not res['wkend'] and res['needPick'] and 'par téléphone' in res['mail'] and res['gmail'] and res['slotClosed'] and res['skills'] == 3 and res['chips'] == 10 and res['chipGame'] and res['share'] and res['faq'] == 7 and res['faqTxt']):
+            erreurs.append(f'{nom} : créneaux / compétences / partage / FAQ {res}')
+        ok(f'{nom} : créneaux (8 jours ouvrés, e-mail prérempli), compétences reliées aux jeux, partage, FAQ')
+        pg.goto(BASE + '/?pour=Société%20Générale%20<b>'); pg.wait_for_timeout(1200)
+        res = pg.evaluate("""() => ({ hello: document.getElementById('helloLine').hidden ? '' : document.getElementById('helloTxt').textContent,
+          mail: decodeURIComponent(document.getElementById('openMail').href), html: document.getElementById('helloTxt').innerHTML })""")
+        if 'Société Générale b' not in res['hello'] or '<' in res['html'] or 'Entreprise : Société Générale b' not in res['mail'] or 'Alternance' not in res['mail'] and '· Société Générale b' not in res['mail']:
+            erreurs.append(f'{nom} : lien personnalisé {res}')
+        pg.evaluate("document.getElementById('termBtn') && document.getElementById('termBtn').click()"); pg.wait_for_timeout(200)
+        pg.evaluate("(() => { const i = document.querySelector('#termForm input'); i.value = 'lien Mairie de Lyon'; document.getElementById('termForm').requestSubmit(); })()"); pg.wait_for_timeout(150)
+        lien = pg.evaluate("[...document.querySelectorAll('#term a')].map(a => a.href).pop() || ''")
+        if lien != 'https://jeremy-grosjean.fr/?pour=Mairie+de+Lyon':
+            erreurs.append(f'{nom} : commande lien → {lien}')
+        pg.evaluate("(() => { const i = document.querySelector('#termForm input'); i.value = 'competences'; document.getElementById('termForm').requestSubmit(); })()"); pg.wait_for_timeout(400)
+        if not pg.evaluate("document.getElementById('skillsPanel').classList.contains('open')"):
+            erreurs.append(f'{nom} : commande competences')
+        pg.evaluate("document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open'))")
+        ok(f'{nom} : lien personnalisé ?pour=… (texte nettoyé), commandes lien et competences')
+        # Mode forum : écran d'accueil, un toucher le masque, Quitter le mode
+        pg.goto(BASE + '/?mode=forum'); pg.wait_for_timeout(1200)
+        f1 = pg.evaluate("!document.getElementById('forum').hidden && document.getElementById('fmFact').textContent.length > 3")
+        pg.mouse.click(5, 5); pg.wait_for_timeout(150)
+        f2 = pg.evaluate("document.getElementById('forum').hidden")
+        if not (f1 and f2):
+            erreurs.append(f'{nom} : mode forum {f1} {f2}')
+        ok(f'{nom} : mode forum (écran d’accueil, retour au site au toucher)')
         ctx.close()
     # Toutes les formes d'écran : montre, carré, écran partagé, téléphone, tablette, 4K, téléviseur 8K, bandes très fines
     ECRANS = [(200, 200), (240, 320), (280, 653), (320, 480), (360, 320), (412, 430), (600, 600), (667, 300), (768, 1024),
