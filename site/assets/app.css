@@ -702,22 +702,66 @@ html:lang(ko) .gl-list, html:lang(ko) .gl-tip, html:lang(ko) .ph-mail, html:lang
   .gl-t { text-decoration: none; }
 }
 
-/* Téléphone tenu à l'horizontale (très peu de hauteur) : la page défile au lieu de tout empiler,
-   l'heure et les boutons du haut défilent avec elle, la barre du bas passe sous le contenu */
-@media (max-height: 500px) and (orientation: landscape) {
-  html, body { height: auto; min-height: 100%; }
-  body { overflow-x: hidden; overflow-y: auto; touch-action: pan-y; display: flex; flex-direction: column; }
-  main { flex: 1 0 auto; }
-  body.playing { overflow: hidden; touch-action: none; }
-  main { min-height: 0; padding: calc(max(10px, env(safe-area-inset-top)) + 54px) max(16px, env(safe-area-inset-right)) 10px max(16px, env(safe-area-inset-left)); }
-  body:has(#cLocal:not([hidden])) main { padding-top: calc(max(10px, env(safe-area-inset-top)) + 74px); }
-  .clock, .topbar { position: absolute; }
-  .clock { left: max(16px, env(safe-area-inset-left)); }
-  .topbar { right: max(16px, env(safe-area-inset-right)); }
-  .dock { position: relative; left: auto; right: auto; bottom: auto; align-items: center;
-    margin: 6px max(16px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+/* ================= Mise en page fluide : du plus petit écran (montre, 240 px) au plus grand (téléviseur 8K) =================
+   La page suit le contenu : si l'écran est trop petit, elle défile au lieu d'empiler les éléments les uns sur les autres.
+   L'heure et les boutons du haut défilent avec la page, la barre du bas vient après le contenu (en bas de l'écran s'il reste de la place). */
+html, body { height: auto; min-height: 100%; }
+body { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; overflow-x: hidden; overflow-y: auto; touch-action: pan-y; }
+body.playing { overflow: hidden; touch-action: none; }
+main { flex: 1 0 auto; min-height: 0;
+  padding: calc(max(1rem, env(safe-area-inset-top)) + 4rem) max(1rem, env(safe-area-inset-right)) .75rem max(1rem, env(safe-area-inset-left)); }
+body.has-local main { padding-top: calc(max(1rem, env(safe-area-inset-top)) + 5.2rem); }
+.clock, .topbar { position: absolute; }
+.clock { left: max(1rem, env(safe-area-inset-left)); }
+.topbar { right: max(1rem, env(safe-area-inset-right)); }
+.dock { position: relative; left: auto; right: auto; bottom: auto; align-items: center;
+  margin: .5rem max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left)); }
+.icon-btn svg, .pill svg, .btn svg, .lang-btn svg { width: 1rem; height: 1rem; }
+.lang-btn .chev { width: .75rem; height: .75rem; }
+.cta .btn svg { width: 1.15rem; height: 1.15rem; }
+/* Téléphones et fenêtres étroites (écran partagé) : la ligne des liens passe sous les boutons, sur toute la largeur,
+   et le glossaire y retrouve sa place */
+@media (max-width: 560px) {
+  main, body.has-local main { padding-top: calc(max(1rem, env(safe-area-inset-top)) + 6.4rem); }
+  body.has-local main { padding-top: calc(max(1rem, env(safe-area-inset-top)) + 7.6rem); }
+}
+@media (max-width: 900px) {
+  .dock { flex-wrap: wrap; row-gap: .35rem; }
+  .dock-mid { order: 3; flex: 1 1 100%; flex-direction: row; flex-wrap: wrap; column-gap: .5rem; row-gap: 0; }
+  .legal-row { flex-direction: row; flex-wrap: wrap; justify-content: center; column-gap: .15rem; white-space: normal; }
+  #glossBtn { display: inline-flex; }
+}
+/* Écran très bas (téléphone à l'horizontale, écran partagé) : moins de marge en haut */
+@media (max-height: 500px) and (min-width: 561px) {
+  main { padding-top: calc(max(.6rem, env(safe-area-inset-top)) + 3.4rem); }
+  body.has-local main { padding-top: calc(max(.6rem, env(safe-area-inset-top)) + 4.6rem); }
   .pill .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
   .pill { padding: .45rem .65rem; }
   .dock-mid { font-size: .72rem; }
   .keys { margin-top: .6rem; font-size: .72rem; }
 }
+/* Montres et écrans minuscules : tout reste utilisable, en plus compact */
+@media (max-width: 300px) {
+  .topbar { gap: .3rem; }
+  .lang-btn #langCur { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); }
+  .domain { font-size: clamp(1rem, 10.5vw, 1.7rem); }
+  .brand { font-size: .68rem; gap: .35rem; max-width: 100%; } .brand > span:last-child { overflow-wrap: anywhere; min-width: 0; }
+  .bootlog { font-size: .6rem; padding: .45rem .5rem; overflow-wrap: anywhere; }
+  .typeline { overflow-wrap: anywhere; }
+  .cta { flex-direction: column; align-items: stretch; }
+  .card { padding: 1.1rem .9rem 1rem; border-radius: 14px; }
+  .panel { padding: 8px; }
+  .dock-left { gap: .3rem; }
+  .ext-list li, .eco-list li, .sc-list li, #supList li { flex-wrap: wrap; row-gap: .1rem; }
+  .ext-list b, .eco-list b, .sc-list b, #supList b { white-space: normal; overflow-wrap: anywhere; }
+  .ph-opts, .sn-opts { grid-template-columns: 1fr; }
+  .tk-opt { overflow-wrap: anywhere; }
+  .keys-list li { grid-template-columns: 1fr; gap: .15rem; }
+  .seg { flex-wrap: wrap; }
+}
+/* Très grands écrans (27 pouces, 4K, téléviseurs) : tout est agrandi proportionnellement */
+@media (min-width: 1800px) and (min-height: 1000px) { :root { --ui-scale: 1.125; } html { font-size: 112.5%; } html[data-size="s"] { font-size: 105%; } html[data-size="l"] { font-size: 126%; } }
+@media (min-width: 2400px) and (min-height: 1300px) { :root { --ui-scale: 1.375; } html { font-size: 137.5%; } html[data-size="s"] { font-size: 129%; } html[data-size="l"] { font-size: 155%; } }
+@media (min-width: 3200px) and (min-height: 1750px) { :root { --ui-scale: 1.875; } html { font-size: 187.5%; } html[data-size="s"] { font-size: 176%; } html[data-size="l"] { font-size: 211%; } }
+@media (min-width: 4800px) and (min-height: 2600px) { :root { --ui-scale: 2.75; } html { font-size: 275%; } html[data-size="s"] { font-size: 258%; } html[data-size="l"] { font-size: 309%; } }
+@media (min-width: 6400px) and (min-height: 3500px) { :root { --ui-scale: 3.75; } html { font-size: 375%; } html[data-size="s"] { font-size: 352%; } html[data-size="l"] { font-size: 422%; } }

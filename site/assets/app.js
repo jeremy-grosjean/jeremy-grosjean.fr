@@ -253,7 +253,7 @@
   const c = $('net'), x = c.getContext ? c.getContext('2d') : null;
   const stack = $('stack'), domain = $('domain');
   const DRIFT = reduce ? 0.12 : 1;
-  let W = 0, H = 0, dpr = 1, nodes = [], packets = [], rings = [], trail = [], sparks = [], baseCount = 0;
+  let W = 0, H = 0, dpr = 1, UIS = 1, nodes = [], packets = [], rings = [], trail = [], sparks = [], baseCount = 0;
   let pointer = null; const glow = { x: 0, y: 0, a: 0 };
   const LINK = () => Math.min(170, Math.max(120, W / 8));
   const FIELD = () => Math.min(220, Math.max(140, W / 6));
@@ -263,8 +263,11 @@
   };
   function setup(w, h) {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = w || window.innerWidth; H = h || window.innerHeight;
-    c.width = W * dpr; c.height = H * dpr;
+    /* Très grands écrans (4K, téléviseurs) : le réseau et le jeu sont agrandis comme le texte (variable --ui-scale du CSS) */
+    UIS = Math.max(1, parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--ui-scale')) || 1);
+    const pw = w || window.innerWidth, ph = h || window.innerHeight;
+    W = pw / UIS; H = ph / UIS;
+    c.width = Math.round(pw * dpr); c.height = Math.round(ph * dpr);
     baseCount = Math.round(Math.min(95, Math.max(44, (W * H) / 14500)));
     nodes = Array.from({ length: baseCount }, () => makeNode(Math.random() * W, Math.random() * H));
     packets = []; rings = []; morph.on = false;
@@ -501,7 +504,7 @@
     if (morph.on && now > morph.until) endMorph();
     let ox = 0, oy = 0;
     if (G.shake > .3) { ox = (Math.random() - .5) * G.shake; oy = (Math.random() - .5) * G.shake; G.shake *= .86; }
-    x.setTransform(dpr, 0, 0, dpr, ox * dpr, oy * dpr);
+    const k2 = dpr * UIS; x.setTransform(k2, 0, 0, k2, ox * k2, oy * k2);
     x.clearRect(-20, -20, W + 40, H + 40);
     const L = LINK(), F = FIELD(), K = P.k;
 
@@ -1012,15 +1015,17 @@
   $('termClose').addEventListener('click', closeTerm);
 
   /* ================= Entrées ================= */
+  /* Coordonnées du pointeur dans le repère du réseau (divisées par l'agrandissement des très grands écrans) */
+  const px = e => e.clientX / UIS, py = e => e.clientY / UIS;
   function onMove(e) {
     if (soundOn && !G.on && pointer && !menuOpen() && !isUI(e.target)) {
-      const now = performance.now(), d = Math.hypot(e.clientX - pointer.x, e.clientY - pointer.y);
-      if (d > 14 && now - lastMoveSound > 110) { lastMoveSound = now; SND.move(e.clientX, e.clientY); }
+      const now = performance.now(), d = Math.hypot(px(e) - pointer.x, py(e) - pointer.y);
+      if (d > 14 && now - lastMoveSound > 110) { lastMoveSound = now; SND.move(px(e), py(e)); }
     }
-    pointer = { x: e.clientX, y: e.clientY };
-    trail.push({ x: e.clientX, y: e.clientY, life: 1 });
+    pointer = { x: px(e), y: py(e) };
+    trail.push({ x: px(e), y: py(e), life: 1 });
     if (trail.length > 28) trail.shift();
-    if (!G.on && !reduce) stack.style.transform = `translate3d(${(e.clientX / W - .5) * -14}px, ${(e.clientY / H - .5) * -10}px, 0)`;
+    if (!G.on && !reduce) stack.style.transform = `translate3d(${(px(e) / W - .5) * -14}px, ${(py(e) / H - .5) * -10}px, 0)`;
   }
   function onLeave() { pointer = null; if (!G.on) stack.style.transform = ''; }
   const isUI = el => el.closest && el.closest('button, a, input, select, label, .panel, .term, .topbar, .dock');
@@ -1028,7 +1033,7 @@
   window.addEventListener('pointerdown', e => {
     if (isUI(e.target)) return;
     onMove(e);
-    if (G.on) gameTap(e.clientX, e.clientY, e.pointerType !== 'mouse'); else burst(e.clientX, e.clientY);
+    if (G.on) gameTap(px(e), py(e), e.pointerType !== 'mouse'); else burst(px(e), py(e));
   }, { passive: true });
   window.addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') onLeave(); }, { passive: true });
   window.addEventListener('pointercancel', onLeave, { passive: true });

@@ -103,6 +103,33 @@ with sync_playwright() as p:
             pg.goto(BASE + page); pg.wait_for_timeout(400)
         ok(f'{nom} : vue recruteur, mentions légales, accessibilité, page 404')
         ctx.close()
+    # Toutes les formes d'écran : montre, carré, écran partagé, téléphone, tablette, 4K, téléviseur 8K, bandes très fines
+    ECRANS = [(200, 200), (240, 320), (280, 653), (320, 480), (360, 320), (412, 430), (600, 600), (667, 300), (768, 1024),
+              (1024, 768), (1280, 480), (1440, 900), (1600, 200), (200, 1600), (2560, 1440), (3840, 2160), (5120, 1440), (7680, 4320)]
+    CLES = ['.clock', '.topbar', '.brand', '#nameFx', '.who-line', '.rot-line', '.avail', '.bootlog', '.cta', '.scores', '.keys', '.dock-left', '.dock-mid', '#sound']
+    MESURE = """(cles) => { const vis = e => { if (!e) return false; const r = e.getBoundingClientRect(), s = getComputedStyle(e); return r.width > 0 && r.height > 0 && s.display !== 'none' && s.visibility !== 'hidden' && +s.opacity > 0; };
+      const R = cles.map(c => { const e = document.querySelector(c); if (!vis(e)) return null; const r = e.getBoundingClientRect(); return [c, r.left, r.top + scrollY, r.right, r.bottom + scrollY]; }).filter(Boolean), pb = [];
+      for (let i = 0; i < R.length; i++) for (let j = i + 1; j < R.length; j++) { const a = R[i], b = R[j]; if (a[1] < b[3] - 1 && b[1] < a[3] - 1 && a[2] < b[4] - 1 && b[2] < a[4] - 1) pb.push(a[0] + ' chevauche ' + b[0]); }
+      const dm = document.querySelector('.dock-mid').getBoundingClientRect();
+      if ([...document.querySelectorAll('.dock-mid *')].some(e => { const r = e.getBoundingClientRect(); return r.width > 0 && (r.right > dm.right + 1 || r.left < dm.left - 1); })) pb.push('le texte du pied de page déborde');
+      return pb; }"""
+    for w, h in ECRANS:
+        ctx = nav.new_context(viewport={'width': w, 'height': h}, has_touch=w < 1100, is_mobile=w < 1100, locale='fr-FR', timezone_id='Europe/Paris')
+        pg = ctx.new_page(); suivre(pg, f'{w}×{h}')
+        pg.add_init_script("localStorage.setItem('jg-tour', '1')")
+        pg.goto(BASE + '/'); pg.wait_for_timeout(900)
+        large = pg.evaluate('Math.max(document.documentElement.scrollWidth, innerWidth)')
+        if large > w + 1:
+            erreurs.append(f'{w}×{h} : la page déborde sur le côté ({large} px)')
+        for pb in pg.evaluate(MESURE, CLES):
+            erreurs.append(f'{w}×{h} : {pb}')
+        for panneau, bouton in (('contactPanel', 'contactBtn'), ('secPanel', 'secBtn'), ('gamesPanel', 'openGame')):
+            pg.evaluate(f"document.getElementById('{bouton}').click()"); pg.wait_for_timeout(200)
+            if pg.evaluate(f"(() => {{ const c = document.querySelector('#{panneau} .card'), r = c.getBoundingClientRect(); return r.left < -1 || r.right > innerWidth + 1 || r.top < -1 || r.bottom > innerHeight + 1 || c.scrollWidth > c.clientWidth + 2; }})()"):
+                erreurs.append(f'{w}×{h} : la fenêtre {panneau} sort de l’écran')
+            pg.evaluate("document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open'))")
+        ctx.close()
+    ok(f'{len(ECRANS)} formes d’écran, du 200×200 au 8K : rien ne déborde ni ne se chevauche')
     nav.close()
 srv.shutdown()
 
