@@ -48,6 +48,15 @@ with sync_playwright() as p:
                 erreurs.append(f'{nom} : le jeu {bouton} ne s’ouvre pas')
             pg.keyboard.press('Escape'); pg.evaluate("document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open'))")
         ok(f'{nom} : les 7 jeux s’ouvrent')
+        # Pendant « Protéger le serveur », un clic là où se trouvait « Me contacter » ne doit rien ouvrir
+        r = pg.evaluate("(() => { const b = document.getElementById('contactBtn').getBoundingClientRect(); return [b.x + b.width / 2, b.y + b.height / 2]; })()")
+        pg.evaluate("document.getElementById('openGame').click(); document.getElementById('pickServer').click(); document.getElementById('start').click()"); pg.wait_for_timeout(150)
+        pg.evaluate("document.getElementById('lvGo').click()"); pg.wait_for_timeout(150)
+        pg.mouse.click(r[0], r[1]); pg.wait_for_timeout(150)
+        if pg.evaluate("document.querySelector('.panel.open') !== null || !document.body.classList.contains('playing')"):
+            erreurs.append(f'{nom} : un clic pendant le jeu ouvre une fenêtre de l’accueil')
+        pg.evaluate("document.getElementById('quit').click()"); pg.wait_for_timeout(100)
+        ok(f'{nom} : pendant le jeu, seul « Quitter » est cliquable')
         pg.evaluate("document.getElementById('pickPhish').click()"); pg.wait_for_timeout(150)
         for i in range(6):
             pg.evaluate("document.getElementById('phPhishBtn').click()"); pg.evaluate("document.getElementById('phNext').click()")

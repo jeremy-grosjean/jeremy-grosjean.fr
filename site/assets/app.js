@@ -356,9 +356,14 @@
     if (k === 2) lg.append(legendItem('phish', t('lgPhish')), legendItem('bad', t('lgBad')), legendItem('good', t('lgGood')));
     hud(); openPanel('levelPanel', 'lvGo');
   }
+  /* Pendant la partie, seul « Quitter » reste cliquable : l'accueil, la barre du haut et le pied de page sont mis hors d'atteinte (souris, doigt et clavier) */
+  function setPlaying(on) {
+    document.body.classList.toggle('playing', on);
+    for (const el of document.querySelectorAll('main, .clock, .topbar, .dock, #term')) { if (on) el.setAttribute('inert', ''); else el.removeAttribute('inert'); }
+  }
   function startGame() {
     Object.assign(G, { on: true, active: false, lv: 0, score: 0, breach: 0, load: 0, items: [], shake: 0, hit: 0 });
-    document.body.classList.add('playing'); showLevel(0);
+    closeTerm(); setPlaying(true); showLevel(0);
   }
   function beginLevel() {
     closePanels();
@@ -367,7 +372,7 @@
   }
   function endGame(reason) {
     G.on = false; G.active = false; G.items = [];
-    document.body.classList.remove('playing'); SND.end();
+    setPlaying(false); SND.end();
     const best = getBest(), record = G.score > best;
     if (record) store.set('jg-firewall-best', String(G.score));
     if (reason === 'win') found('win');
@@ -376,7 +381,7 @@
     $('finalText').textContent = record && G.score > 0 ? t('newRecord') : t('record')(Math.max(best, G.score));
     openPanel('over', 'again');
   }
-  function quitGame() { G.on = false; G.active = false; G.items = []; document.body.classList.remove('playing'); closePanels(); }
+  function quitGame() { G.on = false; G.active = false; G.items = []; setPlaying(false); closePanels(); }
 
   function edgePoint() {
     const side = Math.random() * 4 | 0, m = 30;
@@ -1032,8 +1037,8 @@
   let kIdx = 0;
   window.addEventListener('keydown', e => {
     const typing = e.target === input || menuOpen();
-    if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); termOpen() ? closeTerm() : openTerm(); return; }
-    if (!typing && (e.code === 'Backquote' || e.key === '²' || e.key === '`')) { e.preventDefault(); termOpen() ? closeTerm() : openTerm(); return; }
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); if (!G.on) termOpen() ? closeTerm() : openTerm(); return; }
+    if (!typing && !G.on && (e.code === 'Backquote' || e.key === '²' || e.key === '`')) { e.preventDefault(); termOpen() ? closeTerm() : openTerm(); return; }
     if (e.key === 'Escape') { if (termOpen()) closeTerm(); else if (G.on) quitGame(); else if (recOn() && !document.querySelector('.panel.open')) closeRec(); else closePanels(); return; }
     if (typing) return;
     const k = e.key.toLowerCase();
