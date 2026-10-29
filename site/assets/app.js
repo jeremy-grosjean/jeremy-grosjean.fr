@@ -2296,22 +2296,23 @@
   const svgEl = (tag, attrs) => { const e = document.createElementNS('http://www.w3.org/2000/svg', tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
   /* Une icône au trait par jeu (dessinée élément par élément : compatible avec la politique de sécurité du site) */
   const GICON = {
-    pickServer: [['path', { d: 'M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z' }], ['path', { d: 'M9 12l2 2 4-4' }]],
+    pickServer: [['path', { d: 'M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z' }], ['path', { d: 'M9 12l2 2 4-4', class: 'a-ck', pathLength: 10 }]],
     pickSupport: [['path', { d: 'M4 13a8 8 0 0 1 16 0' }], ['rect', { x: 3, y: 13, width: 4, height: 6, rx: 1.5 }], ['rect', { x: 17, y: 13, width: 4, height: 6, rx: 1.5 }]],
     pickSupport2: [['path', { d: 'M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17v3h3l5.3-5.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.5-.5-2.5z' }]],
-    pickPanne: [['circle', { cx: 11, cy: 11, r: 6 }], ['path', { d: 'M20 20l-4.5-4.5' }]],
+    pickPanne: [['g', { class: 'a-loupe' }, [['circle', { cx: 11, cy: 11, r: 6 }], ['path', { d: 'M20 20l-4.5-4.5' }]]]],
     pickQuiz: [['path', { d: 'M3 7h7l2 2h9v10H3z' }], ['path', { d: 'M3 7V5h6l2 2' }]],
     pickPhish: [['rect', { x: 3, y: 5, width: 18, height: 14, rx: 2 }], ['path', { d: 'M3 8l9 6 9-6' }]],
     pickItil: [['path', { d: 'M4 6h16v4a2 2 0 0 0 0 4v4H4v-4a2 2 0 0 0 0-4z' }], ['path', { d: 'M10 6v12', 'stroke-dasharray': '2 2' }]],
     pickPs: [['rect', { x: 3, y: 4, width: 18, height: 16, rx: 2 }], ['path', { d: 'M7 10l3 2-3 2M12 15h5' }]],
-    pickRj: [['path', { d: 'M6 4h12v9l-3 3v4H9v-4l-3-3z' }], ['path', { d: 'M9 4v4M12 4v4M15 4v4' }]],
-    pickCall: [['path', { d: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2' }]],
+    pickRj: [['g', { class: 'a-plug' }, [['path', { d: 'M6 4h12v9l-3 3v4H9v-4l-3-3z' }], ['path', { d: 'M9 4v4M12 4v4M15 4v4' }]]]],
+    pickCall: [['path', { d: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2', class: 'a-ring' }]],
     pickDaily: [['rect', { x: 4, y: 5, width: 16, height: 15, rx: 2 }], ['path', { d: 'M4 9h16M8 3v4M16 3v4M9 14l2 2 4-4' }]],
     pickPrep: [['rect', { x: 3, y: 4, width: 18, height: 12, rx: 2 }], ['path', { d: 'M8 20h8M12 16v4' }]],
-    pickRansom: [['rect', { x: 5, y: 10, width: 14, height: 10, rx: 2 }], ['path', { d: 'M8 10V7a4 4 0 0 1 8 0v3M12 14v2' }]],
+    pickRansom: [['rect', { x: 5, y: 10, width: 14, height: 10, rx: 2 }], ['path', { d: 'M8 10V7a4 4 0 0 1 8 0v3', class: 'a-shk' }], ['path', { d: 'M12 14v2' }]],
     pickReply: [['path', { d: 'M4 5h16v11H9l-5 4z' }], ['path', { d: 'M8 9h8M8 12h5' }]],
     pickSubnet: [['circle', { cx: 12, cy: 5, r: 2 }], ['circle', { cx: 5, cy: 19, r: 2 }], ['circle', { cx: 19, cy: 19, r: 2 }], ['path', { d: 'M12 7v5M12 12l-6 5M12 12l6 5' }]]
   };
+  function drawParts(parent, parts) { for (const [tg, at, kids] of parts) { const e = svgEl(tg, at); if (kids) drawParts(e, kids); parent.append(e); } }
   /* Fiche de chaque jeu : catégorie, durée, difficulté (1 à 3), clé du meilleur score, score maximal, fenêtre */
   const GAMES = [
     ['pickDaily', 'all', 1, 1, null, 0, 'dyPanel'],
@@ -2340,8 +2341,8 @@
       b.addEventListener('click', () => { gTab = c; store.set('jg-games-tab', c); decoratePicks(); SND.key(); }); tabs.append(b);
     }
     for (const [id, cat, min, diff, key, max] of GAMES) {
-      const p = $(id); if (!p) continue; p.classList.add('has-ic'); p.hidden = !(gTab === 'all' || cat === gTab);
-      let ic = p.querySelector('.g-ic'); if (!ic) { ic = document.createElement('span'); ic.className = 'g-ic'; ic.setAttribute('aria-hidden', 'true'); const sv = svgEl('svg', { viewBox: '0 0 24 24' }); for (const [tg, at] of GICON[id] || []) sv.append(svgEl(tg, at)); ic.append(sv); p.prepend(ic); }
+      const p = $(id); if (!p) continue; p.classList.add('has-ic'); p.dataset.cat = cat; p.hidden = !(gTab === 'all' || cat === gTab);
+      let ic = p.querySelector('.g-ic'); if (!ic) { ic = document.createElement('span'); ic.className = 'g-ic'; ic.setAttribute('aria-hidden', 'true'); const sv = svgEl('svg', { viewBox: '0 0 24 24' }); drawParts(sv, GICON[id] || []); ic.append(sv); p.prepend(ic); }
       let meta = p.querySelector('.g-meta'); if (!meta) { meta = document.createElement('small'); meta.className = 'g-meta'; p.append(meta); }
       const dots = '●'.repeat(diff) + '○'.repeat(3 - diff), dl = t('gDiff')[diff - 1];
       meta.textContent = `${t('gMin')(min)} · `; const d = document.createElement('span'); d.className = 'g-diff'; d.textContent = dots; d.title = t('gDiffL')(dl); d.setAttribute('aria-label', t('gDiffL')(dl)); meta.append(d);
@@ -2517,6 +2518,59 @@
     if (!('contrastSet' in saved) && mq.matches && !A11Y.contrast) { A11Y.contrast = true; applyA11y(); requestAnimationFrame(readPalette); }
     $('a11yContrast').addEventListener('change', () => { A11Y.contrastSet = true; store.set('jg-a11y', JSON.stringify(A11Y)); });
   }
+
+
+  /* ================= Lot 17 : graphisme (couleur par catégorie, bandeaux, jauges de supervision, ciel de Paris) ================= */
+  const CAT_KEY = { sup: 'catSup', sys: 'catSys', net: 'catNet', sec: 'catSec' };
+  const BAND_ICON = {
+    contactPanel: ['cyan', [['rect', { x: 3, y: 5, width: 18, height: 14, rx: 2 }], ['path', { d: 'M3 8l9 6 9-6' }]]],
+    secPanel: ['sec', [['path', { d: 'M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z' }], ['path', { d: 'M9 12l2 2 4-4' }]]],
+    supPanel: ['net', [['path', { d: 'M3 12h4l2.5-6 4 12 2.5-6H21' }]]]
+  };
+  /* Bandeau en tête d'une fenêtre : grande icône sur un dégradé de la couleur de la catégorie */
+  function bandFor(pn) {
+    const card = pn.querySelector('.card'); if (!card) return;
+    let band = card.querySelector(':scope > .g-band');
+    const mk = () => { const b = document.createElement('div'); b.className = 'g-band'; b.setAttribute('aria-hidden', 'true'); const xw = card.querySelector(':scope > .panel-x-wrap'); if (xw) xw.after(b); else card.prepend(b); return b; };
+    if (BAND_ICON[pn.id]) {
+      const [cat, parts] = BAND_ICON[pn.id]; pn.dataset.cat = cat;
+      if (!band) { const h2 = card.querySelector(':scope > h2'); band = mk(); band.classList.add('slim'); band.removeAttribute('aria-hidden'); const ic = document.createElement('span'); ic.className = 'gb-ic'; ic.setAttribute('aria-hidden', 'true'); const sv = svgEl('svg', { viewBox: '0 0 24 24' }); drawParts(sv, parts); ic.append(sv); band.append(ic); if (h2) band.append(h2); }
+      return;
+    }
+    const id = gameOf(pn.id); if (!id) return; const m = gmeta(id); if (!m) return;
+    const [, cat, min, diff] = m; pn.dataset.cat = cat;
+    if (!band) band = mk(); band.textContent = '';
+    const ic = document.createElement('span'), tx = document.createElement('span'), b = document.createElement('b'), sm = document.createElement('small');
+    ic.className = 'gb-ic'; const sv = svgEl('svg', { viewBox: '0 0 24 24' }); drawParts(sv, GICON[id] || []); ic.append(sv);
+    b.textContent = t(id + 'T'); sm.textContent = [CAT_KEY[cat] ? t(CAT_KEY[cat]) : null, t('gMin')(min), '●'.repeat(diff) + '○'.repeat(3 - diff)].filter(Boolean).join(' · ');
+    tx.append(b, sm); band.append(ic, tx);
+  }
+  { const prevOpen = onPanelOpen; onPanelOpen = function (id) { prevOpen(id); const pn = $(id); if (pn && (GAME_PANELS.includes(id) || BAND_ICON[id])) bandFor(pn); if (id === 'supPanel') try { supGauges(); } catch (e) {} }; }
+
+  /* Supervision : deux jauges (jours restants du certificat, disponibilité sur 30 jours) au-dessus de la liste */
+  function arcGauge(frac, cls, big, small) {
+    const g = document.createElement('div'), sv = svgEl('svg', { viewBox: '0 0 100 56', 'aria-hidden': 'true' }), b = document.createElement('b'), s = document.createElement('small');
+    g.className = 'gauge ' + cls;
+    sv.append(svgEl('path', { d: 'M8 52a42 42 0 0 1 84 0', class: 'g-track' }));
+    const arc = svgEl('path', { d: 'M8 52a42 42 0 0 1 84 0', class: 'g-val', pathLength: 100, 'stroke-dasharray': (reduce ? Math.round(frac * 100) : 0) + ' 100' }); sv.append(arc);
+    if (!reduce) requestAnimationFrame(() => requestAnimationFrame(() => arc.setAttribute('stroke-dasharray', Math.round(frac * 100) + ' 100')));
+    b.textContent = big; s.textContent = small; g.append(sv, b, s); return g;
+  }
+  function supGauges() {
+    const old = document.getElementById('supGauges'); if (old) old.remove();
+    const st = ST(); if (!st) return; const S = t('supLabels'), box = document.createElement('div'); box.id = 'supGauges'; box.className = 'gauges';
+    if (typeof st.tlsDays === 'number') box.append(arcGauge(Math.max(0, Math.min(1, st.tlsDays / 90)), st.tlsDays > 20 ? 'ok' : st.tlsDays > 0 ? 'warn' : 'bad', t('gDays')(st.tlsDays), S.tls));
+    if (typeof st.uptime30 === 'number') box.append(arcGauge(Math.max(0, Math.min(1, (st.uptime30 - 95) / 5)), st.uptime30 >= 99.5 ? 'ok' : st.uptime30 >= 98 ? 'warn' : 'bad', String(st.uptime30).replace('.', lang === 'fr' ? ',' : '.') + ' %', S.uptime || 'Uptime'));
+    if (box.children.length) $('supList').before(box);
+  }
+
+  /* Ciel de Paris : en thème sombre, le fond suit doucement l'heure (aube, journée, soir, nuit) */
+  function skyNow() {
+    let h = 12; try { h = parseInt(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Paris' }).format(new Date()), 10); } catch (e) {}
+    const s = h >= 6 && h < 9 ? 'dawn' : h >= 9 && h < 18 ? 'day' : h >= 18 && h < 21 ? 'dusk' : 'night';
+    if (document.documentElement.dataset.sky !== s) document.documentElement.dataset.sky = s;
+  }
+  skyNow(); setInterval(skyNow, 60000);
 
   function lot16Lang() { sizeUI(); if ($('gamesPanel').classList.contains('open')) decoratePicks(); document.querySelectorAll('.end-other').forEach(b => { b.textContent = t('endOther'); }); }
   lot16Lang();

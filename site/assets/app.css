@@ -990,3 +990,71 @@ html[data-contrast] .tk-opt.good { background: #003A1F; } html[data-contrast] .t
 html[data-contrast] .btn { background: #FFE600; color: #000; }
 @media (prefers-reduced-motion: reduce) { .end-ring { transition: none; } .card.q-in > * { animation: none !important; } .ps-term .cur { animation: none; } }
 @media print { .confetti, .kbd-hint, .end-viz { display: none !important; } }
+/* ===== Lot 17 : graphisme ===== */
+/* Police de titre (Sora, licence SIL OFL, hébergée sur ce serveur) */
+@font-face { font-family: "JG Sora"; src: url("/assets/fonts/sora.woff") format("woff"); font-weight: 600 800; font-style: normal; font-display: swap; }
+:root { --font-disp: "JG Sora", ui-sans-serif, -apple-system, "Segoe UI Variable", "Segoe UI", Roboto, "PingFang SC", "PingFang TC", "Apple SD Gothic Neo", "Microsoft YaHei", "Malgun Gothic", sans-serif; }
+.domain, .card > h2:not(.qz-q), .score-big, .end-ring b, .forum-name, .bd-count, .rec-name, #recName { font-family: var(--font-disp); }
+.domain { font-weight: 800; letter-spacing: -0.04em; }
+/* Une couleur par catégorie de jeux (lisible dans les trois thèmes) */
+:root { --c-sup: #5EA8FF; --c-sys: #A98BFF; --c-net: #4BE3A0; --c-sec: #FF7A8A; --c-all: var(--cyan); }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --c-sup: #1F67C9; --c-sys: #6A47D6; --c-net: #0B7F52; --c-sec: #C8223F; } }
+:root[data-theme="light"] { --c-sup: #1F67C9; --c-sys: #6A47D6; --c-net: #0B7F52; --c-sec: #C8223F; }
+:root[data-contrast][data-contrast] { --c-sup: #8CCBFF; --c-sys: #D9C2FF; --c-net: #3CFF9E; --c-sec: #FF9AA8; }
+[data-cat="sup"] { --cat: var(--c-sup); } [data-cat="sys"] { --cat: var(--c-sys); } [data-cat="net"] { --cat: var(--c-net); } [data-cat="sec"] { --cat: var(--c-sec); } [data-cat="all"] { --cat: var(--cyan); } [data-cat="cyan"] { --cat: var(--cyan); }
+.pick[data-cat] > .g-ic { background: rgba(var(--cyan-rgb), .12); background: color-mix(in srgb, var(--cat) 15%, transparent); }
+.pick[data-cat] .g-ic svg { stroke: var(--cat); }
+.pick[data-cat] .g-meta .g-diff { color: var(--cat); }
+.pick[data-cat]:hover, .pick[data-cat]:focus-visible { border-color: var(--cat); background: color-mix(in srgb, var(--cat) 9%, transparent); }
+.g-tabs button[data-cat][aria-selected="true"] { border-color: var(--cat); background: color-mix(in srgb, var(--cat) 16%, transparent); }
+.panel[data-cat] .prog-bar i.f { background: var(--cat); }
+.panel[data-cat] .end-ring { background: conic-gradient(var(--cat) calc(var(--p) * 1%), rgba(var(--node-rgb), .12) 0); }
+/* Bandeaux en tête des fenêtres */
+.g-band { display: flex; align-items: center; gap: .75rem; margin: 0 0 .9rem; padding: .7rem .8rem; border-radius: 12px; border: 1px solid var(--line); background: rgba(var(--cyan-rgb), .1); background: linear-gradient(120deg, color-mix(in srgb, var(--cat, var(--cyan)) 30%, transparent), color-mix(in srgb, var(--cat, var(--cyan)) 4%, transparent)); text-align: left; padding-right: 2.6rem; }
+.g-band .gb-ic { flex: none; width: 2.5rem; height: 2.5rem; border-radius: .75rem; display: grid; place-items: center; background: rgba(var(--node-rgb), .1); }
+.g-band svg { width: 1.45rem; height: 1.45rem; fill: none; stroke: var(--cat, var(--cyan)); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.g-band > span:last-child { min-width: 0; display: grid; gap: .05rem; }
+.g-band b { font: 700 .98rem var(--font-disp); line-height: 1.25; overflow-wrap: anywhere; }
+.g-band small { color: var(--dim); font-size: .76rem; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+.g-band.slim { justify-content: flex-start; padding: .55rem .7rem; padding-right: 2.6rem; }
+.g-band.slim h2 { margin: 0 !important; text-align: left; font-size: 1.3rem; line-height: 1.2; min-width: 0; overflow-wrap: anywhere; }
+.g-band.slim .gb-ic { width: 2.2rem; height: 2.2rem; }
+@media (max-height: 520px) { .g-band { padding: .4rem .6rem; margin-bottom: .6rem; } .g-band .gb-ic { width: 1.9rem; height: 1.9rem; } .g-band small { display: none; } }
+html[data-contrast] .g-band { background: #000; border: 2px solid var(--cat, #FFE600); }
+/* Jauges de supervision */
+.gauges { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr)); gap: .55rem; margin: 0 0 .9rem; }
+.gauge { text-align: center; border: 1px solid var(--line); border-radius: 12px; padding: .6rem .3rem .5rem; }
+.gauge svg { display: block; width: 6rem; height: auto; margin: 0 auto .15rem; fill: none; stroke-width: 9; stroke-linecap: round; }
+.gauge .g-track { stroke: rgba(var(--node-rgb), .12); }
+.gauge .g-val { stroke: var(--ok); transition: stroke-dasharray 1s cubic-bezier(.2, .8, .2, 1); }
+.gauge.warn .g-val { stroke: rgb(var(--warn-rgb)); } .gauge.bad .g-val { stroke: var(--threat); }
+.gauge b { display: block; font: 700 1.05rem ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
+.gauge small { color: var(--dim); font-size: .74rem; }
+/* Icônes animées au survol des jeux */
+.g-ic svg, .g-ic svg * { transform-box: view-box; transform-origin: 12px 12px; }
+.pick:hover .g-ic svg, .pick:focus-visible .g-ic svg { transition: transform .3s cubic-bezier(.2, .8, .2, 1); transform: scale(1.12); }
+.g-ic .a-ck { stroke-dasharray: 10; stroke-dashoffset: 0; }
+.pick:hover .a-ck, .pick:focus-visible .a-ck { animation: aDraw .5s ease both; }
+@keyframes aDraw { from { stroke-dashoffset: 10; } to { stroke-dashoffset: 0; } }
+.pick:hover .a-shk, .pick:focus-visible .a-shk { animation: aShackle .55s ease both; }
+@keyframes aShackle { 0% { transform: translateY(-2.5px); } 60% { transform: translateY(.6px); } 100% { transform: none; } }
+.g-ic .a-ring { transform-origin: 12px 6px; }
+.pick:hover .a-ring, .pick:focus-visible .a-ring { animation: aRing .6s ease; }
+@keyframes aRing { 20% { transform: rotate(-14deg); } 40% { transform: rotate(12deg); } 60% { transform: rotate(-8deg); } 80% { transform: rotate(4deg); } }
+.pick:hover .a-plug, .pick:focus-visible .a-plug { animation: aPlug .5s ease both; }
+@keyframes aPlug { 0% { transform: translateY(3px); } 70% { transform: translateY(-1px); } 100% { transform: none; } }
+.pick:hover .a-loupe, .pick:focus-visible .a-loupe { animation: aLoupe .7s ease; }
+@keyframes aLoupe { 25% { transform: translate(-1.5px, -1px); } 50% { transform: translate(1.5px, .5px); } 75% { transform: translate(-.5px, 1px); } }
+@media (prefers-reduced-motion: reduce) { .pick .g-ic svg, .pick .g-ic svg * { animation: none !important; transition: none !important; transform: none !important; } .gauge .g-val { transition: none; } }
+/* Ciel de Paris (thème sombre seulement) : le haut du fond change selon l'heure */
+@media (prefers-color-scheme: dark) {
+  html[data-sky="dawn"]:not([data-theme]):not([data-contrast]):not([data-retro]) { --bg-1: #2C2766; }
+  html[data-sky="day"]:not([data-theme]):not([data-contrast]):not([data-retro]) { --bg-1: #18326E; }
+  html[data-sky="dusk"]:not([data-theme]):not([data-contrast]):not([data-retro]) { --bg-1: #36204F; }
+  html[data-sky="night"]:not([data-theme]):not([data-contrast]):not([data-retro]) { --bg-1: #10173A; }
+}
+html[data-sky="dawn"][data-theme="dark"]:not([data-contrast]):not([data-retro]) { --bg-1: #2C2766; }
+html[data-sky="day"][data-theme="dark"]:not([data-contrast]):not([data-retro]) { --bg-1: #18326E; }
+html[data-sky="dusk"][data-theme="dark"]:not([data-contrast]):not([data-retro]) { --bg-1: #36204F; }
+html[data-sky="night"][data-theme="dark"]:not([data-contrast]):not([data-retro]) { --bg-1: #10173A; }
+@media print { .g-band, .gauges { display: none !important; } }

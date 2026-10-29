@@ -8,6 +8,7 @@ AddType image/svg+xml .svg
 AddType image/x-icon .ico
 AddType application/manifest+json .webmanifest
 AddType "text/vcard; charset=utf-8" .vcf
+AddType font/woff .woff
 DirectoryIndex index.html
 ErrorDocument 404 /404.html
 
@@ -30,7 +31,7 @@ ErrorDocument 404 /404.html
 # En-têtes de sécurité
 <IfModule mod_headers.c>
   Header always set Strict-Transport-Security "max-age=31536000"
-  Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; font-src 'none'; media-src 'none'; object-src 'none'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types jg; upgrade-insecure-requests"
+  Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; font-src 'self'; media-src 'none'; object-src 'none'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types jg; upgrade-insecure-requests"
   Header always set X-Frame-Options "DENY"
   Header always set X-Content-Type-Options "nosniff"
   Header always set Referrer-Policy "no-referrer"

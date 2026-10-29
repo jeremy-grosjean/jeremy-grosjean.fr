@@ -27,7 +27,7 @@ for page in ['index.html', 'mentions-legales.html', 'accessibilite.html', '404.h
             continue
         if u not in urls:
             urls.append(u)
-for extra in ['/qr.svg', '/icon-192.png', '/og.jpg', '/assets/status.js']:
+for extra in ['/qr.svg', '/icon-192.png', '/og.jpg', '/assets/status.js', '/assets/fonts/sora.woff']:
     if extra not in urls:
         urls.append(extra)
 tout = hashlib.sha256()
