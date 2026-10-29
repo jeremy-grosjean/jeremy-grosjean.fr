@@ -95,13 +95,22 @@ if command -v dig >/dev/null 2>&1; then
   DS="$(dig +short DS "$DOM" | head -n 1 | nettoie)"
   A_REC="$(dig +short A "$DOM" | head -n 1 | nettoie)"
   CAA="$(dig +short CAA "$DOM" | nettoie | tr '\n' ';' | sed 's/;$//')"
+  MTASTS="$(dig +short TXT "_mta-sts.$DOM" | nettoie | grep -i 'v=stsv1' | head -n 1)"
 else
-  MX_JSON=""; SPF=""; DMARC=""; TLSRPT=""; DS=""; A_REC=""; CAA=""
+  MX_JSON=""; SPF=""; DMARC=""; TLSRPT=""; DS=""; A_REC=""; CAA=""; MTASTS=""
 fi
 DNSSEC=false; [ -n "$DS" ] && DNSSEC=true
 CHECKED="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
 # Un vrai envoi de formulaire (avec des données), comme le ferait un robot ou un attaquant
 METHODS="$(curl -s -o /dev/null -m 15 -w '%{http_code}' --data 'test=1' "https://$DOM/")"; METHODS=$((10#${METHODS:-0}))
+# En-têtes de sécurité publics de la page d'accueil (affichés par « curl -I » dans le terminal et dans le rapport PDF)
+HDRS="$(curl -sI -m 15 "https://$DOM/" | python3 -c '
+import json, sys
+garder = ("strict-transport-security", "content-security-policy", "x-content-type-options", "x-frame-options", "referrer-policy", "permissions-policy", "cross-origin-opener-policy", "cross-origin-embedder-policy", "cross-origin-resource-policy")
+lignes = sys.stdin.read().replace("\r", "").split("\n")
+h = [[k.strip().lower(), v.strip()] for k, _, v in (l.partition(":") for l in lignes[1:]) if k.strip().lower() in garder]
+print(json.dumps({"st": lignes[0].strip(), "h": h}) if h else "null")
+' 2>/dev/null)"; [ -n "$HDRS" ] || HDRS="null"
 # Disponibilité : relevée chez UptimeRobot avec une clé en lecture seule (jamais affichée ni enregistrée ailleurs)
 UPTIME30="null"; UPTIME_DAYS="null"
 if [ -n "$UPTIME_KEY" ]; then
@@ -128,7 +137,7 @@ mkdir -p "$TMP/site/assets"
 ecrire_status() {
   cat > "$TMP/site/assets/status.js" <<STATUS
 /* Supervision : relevés publics faits par le script de mise à jour le $CHECKED */
-window.JG_STATUS = {"checked":"$CHECKED","https":$HTTPS_CODE,"tlsDays":$TLS_DAYS,"mx":[$MX_JSON],"spf":"$SPF","dmarc":"$DMARC","tlsrpt":"$TLSRPT","dnssec":$DNSSEC,"ds":"$DS","a":"$A_REC","caa":"$CAA","methods":$METHODS,"uptime30":$UPTIME30,"uptimeDays":$UPTIME_DAYS};
+window.JG_STATUS = {"checked":"$CHECKED","https":$HTTPS_CODE,"tlsDays":$TLS_DAYS,"mx":[$MX_JSON],"spf":"$SPF","dmarc":"$DMARC","tlsrpt":"$TLSRPT","dnssec":$DNSSEC,"ds":"$DS","a":"$A_REC","caa":"$CAA","methods":$METHODS,"mtasts":"$MTASTS","hdrs":$HDRS,"uptime30":$UPTIME30,"uptimeDays":$UPTIME_DAYS};
 STATUS
 }
 ecrire_status
@@ -166,7 +175,7 @@ else
   fi
   exit 1
 fi
-for f in assets/app.css assets/app.js assets/i18n.js assets/labs.js assets/news.js .well-known/security.txt favicon.ico favicon.svg apple-touch-icon.png site.webmanifest og.jpg 404.html assets/404.css assets/404.js mentions-legales.html accessibilite.html assets/legal.css assets/legal.js assets/a11y.js sw.js qr.svg contact.vcf assets/status.js; do
+for f in assets/app.css assets/app.js assets/i18n.js assets/labs.js assets/labs2.js assets/news.js .well-known/security.txt favicon.ico favicon.svg apple-touch-icon.png site.webmanifest og.jpg 404.html assets/404.css assets/404.js mentions-legales.html accessibilite.html assets/legal.css assets/legal.js assets/a11y.js sw.js qr.svg contact.vcf assets/status.js; do
   C="$(curl -s -o /dev/null -w '%{http_code}' "$SITE/$f")"
   [ "$C" = "200" ] && ok "$f (HTTP 200)" || printf '%s✗ %s (code %s)%s\n' "$ROUGE" "$f" "$C" "$FIN"
 done

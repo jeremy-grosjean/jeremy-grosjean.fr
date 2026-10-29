@@ -18,14 +18,16 @@ Site personnel de **Jérémy Grosjean**, technicien informatique, disponible pou
 ## Ce que contient le site
 
 - Page d'accueil animée (réseau interactif à la souris et au doigt), en **6 langues** : français, anglais, chinois simplifié et traditionnel, cantonais, coréen.
-- **Quatre mini-jeux** : « Protéger le serveur » (malware, DDoS, hameçonnage), un **simulateur de support N1/N2** (tickets réalistes : DHCP, DNS, Active Directory, GPO, droits NTFS…), **« Trouve la panne »** (diagnostic réseau avec `ipconfig`, `ping` et `nslookup` simulés) et un **quiz Active Directory et GPO**.
-- **Terminal caché** (`Ctrl/⌘ + K`) : `help`, `cv`, `ipcalc`, `dig`, `device`, `neofetch`, `htop`, `secrets`…
+- **Six mini-jeux** : « Protéger le serveur » (malware, DDoS, hameçonnage), un **simulateur de support N1/N2** (tickets réalistes : DHCP, DNS, Active Directory, GPO, droits NTFS…), **« Trouve la panne »** (diagnostic réseau avec `ipconfig`, `ping` et `nslookup` simulés), un **quiz Active Directory et GPO**, **« Repère l'hameçonnage »** (e-mails inventés, indices révélés après chaque réponse) et **« Sous-réseaux express »** (calcul de sous-réseaux contre la montre). Les meilleurs scores restent dans le navigateur du visiteur.
+- **Le jargon expliqué** : les mots techniques (DNS, GPO, DKIM…) sont soulignés et donnent leur définition au toucher ; glossaire complet de 28 termes dans les 6 langues.
+- **Terminal caché** (`Ctrl/⌘ + K`) : `help`, `cv`, `ipcalc`, `dig`, `curl -I`, `whois`, `traceroute`, `define`, `device`, `neofetch`, `htop`, `secrets`…
 - **Vue recruteur** sur une page, sans animation : [jeremy-grosjean.fr/#recruteur](https://jeremy-grosjean.fr/#recruteur). C'est aussi la fiche A4 imprimée avec `Ctrl/⌘ + P`.
 - **Me contacter** : e-mail déjà rempli en un clic dans Gmail, Outlook, Outlook pro (Microsoft 365) ou Yahoo Mail, ou dans la messagerie de l'appareil. Ce sont de simples liens : rien ne passe par le site.
 - **Page 404 jouable** : trois questions réseau pour que le paquet retrouve sa route.
 - **[Déclaration d'accessibilité](https://jeremy-grosjean.fr/accessibilite.html)** (objectif WCAG 2.2 AA).
 - **Supervision** : état du certificat TLS, des e-mails (MX, SPF, DMARC, TLS-RPT), de DNSSEC, du CAA et des méthodes HTTP, relevé automatiquement à chaque mise en ligne, avec la disponibilité sur 30 jours (UptimeRobot, relevée au moment de la mise en ligne) et un lien vers la [page de statut en direct](https://stats.uptimerobot.com/gHB6v8KF6j).
 - **Quoi de neuf** : journal des évolutions, généré automatiquement depuis les commits à chaque mise en ligne.
+- **Rapport de sécurité imprimable** (ou en PDF) : notes externes, protections, relevés DNS et e-mail, en-têtes HTTP.
 - **Audit de sécurité animé**, mesures réelles de poids et de chargement, réglages d'accessibilité (taille du texte, contraste).
 - Fonctionne **hors ligne** après une première visite, et s'installe comme une application.
 
@@ -44,7 +46,7 @@ Site personnel de **Jérémy Grosjean**, technicien informatique, disponible pou
 À chaque envoi sur GitHub, [GitHub Actions](.github/workflows/verifier.yml) lance :
 
 - `outils/verifier.py` : HTML (langue, titre, identifiants uniques, textes alternatifs, aucun script ni style en ligne, comme l'exige la CSP), liens internes, syntaxe JavaScript, traductions complètes dans les 6 langues, recherche de mots de passe, jetons ou clés privées, poids du site ;
-- `outils/test_jeux.py` : ouverture des pages, des fenêtres et des 4 jeux dans un vrai navigateur (Chromium), sur ordinateur et sur mobile, sans aucune erreur JavaScript.
+- `outils/test_jeux.py` : ouverture des pages, des fenêtres et des 7 jeux dans un vrai navigateur (Chromium), sur ordinateur et sur mobile, sans aucune erreur JavaScript.
 
 Aucun mot de passe ni clé n'est confié à GitHub.
 
@@ -56,7 +58,7 @@ site/                     le site, tel qu'il est publié (version lisible)
   404.html                page d'erreur personnalisée
   mentions-legales.html   mentions légales et confidentialité
   accessibilite.html      déclaration d'accessibilité
-  assets/                 styles, scripts, traductions (i18n.js)
+  assets/                 styles, scripts, traductions (i18n.js, labs.js, labs2.js)
   sw.js                   service worker (mode hors ligne)
   .htaccess               en-têtes de sécurité et redirections (Apache)
 docs/                     politique MTA-STS, publiée par GitHub Pages sur mta-sts.jeremy-grosjean.fr

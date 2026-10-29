@@ -506,6 +506,8 @@ body.playing .hint, body.term-open .hint { display: none; }
   .dock-mid { flex-direction: column; font-size: .7rem; }
   .dock-mid .sep { display: none; }
   .legal-row { flex-direction: column; }
+  /* Sur téléphone, le glossaire s'ouvre depuis les mots soulignés (« Tout le glossaire ») : le pied de page garde 3 lignes */
+  #glossBtn, .gl-sep { display: none; }
   .legal-link { display: inline-flex; align-items: center; justify-content: center; min-height: 24px; min-width: 24px; padding: 0 .3rem; }
   .net-pill { width: 2.2rem; padding: 0; justify-content: center; }
   .net-pill .net-lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
@@ -637,3 +639,63 @@ button.legal-link { font: inherit; background: none; border: 0; cursor: pointer;
 .up-bars i { border-radius: 2px; background: var(--ok); opacity: .85; }
 .up-bars i.warn { background: rgb(var(--warn-rgb)); } .up-bars i.bad { background: var(--threat); } .up-bars i.none { background: var(--line); opacity: 1; }
 .up-cap { display: flex; justify-content: space-between; margin: 0 0 1rem; font: .7rem ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: var(--dim); }
+
+/* Choix du jeu : deux colonnes sur grand écran (7 jeux) */
+@media (min-width: 700px) { #gamesPanel .card { width: min(42rem, 100%); } #gamesPanel .game-pick { grid-template-columns: 1fr 1fr; } }
+/* Jeu « Repère l'hameçonnage » */
+.ph-mail { text-align: left; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 0 0 .9rem; }
+.ph-h { margin: 0 !important; padding: .55rem .8rem; background: rgba(var(--node-rgb), .05); font-size: .82rem; line-height: 1.6; color: var(--dim); word-break: break-word; }
+.ph-h span:not(.ph-k) { color: var(--ink); }
+.ph-k { color: var(--dim); }
+.ph-b { margin: 0 !important; padding: .7rem .8rem; font-size: .93rem; line-height: 1.5; word-break: break-word; color: var(--ink); }
+.ph-mail .ph-sus { border-radius: 3px; transition: background .25s ease; }
+.ph-mail.reveal .ph-sus { background: rgba(var(--threat-rgb), .16); box-shadow: inset 0 -1px 0 var(--threat); color: var(--ink); padding: 0 2px; }
+.ph-opts { grid-template-columns: 1fr 1fr; }
+.ph-opts .tk-opt { text-align: center; font-weight: 600; }
+/* Jeu « Sous-réseaux express » */
+.sn-timer { height: 6px; border-radius: 6px; background: var(--line); overflow: hidden; margin: .1rem 0 .8rem; }
+.sn-timer i { display: block; height: 100%; width: 100%; background: var(--ok); transition: width .1s linear; }
+.sn-timer i.warn { background: rgb(var(--warn-rgb)); } .sn-timer i.bad { background: var(--threat); }
+.sn-ip { margin: 0 0 .3rem !important; font: 600 1.45rem ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: var(--cyan); letter-spacing: .01em; word-break: break-all; }
+.sn-q { text-align: center !important; font-size: 1.02rem !important; }
+.sn-opts { grid-template-columns: 1fr 1fr; }
+.sn-opts .tk-opt { text-align: center; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .9rem; white-space: nowrap; overflow-wrap: normal; }
+@media (max-width: 460px) { .sn-opts { grid-template-columns: 1fr; } .sn-ip { font-size: 1.25rem; } }
+@media (prefers-reduced-motion: reduce) { .sn-timer i { transition: none; } }
+/* Tableau des scores */
+.sc-list { list-style: none; margin: 0 0 1.1rem; padding: 0; display: grid; gap: .4rem; text-align: left; }
+.sc-list li { display: flex; justify-content: space-between; align-items: center; gap: .8rem; padding: .55rem .75rem; border: 1px solid var(--line); border-radius: 10px; font-size: .92rem; }
+.sc-list b { font: 600 .9rem ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: var(--ok); white-space: nowrap; }
+.sc-list b.none { color: var(--dim); font-weight: 400; font-family: inherit; }
+/* Glossaire : mots soulignés et bulle de définition */
+.gl-t { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: help; text-decoration: underline dotted var(--cyan); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+.gl-t:hover, .gl-t:focus-visible, .gl-t[aria-expanded="true"] { color: var(--cyan); outline: none; }
+.gl-tip { position: fixed; z-index: 7; max-width: min(19rem, calc(100vw - 16px)); padding: .7rem .8rem .6rem; border-radius: 12px; background: var(--surface-strong); color: var(--ink); border: 1px solid var(--line-accent); box-shadow: var(--shadow); text-align: left; font-size: .86rem; line-height: 1.45; }
+.gl-tip b { display: block; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: var(--cyan); margin-bottom: .2rem; }
+.gl-tip span { display: block; }
+.gl-more { font: inherit; font-size: .8rem; margin-top: .45rem; padding: .3rem 0; min-height: 24px; background: none; border: 0; color: var(--cyan); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.gl-list { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .5rem 1rem; text-align: left; margin: 0 0 1.1rem; font-size: .9rem; line-height: 1.45; }
+.gl-list dt { font: 600 .85rem ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: var(--cyan); }
+.gl-list dd { margin: 0; }
+@media (max-width: 460px) { .gl-list { grid-template-columns: 1fr; gap: .1rem; } .gl-list dd { margin-bottom: .55rem; } }
+#glossPanel .card { width: min(36rem, 100%); }
+html:lang(ko) .gl-list, html:lang(ko) .gl-tip, html:lang(ko) .ph-mail, html:lang(ko) .tk-expl { word-break: keep-all; }
+/* Rapport de sécurité : visible seulement à l'impression */
+.rep { display: none; }
+@media print {
+  body > *:not(#recView):not(#repView) { display: none !important; }
+  body:not(.rep-print) > #repView { display: none !important; }
+  body.rep-print > #recView, body.rep-print > #recView[hidden] { display: none !important; }
+  body.rep-print > #repView, body.rep-print > #repView[hidden] { display: block !important; color: #000; background: #fff; font-size: 9.5pt; }
+  .rep h2 { margin: 0 0 .2rem; font-size: 17pt; }
+  .rep-sub { margin: 0 0 1rem; color: #444; }
+  .rep h3 { margin: .8rem 0 .25rem; font-size: 10.5pt; break-after: avoid; }
+  .rep table { width: 100%; border-collapse: collapse; break-inside: auto; }
+  .rep td { padding: .17rem 0; border-bottom: 1px solid #ddd; vertical-align: top; }
+  .rep td:last-child { text-align: right; padding-left: 1rem; font-weight: 600; color: #0a6b3d; }
+  .rep td.mono { font: 8.5pt ui-monospace, Menlo, Consolas, monospace; color: #222; font-weight: 400; text-align: left; word-break: break-all; }
+  .rep td.warn { color: #8a5a00; } .rep td.bad { color: #a0102a; }
+  .rep-foot { display: flex; gap: 1rem; align-items: center; margin-top: 1rem; padding-top: .6rem; border-top: 1px solid #bbb; break-inside: avoid; }
+  .rep-foot p { margin: 0; color: #444; line-height: 1.5; } .rep-foot b { color: #000; }
+  .gl-t { text-decoration: none; }
+}

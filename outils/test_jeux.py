@@ -1,4 +1,4 @@
-# Test dans un vrai navigateur (Chromium) : les pages et les 4 jeux s'ouvrent sans aucune erreur JavaScript.
+# Test dans un vrai navigateur (Chromium) : les pages et les 7 jeux s'ouvrent sans aucune erreur JavaScript.
 #   python3 outils/test_jeux.py      (nécessite : pip install playwright && python -m playwright install chromium)
 import functools, http.server, pathlib, sys, threading
 from playwright.sync_api import sync_playwright
@@ -41,23 +41,48 @@ with sync_playwright() as p:
         largeur = pg.evaluate('document.documentElement.scrollWidth')
         if largeur > taille[0]:
             erreurs.append(f'{nom} : la page déborde ({largeur} px)')
-        for bouton, panneau in (('pickServer', 'intro'), ('pickSupport', 'supportPanel'), ('pickPanne', 'panPanel'), ('pickQuiz', 'quizPanel')):
+        for bouton, panneau in (('pickServer', 'intro'), ('pickSupport', 'supportPanel'), ('pickPanne', 'panPanel'), ('pickQuiz', 'quizPanel'), ('pickPhish', 'phPanel'), ('pickSubnet', 'snPanel')):
             pg.evaluate("document.getElementById('openGame').click()"); pg.wait_for_timeout(150)
             pg.evaluate(f"document.getElementById('{bouton}').click()"); pg.wait_for_timeout(300)
             if not pg.evaluate(f"document.getElementById('{panneau}').classList.contains('open')"):
                 erreurs.append(f'{nom} : le jeu {bouton} ne s’ouvre pas')
             pg.keyboard.press('Escape'); pg.evaluate("document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open'))")
-        ok(f'{nom} : les 4 jeux s’ouvrent')
-        for cmd in ('help', 'whoami --long', 'secrets', 'retro', 'retro'):
+        ok(f'{nom} : les 7 jeux s’ouvrent')
+        pg.evaluate("document.getElementById('pickPhish').click()"); pg.wait_for_timeout(150)
+        for i in range(6):
+            pg.evaluate("document.getElementById('phPhishBtn').click()"); pg.evaluate("document.getElementById('phNext').click()")
+        if 'bien classés' not in pg.evaluate("document.getElementById('phTitle').textContent"):
+            erreurs.append(f'{nom} : le jeu hameçonnage ne va pas jusqu’au résultat')
+        pg.evaluate("document.getElementById('pickSubnet').click()"); pg.wait_for_timeout(150)
+        for i in range(10):
+            if pg.evaluate("document.querySelectorAll('#snOpts button').length") != 4:
+                erreurs.append(f'{nom} : sous-réseaux, question {i + 1} sans 4 réponses')
+            pg.evaluate("document.querySelector('#snOpts button[data-j=\"0\"]').click()"); pg.evaluate("document.getElementById('snNext').click()")
+        if '10/10' not in pg.evaluate("document.getElementById('snQ').textContent"):
+            erreurs.append(f'{nom} : sous-réseaux, les bonnes réponses ne sont pas comptées')
+        pg.evaluate("document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open'))")
+        ok(f'{nom} : hameçonnage et sous-réseaux jouables jusqu’au bout')
+        for cmd in ('help', 'whoami --long', 'secrets', 'retro', 'retro', 'curl -I jeremy-grosjean.fr', 'whois', 'traceroute', 'define DNS', 'define inconnu'):
             pg.evaluate(f"(() => {{ const i = document.getElementById('termInput'); i.value = {cmd!r}; document.getElementById('termForm').requestSubmit(); }})()")
             pg.wait_for_timeout(120)
         ok(f'{nom} : commandes du terminal')
-        for panneau, bouton in (('contactPanel', 'contactBtn'), ('newsPanel', 'newsBtn'), ('supPanel', 'supBtn'), ('secPanel', 'secBtn')):
+        for panneau, bouton in (('contactPanel', 'contactBtn'), ('newsPanel', 'newsBtn'), ('supPanel', 'supBtn'), ('secPanel', 'secBtn'), ('glossPanel', 'glossBtn'), ('scPanel', 'scoresBtn')):
             pg.evaluate("document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open')); document.body.classList.remove('term-open')")
             pg.evaluate(f"document.getElementById('{bouton}').click()"); pg.wait_for_timeout(250)
             if not pg.evaluate(f"document.getElementById('{panneau}').classList.contains('open')"):
                 erreurs.append(f'{nom} : la fenêtre {panneau} ne s’ouvre pas')
-        ok(f'{nom} : fenêtres Contact, Nouveautés, Supervision, Sécurité')
+        ok(f'{nom} : fenêtres Contact, Nouveautés, Supervision, Sécurité, Glossaire, Scores')
+        pg.evaluate("document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open')); document.getElementById('availBtn').click()"); pg.wait_for_timeout(200)
+        if not pg.evaluate("document.querySelectorAll('#briefList .gl-t').length"):
+            erreurs.append(f'{nom} : aucun mot du glossaire souligné dans la fiche')
+        else:
+            pg.click('#briefList .gl-t'); pg.wait_for_timeout(150)
+            if pg.evaluate("document.getElementById('glTip').hidden"):
+                erreurs.append(f'{nom} : la bulle de définition ne s’affiche pas')
+        pg.evaluate("window.print = () => {}; document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open')); document.getElementById('secReport').click()"); pg.wait_for_timeout(200)
+        if not pg.evaluate("document.querySelectorAll('#repBody table').length"):
+            erreurs.append(f'{nom} : le rapport de sécurité est vide')
+        ok(f'{nom} : glossaire et rapport de sécurité')
         pg.goto(BASE + '/#recruteur'); pg.wait_for_timeout(800)
         if not pg.evaluate("document.body.classList.contains('rec-on')"):
             erreurs.append(f'{nom} : la vue recruteur ne s’ouvre pas')

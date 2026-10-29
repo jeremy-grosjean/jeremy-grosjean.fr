@@ -26,12 +26,13 @@
 <link rel="icon" href="/favicon.svg?v=c653120d20" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=ea10cf004d">
 <link rel="manifest" href="/site.webmanifest?v=1170d79b15">
-<link rel="stylesheet" href="/assets/app.css?v=a7c6c61574">
+<link rel="stylesheet" href="/assets/app.css?v=1d7062d572">
 <script src="/assets/i18n.js?v=91faf46deb" defer></script>
 <script src="/assets/labs.js?v=24e840f65d" defer></script>
+<script src="/assets/labs2.js?v=3ef38b7751" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=92624add7c" defer></script>
+<script src="/assets/app.js?v=b6a091a087" defer></script>
 </head>
 <body>
 <canvas id="net" aria-hidden="true"></canvas>
@@ -89,6 +90,13 @@
   </div>
 </section>
 
+<section class="rep" id="repView" hidden aria-labelledby="repTitle">
+  <h2 id="repTitle">Rapport de sécurité · jeremy-grosjean.fr</h2>
+  <p class="rep-sub" id="repSub"></p>
+  <div id="repBody"></div>
+  <div class="rep-foot"><img src="/qr.svg" width="72" height="72" alt=""><p><span id="repFoot"></span><br><b>https://jeremy-grosjean.fr</b></p></div>
+</section>
+
 <p class="clock"><b id="cTime">--:--</b><span id="cDate">Paris</span><span class="c-local" id="cLocal" hidden></span></p>
 
 <div class="topbar">
@@ -132,7 +140,7 @@
       <span class="lbl" data-i="termBtn">Terminal</span>
     </button>
   </div>
-  <p class="dock-mid"><span class="privacy" data-i="privacyLine">0 cookie · 0 traceur</span><span class="loadt" id="loadT" hidden></span><span class="sep" aria-hidden="true"> · </span><span class="legal-row"><a class="legal-link" href="/mentions-legales.html" data-i="legalLink">Mentions légales</a><span class="sep lr-sep" aria-hidden="true"> · </span><a class="legal-link" href="/accessibilite.html" data-i="a11yLink">Accessibilité</a><span class="sep lr-sep" aria-hidden="true"> · </span><button class="legal-link news-link" id="newsBtn" type="button" aria-haspopup="dialog" data-i="newsLink">Nouveautés</button></span><span class="upd" id="updLine" hidden></span></p>
+  <p class="dock-mid"><span class="privacy" data-i="privacyLine">0 cookie · 0 traceur</span><span class="loadt" id="loadT" hidden></span><span class="sep" aria-hidden="true"> · </span><span class="legal-row"><a class="legal-link" href="/mentions-legales.html" data-i="legalLink">Mentions légales</a><span class="sep lr-sep" aria-hidden="true"> · </span><a class="legal-link" href="/accessibilite.html" data-i="a11yLink">Accessibilité</a><span class="sep lr-sep" aria-hidden="true"> · </span><button class="legal-link news-link" id="newsBtn" type="button" aria-haspopup="dialog" data-i="newsLink">Nouveautés</button><span class="sep lr-sep gl-sep" aria-hidden="true"> · </span><button class="legal-link" id="glossBtn" type="button" aria-haspopup="dialog" data-i="glossLink">Glossaire</button></span><span class="upd" id="updLine" hidden></span></p>
   <button class="pill sound" id="sound" type="button" aria-pressed="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path id="sWave" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" opacity=".25"/></svg>
     <span class="lbl" id="sLabel">Activer le son</span>
@@ -194,7 +202,7 @@
     <h3 class="eco-title" data-i="ecoTitle">Léger et accessible</h3>
     <ul class="eco-list" id="ecoList"></ul>
     <p class="eco-note" id="ecoNote"></p>
-    <div class="actions"><button class="btn" id="secRerun" type="button" data-i="secRerun">Relancer l'audit</button><button class="btn-ghost" id="secClose" type="button" data-i="close">Fermer</button></div>
+    <div class="actions"><button class="btn" id="secRerun" type="button" data-i="secRerun">Relancer l'audit</button><button class="btn-ghost" id="secReport" type="button" data-i="secReport">Rapport PDF</button><button class="btn-ghost" id="secClose" type="button" data-i="close">Fermer</button></div>
   </div>
 </div>
 
@@ -235,8 +243,10 @@
       <button class="pick" id="pickSupport2" type="button"><b data-i="pickSupport2T">Support informatique N2</b><span data-i="pickSupport2D">Niveau avancé : réseau, DHCP, Active Directory, DNS, droits d'accès.</span></button>
       <button class="pick" id="pickPanne" type="button"><b data-i="pickPanneT">Trouve la panne</b><span data-i="pickPanneD">Un PC n'accède plus au réseau : lancez les bonnes commandes et trouvez la cause.</span></button>
       <button class="pick" id="pickQuiz" type="button"><b data-i="pickQuizT">Quiz Active Directory et GPO</b><span data-i="pickQuizD">10 questions sur AD, les GPO et le DNS, avec l'explication de chaque réponse.</span></button>
+      <button class="pick" id="pickPhish" type="button"><b data-i="pickPhishT">Repère l’hameçonnage</b><span data-i="pickPhishD">6 e-mails : fiables ou pièges ? Les indices s’affichent après chaque réponse.</span></button>
+      <button class="pick" id="pickSubnet" type="button"><b data-i="pickSubnetT">Sous-réseaux express</b><span data-i="pickSubnetD">10 questions chronométrées : adresse du réseau, diffusion, nombre d’appareils.</span></button>
     </div>
-    <div class="actions"><button class="btn-ghost" id="gamesClose" type="button" data-i="close">Fermer</button></div>
+    <div class="actions"><button class="btn-ghost" id="scoresBtn" type="button" data-i="scoresBtn">Mes meilleurs scores</button><button class="btn-ghost" id="gamesClose" type="button" data-i="close">Fermer</button></div>
   </div>
 </div>
 
@@ -278,6 +288,53 @@
     <div class="actions"><button class="btn" id="qzNext" type="button" hidden data-i="qzNext">Question suivante</button><button class="btn-ghost" id="qzQuit" type="button" data-i="quit">Quitter</button></div>
   </div>
 </div>
+
+<div class="panel" id="phPanel" role="dialog" aria-modal="true" aria-labelledby="phTitle">
+  <div class="card ticket">
+    <div class="tk-head"><span class="tag" id="phTag">E-mail 1/6</span><span class="tk-score" id="phScore">0</span></div>
+    <h2 id="phTitle" data-i="phQ">Fiable ou hameçonnage ?</h2>
+    <div class="ph-mail" id="phMail">
+      <p class="ph-h"><span class="ph-k" data-i="phFromL">De :</span> <span id="phFrom"></span><br><span class="ph-k" data-i="phSubjL">Objet :</span> <span id="phSubj"></span></p>
+      <p class="ph-b" id="phBody"></p>
+    </div>
+    <p class="tk-from" id="phSub" hidden></p>
+    <div class="tk-opts ph-opts" id="phOpts"><button class="tk-opt" id="phSafeBtn" type="button" data-i="phSafe">Fiable</button><button class="tk-opt" id="phPhishBtn" type="button" data-i="phPhish">Hameçonnage</button></div>
+    <p class="tk-expl" id="phExpl" hidden></p>
+    <div class="actions"><button class="btn" id="phNext" type="button" hidden data-i="phNext">E-mail suivant</button><button class="btn-ghost" id="phQuit" type="button" data-i="quit">Quitter</button></div>
+  </div>
+</div>
+
+<div class="panel" id="snPanel" role="dialog" aria-modal="true" aria-labelledby="snQ">
+  <div class="card ticket">
+    <div class="tk-head"><span class="tag" id="snTag">Question 1/10</span><span class="tk-score" id="snScore">0</span></div>
+    <div class="sn-timer" id="snTimer" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><i id="snBar"></i></div>
+    <p class="sn-ip" id="snIp">192.168.1.10/24</p>
+    <h2 class="qz-q sn-q" id="snQ">Question</h2>
+    <p class="tk-from" id="snSub" hidden></p>
+    <div class="tk-opts sn-opts" id="snOpts"></div>
+    <p class="tk-expl" id="snExpl" hidden></p>
+    <div class="actions"><button class="btn" id="snNext" type="button" hidden data-i="snNext">Question suivante</button><button class="btn-ghost" id="snQuit" type="button" data-i="quit">Quitter</button></div>
+  </div>
+</div>
+
+<div class="panel" id="scPanel" role="dialog" aria-modal="true" aria-labelledby="scTitle">
+  <div class="card">
+    <h2 id="scTitle" data-i="scTitle">Mes meilleurs scores</h2>
+    <p data-i="scSub">Gardés sur cet appareil uniquement : rien n’est envoyé.</p>
+    <ul class="sc-list" id="scList"></ul>
+    <div class="actions"><button class="btn" id="scPlay" type="button" data-i="scPlay">Jouer</button><button class="btn-ghost" id="scClose" type="button" data-i="close">Fermer</button></div>
+  </div>
+</div>
+
+<div class="panel" id="glossPanel" role="dialog" aria-modal="true" aria-labelledby="glossTitle">
+  <div class="card">
+    <h2 id="glossTitle" data-i="glossTitle">Le jargon expliqué</h2>
+    <p data-i="glossSub">Les mots techniques du site, en une phrase chacun.</p>
+    <dl class="gl-list" id="glossList"></dl>
+    <div class="actions"><button class="btn-ghost" id="glossClose" type="button" data-i="close">Fermer</button></div>
+  </div>
+</div>
+<div class="gl-tip" id="glTip" role="tooltip" hidden><b id="glTipT"></b><span id="glTipD"></span><button class="gl-more" id="glTipMore" type="button" data-i="glossAll">Tout le glossaire</button></div>
 
 <div class="panel" id="newsPanel" role="dialog" aria-modal="true" aria-labelledby="newsTitle">
   <div class="card">

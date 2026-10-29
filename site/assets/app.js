@@ -338,7 +338,7 @@
     $('hScore').textContent = G.score; $('hBreach').textContent = G.breach + '/3'; $('hTime').textContent = Math.ceil(G.time);
   }
   const server = () => ({ x: W / 2, y: H / 2, s: Math.min(64, Math.max(46, W / 22)) });
-  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel'];
+  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel', 'phPanel', 'snPanel', 'scPanel', 'glossPanel'];
   function closePanels() { panels.forEach(p => $(p).classList.remove('open')); }
   function openPanel(id, focusId) { closePanels(); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (focusId) $(focusId).focus(); }
   function openIntro() { closeTerm(); openPanel('intro', 'start'); }
@@ -762,7 +762,7 @@
     const list = t('sec');
     list.forEach(([name, desc], i) => { const li = secItem(name, desc); secUl.append(li); if (auditDone) setCk(li, realCheck(i, list.length)); });
     if (auditDone) { const ok = list.filter((x, i) => realCheck(i, list.length)).length; scoreText(ok, list.length); secBar.style.width = '100%'; }
-    buildEco();
+    glossify(secUl); buildEco();
   }
   function runAudit() {
     const gen = ++auditGen, items = [...secUl.children], total = items.length;
@@ -820,8 +820,8 @@
   /* ================= Terminal ================= */
   const term = $('term'), out = $('termOut'), input = $('termInput');
   const hist = []; let hIdx = 0, greeted = false;
-  const COMMANDS = ['help', 'boot', 'legal', 'device', 'neofetch', 'secrets', 'htop', 'support', 'status', 'dig', 'ipcalc', 'install', 'tour', 'matrix', 'whoami', 'about', 'security', 'ping', 'date', 'lang', 'theme', 'play', 'konami', 'contact', 'cv', 'projets', 'panne', 'quiz', 'changelog', 'print', 'a11y', 'clear', 'exit'];
-  const ALIAS = { aide: 'help', top: 'htop', fps: 'htop', ticket: 'support', tickets: 'support', supervision: 'status', nslookup: 'dig', host: 'dig', installer: 'install', visite: 'tour', appareil: 'device', sysinfo: 'device', fastfetch: 'neofetch', secret: 'secrets', mentions: 'legal', legales: 'legal', 'légales': 'legal', privacy: 'legal', demarrage: 'boot', 'démarrage': 'boot', journal: 'boot', dmesg: 'boot', apropos: 'about', 'à-propos': 'about', securite: 'security', 'sécurité': 'security', jouer: 'play', effacer: 'clear', cls: 'clear', quitter: 'exit', quit: 'exit', langue: 'lang', theme: 'theme', 'thème': 'theme', ls: 'help', man: 'help', recruteur: 'cv', recruiter: 'cv', resume: 'cv', imprimer: 'print', pdf: 'print', accessibilite: 'a11y', 'accessibilité': 'a11y', accessibility: 'a11y', mail: 'contact', email: 'contact', 'rétro': 'retro', crt: 'retro', phosphore: 'retro', vt100: 'retro', diagnostic: 'panne', depannage: 'panne', 'dépannage': 'panne', fault: 'panne', ad: 'quiz', gpo: 'quiz', news: 'changelog', nouveautes: 'changelog', 'nouveautés': 'changelog', quoideneuf: 'changelog' };
+  const COMMANDS = ['help', 'boot', 'legal', 'device', 'neofetch', 'secrets', 'htop', 'support', 'status', 'dig', 'ipcalc', 'install', 'tour', 'matrix', 'whoami', 'about', 'security', 'ping', 'date', 'lang', 'theme', 'play', 'konami', 'contact', 'cv', 'projets', 'panne', 'quiz', 'changelog', 'print', 'a11y', 'curl', 'whois', 'traceroute', 'phish', 'subnet', 'scores', 'glossaire', 'define', 'report', 'clear', 'exit'];
+  const ALIAS = { aide: 'help', top: 'htop', fps: 'htop', ticket: 'support', tickets: 'support', supervision: 'status', nslookup: 'dig', host: 'dig', installer: 'install', visite: 'tour', appareil: 'device', sysinfo: 'device', fastfetch: 'neofetch', secret: 'secrets', mentions: 'legal', legales: 'legal', 'légales': 'legal', privacy: 'legal', demarrage: 'boot', 'démarrage': 'boot', journal: 'boot', dmesg: 'boot', apropos: 'about', 'à-propos': 'about', securite: 'security', 'sécurité': 'security', jouer: 'play', effacer: 'clear', cls: 'clear', quitter: 'exit', quit: 'exit', langue: 'lang', theme: 'theme', 'thème': 'theme', ls: 'help', man: 'help', recruteur: 'cv', recruiter: 'cv', resume: 'cv', imprimer: 'print', pdf: 'print', accessibilite: 'a11y', 'accessibilité': 'a11y', accessibility: 'a11y', mail: 'contact', email: 'contact', 'rétro': 'retro', crt: 'retro', phosphore: 'retro', vt100: 'retro', diagnostic: 'panne', depannage: 'panne', 'dépannage': 'panne', fault: 'panne', ad: 'quiz', gpo: 'quiz', news: 'changelog', nouveautes: 'changelog', 'nouveautés': 'changelog', quoideneuf: 'changelog', tracert: 'traceroute', phishing: 'phish', hameconnage: 'phish', 'hameçonnage': 'phish', 'sous-reseaux': 'subnet', 'sous-réseaux': 'subnet', subnets: 'subnet', sousreseau: 'subnet', score: 'scores', records: 'scores', glossary: 'glossaire', lexique: 'glossaire', jargon: 'glossaire', def: 'define', definition: 'define', 'définition': 'define', rapport: 'report' };
   function line(text, cls) { const d = document.createElement('div'); if (cls) d.className = cls; d.textContent = text; out.append(d); out.scrollTop = out.scrollHeight; return d; }
   function openTerm() {
     closePanels(); document.body.classList.add('term-open');
@@ -975,6 +975,15 @@
       case 'quiz': line(t('tQuiz'), 'g'); setTimeout(openQuiz, 350); break;
       case 'print': line(t('tPrint'), 'g'); setTimeout(() => window.print(), 250); break;
       case 'a11y': line(t('a11yLink') + ' →', 'c'); setTimeout(() => { location.href = '/accessibilite.html'; }, 400); break;
+      case 'curl': curlI(args); break;
+      case 'whois': whois(); break;
+      case 'traceroute': traceroute(); break;
+      case 'phish': line(t('tGame'), 'g'); setTimeout(openPhish, 350); break;
+      case 'subnet': line(t('tGame'), 'g'); setTimeout(openSubnet, 350); break;
+      case 'scores': closeTerm(); setTimeout(openScores, 150); break;
+      case 'glossaire': closeTerm(); setTimeout(openGloss, 150); break;
+      case 'define': define(args.join(' ')); break;
+      case 'report': line(t('tReport'), 'g'); setTimeout(printRep, 300); break;
       case 'clear': out.textContent = ''; break;
       case 'exit': closeTerm(); break;
       case 'sudo': line(t('tSudo'), 'r'); found('sudo'); break;
@@ -1036,7 +1045,7 @@
   function openBrief() {
     const dl = $('briefList'); dl.textContent = '';
     for (const [k, v] of t('brief')) { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; dl.append(dt, dd); }
-    closeTerm(); openPanel('briefPanel', 'briefContact');
+    glossify(dl); closeTerm(); openPanel('briefPanel', 'briefContact');
   }
   $('availBtn').addEventListener('click', openBrief);
 
@@ -1049,6 +1058,7 @@
     const ul = $('recTags'); ul.textContent = '';
     for (const d of t('domains')) { const li = document.createElement('li'); li.textContent = d; ul.append(li); }
     const a = $('recMail'); a.href = mailHref(); a.textContent = MAIL;
+    glossify(dl); glossify(ul);
   }
   function recOn() { return document.body.classList.contains('rec-on'); }
   function openRec() {
@@ -1302,6 +1312,7 @@
     rows.push([S.dnssec, st.dnssec ? t('supSigned') : '?', st.dnssec ? 'ok' : 'warn']);
     if ('caa' in st) rows.push([S.caa || 'CAA', /letsencrypt\.org/.test(st.caa || '') ? 'Let’s Encrypt' : '?', /letsencrypt\.org/.test(st.caa || '') ? 'ok' : 'warn']);
     if ('methods' in st) rows.push([S.methods || 'HTTP', st.methods === 405 || st.methods === 403 ? t('supReadOnly') : '?', st.methods === 405 || st.methods === 403 ? 'ok' : 'warn']);
+    if ('mtasts' in st) rows.push([S.mtasts || 'MTA-STS', /v=STSv1/i.test(st.mtasts || '') ? 'OK' : '?', /v=STSv1/i.test(st.mtasts || '') ? 'ok' : 'warn']);
     if (typeof st.uptime30 === 'number') rows.push([S.uptime || 'Uptime', String(st.uptime30).replace('.', lang === 'fr' ? ',' : '.') + ' %', st.uptime30 >= 99.5 ? 'ok' : st.uptime30 >= 98 ? 'warn' : 'bad']);
     return rows;
   }
@@ -1361,7 +1372,274 @@
       if (type === 'A' || type === 'ANY') if (st.a) out1(dom, 'A', st.a);
     } else if (name === '_dmarc.' + dom && st.dmarc) out1(name, 'TXT', `"${st.dmarc}"`);
     else if (name === '_smtp._tls.' + dom && st.tlsrpt) out1(name, 'TXT', `"${st.tlsrpt}"`);
+    else if (name === '_mta-sts.' + dom && st.mtasts) out1(name, 'TXT', `"${st.mtasts}"`);
     else line(t('digOnly'), 'd');
+  }
+
+  /* ================= Jeu « Repère l'hameçonnage » : e-mails inventés, indices révélés après la réponse ================= */
+  function markup(el, s) {
+    el.textContent = '';
+    for (const part of String(s).split(/(\[\[[^\]]*\]\])/)) {
+      if (!part) continue;
+      if (part.startsWith('[[')) { const sp = document.createElement('span'); sp.className = 'ph-sus'; sp.textContent = part.slice(2, -2); el.append(sp); }
+      else el.append(part);
+    }
+  }
+  const sp = () => /^(zh|yue)/.test(lang) ? '' : ' ';
+  const PH = { list: [], i: 0, score: 0, ok: 0, answered: false, done: false };
+  function openPhish() {
+    closeTerm(); PH.done = false; PH.i = 0; PH.score = 0; PH.ok = 0;
+    PH.list = shuffle(t('phMails').map((x, k) => k));
+    phShow(); openPanel('phPanel', null); SND.level();
+  }
+  function phShow() {
+    const m = t('phMails')[PH.list[PH.i]]; PH.answered = false;
+    $('phTag').textContent = t('phTag')(PH.i + 1, PH.list.length); $('phScore').textContent = t('phPts')(PH.score);
+    $('phTitle').textContent = t('phQ'); $('phMail').hidden = false; $('phMail').classList.remove('reveal'); $('phSub').hidden = true;
+    markup($('phFrom'), m.n + ' <' + m.a + '>'); markup($('phSubj'), m.s); markup($('phBody'), m.b);
+    $('phOpts').hidden = false;
+    for (const id of ['phSafeBtn', 'phPhishBtn']) { const b = $(id); b.disabled = false; b.classList.remove('good', 'bad'); }
+    $('phExpl').hidden = true; $('phNext').hidden = true;
+    setTimeout(() => $('phSafeBtn').focus(), 30);
+  }
+  function phAnswer(saysPhish) {
+    if (PH.answered || PH.done) return; PH.answered = true;
+    const m = t('phMails')[PH.list[PH.i]], good = saysPhish === m.p;
+    const mine = $(saysPhish ? 'phPhishBtn' : 'phSafeBtn'), right = $(m.p ? 'phPhishBtn' : 'phSafeBtn');
+    right.classList.add('good'); if (!good) mine.classList.add('bad');
+    $('phSafeBtn').disabled = true; $('phPhishBtn').disabled = true;
+    if (good) { PH.score += 10; PH.ok++; SND.block(); } else SND.wrong();
+    $('phMail').classList.add('reveal');
+    const ex = $('phExpl'); ex.hidden = false; ex.className = 'tk-expl ' + (good ? 'ok' : 'ko');
+    ex.textContent = (good ? t('phGood') : t('phBad')) + sp() + (m.p ? t('phIsPhish') : t('phIsSafe')) + sp() + m.x;
+    $('phScore').textContent = t('phPts')(PH.score);
+    const nx = $('phNext'); nx.hidden = false; nx.textContent = PH.i < PH.list.length - 1 ? t('phNext') : t('phEnd'); nx.focus();
+  }
+  $('phSafeBtn').addEventListener('click', () => phAnswer(false));
+  $('phPhishBtn').addEventListener('click', () => phAnswer(true));
+  $('phNext').addEventListener('click', () => {
+    if (PH.done) { openPhish(); return; }
+    if (PH.i < PH.list.length - 1) { PH.i++; phShow(); return; }
+    const n = PH.list.length, best = Math.max(+store.get('jg-phish-best') || 0, PH.score); store.set('jg-phish-best', String(best));
+    $('phTag').textContent = t('phDoneTag'); $('phTitle').textContent = t('phDoneTitle')(PH.ok, n);
+    $('phMail').hidden = true; $('phOpts').hidden = true; $('phExpl').hidden = true;
+    const sub = $('phSub'); sub.textContent = t('phDoneMsg')(PH.ok, n) + sp() + t('pnBest')(best); sub.hidden = false;
+    PH.done = true; const nx = $('phNext'); nx.hidden = false; nx.textContent = t('again') || '↻'; nx.focus(); SND.end();
+  });
+  $('phQuit').addEventListener('click', closePanels);
+
+  /* ================= Jeu « Sous-réseaux express » : calculs faits ici, contre la montre ================= */
+  const SN = { list: [], i: 0, score: 0, ok: 0, answered: false, done: false, iv: 0, end: 0 };
+  const SN_ROUND = 10, SN_TIME = 20;
+  const ipq = n => [n >>> 24, (n >>> 16) & 255, (n >>> 8) & 255, n & 255].join('.');
+  const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  const maskOf = c => c <= 0 ? 0 : (0xFFFFFFFF << (32 - c)) >>> 0;
+  function snMake(k) {
+    const cidr = k < 3 ? 24 : k < 6 ? rnd(25, 27) : rnd(20, 30);
+    const base = [() => ((192 << 24) | (168 << 16) | (rnd(0, 254) << 8)) >>> 0, () => ((10 << 24) | (rnd(0, 255) << 16) | (rnd(0, 255) << 8)) >>> 0, () => ((172 << 24) | (rnd(16, 31) << 16) | (rnd(0, 255) << 8)) >>> 0][rnd(0, 2)]();
+    let ip = (base | rnd(1, 254)) >>> 0;
+    const mask = maskOf(cidr), size = Math.pow(2, 32 - cidr), net = (ip & mask) >>> 0, bc = net + size - 1;
+    if (ip === net) ip++; if (ip === bc) ip--;
+    const types = k < 3 ? ['net', 'bc', 'hosts'] : ['net', 'bc', 'hosts', 'mask', 'first', 'last'];
+    const type = types[rnd(0, types.length - 1)], nf = new Intl.NumberFormat(t('locale'));
+    const ok32 = v => v >= 0 && v <= 0xFFFFFFFF;
+    let cand;
+    if (type === 'net') cand = [net, net + size, net - size, (ip & 0xFFFFFF00) >>> 0, net + size / 2, ip].filter(ok32).map(ipq);
+    else if (type === 'bc') cand = [bc, bc - 1, bc + size, net - 1, bc - size, bc - size / 2].filter(ok32).map(ipq);
+    else if (type === 'first') cand = [net + 1, net, net + 2, bc - 1, net + size + 1].filter(ok32).map(ipq);
+    else if (type === 'last') cand = [bc - 1, bc, bc - 2, bc + 1, net + 1].filter(ok32).map(ipq);
+    else if (type === 'hosts') cand = [size - 2, size, size - 1, size * 2 - 2, size / 2 - 2].filter(v => v > 0).map(v => nf.format(v));
+    else cand = [cidr, cidr - 1, cidr + 1, cidr - 2, cidr + 2].filter(c => c >= 8 && c <= 32).map(c => ipq(maskOf(c)));
+    const opts = [...new Set(cand)].slice(0, 4);
+    return { ip: ipq(ip) + '/' + cidr, type, opts, order: shuffle(opts.map((x, j) => j)), expl: [ipq(net), ipq(bc), cidr, nf.format(size - 2), nf.format(size)] };
+  }
+  function snStop() { clearInterval(SN.iv); SN.iv = 0; }
+  function openSubnet() {
+    closeTerm(); snStop(); SN.done = false; SN.i = 0; SN.score = 0; SN.ok = 0;
+    SN.list = Array.from({ length: SN_ROUND }, (x, k) => snMake(k));
+    snShow(); openPanel('snPanel', null); SND.level();
+  }
+  function snShow() {
+    const q = SN.list[SN.i]; SN.answered = false;
+    $('snTag').textContent = t('snTag')(SN.i + 1, SN.list.length); $('snScore').textContent = t('snPts')(SN.score);
+    $('snIp').hidden = false; $('snIp').textContent = q.ip; $('snQ').textContent = t('snQ')[q.type]; $('snSub').hidden = true; $('snTimer').hidden = false;
+    const box = $('snOpts'); box.textContent = ''; box.hidden = false;
+    q.order.forEach(j => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tk-opt'; b.textContent = q.opts[j]; b.dataset.j = j; b.addEventListener('click', () => snAnswer(j, b)); box.append(b); });
+    $('snExpl').hidden = true; $('snNext').hidden = true;
+    SN.end = performance.now() + SN_TIME * 1000; snBar(1); snStop();
+    SN.iv = setInterval(() => {
+      if (!$('snPanel').classList.contains('open')) { snStop(); return; }
+      const left = Math.max(0, (SN.end - performance.now()) / 1000); snBar(left / SN_TIME);
+      if (left <= 0) snAnswer(-1, null);
+    }, 100);
+    setTimeout(() => { const f = box.querySelector('button'); if (f) f.focus(); }, 30);
+  }
+  function snBar(r) { const p = Math.round(r * 100); $('snBar').style.width = p + '%'; $('snBar').className = r < .25 ? 'bad' : r < .5 ? 'warn' : ''; $('snTimer').setAttribute('aria-valuenow', String(p)); }
+  function snAnswer(j, btn) {
+    if (SN.answered) return; SN.answered = true; snStop();
+    const q = SN.list[SN.i], good = j === 0, left = Math.max(0, (SN.end - performance.now()) / 1000);
+    $('snOpts').querySelectorAll('button').forEach(b => { b.disabled = true; if (b.dataset.j === '0') b.classList.add('good'); });
+    if (btn && !good) btn.classList.add('bad');
+    if (good) { SN.ok++; SN.score += 10 + Math.round(left / 2); SND.block(); } else SND.wrong();
+    const ex = $('snExpl'); ex.hidden = false; ex.className = 'tk-expl ' + (good ? 'ok' : 'ko');
+    ex.textContent = (good ? t('snGood') : j < 0 ? t('snTimeout') : t('snBad')) + sp() + t('snExpl')(...q.expl);
+    $('snScore').textContent = t('snPts')(SN.score);
+    const nx = $('snNext'); nx.hidden = false; nx.textContent = SN.i < SN.list.length - 1 ? t('snNext') : t('snEnd'); nx.focus();
+  }
+  $('snNext').addEventListener('click', () => {
+    if (SN.done) { openSubnet(); return; }
+    if (SN.i < SN.list.length - 1) { SN.i++; snShow(); return; }
+    const n = SN.list.length, best = Math.max(+store.get('jg-subnet-best') || 0, SN.score); store.set('jg-subnet-best', String(best));
+    $('snTag').textContent = t('snDoneTag'); $('snQ').textContent = t('snDoneTitle')(SN.ok, n);
+    $('snIp').hidden = true; $('snTimer').hidden = true; $('snOpts').hidden = true; $('snExpl').hidden = true;
+    const sub = $('snSub'); sub.textContent = t('snDoneMsg')(SN.score) + sp() + t('pnBest')(best); sub.hidden = false;
+    SN.done = true; const nx = $('snNext'); nx.hidden = false; nx.textContent = t('again') || '↻'; nx.focus(); SND.end();
+  });
+  $('snQuit').addEventListener('click', () => { snStop(); closePanels(); });
+
+  /* ================= Tableau des meilleurs scores (gardés dans ce navigateur uniquement) ================= */
+  function openScores() {
+    const ul = $('scList'); ul.textContent = '';
+    const rows = [['pickServerT', 'jg-firewall-best', 0], ['pickSupportT', 'jg-support-best', 50], ['pickSupport2T', 'jg-support2-best', 50], ['pickPanneT', 'jg-panne-best', PN_ROUND * 100], ['pickQuizT', 'jg-quiz-best', QZ_ROUND * 10], ['pickPhishT', 'jg-phish-best', 60], ['pickSubnetT', 'jg-subnet-best', 0]];
+    const nf = new Intl.NumberFormat(t('locale'));
+    const add = (k, v, none) => { const li = document.createElement('li'), a = document.createElement('span'), b = document.createElement('b'); a.textContent = k; b.textContent = v; if (none) b.className = 'none'; li.append(a, b); ul.append(li); };
+    for (const [name, key, max] of rows) { const raw = store.get(key); add(t(name), raw === null || raw === undefined || raw === '' ? t('scNone') : nf.format(+raw) + (max ? '/' + nf.format(max) : ''), raw === null || raw === undefined || raw === ''); }
+    add(t('scSecrets'), foundSet().length + '/' + SECRETS.length, false);
+    closeTerm(); openPanel('scPanel', 'scClose');
+  }
+  $('scoresBtn').addEventListener('click', openScores);
+  $('scPlay').addEventListener('click', openGames);
+  $('scClose').addEventListener('click', closePanels);
+  $('pickPhish').addEventListener('click', () => openPhish());
+  $('pickSubnet').addEventListener('click', () => openSubnet());
+
+  /* ================= Glossaire : les mots techniques soulignés donnent leur définition au toucher ================= */
+  function glossEntries() { const g = t('gloss'); return Array.isArray(g) ? g : []; }
+  function glossRegex() {
+    const pats = [];
+    glossEntries().forEach(([term, , al], i) => {
+      for (const p of [term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ \\\/ | \/ /g, '\\s*/\\s*'), ...(al || [])]) pats.push({ p, i });
+    });
+    pats.sort((a, b) => b.p.length - a.p.length);
+    return pats.map(({ p, i }) => {
+      const latin = /^[\x20-\x7E\u00C0-\u017F\u2019]+$/.test(p), caps = /^[A-Z0-9-]+$/.test(p);
+      return { re: new RegExp((latin ? '(?<![A-Za-z0-9\u00C0-\u017F])' : '') + '(' + p + ')' + (latin ? '(?![A-Za-z0-9\u00C0-\u017F])' : ''), caps ? 'u' : 'iu'), i };
+    });
+  }
+  var glossCache = null;
+  function glossify(root) {
+    if (!root) return;
+    try {
+      if (!glossCache || glossCache.lang !== lang) glossCache = { lang, list: glossRegex() };
+      const done = new Set(), walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => n.parentNode.closest('.gl-t, button, a') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+      const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+      for (let node of nodes) {
+        let guard = 0;
+        while (node && guard++ < 12) {
+          let best = null;
+          for (const g of glossCache.list) { if (done.has(g.i)) continue; const m = g.re.exec(node.data); if (m && (!best || m.index < best.m.index || (m.index === best.m.index && m[1].length > best.m[1].length))) best = { m, g }; }
+          if (!best) break;
+          done.add(best.g.i);
+          const rest = node.splitText(best.m.index), after = rest.splitText(best.m[1].length);
+          const b = document.createElement('button'); b.type = 'button'; b.className = 'gl-t'; b.dataset.g = best.g.i; b.textContent = rest.data;
+          b.setAttribute('aria-describedby', 'glTip'); rest.replaceWith(b); node = after;
+        }
+      }
+    } catch (e) {}
+  }
+  let tipFor = null, tipAt = 0;
+  function hideTip() { $('glTip').hidden = true; if (tipFor) tipFor.setAttribute('aria-expanded', 'false'); tipFor = null; }
+  function showTip(btn) {
+    const e = glossEntries()[+btn.dataset.g]; if (!e) return;
+    if (tipFor === btn) { hideTip(); return; }
+    hideTip(); tipFor = btn; tipAt = performance.now(); btn.setAttribute('aria-expanded', 'true');
+    const tip = $('glTip'); $('glTipT').textContent = e[0]; $('glTipD').textContent = e[1]; tip.hidden = false;
+    const r = btn.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
+    const left = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), innerWidth - w - 8);
+    const top = r.bottom + 8 + h > innerHeight - 8 ? Math.max(8, r.top - h - 8) : r.bottom + 8;
+    tip.style.left = left + 'px'; tip.style.top = top + 'px';
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest && e.target.closest('.gl-t');
+    if (b) { e.preventDefault(); showTip(b); return; }
+    if (!(e.target.closest && e.target.closest('#glTip'))) hideTip();
+  });
+  window.addEventListener('scroll', () => { if (performance.now() - tipAt > 400) hideTip(); }, { passive: true, capture: true });
+  window.addEventListener('resize', hideTip, { passive: true });
+  window.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('glTip').hidden) { hideTip(); e.stopImmediatePropagation(); } }, true);
+  function openGloss() {
+    hideTip();
+    const dl = $('glossList'); dl.textContent = '';
+    for (const [term, def] of glossEntries()) { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = term; dd.textContent = def; dl.append(dt, dd); }
+    closeTerm(); openPanel('glossPanel', null); $('glossClose').focus({ preventScroll: true }); $('glossPanel').querySelector('.card').scrollTop = 0;
+  }
+  $('glTipMore').addEventListener('click', openGloss);
+  $('glossBtn').addEventListener('click', openGloss);
+  $('glossClose').addEventListener('click', closePanels);
+  if (['#glossaire', '#glossary'].includes(location.hash)) setTimeout(openGloss, 0);
+  function define(word) {
+    if (!word) { line(t('tDefineUsage'), 'r'); return; }
+    const w = word.toLowerCase(), list = glossEntries();
+    const hit = list.find(([term, , al]) => term.toLowerCase() === w || term.toLowerCase().split(/\s*\/\s*|\s+/).includes(w) || (al || []).some(a => new RegExp('^(' + a + ')$', 'i').test(word)));
+    if (hit) { line(hit[0], 'c'); line('  ' + hit[1]); } else line(t('tDefineNone')(word), 'r');
+  }
+
+  /* ================= Rapport de sécurité imprimable (ou en PDF) ================= */
+  function fillRep() {
+    const st = ST(), body = $('repBody'); body.textContent = '';
+    $('repTitle').textContent = t('repTitle') + ' · jeremy-grosjean.fr';
+    $('repSub').textContent = st && st.checked ? t('repSub')(fmtDate(st.checked, true)) : t('repNow')(fmtDate(new Date().toISOString(), true));
+    const section = (title, rows) => {
+      if (!rows.length) return;
+      const h = document.createElement('h3'), tb = document.createElement('table'); h.textContent = title;
+      for (const [k, v, c] of rows) { const tr = document.createElement('tr'), a = document.createElement('td'), b = document.createElement('td'); a.textContent = k; b.textContent = v; if (c) b.className = c; tr.append(a, b); tb.append(tr); }
+      body.append(h, tb);
+    };
+    section(t('repExt'), EXT.map(([n, g]) => [n, g, 'ok']));
+    section(t('repProt'), t('sec').map(([n, d]) => [n + ' — ' + d, '✓', 'ok']));
+    section(t('repPub'), supRows() || []);
+    const hd = st && st.hdrs && Array.isArray(st.hdrs.h) ? st.hdrs.h : [];
+    section(t('repHdr'), hd.map(([k, v]) => [k, v.length > 90 ? v.slice(0, 88) + '…' : v, 'mono']));
+    $('repFoot').textContent = t('repFoot');
+  }
+  function printRep() {
+    fillRep(); document.body.classList.add('rep-print');
+    const off = () => { document.body.classList.remove('rep-print'); window.removeEventListener('afterprint', off); };
+    window.addEventListener('afterprint', off);
+    setTimeout(() => { window.print(); setTimeout(off, 1500); }, 60);
+  }
+  $('secReport').addEventListener('click', printRep);
+
+  /* ================= Terminal : curl -I, whois, traceroute (relevés de la mise en ligne, aucune requête du visiteur) ================= */
+  const DOM = 'jeremy-grosjean.fr';
+  function curlI(args) {
+    const flags = args.filter(a => a.startsWith('-')), host = (args.find(a => !a.startsWith('-')) || '').replace(/^https?:\/\//, '').replace(/\/.*$/, '').toLowerCase();
+    if (!flags.some(f => /^-(I|-head|sI|Is)$/i.test(f)) || !host) { line(t('tCurlUsage'), 'r'); return; }
+    if (host !== DOM && host !== 'www.' + DOM) { line(t('tCurlOnly'), 'd'); return; }
+    const st = ST(); if (!st || !st.hdrs || !Array.isArray(st.hdrs.h)) { line(t('supNone'), 'd'); return; }
+    line(st.hdrs.st || 'HTTP/2 200', 'd');
+    for (const [k, v] of st.hdrs.h) { const d = line(''), a = document.createElement('span'); a.className = 'g'; a.textContent = k + ':'; d.append(a, ' ' + v); }
+    line(t('tCurlNote')(fmtDate(st.checked, true)), 'd');
+  }
+  function whois() {
+    const W = t('whois'), st = ST() || {};
+    const rows = [[W.dom, DOM], [W.reg, W.regV], [W.rar, 'OVHcloud'], [W.host, 'OVHcloud'], [W.holder, W.holderV]];
+    if (st.dnssec) rows.push([W.dnssec, W.signed]);
+    if (st.a) rows.push([W.ip, st.a]);
+    if (typeof st.tlsDays === 'number') rows.push([W.cert, W.certV(st.tlsDays)]);
+    if ((st.mx || []).length) rows.push([W.mx, st.mx.join(', ')]);
+    const w = Math.max(...rows.map(r => r[0].length)) + 2;
+    for (const [k, v] of rows) line(`  ${(k + ' :').padEnd(w + 2)}${v}`, k === W.dom ? 'c' : undefined);
+  }
+  function traceroute() {
+    const st = ST() || {}, H = t('trHops');
+    const hops = [['192.168.1.1', 1], ['100.64.0.1', 6], ['203.0.113.17', 9], ['203.0.113.130', 12], ['198.51.100.42', 16], [st.a || DOM, 17]];
+    line(t('trHead')(DOM), 'c');
+    hops.forEach(([ip, ms], i) => setTimeout(() => {
+      const t3 = [0, 1, 2].map(() => (ms + Math.random() * (ms / 4 + .5)).toFixed(1) + ' ms').join('  ');
+      line(`${String(i + 1).padStart(2)}  ${ip.padEnd(16)} ${t3}   ← ${H[i]}`, i === hops.length - 1 ? 'g' : undefined); SND.key();
+      if (i === hops.length - 1) setTimeout(() => line(t('trEnd'), 'd'), 250);
+    }, 250 + i * 380));
   }
 
   /* ================= Application installable ================= */
