@@ -26,14 +26,15 @@
 <link rel="icon" href="/favicon.svg?v=c653120d20" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=ea10cf004d">
 <link rel="manifest" href="/site.webmanifest?v=1170d79b15">
-<link rel="stylesheet" href="/assets/app.css?v=3a36c7a1ec">
+<link rel="stylesheet" href="/assets/app.css?v=9b482fc239">
 <script src="/assets/i18n.js?v=91faf46deb" defer></script>
 <script src="/assets/labs.js?v=24e840f65d" defer></script>
 <script src="/assets/labs2.js?v=194508f5f9" defer></script>
 <script src="/assets/labs3.js?v=e42ceff3d6" defer></script>
+<script src="/assets/labs4.js?v=1f113c584a" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=dde0d9ad14" defer></script>
+<script src="/assets/app.js?v=f531ad1e4b" defer></script>
 </head>
 <body>
 <canvas id="net" aria-hidden="true"></canvas>
@@ -274,9 +275,12 @@
       <button class="pick" id="pickRj" type="button"><b data-i="pickRjT">Sertis le câble RJ45</b><span data-i="pickRjD"></span></button>
       <button class="pick" id="pickCall" type="button"><b data-i="pickCallT">Simulateur d’appel</b><span data-i="pickCallD"></span></button>
       <button class="pick pick-daily" id="pickDaily" type="button"><b data-i="pickDailyT">Défi du jour</b><span data-i="pickDailyD"></span></button>
+      <button class="pick" id="pickPrep" type="button"><b data-i="pickPrepT">Prépare un poste</b><span data-i="pickPrepD"></span></button>
+      <button class="pick" id="pickRansom" type="button"><b data-i="pickRansomT">Attaque par rançongiciel</b><span data-i="pickRansomD"></span></button>
+      <button class="pick" id="pickReply" type="button"><b data-i="pickReplyT">Réponds au ticket</b><span data-i="pickReplyD"></span></button>
       <button class="pick" id="pickSubnet" type="button"><b data-i="pickSubnetT">Sous-réseaux express</b><span data-i="pickSubnetD">10 questions chronométrées : adresse du réseau, diffusion, nombre d’appareils.</span></button>
     </div>
-    <div class="actions"><button class="btn-ghost" id="scoresBtn" type="button" data-i="scoresBtn">Mes meilleurs scores</button><button class="btn-ghost" id="gamesClose" type="button" data-i="close">Fermer</button></div>
+    <div class="actions"><button class="btn-ghost" id="badgesBtn" type="button" data-i="badgesBtn">Badges</button><button class="btn-ghost" id="scoresBtn" type="button" data-i="scoresBtn">Mes meilleurs scores</button><button class="btn-ghost" id="gamesClose" type="button" data-i="close">Fermer</button></div>
   </div>
 </div>
 
@@ -352,7 +356,7 @@
     <h2 id="scTitle" data-i="scTitle">Mes meilleurs scores</h2>
     <p data-i="scSub">Gardés sur cet appareil uniquement : rien n’est envoyé.</p>
     <ul class="sc-list" id="scList"></ul>
-    <div class="actions"><button class="btn" id="scPlay" type="button" data-i="scPlay">Jouer</button><button class="btn-ghost" id="scClose" type="button" data-i="close">Fermer</button></div>
+    <div class="actions"><button class="btn" id="scPlay" type="button" data-i="scPlay">Jouer</button><button class="btn-ghost" id="scBadges" type="button" data-i="badgesBtn">Badges</button><button class="btn-ghost" id="scClose" type="button" data-i="close">Fermer</button></div>
   </div>
 </div>
 
@@ -476,6 +480,53 @@
     <p class="tk-expl" id="dyExpl" hidden></p>
     <p class="dy-streak" id="dyStreak"></p>
     <div class="actions"><button class="btn-ghost" id="dyClose" type="button" data-i="close">Fermer</button></div>
+  </div>
+</div>
+
+<div class="panel" id="prPanel" role="dialog" aria-modal="true" aria-labelledby="prTitle">
+  <div class="card ticket">
+    <div class="tk-head"><span class="tag" id="prTag">Étape 1/8</span><span class="tk-score" id="prScore">0</span></div>
+    <h2 class="qz-q" id="prTitle" data-i="prTitle">Préparez le PC d’un nouvel arrivant</h2>
+    <p class="tk-from" id="prSub" data-i="prSub"></p>
+    <ol class="pr-done" id="prDone"></ol>
+    <div class="tk-opts" id="prOpts"></div>
+    <p class="tk-expl" id="prExpl" hidden></p>
+    <div class="actions"><button class="btn" id="prNext" type="button" hidden data-i="prEnd">Voir le résultat</button><button class="btn-ghost" id="prQuit" type="button" data-i="quit">Quitter</button></div>
+  </div>
+</div>
+
+<div class="panel" id="rwPanel" role="dialog" aria-modal="true" aria-labelledby="rwTitle">
+  <div class="card ticket">
+    <div class="tk-head"><span class="tag" id="rwTag">Étape 1/5</span><span class="tk-score" id="rwScore">0</span></div>
+    <p class="rs-alert" data-i="rwTitle"></p>
+    <h2 class="qz-q" id="rwTitle">Alerte</h2>
+    <div class="tk-opts" id="rwOpts"></div>
+    <p class="tk-expl" id="rwExpl" hidden></p>
+    <div class="actions"><button class="btn" id="rwNext" type="button" hidden data-i="rwNext">Étape suivante</button><button class="btn-ghost" id="rwQuit" type="button" data-i="quit">Quitter</button></div>
+  </div>
+</div>
+
+<div class="panel" id="rpPanel" role="dialog" aria-modal="true" aria-labelledby="rpTitle">
+  <div class="card ticket">
+    <div class="tk-head"><span class="tag" id="rpTag">Ticket 1/2</span><span class="tk-score" id="rpScore">0</span></div>
+    <h2 class="qz-q" id="rpTitle">Ticket</h2>
+    <p class="tk-from" id="rpFrom"></p>
+    <p class="pn-lbl" data-i="rpPreview">Votre réponse</p>
+    <div class="rp-mail" id="rpMail"></div>
+    <p class="pn-lbl" id="rpAsk"></p>
+    <div class="tk-opts" id="rpOpts"></div>
+    <p class="tk-expl" id="rpExpl" hidden></p>
+    <div class="actions"><button class="btn" id="rpNext" type="button" hidden data-i="rpNext">Ticket suivant</button><button class="btn-ghost" id="rpQuit" type="button" data-i="quit">Quitter</button></div>
+  </div>
+</div>
+
+<div class="panel" id="bdPanel" role="dialog" aria-modal="true" aria-labelledby="bdTitle">
+  <div class="card">
+    <h2 id="bdTitle" data-i="bdTitle">Badges</h2>
+    <p data-i="bdSub"></p>
+    <p class="bd-count" id="bdCount"></p>
+    <ul class="bd-grid" id="bdGrid"></ul>
+    <div class="actions"><button class="btn" id="bdShare" type="button" data-i="bdShare">Partager mon récapitulatif</button><button class="btn-ghost" id="bdClose" type="button" data-i="close">Fermer</button></div>
   </div>
 </div>
 

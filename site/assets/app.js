@@ -347,12 +347,12 @@
     $('hScore').textContent = G.score; $('hBreach').textContent = G.breach + '/3'; $('hTime').textContent = Math.ceil(G.time);
   }
   const server = () => ({ x: W / 2, y: H / 2, s: Math.min(64, Math.max(46, W / 22)) });
-  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel', 'phPanel', 'snPanel', 'scPanel', 'glossPanel', 'pausePanel', 'resumePanel', 'slotPanel', 'skillsPanel', 'sharePanel', 'faqPanel', 'itPanel', 'psPanel', 'rjPanel', 'clPanel', 'dyPanel'];
+  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel', 'phPanel', 'snPanel', 'scPanel', 'glossPanel', 'pausePanel', 'resumePanel', 'slotPanel', 'skillsPanel', 'sharePanel', 'faqPanel', 'itPanel', 'psPanel', 'rjPanel', 'clPanel', 'dyPanel', 'prPanel', 'rwPanel', 'rpPanel', 'bdPanel'];
   function closePanels() { panels.forEach(p => $(p).classList.remove('open')); }
   /* La fenêtre s'ouvre toujours en haut de son contenu (sur un écran bas, le focus sur un bouton du bas la faisait défiler) */
   /* Fermer une fenêtre : clic sur le fond flou autour (même action que son bouton Fermer / Quitter), ou sur le ✕ en haut à droite.
      Un clic dans la fenêtre ne la ferme pas ; un glisser qui commence dans la fenêtre et finit dehors non plus. */
-  const PANEL_CLOSE = { slotPanel: 'slotClose', skillsPanel: 'skClose', sharePanel: 'shClose', faqPanel: 'faqClose', itPanel: 'itQuit', psPanel: 'psQuit', rjPanel: 'rjQuit', clPanel: 'clQuit', dyPanel: 'dyClose', intro: 'cancel', over: 'back', secPanel: 'secClose', contactPanel: 'contactClose', keysPanel: 'keysClose', gamesPanel: 'gamesClose',
+  const PANEL_CLOSE = { prPanel: 'prQuit', rwPanel: 'rwQuit', rpPanel: 'rpQuit', bdPanel: 'bdClose', slotPanel: 'slotClose', skillsPanel: 'skClose', sharePanel: 'shClose', faqPanel: 'faqClose', itPanel: 'itQuit', psPanel: 'psQuit', rjPanel: 'rjQuit', clPanel: 'clQuit', dyPanel: 'dyClose', intro: 'cancel', over: 'back', secPanel: 'secClose', contactPanel: 'contactClose', keysPanel: 'keysClose', gamesPanel: 'gamesClose',
     supportPanel: 'tkQuit', panPanel: 'pnQuit', quizPanel: 'qzQuit', newsPanel: 'newsClose', briefPanel: 'briefClose', supPanel: 'supClose',
     phPanel: 'phQuit', snPanel: 'snQuit', scPanel: 'scClose', glossPanel: 'glossClose', pausePanel: 'pzResume', resumePanel: 'rsBack' };
   let downOn = null;
@@ -906,8 +906,8 @@
   /* ================= Terminal ================= */
   const term = $('term'), out = $('termOut'), input = $('termInput');
   const hist = []; let hIdx = 0, greeted = false;
-  const COMMANDS = ['help', 'boot', 'legal', 'device', 'neofetch', 'secrets', 'htop', 'support', 'status', 'dig', 'ipcalc', 'install', 'tour', 'matrix', 'whoami', 'about', 'security', 'ping', 'date', 'lang', 'theme', 'play', 'konami', 'contact', 'cv', 'projets', 'panne', 'quiz', 'changelog', 'print', 'a11y', 'curl', 'whois', 'traceroute', 'phish', 'subnet', 'scores', 'glossaire', 'define', 'report', 'lien', 'rdv', 'competences', 'faq', 'partager', 'priorite', 'powershell', 'rj45', 'appel', 'defi', 'clear', 'exit'];
-  const ALIAS = { aide: 'help', top: 'htop', fps: 'htop', ticket: 'support', tickets: 'support', supervision: 'status', nslookup: 'dig', host: 'dig', installer: 'install', visite: 'tour', appareil: 'device', sysinfo: 'device', fastfetch: 'neofetch', secret: 'secrets', mentions: 'legal', legales: 'legal', 'légales': 'legal', privacy: 'legal', demarrage: 'boot', 'démarrage': 'boot', journal: 'boot', dmesg: 'boot', apropos: 'about', 'à-propos': 'about', securite: 'security', 'sécurité': 'security', jouer: 'play', effacer: 'clear', cls: 'clear', quitter: 'exit', quit: 'exit', langue: 'lang', theme: 'theme', 'thème': 'theme', ls: 'help', man: 'help', recruteur: 'cv', recruiter: 'cv', resume: 'cv', imprimer: 'print', pdf: 'print', accessibilite: 'a11y', 'accessibilité': 'a11y', accessibility: 'a11y', mail: 'contact', email: 'contact', 'rétro': 'retro', crt: 'retro', phosphore: 'retro', vt100: 'retro', diagnostic: 'panne', depannage: 'panne', 'dépannage': 'panne', fault: 'panne', ad: 'quiz', gpo: 'quiz', news: 'changelog', nouveautes: 'changelog', 'nouveautés': 'changelog', quoideneuf: 'changelog', tracert: 'traceroute', phishing: 'phish', hameconnage: 'phish', 'hameçonnage': 'phish', 'sous-reseaux': 'subnet', 'sous-réseaux': 'subnet', subnets: 'subnet', sousreseau: 'subnet', score: 'scores', records: 'scores', glossary: 'glossaire', lexique: 'glossaire', jargon: 'glossaire', def: 'define', definition: 'define', 'définition': 'define', rapport: 'report', link: 'lien', meeting: 'rdv', rendezvous: 'rdv', 'rendez-vous': 'rdv', entretien: 'rdv', interview: 'rdv', creneau: 'rdv', 'créneau': 'rdv', 'compétences': 'competences', skills: 'competences', titre: 'competences', tai: 'competences', share: 'partager', partage: 'partager', priority: 'priorite', 'priorité': 'priorite', itil: 'priorite', ps: 'powershell', pwsh: 'powershell', cable: 'rj45', 'câble': 'rj45', sertir: 'rj45', call: 'appel', telephone: 'appel', 'téléphone': 'appel', daily: 'defi', 'défi': 'defi', challenge: 'defi', questions: 'faq' };
+  const COMMANDS = ['help', 'boot', 'legal', 'device', 'neofetch', 'secrets', 'htop', 'support', 'status', 'dig', 'ipcalc', 'install', 'tour', 'matrix', 'whoami', 'about', 'security', 'ping', 'date', 'lang', 'theme', 'play', 'konami', 'contact', 'cv', 'projets', 'panne', 'quiz', 'changelog', 'print', 'a11y', 'curl', 'whois', 'traceroute', 'phish', 'subnet', 'scores', 'glossaire', 'define', 'report', 'lien', 'rdv', 'competences', 'faq', 'partager', 'priorite', 'powershell', 'rj45', 'appel', 'defi', 'poste', 'rancon', 'reponse', 'badges', 'clear', 'exit'];
+  const ALIAS = { aide: 'help', top: 'htop', fps: 'htop', ticket: 'support', tickets: 'support', supervision: 'status', nslookup: 'dig', host: 'dig', installer: 'install', visite: 'tour', appareil: 'device', sysinfo: 'device', fastfetch: 'neofetch', secret: 'secrets', mentions: 'legal', legales: 'legal', 'légales': 'legal', privacy: 'legal', demarrage: 'boot', 'démarrage': 'boot', journal: 'boot', dmesg: 'boot', apropos: 'about', 'à-propos': 'about', securite: 'security', 'sécurité': 'security', jouer: 'play', effacer: 'clear', cls: 'clear', quitter: 'exit', quit: 'exit', langue: 'lang', theme: 'theme', 'thème': 'theme', ls: 'help', man: 'help', recruteur: 'cv', recruiter: 'cv', resume: 'cv', imprimer: 'print', pdf: 'print', accessibilite: 'a11y', 'accessibilité': 'a11y', accessibility: 'a11y', mail: 'contact', email: 'contact', 'rétro': 'retro', crt: 'retro', phosphore: 'retro', vt100: 'retro', diagnostic: 'panne', depannage: 'panne', 'dépannage': 'panne', fault: 'panne', ad: 'quiz', gpo: 'quiz', news: 'changelog', nouveautes: 'changelog', 'nouveautés': 'changelog', quoideneuf: 'changelog', tracert: 'traceroute', phishing: 'phish', hameconnage: 'phish', 'hameçonnage': 'phish', 'sous-reseaux': 'subnet', 'sous-réseaux': 'subnet', subnets: 'subnet', sousreseau: 'subnet', score: 'scores', records: 'scores', glossary: 'glossaire', lexique: 'glossaire', jargon: 'glossaire', def: 'define', definition: 'define', 'définition': 'define', rapport: 'report', link: 'lien', meeting: 'rdv', rendezvous: 'rdv', 'rendez-vous': 'rdv', entretien: 'rdv', interview: 'rdv', creneau: 'rdv', 'créneau': 'rdv', 'compétences': 'competences', skills: 'competences', titre: 'competences', tai: 'competences', share: 'partager', partage: 'partager', priority: 'priorite', 'priorité': 'priorite', itil: 'priorite', ps: 'powershell', pwsh: 'powershell', cable: 'rj45', 'câble': 'rj45', sertir: 'rj45', call: 'appel', telephone: 'appel', 'téléphone': 'appel', daily: 'defi', 'défi': 'defi', challenge: 'defi', questions: 'faq', setup: 'poste', deploiement: 'poste', 'déploiement': 'poste', ransom: 'rancon', 'rançon': 'rancon', ransomware: 'rancon', rancongiciel: 'rancon', 'rançongiciel': 'rancon', reply: 'reponse', 'réponse': 'reponse', repondre: 'reponse', 'répondre': 'reponse', succes: 'badges', 'succès': 'badges', badge: 'badges', achievements: 'badges' };
   function line(text, cls) { const d = document.createElement('div'); if (cls) d.className = cls; d.textContent = text; out.append(d); out.scrollTop = out.scrollHeight; return d; }
   function openTerm() {
     closePanels(); document.body.classList.add('term-open');
@@ -1082,6 +1082,10 @@
       case 'rj45': line(t('tGame'), 'g'); setTimeout(openRj, 350); break;
       case 'appel': line(t('tGame'), 'g'); setTimeout(openCall, 350); break;
       case 'defi': closeTerm(); setTimeout(openDaily, 150); break;
+      case 'poste': line(t('tGame'), 'g'); setTimeout(openPrep, 350); break;
+      case 'rancon': line(t('tGame'), 'g'); setTimeout(openRansom, 350); break;
+      case 'reponse': line(t('tGame'), 'g'); setTimeout(openReply, 350); break;
+      case 'badges': closeTerm(); setTimeout(openBadges, 150); break;
       case 'lien': {
         const u = personalLink(args.join(' ').replace(/[^\p{L}\p{N} &'’.,()\-]/gu, ''));
         if (!u) { line(t('tLinkUsage'), 'd'); break; }
@@ -1604,7 +1608,7 @@
   /* ================= Tableau des meilleurs scores (gardés dans ce navigateur uniquement) ================= */
   function openScores() {
     const ul = $('scList'); ul.textContent = '';
-    const rows = [['pickServerT', 'jg-firewall-best', 0], ['pickSupportT', 'jg-support-best', 50], ['pickSupport2T', 'jg-support2-best', 50], ['pickPanneT', 'jg-panne-best', PN_ROUND * 100], ['pickQuizT', 'jg-quiz-best', QZ_ROUND * 10], ['pickPhishT', 'jg-phish-best', 60], ['pickSubnetT', 'jg-subnet-best', 0], ['pickItilT', 'jg-itil-best', 160], ['pickPsT', 'jg-ps-best', 80], ['pickRjT', 'jg-rj45-best', 200], ['pickCallT', 'jg-call-best', 16]];
+    const rows = [['pickServerT', 'jg-firewall-best', 0], ['pickSupportT', 'jg-support-best', 50], ['pickSupport2T', 'jg-support2-best', 50], ['pickPanneT', 'jg-panne-best', PN_ROUND * 100], ['pickQuizT', 'jg-quiz-best', QZ_ROUND * 10], ['pickPhishT', 'jg-phish-best', 60], ['pickSubnetT', 'jg-subnet-best', 0], ['pickItilT', 'jg-itil-best', 160], ['pickPsT', 'jg-ps-best', 80], ['pickRjT', 'jg-rj45-best', 200], ['pickCallT', 'jg-call-best', 16], ['pickPrepT', 'jg-prep-best', 80], ['pickRansomT', 'jg-ransom-best', 100], ['pickReplyT', 'jg-reply-best', 80]];
     const nf = new Intl.NumberFormat(t('locale'));
     const add = (k, v, none) => { const li = document.createElement('li'), a = document.createElement('span'), b = document.createElement('b'); a.textContent = k; b.textContent = v; if (none) b.className = 'none'; li.append(a, b); ul.append(li); };
     for (const [name, key, max] of rows) { const raw = store.get(key); add(t(name), raw === null || raw === undefined || raw === '' ? t('scNone') : nf.format(+raw) + (max ? '/' + nf.format(max) : ''), raw === null || raw === undefined || raw === ''); }
@@ -1848,7 +1852,7 @@
   for (const id of ['briefSlot', 'contactSlot', 'recSlot', 'faqSlot']) $(id).addEventListener('click', () => { if (id === 'recSlot') closeRec(); openSlots(); });
 
   /* 3. Compétences du titre TAI, chacune reliée aux jeux qui la montrent */
-  const SK_GAMES = [['pickSupport', 'pickSupport2', 'pickCall', 'pickItil'], ['pickRj', 'pickPanne', 'pickPhish'], ['pickSubnet', 'pickQuiz', 'pickPs']];
+  const SK_GAMES = [['pickSupport', 'pickSupport2', 'pickCall', 'pickItil', 'pickReply'], ['pickPrep', 'pickRj', 'pickPanne', 'pickPhish', 'pickRansom'], ['pickSubnet', 'pickQuiz', 'pickPs']];
   function openSkills() {
     const box = $('skList'); box.textContent = '';
     t('skBlocks').forEach(([title, items], i) => {
@@ -2069,7 +2073,7 @@
         if (dailyState().d === today) return;
         const ok = j === 0, s = dailyState(), y1 = dayKey(Date.now() - 864e5);
         const streak = ok ? (s.okLast === y1 ? (s.streak || 0) + 1 : 1) : 0;
-        store.set('jg-daily', JSON.stringify({ d: today, ok, streak, okLast: ok ? today : s.okLast }));
+        store.set('jg-daily', JSON.stringify({ d: today, ok, streak, okLast: ok ? today : s.okLast })); bestOf('jg-daily-best', streak);
         box.querySelectorAll('button').forEach((x, k) => { x.disabled = true; if (order[k] === 0) x.classList.add('good'); });
         if (!ok) b.classList.add('bad');
         ex.hidden = false; ex.className = 'tk-expl ' + (ok ? 'ok' : 'ko'); ex.textContent = (ok ? t('qzGood') : t('qzBad')) + ' ' + q[2] + ' ' + t('dyDone');
@@ -2114,6 +2118,144 @@
 
   function lot14Lang() { renderHello(); fillRecSkills(); }
   lot14Lang();
+
+
+  /* ================= Lot 15 : « Prépare un poste », « Attaque par rançongiciel », « Réponds au ticket » et badges ================= */
+  /* « Prépare un poste » : toucher les 8 étapes dans l'ordre ; chaque erreur coûte 10 points */
+  const PR = { order: [], pos: 0, err: 0, done: false };
+  function openPrep() {
+    closeTerm(); Object.assign(PR, { pos: 0, err: 0, done: false }); PR.order = shuffle(t('prSteps').map((x, k) => k));
+    $('prDone').textContent = ''; $('prExpl').hidden = true; $('prNext').hidden = true; $('prSub').hidden = false; prDraw(); openPanel('prPanel', null); SND.level();
+  }
+  function prDraw() {
+    const S = t('prSteps'), box = $('prOpts'); box.textContent = ''; box.hidden = false;
+    $('prTag').textContent = t('prTag')(Math.min(PR.pos + 1, S.length), S.length); $('prScore').textContent = t('qzPts')(Math.max(0, S.length * 10 - PR.err * 10));
+    for (const k of PR.order) if (k >= PR.pos) box.append(optBtn(S[k][0], b => prTap(k, b)));
+  }
+  function prTap(k, b) {
+    const S = t('prSteps'), ex = $('prExpl'); ex.hidden = false;
+    if (k !== PR.pos) { PR.err++; SND.wrong(); b.classList.add('bad', 'shake'); setTimeout(() => b.classList.remove('bad', 'shake'), 450); ex.className = 'tk-expl ko'; ex.textContent = t('prBad'); $('prScore').textContent = t('qzPts')(Math.max(0, S.length * 10 - PR.err * 10)); return; }
+    SND.key(); const li = document.createElement('li'), w = document.createElement('b'), y = document.createElement('span');
+    w.textContent = S[k][0]; y.textContent = S[k][1]; li.append(w, y); $('prDone').append(li); PR.pos++;
+    ex.hidden = true;
+    if (PR.pos < S.length) { prDraw(); return; }
+    ex.hidden = false; ex.className = 'tk-expl ok';
+    $('prOpts').hidden = true; $('prSub').hidden = true; SND.block(); ex.textContent = t('prOk');
+    $('prScore').textContent = t('qzPts')(Math.max(0, S.length * 10 - PR.err * 10)); const nx = $('prNext'); nx.textContent = t('prEnd'); nx.hidden = false; nx.focus();
+  }
+  $('prNext').addEventListener('click', () => {
+    if (PR.done) { openPrep(); return; }
+    const m = t('prSteps').length * 10, s = Math.max(0, m - PR.err * 10), best = bestOf('jg-prep-best', s);
+    $('prTag').textContent = t('qzDoneTag'); $('prTitle').textContent = t('prDoneTitle')(PR.err);
+    const ex = $('prExpl'); ex.className = 'tk-expl'; ex.textContent = t('prDoneMsg')(s, m) + ' ' + t('pnBest')(best);
+    PR.done = true; $('prNext').textContent = t('again') || '↻'; SND.end();
+  });
+  $('prQuit').addEventListener('click', () => { closePanels(); $('prTitle').textContent = t('prTitle'); });
+
+  /* « Attaque par rançongiciel » : 5 décisions, 20 points du premier coup, 10 au deuxième */
+  const RS = { i: 0, score: 0, ok: 0, wrong: false, done: false };
+  function openRansom() { closeTerm(); Object.assign(RS, { i: 0, score: 0, ok: 0, done: false }); rsShow(); openPanel('rwPanel', null); SND.breach(); }
+  function rsShow() {
+    const q = t('ransom')[RS.i]; RS.wrong = false;
+    $('rwTag').textContent = t('rwTag')(RS.i + 1, t('ransom').length); $('rwScore').textContent = t('qzPts')(RS.score); $('rwTitle').textContent = q[0];
+    const box = $('rwOpts'); box.textContent = ''; box.hidden = false;
+    shuffle([0, 1, 2]).forEach(j => box.append(optBtn(q[1][j], b => rsAnswer(j === 0, b))));
+    $('rwExpl').hidden = true; $('rwNext').hidden = true;
+  }
+  function rsAnswer(good, btn) {
+    const q = t('ransom')[RS.i], ex = $('rwExpl'); ex.hidden = false;
+    if (!good) { RS.wrong = true; btn.classList.add('bad'); btn.disabled = true; SND.wrong(); ex.className = 'tk-expl ko'; ex.textContent = t('rwBad') + ' ' + t('rwRetry'); return; }
+    btn.classList.add('good'); SND.block(); RS.score += RS.wrong ? 10 : 20; if (!RS.wrong) RS.ok++;
+    $('rwOpts').querySelectorAll('button').forEach(b => { b.disabled = true; });
+    ex.className = 'tk-expl ok'; ex.textContent = t('rwGood') + ' ' + q[2]; $('rwScore').textContent = t('qzPts')(RS.score);
+    const nx = $('rwNext'); nx.hidden = false; nx.textContent = RS.i < t('ransom').length - 1 ? t('rwNext') : t('rwEnd'); nx.focus();
+  }
+  $('rwNext').addEventListener('click', () => {
+    if (RS.done) { openRansom(); return; }
+    if (RS.i < t('ransom').length - 1) { RS.i++; rsShow(); return; }
+    const n = t('ransom').length, best = bestOf('jg-ransom-best', RS.score);
+    $('rwTag').textContent = t('qzDoneTag'); $('rwTitle').textContent = t('rwDoneTitle')(RS.ok, n); $('rwOpts').hidden = true;
+    const ex = $('rwExpl'); ex.className = 'tk-expl'; ex.textContent = t('rwDoneMsg')(RS.score, n * 20) + ' ' + t('pnBest')(best) + ' ' + t('rw321');
+    RS.done = true; const nx = $('rwNext'); nx.textContent = t('again') || '↻'; nx.focus(); SND.end();
+  });
+  $('rwQuit').addEventListener('click', closePanels);
+
+  /* « Réponds au ticket » : 2 tickets, 4 phrases à choisir chacun (10, 5 ou 0 point) */
+  const RP = { i: 0, slot: 0, score: 0, done: false };
+  function openReply() { closeTerm(); Object.assign(RP, { i: 0, slot: 0, score: 0, done: false }); rpTicket(); openPanel('rpPanel', null); SND.level(); }
+  function rpTicket() {
+    const tk = t('replies')[RP.i]; RP.slot = 0;
+    $('rpTag').textContent = t('rpTag')(RP.i + 1, t('replies').length); $('rpTitle').textContent = '« ' + tk[0] + ' »'; $('rpFrom').textContent = t('tkFromL') + ' ' + tk[1]; $('rpFrom').hidden = false;
+    $('rpMail').textContent = ''; $('rpMail').hidden = false; $('rpExpl').hidden = true; $('rpNext').hidden = true; rpSlot();
+  }
+  function rpSlot() {
+    const tk = t('replies')[RP.i], opts = tk[2][RP.slot], box = $('rpOpts'); box.textContent = ''; box.hidden = false;
+    $('rpScore').textContent = t('qzPts')(RP.score); $('rpAsk').hidden = false; $('rpAsk').textContent = t('rpPick')(t('rpSlots')[RP.slot]);
+    shuffle([0, 1, 2]).forEach(j => box.append(optBtn(opts[j][0], () => rpChoose(opts[j]))));
+  }
+  function rpChoose(o) {
+    RP.score += o[1]; const p = document.createElement('p'); p.textContent = o[0]; p.className = o[1] === 10 ? 'good' : o[1] ? 'mid' : 'bad'; $('rpMail').append(p);
+    const ex = $('rpExpl'); ex.hidden = false; ex.className = 'tk-expl ' + (o[1] === 10 ? 'ok' : 'ko'); ex.textContent = (o[1] === 10 ? '✓ ' : o[1] ? '• ' : '✗ ') + o[2];
+    if (o[1] === 10) SND.block(); else SND.wrong(); $('rpScore').textContent = t('qzPts')(RP.score);
+    if (RP.slot < 3) { RP.slot++; rpSlot(); return; }
+    const sg = document.createElement('p'); sg.className = 'sign'; sg.textContent = t('rpSign'); $('rpMail').append(sg);
+    $('rpOpts').hidden = true; $('rpAsk').hidden = true;
+    const nx = $('rpNext'); nx.hidden = false; nx.textContent = RP.i < t('replies').length - 1 ? t('rpNext') : t('rpEnd'); nx.focus();
+  }
+  $('rpNext').addEventListener('click', () => {
+    if (RP.done) { openReply(); return; }
+    if (RP.i < t('replies').length - 1) { RP.i++; rpTicket(); return; }
+    const m = t('replies').length * 40, best = bestOf('jg-reply-best', RP.score);
+    $('rpTag').textContent = t('qzDoneTag'); $('rpTitle').textContent = t('rpDoneTitle'); $('rpFrom').hidden = true; $('rpMail').hidden = true;
+    const ex = $('rpExpl'); ex.className = 'tk-expl'; ex.textContent = t('rpDoneMsg')(RP.score, m) + ' ' + t('pnBest')(best);
+    RP.done = true; const nx = $('rpNext'); nx.textContent = t('again') || '↻'; nx.focus(); SND.end();
+  });
+  $('rpQuit').addEventListener('click', closePanels);
+
+  $('pickPrep').addEventListener('click', openPrep);
+  $('pickRansom').addEventListener('click', openRansom);
+  $('pickReply').addEventListener('click', openReply);
+
+  /* Badges : calculés à partir des meilleurs scores enregistrés dans ce navigateur (rien n'est envoyé) */
+  const num = k => +store.get(k) || 0, has = k => { const v = store.get(k); return v !== null && v !== undefined && v !== ''; };
+  const GAME_KEYS = ['jg-firewall-best', 'jg-support-best', 'jg-support2-best', 'jg-panne-best', 'jg-quiz-best', 'jg-phish-best', 'jg-subnet-best', 'jg-itil-best', 'jg-ps-best', 'jg-rj45-best', 'jg-call-best', 'jg-prep-best', 'jg-ransom-best', 'jg-reply-best'];
+  const BADGES = [
+    ['🎮', () => GAME_KEYS.some(has)], ['🛡️', () => num('jg-firewall-best') > 0], ['🎧', () => num('jg-support-best') >= 50], ['🧰', () => num('jg-support2-best') >= 50],
+    ['🔍', () => num('jg-panne-best') >= PN_ROUND * 100], ['🗂️', () => num('jg-quiz-best') >= QZ_ROUND * 10], ['🎣', () => num('jg-phish-best') >= 60], ['🧮', () => num('jg-subnet-best') > 0],
+    ['📋', () => num('jg-itil-best') >= 160], ['⌨️', () => num('jg-ps-best') >= 80], ['🔌', () => num('jg-rj45-best') >= 200], ['📞', () => num('jg-call-best') >= 16],
+    ['💻', () => num('jg-prep-best') >= 80], ['🚨', () => num('jg-ransom-best') >= 100], ['✍️', () => num('jg-reply-best') >= 80], ['📅', () => num('jg-daily-best') >= 3],
+    ['🕵️', () => foundSet().length >= 5], ['🗝️', () => foundSet().length >= SECRETS.length],
+    ['🧩', () => ['jg-firewall-best', 'jg-support-best', 'jg-panne-best', 'jg-quiz-best', 'jg-phish-best', 'jg-subnet-best', 'jg-itil-best', 'jg-ps-best', 'jg-rj45-best', 'jg-call-best', 'jg-prep-best', 'jg-ransom-best', 'jg-reply-best'].every(has)]
+  ];
+  function unlocked() { const u = BADGES.map(([, f]) => { try { return !!f(); } catch (e) { return false; } }); u.push(u.every(Boolean)); return u; }
+  function badgeSeen() { try { const v = JSON.parse(store.get('jg-badges') || 'null'); return Array.isArray(v) ? v : null; } catch (e) { return null; } }
+  let bdTimer = 0;
+  function checkBadges(silent) {
+    const u = unlocked(), seen = badgeSeen(), names = t('badges'), now = u.map((x, i) => x ? i : -1).filter(i => i >= 0);
+    if (seen && !silent) { const fresh = now.filter(i => !seen.includes(i)); fresh.forEach((i, k) => setTimeout(() => toast(t('bdNew')(names[i][0]), 2600), k * 2700)); }
+    if (!seen || now.length !== seen.length || now.some(i => !seen.includes(i))) storeSet('jg-badges', JSON.stringify(now));
+  }
+  const storeSet = store.set.bind(store);
+  store.set = (k, v) => { storeSet(k, v); if (/-best$|^jg-secrets$/.test(k)) { clearTimeout(bdTimer); bdTimer = setTimeout(() => checkBadges(false), 400); } };
+  checkBadges(true);
+  function openBadges() {
+    const u = unlocked(), names = t('badges'), ul = $('bdGrid'); ul.textContent = '';
+    names.forEach(([n, d], i) => {
+      const li = document.createElement('li'), ic = document.createElement('span'), b = document.createElement('b'), p = document.createElement('small');
+      li.className = 'bd' + (u[i] ? ' on' : ''); ic.className = 'bd-ic'; ic.textContent = i < BADGES.length ? BADGES[i][0] : '🏆'; ic.setAttribute('aria-hidden', 'true');
+      b.textContent = n; p.textContent = u[i] ? d : t('bdLocked') + ' · ' + d; li.append(ic, b, p); ul.append(li);
+    });
+    $('bdCount').textContent = t('bdCount')(u.filter(Boolean).length, names.length);
+    closeTerm(); openPanel('bdPanel', 'bdShare');
+  }
+  $('bdShare').addEventListener('click', async () => {
+    const u = unlocked(), names = t('badges'), got = names.filter((x, i) => u[i]).map(x => x[0]);
+    const text = t('bdShareText')(got.length, names.length, got.join(', '), SITE_URL);
+    if (navigator.share && matchMedia('(pointer: coarse)').matches) { navigator.share({ title: 'Jérémy Grosjean', text, url: SITE_URL }).catch(() => {}); return; }
+    if (await copyText(text)) toast(t('bdCopied'));
+  });
+  $('bdClose').addEventListener('click', closePanels);
+  for (const id of ['badgesBtn', 'scBadges']) $(id).addEventListener('click', () => { closePanels(); openBadges(); });
 
   /* ================= Application installable ================= */
   let installEvt = null;

@@ -45,13 +45,13 @@ with sync_playwright() as p:
         chev = pg.evaluate("(() => { const a = document.querySelector('.cta').getBoundingClientRect(), d = [...document.querySelectorAll('.dock-left, .dock-mid, #sound')].map(e => e.getBoundingClientRect()); return d.some(b => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom); })()")
         if chev:
             erreurs.append(f'{nom} : les boutons de l’accueil chevauchent la barre du bas')
-        for bouton, panneau in (('pickServer', 'intro'), ('pickSupport', 'supportPanel'), ('pickPanne', 'panPanel'), ('pickQuiz', 'quizPanel'), ('pickPhish', 'phPanel'), ('pickSubnet', 'snPanel'), ('pickItil', 'itPanel'), ('pickPs', 'psPanel'), ('pickRj', 'rjPanel'), ('pickCall', 'clPanel'), ('pickDaily', 'dyPanel')):
+        for bouton, panneau in (('pickServer', 'intro'), ('pickSupport', 'supportPanel'), ('pickPanne', 'panPanel'), ('pickQuiz', 'quizPanel'), ('pickPhish', 'phPanel'), ('pickSubnet', 'snPanel'), ('pickItil', 'itPanel'), ('pickPs', 'psPanel'), ('pickRj', 'rjPanel'), ('pickCall', 'clPanel'), ('pickDaily', 'dyPanel'), ('pickPrep', 'prPanel'), ('pickRansom', 'rwPanel'), ('pickReply', 'rpPanel')):
             pg.evaluate("document.getElementById('openGame').click()"); pg.wait_for_timeout(150)
             pg.evaluate(f"document.getElementById('{bouton}').click()"); pg.wait_for_timeout(300)
             if not pg.evaluate(f"document.getElementById('{panneau}').classList.contains('open')"):
                 erreurs.append(f'{nom} : le jeu {bouton} ne s’ouvre pas')
             pg.keyboard.press('Escape'); pg.evaluate("document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open'))")
-        ok(f'{nom} : les 12 jeux et défis s’ouvrent')
+        ok(f'{nom} : les 15 jeux et défis s’ouvrent')
         # Pendant « Protéger le serveur », un clic là où se trouvait « Me contacter » ne doit rien ouvrir
         r = pg.evaluate("(() => { const b = document.getElementById('contactBtn').getBoundingClientRect(); return [b.x + b.width / 2, b.y + b.height / 2]; })()")
         pg.evaluate("document.getElementById('openGame').click(); document.getElementById('pickServer').click(); document.getElementById('start').click()"); pg.wait_for_timeout(150)
@@ -214,6 +214,30 @@ with sync_playwright() as p:
         if res.get('itil') != '160' or res.get('ps') != '75' or res.get('rj') != '190' or res.get('call') != '16' or res.get('rj0') != 8 or res.get('rj2') != 8 or res.get('bulles') != 8 or not res.get('daily') or not res.get('daily2') or res.get('psTerm'):
             erreurs.append(f'{nom} : nouveaux jeux {res}')
         ok(f'{nom} : priorisation, PowerShell, RJ45, appel et défi du jour jouables jusqu’au bout, scores enregistrés')
+        # Lot 15 : préparer un poste, rançongiciel, réponse au ticket, badges
+        res = pg.evaluate("""async () => {
+          const $ = id => document.getElementById(id), w = ms => new Promise(r => setTimeout(r, ms)), out = {}, T = window.JG_I18N.fr;
+          const before = JSON.parse(localStorage.getItem('jg-badges') || '[]').length;
+          $('openGame').click(); await w(80); $('pickPrep').click(); await w(150);
+          const wrong = [...$('prOpts').querySelectorAll('button')].find(b => b.textContent !== T.prSteps[0][0]); wrong.click(); await w(20);
+          for (const st of T.prSteps) { [...$('prOpts').querySelectorAll('button')].find(b => b.textContent === st[0]).click(); await w(20); }
+          out.prList = $('prDone').children.length; $('prNext').click(); await w(30); out.prep = localStorage.getItem('jg-prep-best'); $('prQuit').click(); await w(60);
+          $('openGame').click(); await w(80); $('pickRansom').click(); await w(150);
+          for (let i = 0; i < T.ransom.length; i++) { [...$('rwOpts').querySelectorAll('button')].find(b => b.textContent === T.ransom[i][1][0]).click(); await w(20); $('rwNext').click(); await w(20); }
+          out.ransom = localStorage.getItem('jg-ransom-best'); out.r321 = $('rwExpl').textContent.includes('3-2-1'); $('rwQuit').click(); await w(60);
+          $('openGame').click(); await w(80); $('pickReply').click(); await w(150);
+          for (let i = 0; i < T.replies.length; i++) { for (let s = 0; s < 4; s++) { [...$('rpOpts').querySelectorAll('button')].find(b => b.textContent === T.replies[i][2][s][0][0]).click(); await w(20); }
+            out['mail' + i] = $('rpMail').children.length; $('rpNext').click(); await w(30); }
+          out.reply = localStorage.getItem('jg-reply-best'); $('rpQuit').click(); await w(700);
+          $('openGame').click(); await w(80); $('badgesBtn').click(); await w(150);
+          out.bdOpen = $('bdPanel').classList.contains('open'); out.badges = $('bdGrid').children.length; out.on = $('bdGrid').querySelectorAll('.bd.on').length;
+          out.count = $('bdCount').textContent; out.seen = JSON.parse(localStorage.getItem('jg-badges') || '[]').length; out.before = before;
+          out.toast = document.getElementById('toast').textContent;
+          $('bdClose').click(); return out;
+        }""")
+        if res.get('prep') != '70' or res.get('prList') != 8 or res.get('ransom') != '100' or not res.get('r321') or res.get('reply') != '80' or res.get('mail0') != 5 or not res.get('bdOpen') or res.get('badges') != 20 or res.get('on') < 4 or res.get('seen') != res.get('on'):
+            erreurs.append(f'{nom} : lot 15 {res}')
+        ok(f'{nom} : préparer un poste, rançongiciel et réponse au ticket jouables jusqu’au bout ; {res.get("count")}')
         # Lot 14 : créneaux, compétences, partage, FAQ, lien personnalisé
         res = pg.evaluate("""async () => {
           const $ = id => document.getElementById(id), w = ms => new Promise(r => setTimeout(r, ms)), out = {};
@@ -235,7 +259,7 @@ with sync_playwright() as p:
           $('faqClose').click();
           return out;
         }""")
-        if not (res['slotOpen'] and res['days'] == 8 and res['slots'] == 32 and not res['wkend'] and res['needPick'] and 'par téléphone' in res['mail'] and res['gmail'] and res['slotClosed'] and res['skills'] == 3 and res['chips'] == 10 and res['chipGame'] and res['share'] and res['faq'] == 8 and res['faqTxt']):
+        if not (res['slotOpen'] and res['days'] == 8 and res['slots'] == 32 and not res['wkend'] and res['needPick'] and 'par téléphone' in res['mail'] and res['gmail'] and res['slotClosed'] and res['skills'] == 3 and res['chips'] == 13 and res['chipGame'] and res['share'] and res['faq'] == 8 and res['faqTxt']):
             erreurs.append(f'{nom} : créneaux / compétences / partage / FAQ {res}')
         ok(f'{nom} : créneaux (8 jours ouvrés, e-mail prérempli), compétences reliées aux jeux, partage, FAQ')
         pg.goto(BASE + '/?pour=Société%20Générale%20<b>'); pg.wait_for_timeout(1200)
