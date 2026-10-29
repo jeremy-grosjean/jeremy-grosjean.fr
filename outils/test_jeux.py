@@ -235,7 +235,7 @@ with sync_playwright() as p:
           $('faqClose').click();
           return out;
         }""")
-        if not (res['slotOpen'] and res['days'] == 8 and res['slots'] == 32 and not res['wkend'] and res['needPick'] and 'par téléphone' in res['mail'] and res['gmail'] and res['slotClosed'] and res['skills'] == 3 and res['chips'] == 10 and res['chipGame'] and res['share'] and res['faq'] == 7 and res['faqTxt']):
+        if not (res['slotOpen'] and res['days'] == 8 and res['slots'] == 32 and not res['wkend'] and res['needPick'] and 'par téléphone' in res['mail'] and res['gmail'] and res['slotClosed'] and res['skills'] == 3 and res['chips'] == 10 and res['chipGame'] and res['share'] and res['faq'] == 8 and res['faqTxt']):
             erreurs.append(f'{nom} : créneaux / compétences / partage / FAQ {res}')
         ok(f'{nom} : créneaux (8 jours ouvrés, e-mail prérempli), compétences reliées aux jeux, partage, FAQ')
         pg.goto(BASE + '/?pour=Société%20Générale%20<b>'); pg.wait_for_timeout(1200)

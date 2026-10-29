@@ -1888,7 +1888,7 @@
   function openFaq() {
     const box = $('faqList'), qs = t('faqQ'), br = t('brief'); box.textContent = '';
     qs.forEach((q, i) => {
-      const a = i < br.length ? br[i][1] : t('faqContact');
+      const ex = t('faqExtra') || [], a = i < br.length ? br[i][1] : i - br.length < ex.length ? ex[i - br.length] : t('faqContact');
       const d = document.createElement('details'), s = document.createElement('summary'), p = document.createElement('p'); s.textContent = q; p.textContent = a; d.append(s, p); box.append(d);
     });
     const first = box.querySelector('details'); if (first) first.open = true;
