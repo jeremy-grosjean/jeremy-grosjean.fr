@@ -26,15 +26,16 @@
 <link rel="icon" href="/favicon.svg?v=c653120d20" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=ea10cf004d">
 <link rel="manifest" href="/site.webmanifest?v=1170d79b15">
-<link rel="stylesheet" href="/assets/app.css?v=9b482fc239">
+<link rel="stylesheet" href="/assets/app.css?v=4203433831">
 <script src="/assets/i18n.js?v=91faf46deb" defer></script>
 <script src="/assets/labs.js?v=24e840f65d" defer></script>
 <script src="/assets/labs2.js?v=194508f5f9" defer></script>
 <script src="/assets/labs3.js?v=e42ceff3d6" defer></script>
 <script src="/assets/labs4.js?v=1f113c584a" defer></script>
+<script src="/assets/labs5.js?v=b07f4021ef" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=8529d25226" defer></script>
+<script src="/assets/app.js?v=829b20e41c" defer></script>
 </head>
 <body>
 <canvas id="net" aria-hidden="true"></canvas>
@@ -145,6 +146,10 @@
     <button class="pill mono" id="termBtn" type="button" aria-haspopup="dialog">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 8 4 4-4 4M12 16h7"/></svg>
       <span class="lbl" data-i="termBtn">Terminal</span>
+    </button>
+    <button class="pill" id="sizeBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 19 7.5 6l5 13M4.4 14.5h6.2"/><path d="M14 19l3.5-8 3.5 8M15.2 16.2h4.6"/></svg>
+      <span class="lbl">A</span>
     </button>
   </div>
   <p class="dock-mid"><span class="privacy" data-i="privacyLine">0 cookie · 0 traceur</span><span class="loadt" id="loadT" hidden></span><span class="sep" aria-hidden="true"> · </span><span class="legal-row"><a class="legal-link" href="/mentions-legales.html" data-i="legalLink">Mentions légales</a><span class="sep lr-sep" aria-hidden="true"> · </span><a class="legal-link" href="/accessibilite.html" data-i="a11yLink">Accessibilité</a><span class="sep lr-sep" aria-hidden="true"> · </span><button class="legal-link news-link" id="newsBtn" type="button" aria-haspopup="dialog" data-i="newsLink">Nouveautés</button><span class="sep lr-sep gl-sep" aria-hidden="true"> · </span><button class="legal-link" id="glossBtn" type="button" aria-haspopup="dialog" data-i="glossLink">Glossaire</button></span><span class="upd" id="updLine" hidden></span></p>

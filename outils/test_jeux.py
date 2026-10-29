@@ -238,6 +238,47 @@ with sync_playwright() as p:
         if res.get('prep') != '70' or res.get('prList') != 8 or res.get('ransom') != '100' or not res.get('r321') or res.get('reply') != '80' or res.get('mail0') != 5 or not res.get('bdOpen') or res.get('badges') != 20 or res.get('on') < 4 or res.get('seen') != res.get('on'):
             erreurs.append(f'{nom} : lot 15 {res}')
         ok(f'{nom} : préparer un poste, rançongiciel et réponse au ticket jouables jusqu’au bout ; {res.get("count")}')
+        # Lot 16 : catégories, écran de fin, progression, raccourcis clavier, taille du texte, contraste, scènes
+        pg.goto(BASE + '/'); pg.wait_for_timeout(1200)
+        res = pg.evaluate("""async () => {
+          const $ = id => document.getElementById(id), w = ms => new Promise(r => setTimeout(r, ms)), out = {}, T = window.JG_I18N.fr;
+          const vis = () => [...document.querySelectorAll('#gamesPanel .pick')].filter(p => !p.hidden).length;
+          ['jg-prep-best', 'jg-ransom-best'].forEach(k => localStorage.removeItem(k));
+          $('openGame').click(); await w(150);
+          out.tabs = $('gTabs').children.length; out.all = vis(); out.icons = document.querySelectorAll('#gamesPanel .g-ic svg').length;
+          out.newTag = !!$('pickPrep').querySelector('.g-state.new');
+          [...$('gTabs').children].find(b => b.dataset.cat === 'sec').click(); await w(50); out.sec = vis();
+          [...$('gTabs').children].find(b => b.dataset.cat === 'all').click(); await w(50);
+          $('pickRansom').click(); await w(200);
+          out.prog = document.querySelectorAll('#rwPanel .prog-bar i').length; out.files = document.querySelectorAll('#rwPanel .rw-files span').length;
+          for (let i = 0; i < T.ransom.length; i++) { [...$('rwOpts').querySelectorAll('button')].find(b => b.textContent === T.ransom[i][1][0]).click(); await w(20); $('rwNext').click(); await w(30); }
+          await w(80);
+          out.ring = !!document.querySelector('#rwPanel .end-ring'); out.stars = document.querySelectorAll('#rwPanel .end-stars .on').length;
+          out.record = !!document.querySelector('#rwPanel .end-record'); out.confetti = !!document.querySelector('.confetti');
+          out.next = !!document.querySelector('#rwPanel .end-next .chip-btn'); const ob = document.querySelector('#rwPanel .end-other'); out.other = !!ob && !ob.hidden;
+          ob.click(); await w(150); out.backToGames = $('gamesPanel').classList.contains('open'); out.done = !!$('pickRansom').querySelector('.g-state.done');
+          $('pickPs').click(); await w(200); out.psWin = !document.querySelector('#psPanel .ps-win').hidden && !!document.querySelector('#psTerm .cur');
+          $('psQuit').click(); await w(80);
+          return out;
+        }""")
+        pg.evaluate("document.getElementById('openGame').click()"); pg.wait_for_timeout(120)
+        pg.evaluate("document.getElementById('pickRansom').click()"); pg.wait_for_timeout(250)
+        pg.keyboard.press('1'); pg.wait_for_timeout(80)
+        k1 = pg.evaluate("!!document.querySelector('#rwOpts .good, #rwOpts .bad')")
+        pg.evaluate("[...document.querySelectorAll('#rwOpts button')].find(b => b.textContent === window.JG_I18N.fr.ransom[0][1][0]).click()"); pg.wait_for_timeout(50)
+        pg.evaluate("document.activeElement.blur()"); pg.keyboard.press('Enter'); pg.wait_for_timeout(120)
+        k2 = pg.evaluate("document.getElementById('rwTag').textContent")
+        pg.keyboard.press('Escape'); pg.wait_for_timeout(100)
+        sz = []
+        for _ in range(3):
+            pg.evaluate("document.getElementById('sizeBtn').click()"); pg.wait_for_timeout(60)
+            sz.append(pg.evaluate("document.documentElement.dataset.size || 'm'"))
+        pg.evaluate("document.getElementById('a11yContrast').click()"); pg.wait_for_timeout(900)
+        hc = pg.evaluate("getComputedStyle(document.body).backgroundColor")
+        pg.evaluate("document.getElementById('a11yContrast').click()"); pg.wait_for_timeout(60)
+        if not (res['tabs'] == 5 and res['all'] == 15 and res['icons'] == 15 and res['newTag'] and res['sec'] == 3 and res['prog'] == 5 and res['files'] == 3 and res['ring'] and res['stars'] == 3 and res['record'] and res['confetti'] and res['next'] and res['other'] and res['backToGames'] and res['done'] and res['psWin']) or not k1 or '2/5' not in k2 or sz != ['l', 'xl', 'm'] or hc != 'rgb(0, 0, 0)':
+            erreurs.append(f'{nom} : lot 16 {res} clavier={k1},{k2} taille={sz} contraste={hc}')
+        ok(f'{nom} : catégories, icônes, écran de fin, « Autre jeu », progression, raccourcis 1-9 et Entrée, taille A++, contraste élevé, scènes')
         # Lot 14 : créneaux, compétences, partage, FAQ, lien personnalisé
         res = pg.evaluate("""async () => {
           const $ = id => document.getElementById(id), w = ms => new Promise(r => setTimeout(r, ms)), out = {};

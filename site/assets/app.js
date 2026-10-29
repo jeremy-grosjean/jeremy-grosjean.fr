@@ -72,6 +72,7 @@
     if (typeof htopOn !== 'undefined' && htopOn) htopDraw();
     updLine();
     try { lot14Lang(); } catch (e) {}
+    try { lot16Lang(); } catch (e) {}
   }
   function setLang(l) { if (!LANGS.includes(l)) return false; lang = l; store.set('jg-lang', l); applyLang(); return true; }
 
@@ -174,7 +175,7 @@
   function readPalette() {
     const cs = getComputedStyle(document.documentElement);
     const v = n => cs.getPropertyValue(n).trim();
-    P = { cyan: v('--cyan-rgb'), violet: v('--violet-rgb'), threat: v('--threat-rgb'), node: v('--node-rgb'), warn: v('--warn-rgb'), light: resolvedTheme() === 'light' && !document.documentElement.dataset.retro };
+    P = { cyan: v('--cyan-rgb'), violet: v('--violet-rgb'), threat: v('--threat-rgb'), node: v('--node-rgb'), warn: v('--warn-rgb'), light: resolvedTheme() === 'light' && !document.documentElement.dataset.retro && !document.documentElement.dataset.contrast };
     P.blend = P.light ? 'source-over' : 'lighter';
     P.k = P.light ? 1.35 : 1;
   }
@@ -369,7 +370,7 @@
     const wrap = document.createElement('div'); wrap.className = 'panel-x-wrap'; wrap.append(x); card.prepend(wrap);
   }
   function openPanel(id, focusId) {
-    const x = document.querySelector('#' + id + ' .panel-x'); if (x) { x.setAttribute('aria-label', t('close')); x.title = t('close'); } closePanels(); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (focusId) $(focusId).focus({ preventScroll: true }); const c = $(id).querySelector('.card'); if (c) c.scrollTop = 0; }
+    const x = document.querySelector('#' + id + ' .panel-x'); if (x) { x.setAttribute('aria-label', t('close')); x.title = t('close'); } closePanels(); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (focusId) $(focusId).focus({ preventScroll: true }); const c = $(id).querySelector('.card'); if (c) c.scrollTop = 0; try { onPanelOpen(id); } catch (e) {} }
   /* Partie sauvegardée (dans ce navigateur uniquement) : à l'ouverture du jeu, on propose de la reprendre ou d'en commencer une nouvelle */
   const SAVE_KEY = 'jg-firewall-save';
   const readSave = () => { try { const s = JSON.parse(store.get(SAVE_KEY) || 'null'); return s && s.v === 1 && s.lv >= 0 && s.lv < LEVELS.length ? s : null; } catch (e) { return null; } };
@@ -2232,7 +2233,7 @@
   let bdTimer = 0;
   function checkBadges(silent) {
     const u = unlocked(), seen = badgeSeen(), names = t('badges'), now = u.map((x, i) => x ? i : -1).filter(i => i >= 0);
-    if (seen && !silent) { const fresh = now.filter(i => !seen.includes(i)); fresh.forEach((i, k) => setTimeout(() => toast(t('bdNew')(names[i][0]), 2600), k * 2700)); }
+    if (seen && !silent) { const fresh = now.filter(i => !seen.includes(i)); fresh.forEach((i, k) => setTimeout(() => toast(t('bdNew')(names[i][0]), 2600), k * 2700)); if (fresh.length) try { celebrate(); } catch (e) {} }
     if (!seen || now.length !== seen.length || now.some(i => !seen.includes(i))) storeSet('jg-badges', JSON.stringify(now));
   }
   const storeSet = store.set.bind(store);
@@ -2289,6 +2290,236 @@
   document.querySelectorAll('.seg [data-size]').forEach(b => b.addEventListener('click', () => { A11Y.size = b.dataset.size; applyA11y(); SND.key(); setup(); }));
   $('a11yContrast').addEventListener('change', e => { A11Y.contrast = e.target.checked; applyA11y(); requestAnimationFrame(readPalette); });
   $('a11yFont').addEventListener('change', e => { A11Y.font = e.target.checked; applyA11y(); });
+
+
+  /* ================= Lot 16 : ergonomie et visuel des jeux ================= */
+  const svgEl = (tag, attrs) => { const e = document.createElementNS('http://www.w3.org/2000/svg', tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+  /* Une icône au trait par jeu (dessinée élément par élément : compatible avec la politique de sécurité du site) */
+  const GICON = {
+    pickServer: [['path', { d: 'M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z' }], ['path', { d: 'M9 12l2 2 4-4' }]],
+    pickSupport: [['path', { d: 'M4 13a8 8 0 0 1 16 0' }], ['rect', { x: 3, y: 13, width: 4, height: 6, rx: 1.5 }], ['rect', { x: 17, y: 13, width: 4, height: 6, rx: 1.5 }]],
+    pickSupport2: [['path', { d: 'M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17v3h3l5.3-5.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.5-.5-2.5z' }]],
+    pickPanne: [['circle', { cx: 11, cy: 11, r: 6 }], ['path', { d: 'M20 20l-4.5-4.5' }]],
+    pickQuiz: [['path', { d: 'M3 7h7l2 2h9v10H3z' }], ['path', { d: 'M3 7V5h6l2 2' }]],
+    pickPhish: [['rect', { x: 3, y: 5, width: 18, height: 14, rx: 2 }], ['path', { d: 'M3 8l9 6 9-6' }]],
+    pickItil: [['path', { d: 'M4 6h16v4a2 2 0 0 0 0 4v4H4v-4a2 2 0 0 0 0-4z' }], ['path', { d: 'M10 6v12', 'stroke-dasharray': '2 2' }]],
+    pickPs: [['rect', { x: 3, y: 4, width: 18, height: 16, rx: 2 }], ['path', { d: 'M7 10l3 2-3 2M12 15h5' }]],
+    pickRj: [['path', { d: 'M6 4h12v9l-3 3v4H9v-4l-3-3z' }], ['path', { d: 'M9 4v4M12 4v4M15 4v4' }]],
+    pickCall: [['path', { d: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2' }]],
+    pickDaily: [['rect', { x: 4, y: 5, width: 16, height: 15, rx: 2 }], ['path', { d: 'M4 9h16M8 3v4M16 3v4M9 14l2 2 4-4' }]],
+    pickPrep: [['rect', { x: 3, y: 4, width: 18, height: 12, rx: 2 }], ['path', { d: 'M8 20h8M12 16v4' }]],
+    pickRansom: [['rect', { x: 5, y: 10, width: 14, height: 10, rx: 2 }], ['path', { d: 'M8 10V7a4 4 0 0 1 8 0v3M12 14v2' }]],
+    pickReply: [['path', { d: 'M4 5h16v11H9l-5 4z' }], ['path', { d: 'M8 9h8M8 12h5' }]],
+    pickSubnet: [['circle', { cx: 12, cy: 5, r: 2 }], ['circle', { cx: 5, cy: 19, r: 2 }], ['circle', { cx: 19, cy: 19, r: 2 }], ['path', { d: 'M12 7v5M12 12l-6 5M12 12l6 5' }]]
+  };
+  /* Fiche de chaque jeu : catégorie, durée, difficulté (1 à 3), clé du meilleur score, score maximal, fenêtre */
+  const GAMES = [
+    ['pickDaily', 'all', 1, 1, null, 0, 'dyPanel'],
+    ['pickServer', 'sec', 3, 2, 'jg-firewall-best', 0, 'intro'], ['pickSupport', 'sup', 3, 1, 'jg-support-best', 50, 'supportPanel'],
+    ['pickSupport2', 'sup', 4, 3, 'jg-support2-best', 50, 'supportPanel'], ['pickPanne', 'net', 4, 2, 'jg-panne-best', PN_ROUND * 100, 'panPanel'],
+    ['pickQuiz', 'sys', 4, 2, 'jg-quiz-best', QZ_ROUND * 10, 'quizPanel'], ['pickPhish', 'sec', 3, 1, 'jg-phish-best', 60, 'phPanel'],
+    ['pickItil', 'sup', 3, 2, 'jg-itil-best', 160, 'itPanel'], ['pickPs', 'sys', 3, 3, 'jg-ps-best', 80, 'psPanel'],
+    ['pickRj', 'net', 2, 2, 'jg-rj45-best', 200, 'rjPanel'], ['pickCall', 'sup', 2, 1, 'jg-call-best', 16, 'clPanel'],
+    ['pickPrep', 'sys', 2, 1, 'jg-prep-best', 80, 'prPanel'], ['pickRansom', 'sec', 2, 2, 'jg-ransom-best', 100, 'rwPanel'],
+    ['pickReply', 'sup', 2, 1, 'jg-reply-best', 80, 'rpPanel'], ['pickSubnet', 'net', 3, 3, 'jg-subnet-best', 200, 'snPanel']
+  ];
+  const GNEW = ['pickPrep', 'pickRansom', 'pickReply'];
+  const CATS = [['all', 'catAll'], ['sup', 'catSup'], ['sys', 'catSys'], ['net', 'catNet'], ['sec', 'catSec']];
+  const GAME_PANELS = ['supportPanel', 'panPanel', 'quizPanel', 'phPanel', 'snPanel', 'itPanel', 'psPanel', 'rjPanel', 'clPanel', 'dyPanel', 'prPanel', 'rwPanel', 'rpPanel'];
+  let gTab = (() => { const v = store.get('jg-games-tab'); return CATS.some(c => c[0] === v) ? v : 'all'; })();
+  const nfmt = v => { try { return new Intl.NumberFormat(t('locale')).format(v); } catch (e) { return String(v); } };
+  function decoratePicks() {
+    const box = document.querySelector('#gamesPanel .game-pick'); if (!box) return;
+    let tabs = document.getElementById('gTabs');
+    if (!tabs) { tabs = document.createElement('div'); tabs.id = 'gTabs'; tabs.className = 'g-tabs'; tabs.setAttribute('role', 'tablist'); box.before(tabs); }
+    tabs.setAttribute('aria-label', t('catLbl')); tabs.textContent = '';
+    for (const [c, key] of CATS) {
+      const n = GAMES.filter(g => c === 'all' || g[1] === c).length, b = document.createElement('button');
+      b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.cat = c; b.setAttribute('aria-selected', String(c === gTab));
+      const s = document.createElement('span'); s.textContent = n; b.append(t(key) + ' ', s);
+      b.addEventListener('click', () => { gTab = c; store.set('jg-games-tab', c); decoratePicks(); SND.key(); }); tabs.append(b);
+    }
+    for (const [id, cat, min, diff, key, max] of GAMES) {
+      const p = $(id); if (!p) continue; p.classList.add('has-ic'); p.hidden = !(gTab === 'all' || cat === gTab);
+      let ic = p.querySelector('.g-ic'); if (!ic) { ic = document.createElement('span'); ic.className = 'g-ic'; ic.setAttribute('aria-hidden', 'true'); const sv = svgEl('svg', { viewBox: '0 0 24 24' }); for (const [tg, at] of GICON[id] || []) sv.append(svgEl(tg, at)); ic.append(sv); p.prepend(ic); }
+      let meta = p.querySelector('.g-meta'); if (!meta) { meta = document.createElement('small'); meta.className = 'g-meta'; p.append(meta); }
+      const dots = '●'.repeat(diff) + '○'.repeat(3 - diff), dl = t('gDiff')[diff - 1];
+      meta.textContent = `${t('gMin')(min)} · `; const d = document.createElement('span'); d.className = 'g-diff'; d.textContent = dots; d.title = t('gDiffL')(dl); d.setAttribute('aria-label', t('gDiffL')(dl)); meta.append(d);
+      let st = p.querySelector('.g-state'); if (st) st.remove();
+      p.classList.remove('has-state');
+      const raw = key ? store.get(key) : null, played = raw !== null && raw !== undefined && raw !== '';
+      if (played) { st = document.createElement('span'); st.className = 'g-state done'; st.textContent = '✓ ' + nfmt(+raw) + (max ? '/' + nfmt(max) : ''); st.title = t('gPlayed')(raw); p.append(st); p.classList.add('has-state'); }
+      else if (GNEW.includes(id)) { st = document.createElement('span'); st.className = 'g-state new'; st.textContent = t('gNew'); p.append(st); p.classList.add('has-state'); }
+    }
+  }
+
+  /* Fin de partie : anneau de score, étoiles, record, jeu suggéré et bouton « Autre jeu » */
+  const BEST0 = {};
+  const gameOf = pid => pid === 'supportPanel' ? (SP.level === 2 ? 'pickSupport2' : 'pickSupport') : (GAMES.find(g => g[6] === pid) || [])[0];
+  const gmeta = id => GAMES.find(g => g[0] === id);
+  function onPanelOpen(id) {
+    const pn = $(id); if (!pn) return;
+    pn.querySelectorAll('.end-viz').forEach(e => e.remove());
+    const ob = pn.querySelector('.end-other'); if (ob) ob.hidden = true;
+    const g = id === 'intro' || id === 'levelPanel' ? 'pickServer' : gameOf(id);
+    if (g && id !== 'over') { const m = gmeta(g); if (m && m[4]) BEST0[g] = +store.get(m[4]) || 0; }
+    if (GAME_PANELS.includes(id)) progressFor(pn, true);
+    if (id === 'gamesPanel') decoratePicks();
+  }
+  function suggestFor(id) {
+    const m = gmeta(id), list = GAMES.filter(g => g[0] !== id && g[0] !== 'pickDaily' && g[0] !== 'pickSupport2');
+    const unplayed = g => !g[4] || store.get(g[4]) === null;
+    return (list.find(g => g[1] === m[1] && unplayed(g)) || list.find(unplayed) || list.find(g => g[1] === m[1]) || list[0])[0];
+  }
+  function roundScore(pid) {
+    switch (pid) {
+      case 'supportPanel': return [SP.score, SP.list.length * 10];
+      case 'panPanel': return [PN.score, PN.list.length * 100];
+      case 'quizPanel': return [QZ.score, QZ.list.length * 10];
+      case 'phPanel': return [PH.score, PH.list.length * 10];
+      case 'snPanel': return [SN.score, SN.list.length * 20];
+      case 'itPanel': return [IT.score, IT.list.length * 20];
+      case 'psPanel': return [PSG.score, PSG.list.length * 10];
+      case 'rjPanel': return [RJ.score, 200];
+      case 'clPanel': return [CL.rel + CL.tech, t('call').length * 4];
+      case 'prPanel': return [Math.max(0, t('prSteps').length * 10 - PR.err * 10), t('prSteps').length * 10];
+      case 'rwPanel': return [RS.score, t('ransom').length * 20];
+      case 'rpPanel': return [RP.score, t('replies').length * 40];
+      case 'over': return [G.score, 0];
+    }
+    return null;
+  }
+  function onGameEnd() {
+    const pn = document.querySelector('.panel.open'); if (!pn) return;
+    const pid = pn.id, sc = roundScore(pid); if (!sc) return;
+    const id = pid === 'over' ? 'pickServer' : gameOf(pid); if (!id) return;
+    const [score, max] = sc, prev = BEST0[id] || 0, record = score > 0 && score > prev, card = pn.querySelector('.card');
+    pn.querySelectorAll('.end-viz').forEach(e => e.remove());
+    const box = document.createElement('div'); box.className = 'end-viz';
+    if (max) {
+      const pct = Math.max(0, Math.min(100, Math.round(score / max * 100))), stars = pct >= 100 ? 3 : pct >= 70 ? 2 : pct >= 40 ? 1 : 0;
+      const ring = document.createElement('div'); ring.className = 'end-ring'; ring.style.setProperty('--p', reduce ? pct : 0);
+      const inner = document.createElement('div'), b = document.createElement('b'), s = document.createElement('small');
+      b.textContent = nfmt(score); s.textContent = t('endOf')(nfmt(max)); inner.append(b, s); ring.append(inner);
+      ring.setAttribute('role', 'img'); ring.setAttribute('aria-label', `${score} ${t('endOf')(max)}`);
+      const st = document.createElement('p'); st.className = 'end-stars'; st.setAttribute('aria-label', t('endStars')(stars));
+      for (let i = 0; i < 3; i++) { const x = document.createElement('span'); x.textContent = '★'; if (i < stars) x.className = 'on'; x.setAttribute('aria-hidden', 'true'); st.append(x); }
+      box.append(ring, st);
+      if (!reduce) requestAnimationFrame(() => requestAnimationFrame(() => ring.style.setProperty('--p', pct)));
+      if (pct >= 100) celebrate();
+    } else if (record) celebrate();
+    if (record) { const r = document.createElement('p'); r.className = 'end-record'; r.textContent = t('endRecord'); box.append(r); }
+    const nx = suggestFor(id), sg = document.createElement('p'), sb = document.createElement('button'); sg.className = 'end-next';
+    sg.append(t('endNext') + ' '); sb.type = 'button'; sb.className = 'chip-btn'; sb.textContent = t(nx + 'T') + ' ▸';
+    sb.addEventListener('click', () => { closePanels(); $(nx).click(); }); sg.append(sb); box.append(sg);
+    const acts = card.querySelector(':scope > .actions'); if (acts) acts.before(box); else card.append(box);
+    let ob = card.querySelector('.end-other');
+    if (!ob && acts) { ob = document.createElement('button'); ob.type = 'button'; ob.className = 'btn-ghost end-other'; ob.addEventListener('click', () => { closePanels(); openGames(); }); const q = acts.querySelector('[id$="Quit"], #back'); if (q) q.before(ob); else acts.append(ob); }
+    if (ob) { ob.textContent = t('endOther'); ob.hidden = false; }
+  }
+  const sndEnd = SND.end; SND.end = () => { sndEnd(); setTimeout(onGameEnd, 0); };
+
+  /* Petite célébration : quelques confettis pendant une seconde (rien si l'on a demandé moins d'animations) */
+  function celebrate() {
+    if (reduce) return;
+    const layer = document.createElement('div'); layer.className = 'confetti'; layer.setAttribute('aria-hidden', 'true');
+    const cols = ['#5EE7FF', '#8B7CFF', '#4BE3A0', '#FFC857', '#FF5C7A'];
+    for (let i = 0; i < 46; i++) {
+      const c = document.createElement('i'), s = c.style;
+      s.left = (Math.random() * 100) + '%'; s.background = cols[i % cols.length];
+      s.setProperty('--dx', ((Math.random() - .5) * 220).toFixed(0) + 'px'); s.setProperty('--r', ((Math.random() - .5) * 900).toFixed(0) + 'deg');
+      s.animationDelay = (Math.random() * .25).toFixed(2) + 's'; s.animationDuration = (1 + Math.random() * .6).toFixed(2) + 's';
+      layer.append(c);
+    }
+    document.body.append(layer); setTimeout(() => layer.remove(), 2200);
+  }
+
+  /* Barre de progression : lue dans l'étiquette « Étape 3/8 » de chaque jeu ; transition douce à chaque nouvelle question */
+  function progressFor(pn, reset) {
+    const tag = pn.querySelector('.tk-head .tag'); if (!tag) return;
+    let bar = pn.querySelector('.prog-bar');
+    if (!bar) { bar = document.createElement('div'); bar.className = 'prog-bar'; bar.setAttribute('aria-hidden', 'true'); tag.closest('.tk-head').after(bar); }
+    const m = (tag.textContent || '').match(/(\d+)\s*\/\s*(\d+)/);
+    if (!m) { if (reset) bar.hidden = true; else bar.querySelectorAll('i').forEach(i => { i.className = 'f'; }); return; }
+    const n = +m[1], tot = Math.min(+m[2], 24); bar.hidden = false;
+    if (bar.children.length !== tot) { bar.textContent = ''; for (let i = 0; i < tot; i++) bar.append(document.createElement('i')); }
+    [...bar.children].forEach((i, k) => { i.className = k < n - 1 ? 'f' : k === n - 1 ? 'c' : ''; });
+    const prev = +(bar.dataset.n || 0); bar.dataset.n = n;
+    if (!reset && n !== prev && !reduce) { const card = pn.querySelector('.card'); card.classList.remove('q-in'); void card.offsetWidth; card.classList.add('q-in'); }
+  }
+  for (const pid of GAME_PANELS) {
+    const pn = $(pid), tag = pn && pn.querySelector('.tk-head .tag'); if (!tag) continue;
+    new MutationObserver(() => progressFor(pn, false)).observe(tag, { childList: true, characterData: true, subtree: true });
+  }
+
+  /* Raccourcis clavier dans les jeux : 1 à 9 pour répondre, Entrée pour la suite (Échap ferme déjà) */
+  const isShown = el => !!(el && el.getClientRects().length);
+  for (const pid of GAME_PANELS) {
+    const card = $(pid) && $(pid).querySelector('.card'); if (!card || card.querySelector('.kbd-hint')) continue;
+    const p = document.createElement('p'); p.className = 'kbd-hint'; p.dataset.i = 'kbdHint'; p.textContent = t('kbdHint'); card.append(p);
+  }
+  window.addEventListener('keydown', e => {
+    if (e.ctrlKey || e.metaKey || e.altKey || G.on || termOpen()) return;
+    const pn = document.querySelector('.panel.open'); if (!pn || !GAME_PANELS.includes(pn.id)) return;
+    const tag = (e.target && e.target.tagName) || ''; if (/^(INPUT|TEXTAREA|SELECT)$/.test(tag)) return;
+    if (/^[1-9]$/.test(e.key)) {
+      const opts = [...pn.querySelectorAll('.card .tk-opt, .card .rj-wire')].filter(isShown), b = opts[+e.key - 1];
+      if (b && !b.disabled) { e.preventDefault(); b.focus({ preventScroll: true }); b.click(); }
+      return;
+    }
+    if (e.key === 'Enter' && !/^(BUTTON|A|SUMMARY)$/.test(tag)) {
+      const b = [...pn.querySelectorAll('.card > .actions .btn')].find(x => isShown(x) && !x.disabled);
+      if (b) { e.preventDefault(); b.click(); }
+    }
+  });
+
+  /* Vibration légère sur téléphone (Android) pour une bonne ou une mauvaise réponse ; coupée avec le son */
+  const canBuzz = () => soundOn && !G.on && typeof navigator.vibrate === 'function' && matchMedia('(pointer: coarse)').matches;
+  const sndBlock = SND.block, sndWrong = SND.wrong;
+  SND.block = (...a) => { sndBlock(...a); if (canBuzz()) try { navigator.vibrate(15); } catch (e) {} };
+  SND.wrong = (...a) => { sndWrong(...a); if (canBuzz()) try { navigator.vibrate([25, 60, 25]); } catch (e) {} };
+
+  /* Scènes : fenêtre PowerShell avec invite qui clignote, écran de rançon avec fichiers chiffrés */
+  { const term = $('psTerm');
+    if (term && !term.parentElement.classList.contains('ps-win')) {
+      const win = document.createElement('div'), bar = document.createElement('div'), ttl = document.createElement('span'); win.className = 'ps-win'; bar.className = 'ps-bar';
+      ttl.dataset.i = 'psWin'; ttl.textContent = t('psWin'); bar.append(document.createElement('i'), document.createElement('i'), document.createElement('i'), ttl);
+      term.before(win); win.append(bar, term);
+      new MutationObserver(() => { win.hidden = term.hidden && $('psOpts').hidden; if (term.hidden && !$('psOpts').hidden) { term.hidden = false; term.textContent = ''; const pr = document.createElement('span'); pr.className = 'pr'; pr.textContent = 'PS C:\\> '; const cu = document.createElement('span'); cu.className = 'cur'; cu.textContent = '▌'; term.append(pr, cu); } })
+        .observe($('psOpts'), { childList: true, attributes: true, attributeFilter: ['hidden'] });
+    }
+    const al = document.querySelector('#rwPanel .rs-alert');
+    if (al && !al.nextElementSibling?.classList.contains('rw-files')) {
+      const f = document.createElement('p'); f.className = 'rw-files'; f.setAttribute('aria-label', t('rwFiles'));
+      for (const n of ['Comptabilite_2026.xlsx.locked', 'Factures_T3.pdf.locked', 'Paie_octobre.csv.locked']) { const s = document.createElement('span'); s.textContent = n; f.append(s); }
+      al.after(f);
+    }
+  }
+
+  /* Taille du texte : A++ en plus, et un bouton rapide dans la barre du bas */
+  const SIZES = ['m', 'l', 'xl'];
+  function sizeUI() {
+    const b = $('sizeBtn'); if (!b) return; const nm = t('sizeNames')[A11Y.size] || 'A';
+    b.querySelector('.lbl').textContent = nm; const lbl = t('sizeBtn') + (lang === 'fr' ? ' : ' : (lang === 'en' || lang === 'ko') ? ': ' : '：') + nm; b.setAttribute('aria-label', lbl); b.title = lbl;
+  }
+  { const seg = document.querySelector('.a11y .seg');
+    if (seg && !seg.querySelector('[data-size="xl"]')) { const x = document.createElement('button'); x.type = 'button'; x.dataset.size = 'xl'; x.setAttribute('aria-pressed', String(A11Y.size === 'xl')); x.textContent = 'A++'; seg.append(x);
+      x.addEventListener('click', () => { A11Y.size = 'xl'; applyA11y(); SND.key(); setup(); sizeUI(); }); }
+    seg && seg.querySelectorAll('[data-size]').forEach(b => b.addEventListener('click', () => setTimeout(sizeUI, 0)));
+    const sb = $('sizeBtn');
+    if (sb) sb.addEventListener('click', () => { const i = SIZES.indexOf(A11Y.size); A11Y.size = SIZES[(i + 1) % SIZES.length]; applyA11y(); SND.key(); setup(); sizeUI(); });
+    if (A11Y.size === 'xl') applyA11y();
+  }
+
+  /* Contraste élevé : suivi automatique du réglage du système tant que la personne n'a pas choisi elle-même */
+  { let saved = {}; try { saved = JSON.parse(store.get('jg-a11y') || '{}'); } catch (e) {}
+    const mq = matchMedia('(prefers-contrast: more)');
+    if (!('contrastSet' in saved) && mq.matches && !A11Y.contrast) { A11Y.contrast = true; applyA11y(); requestAnimationFrame(readPalette); }
+    $('a11yContrast').addEventListener('change', () => { A11Y.contrastSet = true; store.set('jg-a11y', JSON.stringify(A11Y)); });
+  }
+
+  function lot16Lang() { sizeUI(); if ($('gamesPanel').classList.contains('open')) decoratePicks(); document.querySelectorAll('.end-other').forEach(b => { b.textContent = t('endOther'); }); }
+  lot16Lang();
 
   /* ================= Visite guidée (une seule fois, passable) ================= */
   const tourRing = $('tourRing'), tourTip = $('tourTip');
