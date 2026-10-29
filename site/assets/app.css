@@ -701,3 +701,23 @@ html:lang(ko) .gl-list, html:lang(ko) .gl-tip, html:lang(ko) .ph-mail, html:lang
   .rep-foot p { margin: 0; color: #444; line-height: 1.5; } .rep-foot b { color: #000; }
   .gl-t { text-decoration: none; }
 }
+
+/* Téléphone tenu à l'horizontale (très peu de hauteur) : la page défile au lieu de tout empiler,
+   l'heure et les boutons du haut défilent avec elle, la barre du bas passe sous le contenu */
+@media (max-height: 500px) and (orientation: landscape) {
+  html, body { height: auto; min-height: 100%; }
+  body { overflow-x: hidden; overflow-y: auto; touch-action: pan-y; display: flex; flex-direction: column; }
+  main { flex: 1 0 auto; }
+  body.playing { overflow: hidden; touch-action: none; }
+  main { min-height: 0; padding: calc(max(10px, env(safe-area-inset-top)) + 54px) max(16px, env(safe-area-inset-right)) 10px max(16px, env(safe-area-inset-left)); }
+  body:has(#cLocal:not([hidden])) main { padding-top: calc(max(10px, env(safe-area-inset-top)) + 74px); }
+  .clock, .topbar { position: absolute; }
+  .clock { left: max(16px, env(safe-area-inset-left)); }
+  .topbar { right: max(16px, env(safe-area-inset-right)); }
+  .dock { position: relative; left: auto; right: auto; bottom: auto; align-items: center;
+    margin: 6px max(16px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+  .pill .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+  .pill { padding: .45rem .65rem; }
+  .dock-mid { font-size: .72rem; }
+  .keys { margin-top: .6rem; font-size: .72rem; }
+}

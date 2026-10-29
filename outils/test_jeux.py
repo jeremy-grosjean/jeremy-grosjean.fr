@@ -34,13 +34,17 @@ def ok(msg):
 
 with sync_playwright() as p:
     nav = p.chromium.launch()
-    for taille, nom in (((1280, 800), 'ordinateur'), ((390, 844), 'mobile')):
+    for taille, nom in (((1280, 800), 'ordinateur'), ((390, 844), 'mobile'), ((740, 280), 'téléphone à l’horizontale')):
         ctx = nav.new_context(viewport={'width': taille[0], 'height': taille[1]}, locale='fr-FR')
         pg = ctx.new_page(); suivre(pg, nom)
         pg.goto(BASE + '/'); pg.wait_for_timeout(1500)
         largeur = pg.evaluate('document.documentElement.scrollWidth')
         if largeur > taille[0]:
             erreurs.append(f'{nom} : la page déborde ({largeur} px)')
+        # Rien ne doit se chevaucher : les boutons de l'accueil et la barre du bas
+        chev = pg.evaluate("(() => { const a = document.querySelector('.cta').getBoundingClientRect(), d = [...document.querySelectorAll('.dock-left, .dock-mid, #sound')].map(e => e.getBoundingClientRect()); return d.some(b => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom); })()")
+        if chev:
+            erreurs.append(f'{nom} : les boutons de l’accueil chevauchent la barre du bas')
         for bouton, panneau in (('pickServer', 'intro'), ('pickSupport', 'supportPanel'), ('pickPanne', 'panPanel'), ('pickQuiz', 'quizPanel'), ('pickPhish', 'phPanel'), ('pickSubnet', 'snPanel')):
             pg.evaluate("document.getElementById('openGame').click()"); pg.wait_for_timeout(150)
             pg.evaluate(f"document.getElementById('{bouton}').click()"); pg.wait_for_timeout(300)

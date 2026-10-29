@@ -340,7 +340,8 @@
   const server = () => ({ x: W / 2, y: H / 2, s: Math.min(64, Math.max(46, W / 22)) });
   const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel', 'phPanel', 'snPanel', 'scPanel', 'glossPanel'];
   function closePanels() { panels.forEach(p => $(p).classList.remove('open')); }
-  function openPanel(id, focusId) { closePanels(); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (focusId) $(focusId).focus(); }
+  /* La fenêtre s'ouvre toujours en haut de son contenu (sur un écran bas, le focus sur un bouton du bas la faisait défiler) */
+  function openPanel(id, focusId) { closePanels(); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (focusId) $(focusId).focus({ preventScroll: true }); const c = $(id).querySelector('.card'); if (c) c.scrollTop = 0; }
   function openIntro() { closeTerm(); openPanel('intro', 'start'); }
 
   function legendItem(cls, label) { const s = document.createElement('span'), i = document.createElement('i'); i.className = 'sw ' + cls; s.append(i, label); return s; }
