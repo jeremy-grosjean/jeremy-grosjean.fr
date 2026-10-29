@@ -2175,7 +2175,7 @@
     if (RS.i < t('ransom').length - 1) { RS.i++; rsShow(); return; }
     const n = t('ransom').length, best = bestOf('jg-ransom-best', RS.score);
     $('rwTag').textContent = t('qzDoneTag'); $('rwTitle').textContent = t('rwDoneTitle')(RS.ok, n); $('rwOpts').hidden = true;
-    const ex = $('rwExpl'); ex.className = 'tk-expl'; ex.textContent = t('rwDoneMsg')(RS.score, n * 20) + ' ' + t('pnBest')(best) + ' ' + t('rw321');
+    const ex = $('rwExpl'); ex.className = 'tk-expl'; ex.textContent = t('rwDoneMsg')(RS.score, n * 20) + ' ' + t('pnBest')(best) + ' · ' + t('rw321');
     RS.done = true; const nx = $('rwNext'); nx.textContent = t('again') || '↻'; nx.focus(); SND.end();
   });
   $('rwQuit').addEventListener('click', closePanels);
