@@ -279,6 +279,40 @@ with sync_playwright() as p:
         if not (res['tabs'] == 5 and res['all'] == 15 and res['icons'] == 15 and res['newTag'] and res['sec'] == 3 and res['prog'] == 5 and res['files'] == 3 and res['ring'] and res['stars'] == 3 and res['record'] and res['confetti'] and res['next'] and res['other'] and res['backToGames'] and res['done'] and res['psWin']) or not k1 or '2/5' not in k2 or sz != ['l', 'xl', 'm'] or hc != 'rgb(0, 0, 0)':
             erreurs.append(f'{nom} : lot 16 {res} clavier={k1},{k2} taille={sz} contraste={hc}')
         ok(f'{nom} : catégories, icônes, écran de fin, « Autre jeu », progression, raccourcis 1-9 et Entrée, taille A++, contraste élevé, scènes')
+        # Lot 18 : indices progressifs, taille par défaut, effets visuels désactivés par défaut
+        pg.goto(BASE + '/'); pg.wait_for_timeout(1200)
+        res = pg.evaluate("""async () => {
+          const $ = id => document.getElementById(id), w = ms => new Promise(r => setTimeout(r, ms)), out = {}, T = window.JG_I18N.fr;
+          out.skyOff = !document.documentElement.dataset.sky; out.seasonOff = !$('seasonFx'); out.morphOff = !document.body.classList.contains('morph');
+          $('openGame').click(); await w(100); $('pickQuiz').click(); await w(200);
+          const row = document.querySelector('#quizPanel .hint-row'); out.rowShown = !row.hidden;
+          const hb = row.querySelector('.hint-btn'); hb.click(); await w(30);
+          out.h1 = document.querySelectorAll('#qzOpts .hint-off').length; out.t1 = row.querySelector('.hint-txt').textContent;
+          hb.click(); await w(30); out.t2 = row.querySelector('.hint-txt').textContent;
+          hb.click(); await w(30); out.h3 = !!document.querySelector('#qzOpts .hint-good'); out.btnGone = hb.hidden;
+          document.querySelector('#qzOpts .hint-good').click(); await w(40); out.rowHidden = row.hidden;
+          $('qzNext').click(); await w(60); out.reset = !row.hidden && row.querySelector('.hint-txt').textContent === '' && !hb.hidden;
+          $('qzQuit').click(); await w(80);
+          $('openGame').click(); await w(100); $('pickPrep').click(); await w(200);
+          document.querySelector('#prPanel .hint-btn').click(); await w(30); out.prOff = document.querySelectorAll('#prOpts .hint-off').length;
+          $('prQuit').click(); await w(80);
+          $('openGame').click(); await w(100); $('pickPhish').click(); await w(200);
+          document.querySelector('#phPanel .hint-btn').click(); await w(30); out.ph = document.querySelector('#phPanel .hint-txt').textContent.length > 5;
+          $('phQuit').click(); await w(80);
+          $('sizeBtn').click(); await w(40); out.dockReset = !$('sizeResetDock').hidden; $('sizeResetDock').click(); await w(40);
+          out.sizeBack = !document.documentElement.dataset.size && $('sizeResetDock').hidden;
+          $('keysBtn').click(); await w(150);
+          $('fxSky').click(); await w(30); out.skyOn = !!document.documentElement.dataset.sky;
+          $('fxSeason').click(); await w(30); out.seasonMatch = !!$('seasonFx') === !/rien/.test($('fxSeasonNow').textContent);
+          $('fxJg').click(); await w(600); out.morphOn = document.body.classList.contains('morph');
+          await w(4600); $('keysBtn').click(); await w(150);
+          $('a11yResetAll').click(); await w(60);
+          out.resetAll = !document.documentElement.dataset.sky && !$('seasonFx') && !$('fxJg').checked && !$('fxSky').checked && !document.documentElement.dataset.size;
+          return out;
+        }""")
+        if not (res['skyOff'] and res['seasonOff'] and res['morphOff'] and res['rowShown'] and res['h1'] == 1 and 'retirée' in res['t1'] and res['t2'].startswith('Indice 2') and res['h3'] and res['btnGone'] and res['rowHidden'] and res['reset'] and res['prOff'] >= 3 and res['ph'] and res['dockReset'] and res['sizeBack'] and res['skyOn'] and res['seasonMatch'] and res['morphOn'] and res['resetAll']):
+            erreurs.append(f'{nom} : lot 18 {res}')
+        ok(f'{nom} : indices 1-2-3, taille par défaut, ciel / « JG » / saison désactivés par défaut puis activables, tout remettre par défaut')
         # Lot 14 : créneaux, compétences, partage, FAQ, lien personnalisé
         res = pg.evaluate("""async () => {
           const $ = id => document.getElementById(id), w = ms => new Promise(r => setTimeout(r, ms)), out = {};

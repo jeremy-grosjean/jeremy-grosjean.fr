@@ -102,7 +102,7 @@ etape('Traductions (6 langues)')
 CODE = r"""
 const fs = require('fs'), vm = require('vm'), base = process.argv[1];
 const w = {}; const ctx = { window: w }; vm.createContext(ctx);
-for (const f of ['i18n.js', 'labs.js', 'labs2.js', 'labs3.js', 'labs4.js', 'labs5.js']) vm.runInContext(fs.readFileSync(base + '/assets/' + f, 'utf8'), ctx);
+for (const f of ['i18n.js', 'labs.js', 'labs2.js', 'labs3.js', 'labs4.js', 'labs5.js', 'labs6.js']) vm.runInContext(fs.readFileSync(base + '/assets/' + f, 'utf8'), ctx);
 const L = w.JG_I18N, out = {};
 const forme = v => Array.isArray(v) ? 'tableau:' + v.length : typeof v === 'object' && v ? 'objet:' + Object.keys(v).sort().join(',') : typeof v;
 for (const k of Object.keys(L)) { out[k] = {}; for (const c of Object.keys(L[k])) out[k][c] = forme(L[k][c]); }
@@ -110,7 +110,7 @@ console.log(JSON.stringify(out));
 """
 r = subprocess.run(['node', '-e', CODE, str(SITE)], capture_output=True, text=True)
 if r.returncode:
-    erreur('i18n.js / labs.js / labs2.js / labs3.js / labs4.js / labs5.js : chargement impossible ' + r.stderr.strip()[:200])
+    erreur('i18n.js / labs.js / labs2.js / labs3.js / labs4.js / labs5.js / labs6.js : chargement impossible ' + r.stderr.strip()[:200])
 else:
     T = json.loads(r.stdout)
     manquantes = [l for l in LANGUES if l not in T]
@@ -164,9 +164,10 @@ total = sum(f.stat().st_size for f in SITE.rglob('*') if f.is_file())
 print(f'  site complet : {total // 1024} Ko')
 if total > 1200 * 1024:
     erreur(f'le site dépasse 1 200 Ko ({total // 1024} Ko)')
+# Fichiers source (commentés) : 260 Ko au plus chacun ; la version en ligne est minifiée par esbuild (environ 2,5 fois plus légère)
 for f in (SITE / 'assets').glob('*'):
-    if f.stat().st_size > 200 * 1024:
-        erreur(f'{f.name} dépasse 200 Ko ({f.stat().st_size // 1024} Ko)')
+    if f.is_file() and f.stat().st_size > 260 * 1024:
+        erreur(f'{f.name} dépasse 260 Ko ({f.stat().st_size // 1024} Ko)')
 
 print()
 if erreurs:

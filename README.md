@@ -58,7 +58,7 @@ site/                     le site, tel qu'il est publié (version lisible)
   404.html                page d'erreur personnalisée
   mentions-legales.html   mentions légales et confidentialité
   accessibilite.html      déclaration d'accessibilité
-  assets/                 styles, scripts, traductions (i18n.js, labs.js, labs2.js, labs3.js, labs4.js, labs5.js), fonts/ (police Sora, licence SIL OFL)
+  assets/                 styles, scripts, traductions (i18n.js, labs.js, labs2.js, labs3.js, labs4.js, labs5.js, labs6.js), fonts/ (police Sora, licence SIL OFL)
   sw.js                   service worker (mode hors ligne)
   .htaccess               en-têtes de sécurité et redirections (Apache)
 docs/                     politique MTA-STS, publiée par GitHub Pages sur mta-sts.jeremy-grosjean.fr

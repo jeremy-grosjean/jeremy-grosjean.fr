@@ -26,16 +26,17 @@
 <link rel="icon" href="/favicon.svg?v=c653120d20" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=ea10cf004d">
 <link rel="manifest" href="/site.webmanifest?v=1170d79b15">
-<link rel="stylesheet" href="/assets/app.css?v=b3fd1a45c1">
+<link rel="stylesheet" href="/assets/app.css?v=17157a0a47">
 <script src="/assets/i18n.js?v=91faf46deb" defer></script>
 <script src="/assets/labs.js?v=24e840f65d" defer></script>
 <script src="/assets/labs2.js?v=194508f5f9" defer></script>
 <script src="/assets/labs3.js?v=e42ceff3d6" defer></script>
 <script src="/assets/labs4.js?v=1f113c584a" defer></script>
 <script src="/assets/labs5.js?v=60720498d6" defer></script>
+<script src="/assets/labs6.js?v=716e5179dc" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=ec060ebae8" defer></script>
+<script src="/assets/app.js?v=16b73c2070" defer></script>
 </head>
 <body>
 <canvas id="net" aria-hidden="true"></canvas>
@@ -150,6 +151,9 @@
     <button class="pill" id="sizeBtn" type="button">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 19 7.5 6l5 13M4.4 14.5h6.2"/><path d="M14 19l3.5-8 3.5 8M15.2 16.2h4.6"/></svg>
       <span class="lbl">A</span>
+    </button>
+    <button class="pill size-reset-dock" id="sizeResetDock" type="button" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>
     </button>
   </div>
   <p class="dock-mid"><span class="privacy" data-i="privacyLine">0 cookie · 0 traceur</span><span class="loadt" id="loadT" hidden></span><span class="sep" aria-hidden="true"> · </span><span class="legal-row"><a class="legal-link" href="/mentions-legales.html" data-i="legalLink">Mentions légales</a><span class="sep lr-sep" aria-hidden="true"> · </span><a class="legal-link" href="/accessibilite.html" data-i="a11yLink">Accessibilité</a><span class="sep lr-sep" aria-hidden="true"> · </span><button class="legal-link news-link" id="newsBtn" type="button" aria-haspopup="dialog" data-i="newsLink">Nouveautés</button><span class="sep lr-sep gl-sep" aria-hidden="true"> · </span><button class="legal-link" id="glossBtn" type="button" aria-haspopup="dialog" data-i="glossLink">Glossaire</button></span><span class="upd" id="updLine" hidden></span></p>
@@ -584,8 +588,16 @@
     <div class="a11y">
       <div class="seg" role="group" aria-labelledby="a11ySizeL"><span class="sr" id="a11ySizeL" data-i="a11ySize">Taille du texte</span>
         <button type="button" data-size="s" aria-pressed="false">A−</button><button type="button" data-size="m" aria-pressed="true">A</button><button type="button" data-size="l" aria-pressed="false">A+</button></div>
+      <button class="chip-btn size-reset" id="sizeReset" type="button" data-i="a11ySizeReset">Taille par défaut</button>
       <label class="tog"><input type="checkbox" id="a11yContrast"> <span data-i="a11yContrast">Contraste renforcé</span></label>
       <label class="tog"><input type="checkbox" id="a11yFont"> <span data-i="a11yFont">Texte plus espacé</span></label>
+    </div>
+    <h3 class="eco-title" data-i="a11yExtra">Effets visuels (désactivés par défaut)</h3>
+    <div class="a11y">
+      <label class="tog"><input type="checkbox" id="fxSky"> <span data-i="a11ySky">Ciel selon l’heure de Paris (thème sombre)</span></label>
+      <div class="tog-row"><label class="tog"><input type="checkbox" id="fxJg"> <span data-i="a11yJg">Initiales « JG » dans le réseau animé</span></label><button class="chip-btn" id="fxJgPlay" type="button" data-i="a11yJgPlay" hidden>Rejouer</button></div>
+      <label class="tog"><input type="checkbox" id="fxSeason"> <span><span data-i="a11ySeason">Décor de saison</span> <small class="fx-now" id="fxSeasonNow"></small></span></label>
+      <button class="chip-btn" id="a11yResetAll" type="button" data-i="a11yResetAll">Tout remettre par défaut</button>
     </div>
     <div class="actions"><button class="btn" id="installBtn" type="button" hidden data-i="installBtn">Installer l'application</button><button class="btn-ghost" id="keysClose" type="button" data-i="close">Fermer</button></div>
     <p class="install-ios" id="installIos" hidden></p>

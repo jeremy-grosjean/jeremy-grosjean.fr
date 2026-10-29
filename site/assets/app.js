@@ -73,6 +73,7 @@
     updLine();
     try { lot14Lang(); } catch (e) {}
     try { lot16Lang(); } catch (e) {}
+    try { fxUI(); } catch (e) {}
   }
   function setLang(l) { if (!LANGS.includes(l)) return false; lang = l; store.set('jg-lang', l); applyLang(); return true; }
 
@@ -307,7 +308,8 @@
 
   /* ================= Code Konami : les nœuds dessinent « JG » ================= */
   const morph = { on: false, until: 0 };
-  function konami() {
+  function konami() { morphJG(); SND.konami(); flashTitle(); toast(t('tKonami')); found('konami'); }
+  function morphJG() {
     const oc = document.createElement('canvas'), ow = Math.min(W, 900), oh = Math.min(H, 520);
     oc.width = ow; oc.height = oh;
     const o = oc.getContext('2d');
@@ -323,7 +325,6 @@
     nodes.forEach((n, i) => { const p = pts[i % pts.length]; n.tx = p[0]; n.ty = p[1]; });
     morph.on = true; morph.until = performance.now() + 4200;
     document.body.classList.add('morph');
-    SND.konami(); flashTitle(); toast(t('tKonami')); found('konami');
   }
   function endMorph() {
     morph.on = false;
@@ -2064,7 +2065,7 @@
   function dailyPool() { return t('quizAD').concat(t('ps').map((m, k) => [m[0], PS_CMD[k], m[1], 1])); }
   function dailyState() { try { const s = JSON.parse(store.get('jg-daily') || 'null'); return s && typeof s === 'object' ? s : {}; } catch (e) { return {}; } }
   function openDaily() {
-    const today = dayKey(Date.now()), [y, m, d] = today.split('-').map(Number), n = Math.floor(Date.UTC(y, m - 1, d) / 864e5), pool = dailyPool(), q = pool[(n * 7 + 3) % pool.length], st = dailyState();
+    const today = dayKey(Date.now()), [y, m, d] = today.split('-').map(Number), n = Math.floor(Date.UTC(y, m - 1, d) / 864e5), pool = dailyPool(), q = pool[(n * 7 + 3) % pool.length], st = dailyState(); DY_OK = q[1][0];
     let lab; try { lab = new Intl.DateTimeFormat(regionLocale(lang), { day: 'numeric', month: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(y, m - 1, d, 12))); } catch (e) { lab = today; }
     $('dyTitle').textContent = t('dyTitle')(lab); $('dyQ').textContent = q[0];
     const box = $('dyOpts'); box.textContent = ''; const ex = $('dyExpl'); ex.hidden = true;
@@ -2501,7 +2502,7 @@
   const SIZES = ['m', 'l', 'xl'];
   function sizeUI() {
     const b = $('sizeBtn'); if (!b) return; const nm = t('sizeNames')[A11Y.size] || 'A';
-    b.querySelector('.lbl').textContent = nm; const lbl = t('sizeBtn') + (lang === 'fr' ? ' : ' : (lang === 'en' || lang === 'ko') ? ': ' : '：') + nm; b.setAttribute('aria-label', lbl); b.title = lbl;
+    b.querySelector('.lbl').textContent = nm; try { fxUI(); } catch (e) {} const lbl = t('sizeBtn') + (lang === 'fr' ? ' : ' : (lang === 'en' || lang === 'ko') ? ': ' : '：') + nm; b.setAttribute('aria-label', lbl); b.title = lbl;
   }
   { const seg = document.querySelector('.a11y .seg');
     if (seg && !seg.querySelector('[data-size="xl"]')) { const x = document.createElement('button'); x.type = 'button'; x.dataset.size = 'xl'; x.setAttribute('aria-pressed', String(A11Y.size === 'xl')); x.textContent = 'A++'; seg.append(x);
@@ -2566,11 +2567,144 @@
 
   /* Ciel de Paris : en thème sombre, le fond suit doucement l'heure (aube, journée, soir, nuit) */
   function skyNow() {
+    if (!A11Y.sky) { delete document.documentElement.dataset.sky; return; }
     let h = 12; try { h = parseInt(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Paris' }).format(new Date()), 10); } catch (e) {}
     const s = h >= 6 && h < 9 ? 'dawn' : h >= 9 && h < 18 ? 'day' : h >= 18 && h < 21 ? 'dusk' : 'night';
     if (document.documentElement.dataset.sky !== s) document.documentElement.dataset.sky = s;
   }
   skyNow(); setInterval(skyNow, 60000);
+
+
+  /* ================= Lot 18 : indices progressifs, taille par défaut, effets visuels sur demande ================= */
+  /* Indices : 3 niveaux, de plus en plus précis (retirer des mauvaises réponses, un mot de la bonne réponse, la bonne réponse) */
+  let DY_OK = '';
+  const HINTS = {
+    supportPanel: { box: 'tkOpts', ok: () => { const { tk } = cur(); return tk.opts[tk.ok]; }, pen: () => {}, cost: true },
+    quizPanel: { box: 'qzOpts', ok: () => t('quizAD')[QZ.list[QZ.i].k][1][0], pen: () => { QZ.wrong = true; }, cost: true },
+    psPanel: { box: 'psOpts', ok: () => PS_CMD[PSG.list[PSG.i].k][0], pen: () => { PSG.wrong = true; }, cost: true },
+    rjPanel: { box: 'rjOpts', ok: () => t('rjOpts')[0], pen: () => { RJ.qWrong = true; }, cost: true },
+    clPanel: { box: 'clOpts', ok: () => t('call')[CL.i][1][0][0], pen: () => {} },
+    dyPanel: { box: 'dyOpts', ok: () => DY_OK, pen: () => {} },
+    prPanel: { box: 'prOpts', ok: () => t('prSteps')[PR.pos][0], pen: () => { PR.err++; $('prScore').textContent = t('qzPts')(Math.max(0, t('prSteps').length * 10 - PR.err * 10)); }, cost: true },
+    rwPanel: { box: 'rwOpts', ok: () => t('ransom')[RS.i][1][0], pen: () => { RS.wrong = true; }, cost: true },
+    rpPanel: { box: 'rpOpts', ok: () => t('replies')[RP.i][2][RP.slot][0][0], pen: () => {} },
+    phPanel: { box: 'phOpts', phish: true, sig: () => 'm' + PH.i }
+  };
+  const HS = {};
+  function clueWord(okTxt, others) {
+    const low = others.map(o => o.toLowerCase()), free = w => w && !low.some(o => o.includes(w.toLowerCase()));
+    if (/[\u3040-\u30ff\u3400-\u9fff]/.test(okTxt)) {
+      /* chinois : pas d'espaces, on prend 2 à 4 caractères chinois absents des autres réponses */
+      const runs = okTxt.match(/[\u3040-\u30ff\u3400-\u9fff]+/g) || [];
+      for (const n of [4, 3, 2]) for (const r of runs) for (let k = 0; k + n <= r.length; k++) { const sub = r.slice(k, k + n); if (free(sub)) return sub; }
+      return '';
+    }
+    const words = okTxt.split(/[\s,.;:!?()«»“”"'’/|=，。：；！？（）、]+/).filter(w => w.length >= (/[\uac00-\ud7af]/.test(w) ? 2 : 4) && !/^\d+$/.test(w) && free(w)).sort((a, b) => b.length - a.length);
+    return words[0] || '';
+  }
+  function hintRow(pid) {
+    const cfg = HINTS[pid], box = $(cfg.box); let row = box.parentElement.querySelector(':scope > .hint-row');
+    if (!row) {
+      row = document.createElement('div'); row.className = 'hint-row';
+      const b = document.createElement('button'), p = document.createElement('p'), c = document.createElement('small');
+      b.type = 'button'; b.className = 'chip-btn hint-btn'; p.className = 'hint-txt'; p.setAttribute('aria-live', 'polite'); c.className = 'hint-cost';
+      b.addEventListener('click', () => useHint(pid)); row.append(b, p, c); box.after(row);
+    }
+    return row;
+  }
+  function hintRefresh(pid) {
+    const cfg = HINTS[pid], box = $(cfg.box), row = hintRow(pid), st = HS[pid] || (HS[pid] = { lvl: 0, sig: '' });
+    const btns = [...box.querySelectorAll('button')].filter(isShown);
+    const sig = cfg.sig ? cfg.sig() : btns.map(b => b.textContent).join('|');
+    if (sig !== st.sig) { st.sig = sig; st.lvl = 0; row.querySelector('.hint-txt').textContent = ''; row.querySelector('.hint-cost').textContent = ''; }
+    const open = !box.hidden && btns.length > 1 && !box.querySelector('.good:not(.hint-good)') && btns.some(b => !b.disabled);
+    row.hidden = !open;
+    const hb = row.querySelector('.hint-btn'); hb.hidden = st.lvl >= 3; hb.textContent = st.lvl === 0 ? t('hintBtn') : t('hintMore')(st.lvl + 1, 3);
+  }
+  function useHint(pid) {
+    const cfg = HINTS[pid], box = $(cfg.box), row = hintRow(pid), st = HS[pid], txt = row.querySelector('.hint-txt');
+    if (!st || st.lvl >= 3) return;
+    if (cfg.phish) {
+      const sus = [...document.querySelectorAll('#phMail .ph-sus')];
+      if (!sus.length) { txt.textContent = t('phHintNone'); st.lvl = 3; hintRefresh(pid); SND.key(); return; }
+      st.lvl++; const n = st.lvl >= 3 ? sus.length : Math.min(sus.length, st.lvl);
+      sus.slice(0, n).forEach(s => s.classList.add('hint-on')); if (n >= sus.length) st.lvl = 3;
+      txt.textContent = st.lvl >= 3 ? t('phHintAll') : t('phHint')(st.lvl, 3); hintRefresh(pid); SND.key(); return;
+    }
+    const btns = [...box.querySelectorAll('button')].filter(isShown), okTxt = cfg.ok(), good = btns.find(b => b.textContent === okTxt);
+    if (!good) return;
+    const live = () => btns.filter(b => b !== good && !b.disabled);
+    const drop = list => list.forEach(b => { b.classList.add('hint-off', 'bad'); b.disabled = true; });
+    if (st.lvl === 0) {
+      cfg.pen(); const w = shuffle(live()), n = Math.max(1, Math.floor(w.length / 2)); drop(w.slice(0, n));
+      txt.textContent = t('hint1')(n); if (cfg.cost) row.querySelector('.hint-cost').textContent = t('hintCost'); st.lvl = 1;
+    } else if (st.lvl === 1) {
+      const w = live();
+      if (w.length > 1) { drop(shuffle(w).slice(0, w.length - 1)); txt.textContent = t('hint2r'); st.lvl = 2; }
+      else { const word = clueWord(okTxt, w.map(b => b.textContent)), first = okTxt.trim().slice(0, 1);
+        if (word) { txt.textContent = t('hint2w')(word); st.lvl = 2; }
+        else if (first && okTxt.trim().length > 1 && !w.some(b => b.textContent.trim().startsWith(first))) { txt.textContent = t('hint2s')(first); st.lvl = 2; }
+        else { good.classList.add('hint-good'); txt.textContent = t('hint3'); st.lvl = 3; } }
+    } else { good.classList.add('hint-good'); txt.textContent = t('hint3'); st.lvl = 3; }
+    SND.key(); hintRefresh(pid);
+  }
+  for (const pid in HINTS) {
+    const box = $(HINTS[pid].box); if (!box || !document.getElementById(HINTS[pid].box)) continue;
+    hintRow(pid);
+    new MutationObserver(() => hintRefresh(pid)).observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'disabled', 'hidden'] });
+  }
+  { const prevOpen2 = onPanelOpen; onPanelOpen = function (id) { prevOpen2(id); if (HINTS[id]) { HS[id] = { lvl: 0, sig: '' }; setTimeout(() => hintRefresh(id), 0); } }; }
+
+  /* Taille du texte : retour à la taille par défaut (dans l'Affichage et à côté du bouton rapide) */
+  function sizeDefault() { A11Y.size = 'm'; applyA11y(); SND.key(); setup(); sizeUI(); fxUI(); toast(t('a11ySizeReset')); }
+  $('sizeReset').addEventListener('click', sizeDefault);
+  $('sizeResetDock').addEventListener('click', sizeDefault);
+
+  /* Effets visuels sur demande (désactivés par défaut, gardés dans ce navigateur) */
+  function fxUI() {
+    $('fxSky').checked = !!A11Y.sky; $('fxJg').checked = !!A11Y.jg; $('fxSeason').checked = !!A11Y.season; $('fxJgPlay').hidden = !A11Y.jg;
+    const s = seasonNow(); $('fxSeasonNow').textContent = '(' + (s ? t('seasons')[s] : t('a11ySeasonNone')) + ')';
+    $('sizeResetDock').hidden = A11Y.size === 'm'; $('sizeResetDock').setAttribute('aria-label', t('a11ySizeReset')); $('sizeResetDock').title = t('a11ySizeReset');
+  }
+  const saveA11y = () => store.set('jg-a11y', JSON.stringify(A11Y));
+  $('fxSky').addEventListener('change', e => { A11Y.sky = e.target.checked; saveA11y(); skyNow(); SND.key(); });
+  $('fxJg').addEventListener('change', e => { A11Y.jg = e.target.checked; saveA11y(); fxUI(); if (A11Y.jg) { closePanels(); setTimeout(jgPlay, 250); } });
+  $('fxJgPlay').addEventListener('click', () => { closePanels(); setTimeout(jgPlay, 250); });
+  $('fxSeason').addEventListener('change', e => { A11Y.season = e.target.checked; saveA11y(); seasonDraw(); SND.key(); });
+  $('a11yResetAll').addEventListener('click', () => {
+    for (const k of Object.keys(A11Y)) delete A11Y[k];
+    Object.assign(A11Y, { size: 'm', contrast: !!matchMedia('(prefers-contrast: more)').matches, font: false, sky: false, jg: false, season: false });
+    applyA11y(); requestAnimationFrame(readPalette); setup(); sizeUI(); skyNow(); seasonDraw(); fxUI(); SND.key(); toast(t('a11yResetDone'), 2200);
+  });
+
+  /* Initiales « JG » : les points du réseau se rassemblent puis se dispersent (comme le code Konami, sans le reste) */
+  function jgPlay() {
+    if (G.on || termOpen() || document.querySelector('.panel.open') || recOn() || morph.on) return;
+    morphJG();
+  }
+  if (A11Y.jg) setTimeout(() => safe('jg', jgPlay), 2600);
+
+  /* Décor de saison : Halloween, hiver, Saint-Valentin (heure de Paris), jamais sur la vue recruteur ni à l'impression */
+  function seasonNow() {
+    let md = ''; try { md = new Intl.DateTimeFormat('en-GB', { month: '2-digit', day: '2-digit', timeZone: 'Europe/Paris' }).format(new Date()).split('/').reverse().join('-'); } catch (e) { return null; }
+    if (md >= '10-15' && md <= '11-02') return 'halloween';
+    if (md >= '12-01' || md <= '01-06') return 'winter';
+    if (md >= '02-07' && md <= '02-14') return 'valentine';
+    return null;
+  }
+  function seasonDraw() {
+    let layer = document.getElementById('seasonFx'); const s = A11Y.season ? seasonNow() : null;
+    if (!s) { if (layer) layer.remove(); return; }
+    if (layer && layer.dataset.s === s) return; if (layer) layer.remove();
+    layer = document.createElement('div'); layer.id = 'seasonFx'; layer.className = 'season-fx ' + s; layer.dataset.s = s; layer.setAttribute('aria-hidden', 'true');
+    const add = (txt, cls, css) => { const e = document.createElement('span'); e.textContent = txt; e.className = cls; for (const k in css) e.style.setProperty(k, css[k]); layer.append(e); };
+    if (s === 'halloween') { add('🎃', 'sf-pk', { left: '3%', bottom: 'calc(4.5rem + 2vh)' }); add('🎃', 'sf-pk small', { right: '4%', top: '42%' }); for (let i = 0; i < 4; i++) add('🦇', 'sf-bat', { left: (12 + i * 22) + '%', top: (10 + (i % 2) * 9) + '%', '--d': (6 + i * 1.7) + 's', '--o': (-i * 1.3) + 's' }); }
+    if (s === 'winter') for (let i = 0; i < 28; i++) add('❄', 'sf-flake', { left: (Math.random() * 100).toFixed(1) + '%', '--d': (7 + Math.random() * 7).toFixed(1) + 's', '--o': (-Math.random() * 12).toFixed(1) + 's', 'font-size': (8 + Math.random() * 9).toFixed(0) + 'px' });
+    if (s === 'valentine') for (let i = 0; i < 10; i++) add(['💙', '💜', '🩵'][i % 3], 'sf-heart', { left: (5 + i * 9.5) + '%', '--d': (9 + i % 4 * 2) + 's', '--o': (-i * 1.4) + 's' });
+    document.body.append(layer);
+  }
+  seasonDraw(); setInterval(seasonDraw, 3600000);
+  fxUI();
 
   function lot16Lang() { sizeUI(); if ($('gamesPanel').classList.contains('open')) decoratePicks(); document.querySelectorAll('.end-other').forEach(b => { b.textContent = t('endOther'); }); }
   lot16Lang();
