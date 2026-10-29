@@ -341,10 +341,29 @@
     $('hScore').textContent = G.score; $('hBreach').textContent = G.breach + '/3'; $('hTime').textContent = Math.ceil(G.time);
   }
   const server = () => ({ x: W / 2, y: H / 2, s: Math.min(64, Math.max(46, W / 22)) });
-  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel', 'phPanel', 'snPanel', 'scPanel', 'glossPanel'];
+  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel', 'phPanel', 'snPanel', 'scPanel', 'glossPanel', 'pausePanel'];
   function closePanels() { panels.forEach(p => $(p).classList.remove('open')); }
   /* La fenêtre s'ouvre toujours en haut de son contenu (sur un écran bas, le focus sur un bouton du bas la faisait défiler) */
-  function openPanel(id, focusId) { closePanels(); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (focusId) $(focusId).focus({ preventScroll: true }); const c = $(id).querySelector('.card'); if (c) c.scrollTop = 0; }
+  /* Fermer une fenêtre : clic sur le fond flou autour (même action que son bouton Fermer / Quitter), ou sur le ✕ en haut à droite.
+     Un clic dans la fenêtre ne la ferme pas ; un glisser qui commence dans la fenêtre et finit dehors non plus. */
+  const PANEL_CLOSE = { intro: 'cancel', over: 'back', secPanel: 'secClose', contactPanel: 'contactClose', keysPanel: 'keysClose', gamesPanel: 'gamesClose',
+    supportPanel: 'tkQuit', panPanel: 'pnQuit', quizPanel: 'qzQuit', newsPanel: 'newsClose', briefPanel: 'briefClose', supPanel: 'supClose',
+    phPanel: 'phQuit', snPanel: 'snQuit', scPanel: 'scClose', glossPanel: 'glossClose', pausePanel: 'pzResume' };
+  let downOn = null;
+  document.addEventListener('pointerdown', e => { downOn = e.target; }, true);
+  document.addEventListener('click', e => {
+    const p = e.target;
+    if (!p.classList || !p.classList.contains('panel') || !p.classList.contains('open') || downOn !== p) return;
+    const b = $(PANEL_CLOSE[p.id] || ''); if (b) b.click();
+  });
+  for (const [pid, bid] of Object.entries(PANEL_CLOSE)) {
+    const card = document.querySelector('#' + pid + ' .card'); if (!card || pid === 'pausePanel') continue;
+    const x = document.createElement('button'); x.type = 'button'; x.className = 'panel-x'; x.textContent = '×';
+    x.addEventListener('click', () => { const b = $(bid); if (b) b.click(); });
+    const wrap = document.createElement('div'); wrap.className = 'panel-x-wrap'; wrap.append(x); card.prepend(wrap);
+  }
+  function openPanel(id, focusId) {
+    const x = document.querySelector('#' + id + ' .panel-x'); if (x) { x.setAttribute('aria-label', t('close')); x.title = t('close'); } closePanels(); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (focusId) $(focusId).focus({ preventScroll: true }); const c = $(id).querySelector('.card'); if (c) c.scrollTop = 0; }
   function openIntro() { closeTerm(); openPanel('intro', 'start'); }
 
   function legendItem(cls, label) { const s = document.createElement('span'), i = document.createElement('i'); i.className = 'sw ' + cls; s.append(i, label); return s; }
@@ -386,6 +405,21 @@
     openPanel('over', 'again');
   }
   function quitGame() { G.on = false; G.active = false; G.items = []; setPlaying(false); closePanels(); }
+  /* Pause : le temps s'arrête, on reprend exactement là où on en était ; quitter se fait depuis la pause (plus de partie perdue par erreur) */
+  const paused = () => $('pausePanel').classList.contains('open');
+  function pauseGame() {
+    if (!G.on || paused()) return;
+    G.pausedLevel = $('levelPanel').classList.contains('open'); G.wasActive = G.active; G.active = false;
+    $('pzStats').textContent = `${t('level')} ${G.lv + 1}/${LEVELS.length} · ${t('score')} ${G.score} · ${t('breaches')} ${G.breach}/3 · ${t('time')} ${Math.ceil(G.time)}`;
+    openPanel('pausePanel', 'pzResume');
+  }
+  function resumeGame() {
+    if (!G.on) return;
+    closePanels();
+    if (G.pausedLevel) { openPanel('levelPanel', 'lvGo'); return; }
+    if (G.wasActive) { G.active = true; G.last = performance.now(); }
+  }
+  const togglePause = () => { if (paused()) resumeGame(); else pauseGame(); };
 
   function edgePoint() {
     const side = Math.random() * 4 | 0, m = 30;
@@ -1045,7 +1079,8 @@
     const typing = e.target === input || menuOpen();
     if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); if (!G.on) termOpen() ? closeTerm() : openTerm(); return; }
     if (!typing && !G.on && (e.code === 'Backquote' || e.key === '²' || e.key === '`')) { e.preventDefault(); termOpen() ? closeTerm() : openTerm(); return; }
-    if (e.key === 'Escape') { if (termOpen()) closeTerm(); else if (G.on) quitGame(); else if (recOn() && !document.querySelector('.panel.open')) closeRec(); else closePanels(); return; }
+    if (G.on && !typing && (e.key === 'p' || e.key === 'P')) { e.preventDefault(); togglePause(); return; }
+    if (e.key === 'Escape') { if (termOpen()) closeTerm(); else if (G.on) togglePause(); else if (recOn() && !document.querySelector('.panel.open')) closeRec(); else closePanels(); return; }
     if (typing) return;
     const k = e.key.toLowerCase();
     if (k === KONAMI[kIdx]) { kIdx++; if (kIdx === KONAMI.length) { kIdx = 0; if (!G.on) konami(); } }
@@ -1809,8 +1844,11 @@
   $('again').addEventListener('click', startGame);
   $('cancel').addEventListener('click', closePanels);
   $('back').addEventListener('click', closePanels);
-  $('quit').addEventListener('click', quitGame);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden && G.on) G.last = performance.now(); });
+  $('pauseBtn').addEventListener('click', togglePause);
+  $('pzResume').addEventListener('click', resumeGame);
+  $('pzQuit').addEventListener('click', quitGame);
+  /* Changement d'onglet ou d'application pendant la partie : pause automatique */
+  document.addEventListener('visibilitychange', () => { if (document.hidden && G.on && G.active) pauseGame(); else if (!document.hidden && G.on) G.last = performance.now(); });
   let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(setup, 150); });
 
   /* Raccourci affiché selon l'appareil : ⌘ + K sur Mac, iPhone et iPad ; Ctrl + K ailleurs */

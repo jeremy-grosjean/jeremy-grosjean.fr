@@ -59,8 +59,37 @@ with sync_playwright() as p:
         pg.mouse.click(r[0], r[1]); pg.wait_for_timeout(150)
         if pg.evaluate("document.querySelector('.panel.open') !== null || !document.body.classList.contains('playing')"):
             erreurs.append(f'{nom} : un clic pendant le jeu ouvre une fenêtre de l’accueil')
-        pg.evaluate("document.getElementById('quit').click()"); pg.wait_for_timeout(100)
-        ok(f'{nom} : pendant le jeu, seul « Quitter » est cliquable')
+        # Pause : le temps s'arrête, « Reprendre » relance la partie là où elle était, « Quitter la partie » la termine
+        pg.evaluate("document.getElementById('pauseBtn').click()"); pg.wait_for_timeout(150)
+        t1 = pg.evaluate("document.getElementById('hTime').textContent"); pg.wait_for_timeout(1300)
+        if not pg.evaluate("document.getElementById('pausePanel').classList.contains('open')") or pg.evaluate("document.getElementById('hTime').textContent") != t1:
+            erreurs.append(f'{nom} : la pause n’arrête pas le jeu')
+        pg.mouse.click(3, r[1]); pg.wait_for_timeout(150)
+        if pg.evaluate("document.getElementById('pausePanel').classList.contains('open') || !document.body.classList.contains('playing')"):
+            erreurs.append(f'{nom} : un clic à côté de la pause ne fait pas reprendre la partie')
+        pg.evaluate("document.getElementById('pauseBtn').click()"); pg.wait_for_timeout(100)
+        pg.evaluate("document.getElementById('pzQuit').click()"); pg.wait_for_timeout(100)
+        if pg.evaluate("document.body.classList.contains('playing')"):
+            erreurs.append(f'{nom} : « Quitter la partie » ne termine pas le jeu')
+        ok(f'{nom} : pendant le jeu, seul le bouton Pause est cliquable ; pause, reprise et abandon fonctionnent')
+        # Fenêtres : un clic sur le fond flou ou sur ✕ les ferme, un clic dedans non
+        for panneau, bouton in (('contactPanel', 'contactBtn'), ('gamesPanel', 'openGame'), ('secPanel', 'secBtn')):
+            pg.evaluate(f"document.getElementById('{bouton}').click()"); pg.wait_for_timeout(200)
+            c = pg.evaluate(f"(() => {{ const r = document.querySelector('#{panneau} .card').getBoundingClientRect(); return [r.left + r.width / 2, r.top + 30, r.left, r.top]; }})()")
+            pg.mouse.click(c[0], c[1]); pg.wait_for_timeout(100)
+            if not pg.evaluate(f"document.getElementById('{panneau}').classList.contains('open')"):
+                erreurs.append(f'{nom} : un clic dans la fenêtre {panneau} la ferme')
+            if c[2] > 4:
+                pg.mouse.click(2, c[1]); pg.wait_for_timeout(100)
+            else:
+                pg.evaluate(f"document.querySelector('#{panneau} .panel-x').click()"); pg.wait_for_timeout(100)
+            if pg.evaluate(f"document.getElementById('{panneau}').classList.contains('open')"):
+                erreurs.append(f'{nom} : la fenêtre {panneau} ne se ferme pas en cliquant à côté')
+            pg.evaluate(f"document.getElementById('{bouton}').click()"); pg.wait_for_timeout(150)
+            pg.evaluate(f"document.querySelector('#{panneau} .panel-x').click()"); pg.wait_for_timeout(100)
+            if pg.evaluate(f"document.getElementById('{panneau}').classList.contains('open')"):
+                erreurs.append(f'{nom} : le ✕ ne ferme pas {panneau}')
+        ok(f'{nom} : fenêtres fermées par le fond flou et par ✕, pas par un clic à l’intérieur')
         pg.evaluate("document.getElementById('pickPhish').click()"); pg.wait_for_timeout(150)
         for i in range(6):
             pg.evaluate("document.getElementById('phPhishBtn').click()"); pg.evaluate("document.getElementById('phNext').click()")
