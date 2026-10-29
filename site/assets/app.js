@@ -253,6 +253,11 @@
   const c = $('net'), x = c.getContext ? c.getContext('2d') : null;
   const stack = $('stack'), domain = $('domain');
   const DRIFT = reduce ? 0.12 : 1;
+  /* Fluidité identique quel que soit l'écran (1 à 240 Hz et plus) : chaque mouvement est calculé selon le temps réellement écoulé.
+     FR = durée de l'image / 1/60 s (1 à 60 Hz, 0,25 à 240 Hz…). Vitesse exacte jusqu'à 8 images/s ; en dessous (écran 1 à 7 Hz, appareil très lent),
+     le jeu passe au ralenti au lieu de faire « sauter » les objets, ce qui le garde jouable */
+  let FR = 1, lastFrame = 0;
+  const decay = a => Math.pow(a, FR), ease = k => 1 - Math.pow(1 - k, FR);
   let W = 0, H = 0, dpr = 1, UIS = 1, nodes = [], packets = [], rings = [], trail = [], sparks = [], baseCount = 0;
   let pointer = null; const glow = { x: 0, y: 0, a: 0 };
   const LINK = () => Math.min(170, Math.max(120, W / 8));
@@ -492,7 +497,7 @@
     hud();
   }
   function updateGame(now) {
-    const dt = Math.min(50, now - G.last); G.last = now;
+    const dt = Math.min(120, Math.max(0, now - G.last)); G.last = now; const gf = dt / 16.667;
     G.time -= dt / 1000;
     if (Math.ceil(G.time) !== G.shown) { G.shown = Math.ceil(G.time); $('hTime').textContent = G.shown; }
     if (G.time <= 0) {
@@ -507,9 +512,9 @@
     for (let i = G.items.length - 1; i >= 0; i--) {
       const it = G.items[i];
       const dx = S.x - it.x, dy = S.y - it.y, d = Math.hypot(dx, dy) || 1;
-      it.wob += .08;
-      const w = Math.sin(it.wob) * .6;
-      it.x += (dx / d) * it.sp + (-dy / d) * w; it.y += (dy / d) * it.sp + (dx / d) * w;
+      it.wob += .08 * gf;
+      const w = Math.sin(it.wob) * .6, st = it.sp * gf;
+      it.x += (dx / d) * st + (-dy / d) * w * gf; it.y += (dy / d) * st + (dx / d) * w * gf;
       if (d < S.s * .55) {
         G.items.splice(i, 1);
         if (it.kind === 'legit') { SND.deliver(); G.score += 2; sparkle(S.x, S.y, P.cyan, 6); }
@@ -524,7 +529,7 @@
   }
   function roundRect(rx, ry, w, h, rr) { x.beginPath(); x.moveTo(rx + rr, ry); x.arcTo(rx + w, ry, rx + w, ry + h, rr); x.arcTo(rx + w, ry + h, rx, ry + h, rr); x.arcTo(rx, ry + h, rx, ry, rr); x.arcTo(rx, ry, rx + w, ry, rr); x.closePath(); }
   function drawGame() {
-    const S = server(); G.hit *= .92;
+    const S = server(); G.hit *= decay(.92);
     const pulse = .5 + .5 * Math.sin(performance.now() / 400);
     const g = x.createRadialGradient(S.x, S.y, 0, S.x, S.y, S.s * 2.2);
     g.addColorStop(0, G.hit > .05 ? `rgba(${P.threat},${.35 * G.hit + .1})` : `rgba(${P.cyan},${.12 + .08 * pulse})`);
@@ -557,7 +562,15 @@
   }
 
   /* ================= Rendu ================= */
+  /* Qualité adaptative : si l'appareil n'arrive pas à suivre (moins de 30 images/s pendant 3 s), le réseau de fond est allégé */
+  let slowMs = 0, avgMs = 16.7;
   function frame(now) {
+    const dt = lastFrame ? now - lastFrame : 16.7; lastFrame = now;
+    FR = Math.min(7.2, Math.max(.05, dt / 16.667));
+    if (dt < 1000) avgMs += (dt - avgMs) * .05;
+    if (avgMs > 34 && !G.on && !morph.on && !document.hidden) { slowMs += dt; if (slowMs > 3000 && nodes.length > 28) { nodes.splice(Math.round(nodes.length * .8)); baseCount = nodes.length; slowMs = 0; avgMs = 22; } } else slowMs = 0;
+    /* Vue recruteur ouverte (elle couvre tout l'écran) : rien à dessiner, on économise le processeur et la batterie */
+    if (document.body.classList.contains('rec-on')) { requestAnimationFrame(frame); return; }
     try { drawFrame(now); } catch (e) { if (window.console) console.warn('[jeremy-grosjean.fr] rendu :', e); }
     requestAnimationFrame(frame);
   }
@@ -565,30 +578,31 @@
     if (G.on && G.active) updateGame(now);
     if (morph.on && now > morph.until) endMorph();
     let ox = 0, oy = 0;
-    if (G.shake > .3) { ox = (Math.random() - .5) * G.shake; oy = (Math.random() - .5) * G.shake; G.shake *= .86; }
+    if (G.shake > .3) { ox = (Math.random() - .5) * G.shake; oy = (Math.random() - .5) * G.shake; G.shake *= decay(.86); }
     const k2 = dpr * UIS; x.setTransform(k2, 0, 0, k2, ox * k2, oy * k2);
     x.clearRect(-20, -20, W + 40, H + 40);
     const L = LINK(), F = FIELD(), K = P.k;
 
-    if (pointer) { glow.x += (pointer.x - glow.x) * .18; glow.y += (pointer.y - glow.y) * .18; glow.a += (1 - glow.a) * .08; } else glow.a *= .94;
+    const eG = ease(.18), eA = ease(.08), eM = ease(.08), eB = ease(.04), dH = decay(.965);
+    if (pointer) { glow.x += (pointer.x - glow.x) * eG; glow.y += (pointer.y - glow.y) * eG; glow.a += (1 - glow.a) * eA; } else glow.a *= decay(.94);
 
     for (const p of nodes) {
       if (morph.on && p.tx !== null) {
-        p.x += (p.tx - p.x) * .08; p.y += (p.ty - p.y) * .08; p.heat = Math.max(p.heat, .55); continue;
+        p.x += (p.tx - p.x) * eM; p.y += (p.ty - p.y) * eM; p.heat = Math.max(p.heat, .55); continue;
       }
       if (pointer && !G.on) {
         const dx = p.x - pointer.x, dy = p.y - pointer.y, d = Math.hypot(dx, dy) || 1;
-        if (d < F) { const f = (1 - d / F) * .9; p.vx += (dx / d) * f * .35 + (-dy / d) * f * .18; p.vy += (dy / d) * f * .35 + (dx / d) * f * .18; p.heat = Math.max(p.heat, 1 - d / F); }
+        if (d < F) { const f = (1 - d / F) * .9 * FR; p.vx += (dx / d) * f * .35 + (-dy / d) * f * .18; p.vy += (dy / d) * f * .35 + (dx / d) * f * .18; p.heat = Math.max(p.heat, 1 - d / F); }
       }
       for (const r of rings) {
         const dx = p.x - r.x, dy = p.y - r.y, d = Math.hypot(dx, dy) || 1;
-        if (Math.abs(d - r.r) < 26) { p.vx += (dx / d) * 1.6 * r.life; p.vy += (dy / d) * 1.6 * r.life; p.heat = 1; }
+        if (Math.abs(d - r.r) < 26 + 7 * FR) { p.vx += (dx / d) * 1.6 * r.life * FR; p.vy += (dy / d) * 1.6 * r.life * FR; p.heat = 1; }
       }
-      p.vx += (p.bx - p.vx) * .04; p.vy += (p.by - p.vy) * .04;
-      p.x += p.vx; p.y += p.vy;
+      p.vx += (p.bx - p.vx) * eB; p.vy += (p.by - p.vy) * eB;
+      p.x += p.vx * FR; p.y += p.vy * FR;
       if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20;
       if (p.y < -20) p.y = H + 20; if (p.y > H + 20) p.y = -20;
-      p.heat *= .965;
+      p.heat *= dH;
     }
 
     const dim = G.on ? .45 : 1;
@@ -622,7 +636,7 @@
       x.lineWidth = 1 + k * 3; x.lineCap = 'round';
       x.beginPath(); x.moveTo(p0.x, p0.y); x.lineTo(p1.x, p1.y); x.stroke();
     }
-    for (const tr of trail) tr.life *= .92;
+    const dT = decay(.92); for (const tr of trail) tr.life *= dT;
     while (trail.length && trail[0].life < .05) trail.shift();
     x.lineWidth = 1;
 
@@ -638,16 +652,16 @@
     }
     for (let k = rings.length - 1; k >= 0; k--) {
       const r = rings[k], col = r.col || P.cyan;
-      r.r += 7 + r.r * .02; r.life *= .955;
+      r.r += (7 + r.r * .02) * FR; r.life *= decay(.955);
       x.strokeStyle = `rgba(${col},${r.life * .8})`; x.lineWidth = 2 * r.life + .5;
       x.beginPath(); x.arc(r.x, r.y, r.r, 0, Math.PI * 2); x.stroke();
       if (!r.col) { x.strokeStyle = `rgba(${P.violet},${r.life * .45})`; x.lineWidth = 1; x.beginPath(); x.arc(r.x, r.y, r.r * .72, 0, Math.PI * 2); x.stroke(); }
       if (r.life < .03) rings.splice(k, 1);
     }
-    if (!G.on && !reduce && !morph.on && packets.length < 16 && Math.random() < .07) sendPacket(nodes[(Math.random() * nodes.length) | 0], Math.random() < .8 ? 'c' : 'v');
+    if (!G.on && !reduce && !morph.on && packets.length < 16 && Math.random() < 1 - decay(.93)) sendPacket(nodes[(Math.random() * nodes.length) | 0], Math.random() < .8 ? 'c' : 'v');
     for (let k = packets.length - 1; k >= 0; k--) {
       const q = packets[k];
-      q.t += .02;
+      q.t += .02 * FR;
       if (q.t >= 1) {
         q.hops--; q.b.heat = Math.max(q.b.heat, .6);
         const nb = neighbours(q.b).filter(n => n !== q.a);
@@ -661,7 +675,7 @@
     }
     for (let k = sparks.length - 1; k >= 0; k--) {
       const s = sparks[k];
-      s.x += s.vx; s.y += s.vy; s.vx *= .93; s.vy *= .93; s.life *= .9;
+      s.x += s.vx * FR; s.y += s.vy * FR; s.vx *= decay(.93); s.vy *= decay(.93); s.life *= decay(.9);
       x.fillStyle = `rgba(${s.col},${s.life})`; x.beginPath(); x.arc(s.x, s.y, 2.2 * s.life + .4, 0, Math.PI * 2); x.fill();
       if (s.life < .04) sparks.splice(k, 1);
     }
@@ -1798,22 +1812,28 @@
     const end = () => { stop = true; cv.hidden = true; window.removeEventListener('keydown', end); cv.removeEventListener('pointerdown', end); };
     window.addEventListener('keydown', end); cv.addEventListener('pointerdown', end);
     found('matrix'); tone(220, .6, 'sine', .04, 2);
+    let mLast = t0;
     (function f(now) {
       if (stop) return; if (now - t0 > dur) { end(); return; }
-      g.fillStyle = light ? 'rgba(247,249,255,.16)' : 'rgba(10,15,36,.16)'; g.fillRect(0, 0, innerWidth, innerHeight);
+      const mf = Math.min(7.2, Math.max(.05, (now - mLast) / 16.667)); mLast = now; const fade = (1 - Math.pow(.84, mf)).toFixed(3);
+      g.fillStyle = light ? `rgba(247,249,255,${fade})` : `rgba(10,15,36,${fade})`; g.fillRect(0, 0, innerWidth, innerHeight);
       g.fillStyle = light ? '#0E8A5A' : '#4BE3A0'; g.font = fs + 'px ui-monospace, Menlo, monospace';
-      for (let i = 0; i < cols; i++) { g.fillText(chars[(Math.random() * chars.length) | 0], i * fs, drops[i] * fs); drops[i] = drops[i] * fs > innerHeight && Math.random() > .975 ? 0 : drops[i] + (reduce ? .5 : 1); }
+      for (let i = 0; i < cols; i++) { g.fillText(chars[(Math.random() * chars.length) | 0], i * fs, drops[i] * fs); drops[i] = drops[i] * fs > innerHeight && Math.random() > Math.pow(.975, mf) ? 0 : drops[i] + (reduce ? .5 : 1) * mf; }
       requestAnimationFrame(f);
     })(t0);
   }
 
   /* ================= « htop » secret : FPS, nœuds, mémoire (touche F ou commande htop) ================= */
-  let htopOn = false, htopFrames = 0, htopLast = 0, htopFps = 0, htopTimer = 0;
+  let htopOn = false, htopFrames = 0, htopLast = 0, htopFps = 0, htopTimer = 0, htopHz = 60, htopPrev = 0; const htopGaps = [];
   const t0page = performance.now();
   function htopLoop(now) {
     if (!htopOn) return;
-    htopFrames++;
-    if (now - htopLast >= 500) { htopFps = Math.round(htopFrames * 1000 / (now - htopLast)); htopFrames = 0; htopLast = now; }
+    htopFrames++; if (htopPrev) { htopGaps.push(now - htopPrev); if (htopGaps.length > 60) htopGaps.shift(); } htopPrev = now;
+    if (now - htopLast >= 500) {
+      htopFps = Math.round(htopFrames * 1000 / (now - htopLast)); htopFrames = 0; htopLast = now;
+      /* Fréquence de l'écran : intervalle médian entre deux images (1 Hz à 500 Hz) */
+      if (htopGaps.length > 5) { const s = htopGaps.slice().sort((a, b) => a - b), med = s[s.length >> 1]; const raw = 1000 / Math.max(2, med), STD = [24, 30, 48, 50, 60, 72, 75, 90, 100, 120, 144, 165, 175, 180, 200, 240, 280, 300, 360, 480, 500]; const near = STD.find(v => Math.abs(v - raw) / v < .07); htopHz = Math.max(1, Math.min(500, near || Math.round(raw))); }
+    }
     requestAnimationFrame(htopLoop);
   }
   function htopDraw() {
@@ -1825,7 +1845,7 @@
     rows.push([H.weight, `${nf.format(measure().kb)} ${t('kb')}`], [H.up, `${hh}:${mm}:${ss}`], [H.cpu, navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency}` : '?']);
     for (const [k, v, kind] of rows) {
       const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v;
-      if (kind === 'fps') { dd.className = htopFps >= 50 ? 'ok' : htopFps >= 30 ? 'warn' : 'bad'; const bar = document.createElement('i'); bar.className = 'fbar'; bar.style.width = Math.min(100, (htopFps / 60) * 100) + '%'; dd.append(bar); }
+      if (kind === 'fps') { const ref = Math.max(1, htopHz); dd.textContent = htopFps ? `${htopFps} / ${ref} Hz` : '…'; dd.className = htopFps >= ref * .8 ? 'ok' : htopFps >= Math.min(30, ref * .5) ? 'warn' : 'bad'; const bar = document.createElement('i'); bar.className = 'fbar'; bar.style.width = Math.min(100, (htopFps / ref) * 100) + '%'; dd.append(bar); }
       dl.append(dt, dd);
     }
   }
