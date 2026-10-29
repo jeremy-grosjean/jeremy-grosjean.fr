@@ -6,7 +6,8 @@
   const D = {
     fr: {
       ui: {
-        pause: 'Pause', pzTitle: 'Partie en pause', pzSub: 'Le temps est arrêté : reprenez quand vous voulez, là où vous en étiez.', pzResume: 'Reprendre', pzQuit: 'Quitter la partie',
+        lvQuit: 'Quitter le jeu', pzSave: 'Sauvegarder et quitter', rsTitle: 'Partie en cours', rsSub: 'Vous avez une partie sauvegardée. Voulez-vous la reprendre ?', rsResume: 'Reprendre la partie', rsNew: 'Nouvelle partie', tSaved: 'Partie sauvegardée : rouvrez « Protéger le serveur » pour la reprendre.',
+        pause: 'Pause', pzTitle: 'Partie en pause', pzSub: 'Le temps est arrêté : reprenez quand vous voulez, là où vous en étiez.', pzResume: 'Reprendre', pzQuit: 'Quitter sans sauvegarder',
         play: 'Jouer : 6 mini-jeux',
         pickPhishT: 'Repère l’hameçonnage', pickPhishD: '6 e-mails : fiables ou pièges ? Les indices s’affichent après chaque réponse.',
         pickSubnetT: 'Sous-réseaux express', pickSubnetD: '10 questions chronométrées : adresse du réseau, diffusion, nombre d’appareils.',
@@ -82,7 +83,8 @@
 
     en: {
       ui: {
-        pause: 'Pause', pzTitle: 'Game paused', pzSub: 'Time is stopped: resume whenever you like, right where you left off.', pzResume: 'Resume', pzQuit: 'Quit the game',
+        lvQuit: 'Quit the game', pzSave: 'Save and quit', rsTitle: 'Game in progress', rsSub: 'You have a saved game. Do you want to resume it?', rsResume: 'Resume the game', rsNew: 'New game', tSaved: 'Game saved: open “Protect the server” again to resume it.',
+        pause: 'Pause', pzTitle: 'Game paused', pzSub: 'Time is stopped: resume whenever you like, right where you left off.', pzResume: 'Resume', pzQuit: 'Quit without saving',
         play: 'Play: 6 mini-games',
         pickPhishT: 'Spot the phishing', pickPhishD: '6 emails: genuine or traps? The clues light up after each answer.',
         pickSubnetT: 'Subnet sprint', pickSubnetD: '10 timed questions: network address, broadcast, number of hosts.',
@@ -158,7 +160,8 @@
 
     'zh-Hans': {
       ui: {
-        pause: '暂停', pzTitle: '游戏已暂停', pzSub: '时间已停止：随时可以从刚才的位置继续。', pzResume: '继续', pzQuit: '退出游戏',
+        lvQuit: '退出游戏', pzSave: '保存并退出', rsTitle: '进行中的游戏', rsSub: '您有一局已保存的游戏，要继续吗？', rsResume: '继续游戏', rsNew: '新游戏', tSaved: '游戏已保存：再次打开“保护服务器”即可继续。',
+        pause: '暂停', pzTitle: '游戏已暂停', pzSub: '时间已停止：随时可以从刚才的位置继续。', pzResume: '继续', pzQuit: '不保存退出',
         play: '玩：6 个小游戏',
         pickPhishT: '识破钓鱼邮件', pickPhishD: '6 封邮件：可信还是陷阱？每次回答后会显示线索。',
         pickSubnetT: '子网速算', pickSubnetD: '10 道限时题：网络地址、广播地址、可用主机数。',
@@ -234,7 +237,8 @@
 
     'zh-Hant': {
       ui: {
-        pause: '暫停', pzTitle: '遊戲已暫停', pzSub: '時間已停止：隨時可以從剛才的位置繼續。', pzResume: '繼續', pzQuit: '離開遊戲',
+        lvQuit: '離開遊戲', pzSave: '儲存並離開', rsTitle: '進行中的遊戲', rsSub: '您有一局已儲存的遊戲，要繼續嗎？', rsResume: '繼續遊戲', rsNew: '新遊戲', tSaved: '遊戲已儲存：再次開啟「保護伺服器」即可繼續。',
+        pause: '暫停', pzTitle: '遊戲已暫停', pzSub: '時間已停止：隨時可以從剛才的位置繼續。', pzResume: '繼續', pzQuit: '不儲存離開',
         play: '玩：6 個小遊戲',
         pickPhishT: '識破釣魚郵件', pickPhishD: '6 封郵件：可信還是陷阱？每次回答後會顯示線索。',
         pickSubnetT: '子網速算', pickSubnetD: '10 道限時題：網路位址、廣播位址、可用主機數。',
@@ -310,7 +314,8 @@
 
     yue: {
       ui: {
-        pause: '暫停', pzTitle: '遊戲暫停咗', pzSub: '時間停咗：幾時想繼續都得，由啱先嘅位置開始。', pzResume: '繼續', pzQuit: '離開遊戲',
+        lvQuit: '離開遊戲', pzSave: '儲存再離開', rsTitle: '進行緊嘅遊戲', rsSub: '你有一局儲存咗嘅遊戲，要唔要繼續？', rsResume: '繼續遊戲', rsNew: '新遊戲', tSaved: '遊戲已儲存：再開「保護伺服器」就可以繼續。',
+        pause: '暫停', pzTitle: '遊戲暫停咗', pzSub: '時間停咗：幾時想繼續都得，由啱先嘅位置開始。', pzResume: '繼續', pzQuit: '唔儲存離開',
         play: '玩：6 個小遊戲',
         pickPhishT: '識穿釣魚電郵', pickPhishD: '6 封電郵：可信定係陷阱？每次答完會顯示線索。',
         pickSubnetT: '子網速算', pickSubnetD: '10 條限時題：網絡位址、廣播位址、可用主機數目。',
@@ -386,7 +391,8 @@
 
     ko: {
       ui: {
-        pause: '일시 정지', pzTitle: '게임 일시 정지', pzSub: '시간이 멈췄습니다. 원할 때 멈춘 곳에서 다시 시작하세요.', pzResume: '계속하기', pzQuit: '게임 나가기',
+        lvQuit: '게임 나가기', pzSave: '저장하고 나가기', rsTitle: '진행 중인 게임', rsSub: '저장된 게임이 있습니다. 이어서 하시겠어요?', rsResume: '게임 이어하기', rsNew: '새 게임', tSaved: '게임이 저장되었습니다. ‘서버 지키기’를 다시 열면 이어서 할 수 있습니다.',
+        pause: '일시 정지', pzTitle: '게임 일시 정지', pzSub: '시간이 멈췄습니다. 원할 때 멈춘 곳에서 다시 시작하세요.', pzResume: '계속하기', pzQuit: '저장하지 않고 나가기',
         play: '게임하기: 미니게임 6개',
         pickPhishT: '피싱 메일 찾기', pickPhishD: '메일 6통: 진짜일까요, 함정일까요? 답할 때마다 단서가 표시됩니다.',
         pickSubnetT: '서브넷 스피드 퀴즈', pickSubnetD: '제한 시간 10문제: 네트워크 주소, 브로드캐스트, 호스트 수.',

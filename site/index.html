@@ -29,10 +29,10 @@
 <link rel="stylesheet" href="/assets/app.css?v=47eefc2e2c">
 <script src="/assets/i18n.js?v=91faf46deb" defer></script>
 <script src="/assets/labs.js?v=24e840f65d" defer></script>
-<script src="/assets/labs2.js?v=6e7958db7b" defer></script>
+<script src="/assets/labs2.js?v=194508f5f9" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=0760b8a3ee" defer></script>
+<script src="/assets/app.js?v=be09bf536a" defer></script>
 </head>
 <body>
 <canvas id="net" aria-hidden="true"></canvas>
@@ -174,7 +174,7 @@
     <p id="lvWhat"></p>
     <div class="legend" id="lvLegend"></div>
     <p class="defense" id="lvHow"></p>
-    <div class="actions"><button class="btn" id="lvGo" type="button" data-i="go">C'est parti</button></div>
+    <div class="actions"><button class="btn" id="lvGo" type="button" data-i="go">C'est parti</button><button class="btn-ghost" id="lvQuit" type="button" data-i="lvQuit">Quitter le jeu</button></div>
   </div>
 </div>
 
@@ -195,7 +195,16 @@
     <h2 id="pzTitle" data-i="pzTitle">Partie en pause</h2>
     <p data-i="pzSub">Le temps est arrêté : reprenez quand vous voulez, là où vous en étiez.</p>
     <p class="pz-stats" id="pzStats"></p>
-    <div class="actions"><button class="btn" id="pzResume" type="button" data-i="pzResume">Reprendre</button><button class="btn-ghost" id="pzQuit" type="button" data-i="pzQuit">Quitter la partie</button></div>
+    <div class="actions"><button class="btn" id="pzResume" type="button" data-i="pzResume">Reprendre</button><button class="btn-ghost" id="pzSave" type="button" data-i="pzSave">Sauvegarder et quitter</button><button class="btn-ghost" id="pzQuit" type="button" data-i="pzQuit">Quitter sans sauvegarder</button></div>
+  </div>
+</div>
+
+<div class="panel" id="resumePanel" role="dialog" aria-modal="true" aria-labelledby="rsTitle">
+  <div class="card">
+    <h2 id="rsTitle" data-i="rsTitle">Partie en cours</h2>
+    <p data-i="rsSub">Vous avez une partie sauvegardée. Voulez-vous la reprendre ?</p>
+    <p class="pz-stats" id="rsStats"></p>
+    <div class="actions"><button class="btn" id="rsResume" type="button" data-i="rsResume">Reprendre la partie</button><button class="btn-ghost" id="rsNew" type="button" data-i="rsNew">Nouvelle partie</button><button class="btn-ghost" id="rsBack" type="button" data-i="back">Retour au site</button></div>
   </div>
 </div>
 

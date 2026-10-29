@@ -72,6 +72,35 @@ with sync_playwright() as p:
         if pg.evaluate("document.body.classList.contains('playing')"):
             erreurs.append(f'{nom} : « Quitter la partie » ne termine pas le jeu')
         ok(f'{nom} : pendant le jeu, seul le bouton Pause est cliquable ; pause, reprise et abandon fonctionnent')
+        # Sauvegarde : « Sauvegarder et quitter », puis rouvrir le jeu propose de reprendre là où on en était
+        pg.evaluate("document.getElementById('openGame').click(); document.getElementById('pickServer').click()"); pg.wait_for_timeout(150)
+        if pg.evaluate("document.getElementById('resumePanel').classList.contains('open')"):
+            pg.evaluate("document.getElementById('rsNew').click()")
+        else:
+            pg.evaluate("document.getElementById('start').click()")
+        pg.wait_for_timeout(150)
+        if not pg.evaluate("!!document.getElementById('lvQuit') && document.getElementById('levelPanel').classList.contains('open')"):
+            erreurs.append(f'{nom} : pas de bouton Quitter sur l’annonce du niveau')
+        pg.evaluate("document.getElementById('lvGo').click()"); pg.wait_for_timeout(1600)
+        pg.evaluate("document.getElementById('pauseBtn').click()"); pg.wait_for_timeout(100)
+        avant = pg.evaluate("[document.getElementById('hLevel').textContent, document.getElementById('hScore').textContent, document.getElementById('hTime').textContent]")
+        pg.evaluate("document.getElementById('pzSave').click()"); pg.wait_for_timeout(150)
+        pg.evaluate("document.getElementById('openGame').click(); document.getElementById('pickServer').click()"); pg.wait_for_timeout(150)
+        if not pg.evaluate("document.getElementById('resumePanel').classList.contains('open')"):
+            erreurs.append(f'{nom} : la partie sauvegardée n’est pas proposée à la reprise')
+        pg.evaluate("document.getElementById('rsResume').click()"); pg.wait_for_timeout(150)
+        apres = pg.evaluate("[document.getElementById('hLevel').textContent, document.getElementById('hScore').textContent, document.getElementById('hTime').textContent]")
+        if apres != avant or not pg.evaluate("document.getElementById('pausePanel').classList.contains('open')"):
+            erreurs.append(f'{nom} : la reprise ne revient pas au même endroit ({avant} → {apres})')
+        pg.evaluate("document.getElementById('pzResume').click()"); pg.wait_for_timeout(1300)
+        if pg.evaluate("document.getElementById('hTime').textContent") == apres[2] and pg.evaluate("document.body.classList.contains('playing')"):
+            erreurs.append(f'{nom} : après la reprise, le temps ne repart pas')
+        pg.evaluate("document.getElementById('pauseBtn').click(); document.getElementById('pzQuit').click()"); pg.wait_for_timeout(100)
+        pg.evaluate("document.getElementById('openGame').click(); document.getElementById('pickServer').click()"); pg.wait_for_timeout(150)
+        if not pg.evaluate("document.getElementById('intro').classList.contains('open')"):
+            erreurs.append(f'{nom} : « Quitter sans sauvegarder » a gardé la partie')
+        pg.evaluate("document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open'))")
+        ok(f'{nom} : sauvegarde, reprise au même endroit, nouvelle partie et abandon sans sauvegarde')
         # Fenêtres : un clic sur le fond flou ou sur ✕ les ferme, un clic dedans non
         for panneau, bouton in (('contactPanel', 'contactBtn'), ('gamesPanel', 'openGame'), ('secPanel', 'secBtn')):
             pg.evaluate(f"document.getElementById('{bouton}').click()"); pg.wait_for_timeout(200)

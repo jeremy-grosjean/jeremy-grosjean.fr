@@ -341,14 +341,14 @@
     $('hScore').textContent = G.score; $('hBreach').textContent = G.breach + '/3'; $('hTime').textContent = Math.ceil(G.time);
   }
   const server = () => ({ x: W / 2, y: H / 2, s: Math.min(64, Math.max(46, W / 22)) });
-  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel', 'phPanel', 'snPanel', 'scPanel', 'glossPanel', 'pausePanel'];
+  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel', 'phPanel', 'snPanel', 'scPanel', 'glossPanel', 'pausePanel', 'resumePanel'];
   function closePanels() { panels.forEach(p => $(p).classList.remove('open')); }
   /* La fenêtre s'ouvre toujours en haut de son contenu (sur un écran bas, le focus sur un bouton du bas la faisait défiler) */
   /* Fermer une fenêtre : clic sur le fond flou autour (même action que son bouton Fermer / Quitter), ou sur le ✕ en haut à droite.
      Un clic dans la fenêtre ne la ferme pas ; un glisser qui commence dans la fenêtre et finit dehors non plus. */
   const PANEL_CLOSE = { intro: 'cancel', over: 'back', secPanel: 'secClose', contactPanel: 'contactClose', keysPanel: 'keysClose', gamesPanel: 'gamesClose',
     supportPanel: 'tkQuit', panPanel: 'pnQuit', quizPanel: 'qzQuit', newsPanel: 'newsClose', briefPanel: 'briefClose', supPanel: 'supClose',
-    phPanel: 'phQuit', snPanel: 'snQuit', scPanel: 'scClose', glossPanel: 'glossClose', pausePanel: 'pzResume' };
+    phPanel: 'phQuit', snPanel: 'snQuit', scPanel: 'scClose', glossPanel: 'glossClose', pausePanel: 'pzResume', resumePanel: 'rsBack' };
   let downOn = null;
   document.addEventListener('pointerdown', e => { downOn = e.target; }, true);
   document.addEventListener('click', e => {
@@ -364,7 +364,32 @@
   }
   function openPanel(id, focusId) {
     const x = document.querySelector('#' + id + ' .panel-x'); if (x) { x.setAttribute('aria-label', t('close')); x.title = t('close'); } closePanels(); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (focusId) $(focusId).focus({ preventScroll: true }); const c = $(id).querySelector('.card'); if (c) c.scrollTop = 0; }
-  function openIntro() { closeTerm(); openPanel('intro', 'start'); }
+  /* Partie sauvegardée (dans ce navigateur uniquement) : à l'ouverture du jeu, on propose de la reprendre ou d'en commencer une nouvelle */
+  const SAVE_KEY = 'jg-firewall-save';
+  const readSave = () => { try { const s = JSON.parse(store.get(SAVE_KEY) || 'null'); return s && s.v === 1 && s.lv >= 0 && s.lv < LEVELS.length ? s : null; } catch (e) { return null; } };
+  const dropSave = () => { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} };
+  const saveStats = s => `${t('level')} ${s.lv + 1}/${LEVELS.length} · ${t('score')} ${s.score} · ${t('breaches')} ${s.breach}/3` + (s.intro ? '' : ` · ${t('time')} ${Math.ceil(s.time)}`);
+  function writeSave() {
+    if (!G.on) return;
+    const intro = $('levelPanel').classList.contains('open') || (paused() && G.pausedLevel);
+    store.set(SAVE_KEY, JSON.stringify({ v: 1, lv: G.lv, score: G.score, breach: G.breach, load: G.load, time: G.time, spawnIn: G.spawnIn || 500, intro,
+      items: intro ? [] : G.items.map(it => ({ x: it.x / W, y: it.y / H, sp: it.sp, kind: it.kind, wob: it.wob, r: it.r })) }));
+  }
+  function openIntro() {
+    closeTerm();
+    const s = readSave();
+    if (s) { $('rsStats').textContent = saveStats(s); openPanel('resumePanel', 'rsResume'); return; }
+    openPanel('intro', 'start');
+  }
+  function resumeSaved() {
+    const s = readSave(); if (!s) { openPanel('intro', 'start'); return; }
+    Object.assign(G, { on: true, active: false, lv: s.lv, score: s.score | 0, breach: s.breach | 0, load: s.load | 0, items: [], shake: 0, hit: 0 });
+    closeTerm(); setPlaying(true);
+    if (s.intro) { showLevel(s.lv); return; }
+    G.items = (s.items || []).map(it => ({ x: it.x * W, y: it.y * H, sp: it.sp, kind: it.kind, wob: it.wob, r: it.r }));
+    Object.assign(G, { time: Math.max(1, +s.time || LEVELS[s.lv].dur), spawnIn: +s.spawnIn || 500, last: performance.now(), active: true });
+    hud(); pauseGame();
+  }
 
   function legendItem(cls, label) { const s = document.createElement('span'), i = document.createElement('i'); i.className = 'sw ' + cls; s.append(i, label); return s; }
   function showLevel(k) {
@@ -385,6 +410,7 @@
     for (const el of document.querySelectorAll('main, .clock, .topbar, .dock, #term')) { if (on) el.setAttribute('inert', ''); else el.removeAttribute('inert'); }
   }
   function startGame() {
+    dropSave();
     Object.assign(G, { on: true, active: false, lv: 0, score: 0, breach: 0, load: 0, items: [], shake: 0, hit: 0 });
     closeTerm(); setPlaying(true); showLevel(0);
   }
@@ -394,6 +420,7 @@
     SND.level(); hud();
   }
   function endGame(reason) {
+    dropSave();
     G.on = false; G.active = false; G.items = [];
     setPlaying(false); SND.end();
     const best = getBest(), record = G.score > best;
@@ -404,13 +431,14 @@
     $('finalText').textContent = record && G.score > 0 ? t('newRecord') : t('record')(Math.max(best, G.score));
     openPanel('over', 'again');
   }
-  function quitGame() { G.on = false; G.active = false; G.items = []; setPlaying(false); closePanels(); }
+  function quitGame() { dropSave(); G.on = false; G.active = false; G.items = []; setPlaying(false); closePanels(); }
+  function saveAndQuit() { writeSave(); G.on = false; G.active = false; G.items = []; setPlaying(false); closePanels(); toast(t('tSaved'), 3500); }
   /* Pause : le temps s'arrête, on reprend exactement là où on en était ; quitter se fait depuis la pause (plus de partie perdue par erreur) */
   const paused = () => $('pausePanel').classList.contains('open');
   function pauseGame() {
     if (!G.on || paused()) return;
     G.pausedLevel = $('levelPanel').classList.contains('open'); G.wasActive = G.active; G.active = false;
-    $('pzStats').textContent = `${t('level')} ${G.lv + 1}/${LEVELS.length} · ${t('score')} ${G.score} · ${t('breaches')} ${G.breach}/3 · ${t('time')} ${Math.ceil(G.time)}`;
+    $('pzStats').textContent = saveStats({ lv: G.lv, score: G.score, breach: G.breach, time: G.time, intro: G.pausedLevel });
     openPanel('pausePanel', 'pzResume');
   }
   function resumeGame() {
@@ -1847,6 +1875,13 @@
   $('pauseBtn').addEventListener('click', togglePause);
   $('pzResume').addEventListener('click', resumeGame);
   $('pzQuit').addEventListener('click', quitGame);
+  $('pzSave').addEventListener('click', saveAndQuit);
+  $('lvQuit').addEventListener('click', pauseGame);
+  $('rsResume').addEventListener('click', resumeSaved);
+  $('rsNew').addEventListener('click', () => { dropSave(); startGame(); });
+  $('rsBack').addEventListener('click', closePanels);
+  /* Fermeture de l'onglet ou départ vers une autre page en pleine partie : la partie est sauvegardée automatiquement */
+  window.addEventListener('pagehide', () => { if (G.on) writeSave(); });
   /* Changement d'onglet ou d'application pendant la partie : pause automatique */
   document.addEventListener('visibilitychange', () => { if (document.hidden && G.on && G.active) pauseGame(); else if (!document.hidden && G.on) G.last = performance.now(); });
   let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(setup, 150); });
