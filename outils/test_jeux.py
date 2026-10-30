@@ -538,14 +538,14 @@ with sync_playwright() as p:
     m = man['m']
     if not (m.get('display') == 'standalone' and m.get('orientation') == 'any' and m.get('start_url') == '/' and m.get('lang') == 'fr'
             and any(i.get('purpose') == 'maskable' for i in m['icons']) and all(man['ic']) and man['ios'] and 0 < len(m.get('short_name', '')) <= 12
-            and {x['url'] for x in m.get('shortcuts', [])} == {'/#contact', '/#jeux', '/#recruteur'}):
+            and [x['url'] for x in m.get('shortcuts', [])] == ['/#contact', '/#jeux', '/#recruteur', '/#fiche']):
         erreurs.append(f'application installable : manifeste incomplet {man}')
-    for ancre, panneau in (('#contact', 'contactPanel'), ('#jeux', 'gamesPanel')):
+    for ancre, panneau in (('#contact', 'contactPanel'), ('#jeux', 'gamesPanel'), ('#fiche', 'briefPanel')):
         pg.goto(BASE + '/' + ancre); pg.wait_for_timeout(700)
         if not pg.evaluate(f"document.getElementById('{panneau}').classList.contains('open')"):
             erreurs.append(f'raccourci {ancre} : la fenêtre {panneau} ne s’ouvre pas')
     ctx.close()
-    ok('application installable : manifeste complet (portrait et paysage), icônes, raccourcis #contact et #jeux')
+    ok('application installable : manifeste complet (portrait et paysage), icônes, 4 raccourcis (#contact, #jeux, #recruteur, #fiche)')
     # Fenêtre « En 30 secondes » en tuiles : 4 tuiles, 6 domaines en pastilles, 2 boutons principaux, plus de « Fermer »
     # (la croix suffit) ; rien ne déborde, dans les 6 langues, du téléphone (320 px) à l'ordinateur
     for w, h in [(320, 568), (402, 874), (874, 402), (1280, 800)]:

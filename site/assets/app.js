@@ -2946,13 +2946,14 @@
   });
 
   $('openGame').addEventListener('click', openGames);
-  /* Raccourcis de l'application installée (appui long sur l'icône, Android) et liens directs : /#contact, /#jeux */
+  /* Raccourcis de l'application installée (appui long sur l'icône, Android) et liens directs : /#contact, /#jeux, /#fiche (« En 30 secondes ») */
   function ouvrirDepuisAdresse() {
     const h = location.hash;
     if (h === '#contact') { history.replaceState(null, '', location.pathname + location.search); $('contactBtn').click(); }
     else if (h === '#jeux' || h === '#games') { history.replaceState(null, '', location.pathname + location.search); openGames(); }
+    else if (h === '#fiche' || h === '#30s') { history.replaceState(null, '', location.pathname + location.search); openBrief(); }
   }
-  if (location.hash === '#contact' || location.hash === '#jeux' || location.hash === '#games') setTimeout(ouvrirDepuisAdresse, 0);
+  if (['#contact', '#jeux', '#games', '#fiche', '#30s'].includes(location.hash)) setTimeout(ouvrirDepuisAdresse, 0);
   window.addEventListener('hashchange', ouvrirDepuisAdresse);
   $('start').addEventListener('click', startGame);
   $('lvGo').addEventListener('click', beginLevel);

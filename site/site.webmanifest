@@ -74,6 +74,18 @@
           "type": "image/png"
         }
       ]
+    },
+    {
+      "name": "En 30 secondes",
+      "short_name": "En 30 s",
+      "url": "/#fiche",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }
