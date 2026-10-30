@@ -206,7 +206,7 @@ if [ "$RESULTAT" = 0 ] && [ -f "$HOME/Downloads/jeremy-grosjean-site.zip" ]; the
   # Étiquette de version dans Git (GitHub Desktop l'envoie sur GitHub au prochain Push)
   QUI="$(git -C "$DEPOT" config user.name || git -C "$DEPOT" log -1 --format=%an)"; MEL="$(git -C "$DEPOT" config user.email || git -C "$DEPOT" log -1 --format=%ae)"
   if [ -n "$VERSION" ] && git -C "$DEPOT" -c user.name="$QUI" -c user.email="$MEL" tag -a "$VERSION" -m "Mise en ligne du $(date '+%d/%m/%Y à %H:%M')" "$SHA" 2>/dev/null; then
-    printf '%s✓%s Étiquette %s créée (elle partira sur GitHub au prochain Push origin)\n' "$VERT" "$FIN" "$VERSION"
+    printf '%s✓%s Étiquette %s enregistrée sur ce Mac (repère de version, visible avec : git tag)\n' "$VERT" "$FIN" "$VERSION"
   fi
   notifier "jeremy-grosjean.fr est en ligne" "Publication terminée${VERSION:+ ($VERSION)}." "Glass"
 elif [ "$RESULTAT" != 0 ]; then

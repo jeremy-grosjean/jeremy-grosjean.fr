@@ -482,6 +482,26 @@ with sync_playwright() as p:
             pg.evaluate("document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open'))")
         ctx.close()
     ok(f'{len(ECRANS)} formes d’écran, du 200×200 au 8K : rien ne déborde ni ne se chevauche, la croix ne touche aucun bandeau')
+    # Régressions, pied de page tel qu'en ligne (relevés de supervision + numéro de version) :
+    # « Activer le son » ne passe jamais sur deux lignes ; le numéro de version reste visible, même sur téléphone ; pas de « · » collé ni doublé
+    STATUT = "window.JG_STATUS = {checked: '2026-10-30T11:04:00Z', https: 200, mx: [], dnssec: true};"
+    for w, h in [(1440, 900), (1000, 700), (920, 700), (874, 402), (874, 330), (402, 874), (375, 667), (320, 568)]:
+        ctx = nav.new_context(viewport={'width': w, 'height': h}, has_touch=w < 1100, is_mobile=w < 1100, locale='fr-FR', timezone_id='Europe/Paris')
+        pg = ctx.new_page(); suivre(pg, f'pied {w}×{h}')
+        pg.route('**/assets/status.js', lambda r: r.fulfill(status=200, content_type='application/javascript', body=STATUT))
+        pg.add_init_script("localStorage.setItem('jg-tour', '1'); window.JG_VERSION = {v: 'v2026.10.30.9', url: 'https://github.com/jeremy-grosjean/jeremy-grosjean.fr/commit/0000000'}")
+        pg.goto(BASE + '/'); pg.wait_for_timeout(1200)
+        pied = pg.evaluate("""(() => { const out = [], v = document.querySelector('#updLine .ver-link'), dm = document.querySelector('.dock-mid');
+          document.querySelectorAll('.dock .pill').forEach(b => { const l = b.querySelector('.lbl'); if (b.getBoundingClientRect().width > 0 && (b.scrollWidth > b.clientWidth + 1 || (l && l.getBoundingClientRect().width > 2 && l.getClientRects().length > 1) || (l && l.getBoundingClientRect().height > 22)))
+            out.push('le bouton ' + (b.id || b.className) + ' passe sur deux lignes ou déborde'); });
+          if (!v || v.getBoundingClientRect().width === 0 || getComputedStyle(document.getElementById('updLine')).display === 'none') out.push('numéro de version invisible');
+          const txt = dm.innerText.replace(/\\s+/g, ' ');
+          if (/[^\\s]·/.test(txt) || /·\\s*·/.test(txt)) out.push('« · » collé ou doublé : ' + txt);
+          return out; })()""")
+        for pb in pied:
+            erreurs.append(f'{w}×{h} : {pb}')
+        ctx.close()
+    ok('pied de page en ligne : « Activer le son » sur une ligne, numéro de version visible de l’ordinateur au téléphone')
     # Fluidité : le jeu va à la même vitesse sur un écran 30 Hz, 60 Hz, 144 Hz ou 240 Hz (hasard figé pour comparer)
     # Une machine surchargée (GitHub lance plusieurs vérifications à la fois) peut ralentir une seule mesure :
     # en cas d'écart, on refait la mesure (2 fois au plus) et on garde le meilleur temps de chaque fréquence.

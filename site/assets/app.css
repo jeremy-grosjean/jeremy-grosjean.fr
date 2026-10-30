@@ -256,6 +256,7 @@ body.playing .clock, body.playing .topbar, body.playing .dock, body.term-open .d
   pointer-events: auto; display: inline-flex; align-items: center; gap: .45rem; padding: .45rem .8rem; height: 2.2rem;
   font: inherit; font-size: .85rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
   cursor: pointer; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  white-space: nowrap; flex-shrink: 0; /* « Activer le son » reste sur une ligne : c'est le texte du milieu qui se replie */
 }
 .pill:hover { border-color: var(--line-accent); }
 .pill .ok { color: var(--ok); }
@@ -364,8 +365,15 @@ body.playing .quit { display: inline-flex; }
 .term-out .neo-colors i { width: 1.6rem; height: .9rem; display: inline-block; }
 
 /* Date de mise à jour (ordinateur uniquement) */
-.upd { white-space: nowrap; }
-@media (max-width: 900px) { .upd { display: none; } }
+.upd { white-space: pre; }
+/* Écran étroit (téléphone) : la date est masquée, mais le numéro de version reste visible, en petit, après « 0 cookie · 0 traceur » */
+@media (max-width: 900px) {
+  .upd-date, .dock-mid > .sep { display: none; }
+  .dock-mid > .upd { order: 1; }
+  .dock-mid > .loadt, .dock-mid > .upd { margin-left: -.5rem; } /* « · » collé comme ailleurs, sans l'écart des colonnes */
+  .dock-mid > .legal-row { order: 2; flex-basis: 100%; justify-content: center; }
+  .ver-link { font-size: .9em; opacity: .85; }
+}
 
 /* Choix du jeu */
 .game-pick { display: grid; gap: .6rem; margin: 0 0 1.1rem; }
@@ -449,7 +457,7 @@ html[data-font] .card p, html[data-font] .bootlog, html[data-font] .tk-msg { lin
 .c-local { display: block; color: var(--cyan); font-size: .78rem; }
 
 /* Temps de chargement */
-.loadt { white-space: nowrap; }
+.loadt { white-space: pre; } /* pre : garde l'espace avant « · » (sinon « 0 traceur· ») */
 @media (max-width: 560px) { .loadt { display: none; } }
 
 /* htop */
