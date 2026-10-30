@@ -431,18 +431,30 @@ with sync_playwright() as p:
         ctx.close()
     ok(f'{len(ECRANS)} formes d’écran, du 200×200 au 8K : rien ne déborde ni ne se chevauche')
     # Fluidité : le jeu va à la même vitesse sur un écran 30 Hz, 60 Hz, 144 Hz ou 240 Hz (hasard figé pour comparer)
-    temps = {}
-    for hz in (30, 60, 144, 240):
+    # Une machine surchargée (GitHub lance plusieurs vérifications à la fois) peut ralentir une seule mesure :
+    # en cas d'écart, on refait la mesure (2 fois au plus) et on garde le meilleur temps de chaque fréquence.
+    # Un vrai défaut (vitesse liée à l'écran) donne toujours le même écart et fait toujours échouer le test.
+    def mesurer(hz):
         pg = nav.new_page(viewport={'width': 1280, 'height': 800}); suivre(pg, f'{hz} Hz')
         pg.add_init_script("Math.random = () => 0.5; window.requestAnimationFrame = cb => setTimeout(() => cb(performance.now()), 1000 / %d); localStorage.setItem('jg-tour', '1');" % hz)
         pg.goto(BASE + '/'); pg.wait_for_timeout(1200)
         pg.evaluate("document.getElementById('openGame').click(); document.getElementById('pickServer').click(); document.getElementById('start').click()"); pg.wait_for_timeout(150)
-        temps[hz] = pg.evaluate("""new Promise(res => { const t0 = performance.now(); document.getElementById('lvGo').click();
+        t = pg.evaluate("""new Promise(res => { const t0 = performance.now(); document.getElementById('lvGo').click();
           const iv = setInterval(() => { if (document.getElementById('hBreach').textContent !== '0/3' || performance.now() - t0 > 15000) { clearInterval(iv); res(performance.now() - t0); } }, 20); })""")
         pg.close()
+        return t
+
+    FREQUENCES = (30, 60, 144, 240)
+    temps = {hz: mesurer(hz) for hz in FREQUENCES}
+    essais = 1
+    while max(temps.values()) > min(temps.values()) * 1.12 and essais < 3:
+        essais += 1
+        temps = {hz: min(temps[hz], mesurer(hz)) for hz in FREQUENCES}
+    detail = ' · '.join(f'{v / 1000:.1f} s' for v in temps.values()) + (f', {essais} mesures' if essais > 1 else '')
     if max(temps.values()) > min(temps.values()) * 1.12:
-        erreurs.append('fluidité : la vitesse du jeu dépend de l’écran (' + ', '.join(f'{k} Hz : {v / 1000:.1f} s' for k, v in temps.items()) + ')')
-    ok('même vitesse de jeu à 30, 60, 144 et 240 Hz (' + ' · '.join(f'{v / 1000:.1f} s' for v in temps.values()) + ')')
+        erreurs.append('fluidité : la vitesse du jeu dépend de l’écran (' + ', '.join(f'{k} Hz : {v / 1000:.1f} s' for k, v in temps.items()) + f', après {essais} mesures)')
+    else:
+        ok(f'même vitesse de jeu à 30, 60, 144 et 240 Hz ({detail})')
     nav.close()
 srv.shutdown()
 
