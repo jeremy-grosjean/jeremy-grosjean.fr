@@ -1204,20 +1204,23 @@
   });
 
   /* ================= Fiche « En 30 secondes » ================= */
+  /* Photo : chargée seulement à l'ouverture de la fiche ou de la vue sur une page (jamais sur l'accueil),
+     une seule petite taille (240 px), ni clic droit, ni glisser, ni appui long pour l'enregistrer */
+  function showPhoto(id) { const im = $(id); if (!im) return; if (!im.getAttribute('src')) im.src = '/assets/jg.webp'; im.alt = t('photoAlt') || ''; im.hidden = false; }
   function openBrief() {
     /* 4 tuiles (l'essentiel en gros, lisible en 5 secondes), puis les domaines de la formation en pastilles */
     const dl = $('briefList'), ul = $('briefDoms'); dl.textContent = ''; ul.textContent = '';
     for (const [k, v, sub] of t('briefTiles')) { const d = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; if (sub) { const s = document.createElement('span'); s.className = 'sub'; s.textContent = sub; dd.append(s); } d.append(dt, dd); dl.append(d); }
     const b = t('brief'); $('briefDomLbl').textContent = (b[b.length - 1] || [''])[0];
     for (const x of t('domains')) { const li = document.createElement('li'); li.textContent = x.charAt(0).toLocaleUpperCase(lang) + x.slice(1); ul.append(li); }
-    glossify(dl); glossify(ul); closeTerm(); openPanel('briefPanel', 'briefContact');
+    showPhoto('briefPhoto'); glossify(dl); glossify(ul); closeTerm(); openPanel('briefPanel', 'briefContact');
   }
   $('availBtn').addEventListener('click', openBrief);
 
   /* ================= Vue recruteur : une page sobre (lien direct : /#recruteur), aussi utilisée pour l'impression ================= */
   const REC_HASH = ['#recruteur', '#recruiter', '#cv'];
   function fillRec() {
-    $('recRole').textContent = t('title').split(' · ')[1] || t('whoRole');
+    $('recRole').textContent = t('title').split(' · ')[1] || t('whoRole'); showPhoto('recPhoto');
     const dl = $('recBrief'); dl.textContent = '';
     for (const [k, v] of t('brief')) { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; dl.append(dt, dd); }
     const ul = $('recTags'); ul.textContent = '';

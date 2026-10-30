@@ -1327,3 +1327,16 @@ body.deja-vu .hint, body.deja-vu .keys { display: none; }
 .sk-extra p:last-child { margin-bottom: 0; }
 .sk-extra b { color: var(--dim); font-size: .8rem; font-weight: 600; }
 @media print { .pc-list::before, .pc-item::before { display: none; } .pc-list { padding-left: 0; } }
+
+/* ================= Lot 24 : photo (fiche et vue sur une page) ================= */
+.me-photo { display: block; flex: none; border-radius: 50%; object-fit: cover; background: rgba(var(--node-rgb), .08);
+  border: 2px solid var(--surface-strong); box-shadow: 0 0 0 1px var(--line);
+  pointer-events: none; -webkit-user-select: none; user-select: none; -webkit-user-drag: none; -webkit-touch-callout: none; }
+.me-photo[hidden] { display: none; }
+.brief-id { display: flex; align-items: center; justify-content: center; gap: .7rem; margin: 0 0 1rem; }
+#briefPanel .brief-id .brief-avail { margin: 0; }
+.rec-head { align-items: center; }
+.rec-photo { border-radius: 14px; }
+.rec-id { flex: 1 1 12rem; min-width: 0; }
+@media print { .me-photo { box-shadow: none; border: 0; } }
+.rec .pc-item h3 { margin: .1rem 0 0; font-size: .95rem; letter-spacing: 0; text-transform: none; color: var(--ink); }

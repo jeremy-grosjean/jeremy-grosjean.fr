@@ -9,6 +9,7 @@ AddType image/x-icon .ico
 AddType application/manifest+json .webmanifest
 AddType "text/vcard; charset=utf-8" .vcf
 AddType font/woff .woff
+AddType image/webp .webp
 DirectoryIndex index.html
 ErrorDocument 404 /404.html
 
@@ -53,4 +54,12 @@ ErrorDocument 404 /404.html
 # Les fichiers cachés (sauf .well-known) ne sont jamais servis
 <IfModule mod_rewrite.c>
   RewriteRule "(^|/)\.(?!well-known/)" - [F]
+</IfModule>
+
+# Photo : jamais répertoriée par les moteurs de recherche (ni résultats, ni Google Images).
+# Les autres sites ne peuvent déjà pas l'afficher : Cross-Origin-Resource-Policy "same-origin" plus haut.
+<IfModule mod_headers.c>
+  <Files "jg.webp">
+    Header set X-Robots-Tag "noindex, noimageindex"
+  </Files>
 </IfModule>

@@ -188,6 +188,9 @@ if [ "$AVEC_HTACCESS" = 1 ]; then
   if curl -sI "$SITE/sw.js" | grep -qi "^content-security-policy:.*connect-src 'self'"; then ok "Mode hors ligne : politique du service worker"; else printf '%s✗ Mode hors ligne : politique du service worker absente (le site marche, mais pas hors ligne)%s\n' "$ROUGE" "$FIN"; fi
   C404="$(curl -s -o "$TMP/404.html" -w '%{http_code}' "$SITE/page-qui-n-existe-pas-$(date +%s)")"
   if [ "$C404" = "404" ] && grep -q 'traceroute' "$TMP/404.html"; then ok "Page 404 personnalisée (code 404)"; else printf '%s✗ Page 404 : code %s%s\n' "$ROUGE" "$C404" "$FIN"; fi
+  # Photo : servie, mais jamais répertoriée par les moteurs de recherche et jamais affichable sur un autre site
+  HP="$(curl -sI "$SITE/assets/jg.webp")"
+  if echo "$HP" | grep -qi '^x-robots-tag:.*noimageindex' && echo "$HP" | grep -qi '^cross-origin-resource-policy: *same-origin'; then ok "Photo protégée (hors moteurs de recherche, pas d’affichage ailleurs)"; else printf '%s✗ Photo : protection absente%s\n' "$ROUGE" "$FIN"; fi
   R1="$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "http://jeremy-grosjean.fr/")"
   R2="$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "https://www.jeremy-grosjean.fr/")"
   case "$R1" in 301\ https://jeremy-grosjean.fr/*) ok "Redirection http → https" ;; *) printf '%s✗ Redirection http : %s%s\n' "$ROUGE" "$R1" "$FIN" ;; esac
