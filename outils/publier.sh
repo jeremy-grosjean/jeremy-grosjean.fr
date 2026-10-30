@@ -66,8 +66,8 @@ elif command -v git >/dev/null 2>&1 && git -C "$DEPOT" rev-parse >/dev/null 2>&1
     demander '  Publier sans attendre la vérification GitHub ?' || arret "Faites Push origin dans GitHub Desktop, attendez la coche verte, puis relancez."
   else
     REPO="$(git -C "$DEPOT" remote get-url origin 2>/dev/null | sed -E 's#(git@github.com:|https://github.com/)##; s#\.git$##')"
-    # État de la vérification GitHub (lecture publique, sans identifiant). Seuls les 4 vrais tests du site comptent :
-    # la mise en ligne de la page MTA-STS par GitHub Pages (build, deploy, report-build-status) est ignorée.
+    # État de la vérification GitHub (lecture publique, sans identifiant). Seuls les 4 tests de « Vérifier le site » comptent :
+    # GitHub Pages (page MTA-STS), Dependabot et la surveillance du site en ligne sont ignorés.
     # 1re ligne : « état terminés total secondes_écoulées durée_totale » ; puis une ligne par test : « statut|nom|secondes ».
     lire_ci() {
       curl -s -m 15 -H 'Accept: application/vnd.github+json' "https://api.github.com/repos/$REPO/commits/$SHA/check-runs" > "$TMPCI.json" 2>/dev/null
@@ -75,7 +75,7 @@ elif command -v git >/dev/null 2>&1 && git -C "$DEPOT" rev-parse >/dev/null 2>&1
 import json, sys, time, calendar
 try: runs = json.load(open(sys.argv[1])).get("check_runs", [])
 except Exception: print("inconnu 0 0 0 0"); sys.exit()
-runs = [r for r in runs if r.get("name") not in ("build", "deploy", "report-build-status") and not r.get("name", "").startswith("Dependabot")]
+runs = [r for r in runs if r.get("name", "").startswith(("Sources (", "Version en ligne"))]
 ts = lambda v: calendar.timegm(time.strptime(v, "%Y-%m-%dT%H:%M:%SZ"))
 faits = sum(r.get("status") == "completed" for r in runs)
 debuts = [ts(r["started_at"]) for r in runs if r.get("started_at")]
