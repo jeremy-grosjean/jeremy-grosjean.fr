@@ -26,7 +26,7 @@
 <link rel="icon" href="/favicon.svg?v=c653120d20" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=ea10cf004d">
 <link rel="manifest" href="/site.webmanifest?v=1170d79b15">
-<link rel="stylesheet" href="/assets/app.css?v=eb0b8f58d8">
+<link rel="stylesheet" href="/assets/app.css?v=38ecc39073">
 <script src="/assets/i18n.js?v=91faf46deb" defer></script>
 <script src="/assets/labs.js?v=24e840f65d" defer></script>
 <script src="/assets/labs2.js?v=194508f5f9" defer></script>
@@ -34,9 +34,10 @@
 <script src="/assets/labs4.js?v=1f113c584a" defer></script>
 <script src="/assets/labs5.js?v=60720498d6" defer></script>
 <script src="/assets/labs6.js?v=716e5179dc" defer></script>
+<script src="/assets/labs7.js?v=daf6f9b419" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=16b73c2070" defer></script>
+<script src="/assets/app.js?v=2703c654ec" defer></script>
 </head>
 <body>
 <canvas id="net" aria-hidden="true"></canvas>
@@ -277,6 +278,7 @@
       <button class="pick" id="pickSupport" type="button"><b data-i="pickSupportT">Support informatique N1</b><span data-i="pickSupportD">Résolvez 5 tickets d'utilisateurs en choisissant le bon diagnostic.</span></button>
       <button class="pick" id="pickSupport2" type="button"><b data-i="pickSupport2T">Support informatique N2</b><span data-i="pickSupport2D">Niveau avancé : réseau, DHCP, Active Directory, DNS, droits d'accès.</span></button>
       <button class="pick" id="pickPanne" type="button"><b data-i="pickPanneT">Trouve la panne</b><span data-i="pickPanneD">Un PC n'accède plus au réseau : lancez les bonnes commandes et trouvez la cause.</span></button>
+      <button class="pick" id="pickNoNet" type="button"><b data-i="pickNoNetT">Plus d’Internet</b><span data-i="pickNoNetD">Un utilisateur n’a plus Internet : vérifiez dans le bon ordre, du câble au navigateur.</span></button>
       <button class="pick" id="pickQuiz" type="button"><b data-i="pickQuizT">Quiz Active Directory et GPO</b><span data-i="pickQuizD">10 questions sur AD, les GPO et le DNS, avec l'explication de chaque réponse.</span></button>
       <button class="pick" id="pickPhish" type="button"><b data-i="pickPhishT">Repère l’hameçonnage</b><span data-i="pickPhishD">6 e-mails : fiables ou pièges ? Les indices s’affichent après chaque réponse.</span></button>
       <button class="pick" id="pickItil" type="button"><b data-i="pickItilT">Priorise les tickets</b><span data-i="pickItilD"></span></button>
@@ -526,6 +528,21 @@
     <div class="tk-opts" id="rpOpts"></div>
     <p class="tk-expl" id="rpExpl" hidden></p>
     <div class="actions"><button class="btn" id="rpNext" type="button" hidden data-i="rpNext">Ticket suivant</button><button class="btn-ghost" id="rpQuit" type="button" data-i="quit">Quitter</button></div>
+  </div>
+</div>
+
+<div class="panel" id="niPanel" role="dialog" aria-modal="true" aria-labelledby="niTitle">
+  <div class="card ticket">
+    <div class="tk-head"><span class="tag" id="niTag">Poste 1/3</span><span class="tk-score" id="niScore">0</span></div>
+    <h2 class="qz-q" id="niTitle">Plus d’Internet</h2>
+    <p class="tk-from" id="niFrom"></p>
+    <p class="pn-lbl" id="niStepsL" data-i="niMethodL">La méthode</p>
+    <ol class="ni-steps" id="niSteps"></ol>
+    <div class="rp-mail ni-log" id="niLog" aria-live="polite"></div>
+    <p class="pn-lbl" id="niAsk"></p>
+    <div class="tk-opts" id="niOpts"></div>
+    <p class="tk-expl" id="niExpl" hidden></p>
+    <div class="actions"><button class="btn" id="niNext" type="button" hidden data-i="niNext">Poste suivant</button><button class="btn-ghost" id="niQuit" type="button" data-i="quit">Quitter</button></div>
   </div>
 </div>
 

@@ -80,13 +80,13 @@ with sync_playwright() as p:
         chev = pg.evaluate("(() => { const a = document.querySelector('.cta').getBoundingClientRect(), d = [...document.querySelectorAll('.dock-left, .dock-mid, #sound')].map(e => e.getBoundingClientRect()); return d.some(b => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom); })()")
         if chev:
             erreurs.append(f'{nom} : les boutons de l’accueil chevauchent la barre du bas')
-        for bouton, panneau in (('pickServer', 'intro'), ('pickSupport', 'supportPanel'), ('pickPanne', 'panPanel'), ('pickQuiz', 'quizPanel'), ('pickPhish', 'phPanel'), ('pickSubnet', 'snPanel'), ('pickItil', 'itPanel'), ('pickPs', 'psPanel'), ('pickRj', 'rjPanel'), ('pickCall', 'clPanel'), ('pickDaily', 'dyPanel'), ('pickPrep', 'prPanel'), ('pickRansom', 'rwPanel'), ('pickReply', 'rpPanel')):
+        for bouton, panneau in (('pickServer', 'intro'), ('pickSupport', 'supportPanel'), ('pickPanne', 'panPanel'), ('pickQuiz', 'quizPanel'), ('pickPhish', 'phPanel'), ('pickSubnet', 'snPanel'), ('pickItil', 'itPanel'), ('pickPs', 'psPanel'), ('pickRj', 'rjPanel'), ('pickCall', 'clPanel'), ('pickDaily', 'dyPanel'), ('pickPrep', 'prPanel'), ('pickRansom', 'rwPanel'), ('pickReply', 'rpPanel'), ('pickNoNet', 'niPanel')):
             pg.evaluate("document.getElementById('openGame').click()"); pg.wait_for_timeout(150)
             pg.evaluate(f"document.getElementById('{bouton}').click()"); pg.wait_for_timeout(300)
             if not pg.evaluate(f"document.getElementById('{panneau}').classList.contains('open')"):
                 erreurs.append(f'{nom} : le jeu {bouton} ne s’ouvre pas')
             pg.keyboard.press('Escape'); pg.evaluate("document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open'))")
-        ok(f'{nom} : les 15 jeux et défis s’ouvrent')
+        ok(f'{nom} : les 16 jeux et défis s’ouvrent')
         # Pendant « Protéger le serveur », un clic là où se trouvait « Me contacter » ne doit rien ouvrir
         r = pg.evaluate("(() => { const b = document.getElementById('contactBtn').getBoundingClientRect(); return [b.x + b.width / 2, b.y + b.height / 2]; })()")
         pg.evaluate("document.getElementById('openGame').click(); document.getElementById('pickServer').click(); document.getElementById('start').click()"); pg.wait_for_timeout(150)
@@ -277,15 +277,43 @@ with sync_playwright() as p:
         if res.get('prep') != '70' or res.get('prList') != 8 or res.get('ransom') != '100' or not res.get('r321') or res.get('reply') != '80' or res.get('mail0') != 5 or not res.get('bdOpen') or res.get('badges') != 20 or res.get('on') < 4 or res.get('seen') != res.get('on'):
             erreurs.append(f'{nom} : lot 15 {res}')
         ok(f'{nom} : préparer un poste, rançongiciel et réponse au ticket jouables jusqu’au bout ; {res.get("count")}')
+        # Lot 19 : « Plus d'Internet », la méthode de diagnostic (câble → IP → passerelle → Internet → DNS → navigateur)
+        res = pg.evaluate("""async () => {
+          const $ = id => document.getElementById(id), w = ms => new Promise(r => setTimeout(r, ms)), out = { ordre: true }, T = window.JG_I18N.fr;
+          const fixes = T.niScen.map(s => s.fix[0][0]), live = () => [...$('niOpts').querySelectorAll('button')].filter(b => !b.disabled);
+          $('openGame').click(); await w(80); $('pickNoNet').click(); await w(150);
+          out.open = $('niPanel').classList.contains('open'); out.steps = $('niSteps').children.length;
+          out.cur0 = [...$('niSteps').children].findIndex(li => li.classList.contains('now'));
+          const faux = live().find(b => b.textContent !== T.niChecks[0]); faux.click(); await w(20);
+          out.fauxKo = $('niExpl').classList.contains('ko') && faux.disabled;
+          for (let cas = 0; cas < 3; cas++) {
+            if (cas === 1) { document.querySelector('#niPanel .hint-btn').click(); await w(30); out.hint = document.querySelectorAll('#niOpts .hint-off').length; }
+            for (let n = 0; n < 8 && !$('niOpts').hidden; n++) {
+              const c = [...$('niSteps').children].findIndex(li => li.classList.contains('now'));
+              if (c >= 0 && c !== n) out.ordre = false;
+              const bon = c >= 0 ? T.niChecks[c] : fixes.find(f => live().some(b => b.textContent === f));
+              live().find(b => b.textContent === bon).click(); await w(20);
+            }
+            out['log' + cas] = $('niLog').children.length; $('niNext').click(); await w(40);
+          }
+          await w(80);
+          out.best = localStorage.getItem('jg-noint-best'); out.ring = !!document.querySelector('#niPanel .end-ring');
+          out.methode = $('niExpl').textContent.includes('câble → adresse IP → passerelle'); $('niQuit').click(); await w(60);
+          return out;
+        }""")
+        if not (res.get('open') and res.get('steps') == 5 and res.get('cur0') == 0 and res.get('fauxKo') and res.get('ordre') and res.get('hint', 0) >= 1
+                and res.get('best') == '130' and res.get('ring') and res.get('methode') and all(res.get(f'log{c}', 0) >= 2 for c in range(3))):
+            erreurs.append(f'{nom} : jeu Plus d’Internet {res}')
+        ok(f'{nom} : « Plus d’Internet » jouable jusqu’au bout, étapes dans l’ordre, mauvais choix et indice comptés (130/150)')
         # Lot 16 : catégories, écran de fin, progression, raccourcis clavier, taille du texte, contraste, scènes
         pg.goto(BASE + '/'); pg.wait_for_timeout(1200)
         res = pg.evaluate("""async () => {
           const $ = id => document.getElementById(id), w = ms => new Promise(r => setTimeout(r, ms)), out = {}, T = window.JG_I18N.fr;
           const vis = () => [...document.querySelectorAll('#gamesPanel .pick')].filter(p => !p.hidden).length;
-          ['jg-prep-best', 'jg-ransom-best'].forEach(k => localStorage.removeItem(k));
+          ['jg-prep-best', 'jg-ransom-best', 'jg-noint-best'].forEach(k => localStorage.removeItem(k));
           $('openGame').click(); await w(150);
           out.tabs = $('gTabs').children.length; out.all = vis(); out.icons = document.querySelectorAll('#gamesPanel .g-ic svg').length;
-          out.newTag = !!$('pickPrep').querySelector('.g-state.new');
+          out.newTag = !!$('pickNoNet').querySelector('.g-state.new') && !$('pickPrep').querySelector('.g-state.new');
           [...$('gTabs').children].find(b => b.dataset.cat === 'sec').click(); await w(50); out.sec = vis();
           [...$('gTabs').children].find(b => b.dataset.cat === 'all').click(); await w(50);
           $('pickRansom').click(); await w(200);
@@ -315,7 +343,7 @@ with sync_playwright() as p:
         pg.evaluate("document.getElementById('a11yContrast').click()"); pg.wait_for_timeout(900)
         hc = pg.evaluate("getComputedStyle(document.body).backgroundColor")
         pg.evaluate("document.getElementById('a11yContrast').click()"); pg.wait_for_timeout(60)
-        if not (res['tabs'] == 5 and res['all'] == 15 and res['icons'] == 15 and res['newTag'] and res['sec'] == 3 and res['prog'] == 5 and res['files'] == 3 and res['ring'] and res['stars'] == 3 and res['record'] and res['confetti'] and res['next'] and res['other'] and res['backToGames'] and res['done'] and res['psWin']) or not k1 or '2/5' not in k2 or sz != ['l', 'xl', 'm'] or hc != 'rgb(0, 0, 0)':
+        if not (res['tabs'] == 5 and res['all'] == 16 and res['icons'] == 16 and res['newTag'] and res['sec'] == 3 and res['prog'] == 5 and res['files'] == 3 and res['ring'] and res['stars'] == 3 and res['record'] and res['confetti'] and res['next'] and res['other'] and res['backToGames'] and res['done'] and res['psWin']) or not k1 or '2/5' not in k2 or sz != ['l', 'xl', 'm'] or hc != 'rgb(0, 0, 0)':
             erreurs.append(f'{nom} : lot 16 {res} clavier={k1},{k2} taille={sz} contraste={hc}')
         ok(f'{nom} : catégories, icônes, écran de fin, « Autre jeu », progression, raccourcis 1-9 et Entrée, taille A++, contraste élevé, scènes')
         # Lot 18 : indices progressifs, taille par défaut, effets visuels désactivés par défaut
@@ -376,7 +404,7 @@ with sync_playwright() as p:
           $('faqClose').click();
           return out;
         }""")
-        if not (res['slotOpen'] and res['days'] == 8 and res['slots'] == 32 and not res['wkend'] and res['needPick'] and 'par téléphone' in res['mail'] and res['gmail'] and res['slotClosed'] and res['skills'] == 3 and res['chips'] == 13 and res['chipGame'] and res['share'] and res['faq'] == 8 and res['faqTxt']):
+        if not (res['slotOpen'] and res['days'] == 8 and res['slots'] == 32 and not res['wkend'] and res['needPick'] and 'par téléphone' in res['mail'] and res['gmail'] and res['slotClosed'] and res['skills'] == 3 and res['chips'] == 14 and res['chipGame'] and res['share'] and res['faq'] == 8 and res['faqTxt']):
             erreurs.append(f'{nom} : créneaux / compétences / partage / FAQ {res}')
         ok(f'{nom} : créneaux (8 jours ouvrés, e-mail prérempli), compétences reliées aux jeux, partage, FAQ')
         pg.goto(BASE + '/?pour=Société%20Générale%20<b>'); pg.wait_for_timeout(1200)
@@ -423,7 +451,7 @@ with sync_playwright() as p:
             erreurs.append(f'{w}×{h} : la page déborde sur le côté ({large} px)')
         for pb in pg.evaluate(MESURE, CLES):
             erreurs.append(f'{w}×{h} : {pb}')
-        for panneau, bouton in (('contactPanel', 'contactBtn'), ('secPanel', 'secBtn'), ('gamesPanel', 'openGame')):
+        for panneau, bouton in (('contactPanel', 'contactBtn'), ('secPanel', 'secBtn'), ('gamesPanel', 'openGame'), ('niPanel', 'pickNoNet')):
             pg.evaluate(f"document.getElementById('{bouton}').click()"); pg.wait_for_timeout(200)
             if pg.evaluate(f"(() => {{ const c = document.querySelector('#{panneau} .card'), r = c.getBoundingClientRect(); return r.left < -1 || r.right > innerWidth + 1 || r.top < -1 || r.bottom > innerHeight + 1 || c.scrollWidth > c.clientWidth + 2; }})()"):
                 erreurs.append(f'{w}×{h} : la fenêtre {panneau} sort de l’écran')

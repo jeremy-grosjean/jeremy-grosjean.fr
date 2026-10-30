@@ -349,12 +349,12 @@
     $('hScore').textContent = G.score; $('hBreach').textContent = G.breach + '/3'; $('hTime').textContent = Math.ceil(G.time);
   }
   const server = () => ({ x: W / 2, y: H / 2, s: Math.min(64, Math.max(46, W / 22)) });
-  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel', 'phPanel', 'snPanel', 'scPanel', 'glossPanel', 'pausePanel', 'resumePanel', 'slotPanel', 'skillsPanel', 'sharePanel', 'faqPanel', 'itPanel', 'psPanel', 'rjPanel', 'clPanel', 'dyPanel', 'prPanel', 'rwPanel', 'rpPanel', 'bdPanel'];
+  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel', 'phPanel', 'snPanel', 'scPanel', 'glossPanel', 'pausePanel', 'resumePanel', 'slotPanel', 'skillsPanel', 'sharePanel', 'faqPanel', 'itPanel', 'psPanel', 'rjPanel', 'clPanel', 'dyPanel', 'prPanel', 'rwPanel', 'rpPanel', 'niPanel', 'bdPanel'];
   function closePanels() { panels.forEach(p => $(p).classList.remove('open')); }
   /* La fenêtre s'ouvre toujours en haut de son contenu (sur un écran bas, le focus sur un bouton du bas la faisait défiler) */
   /* Fermer une fenêtre : clic sur le fond flou autour (même action que son bouton Fermer / Quitter), ou sur le ✕ en haut à droite.
      Un clic dans la fenêtre ne la ferme pas ; un glisser qui commence dans la fenêtre et finit dehors non plus. */
-  const PANEL_CLOSE = { prPanel: 'prQuit', rwPanel: 'rwQuit', rpPanel: 'rpQuit', bdPanel: 'bdClose', slotPanel: 'slotClose', skillsPanel: 'skClose', sharePanel: 'shClose', faqPanel: 'faqClose', itPanel: 'itQuit', psPanel: 'psQuit', rjPanel: 'rjQuit', clPanel: 'clQuit', dyPanel: 'dyClose', intro: 'cancel', over: 'back', secPanel: 'secClose', contactPanel: 'contactClose', keysPanel: 'keysClose', gamesPanel: 'gamesClose',
+  const PANEL_CLOSE = { prPanel: 'prQuit', rwPanel: 'rwQuit', rpPanel: 'rpQuit', niPanel: 'niQuit', bdPanel: 'bdClose', slotPanel: 'slotClose', skillsPanel: 'skClose', sharePanel: 'shClose', faqPanel: 'faqClose', itPanel: 'itQuit', psPanel: 'psQuit', rjPanel: 'rjQuit', clPanel: 'clQuit', dyPanel: 'dyClose', intro: 'cancel', over: 'back', secPanel: 'secClose', contactPanel: 'contactClose', keysPanel: 'keysClose', gamesPanel: 'gamesClose',
     supportPanel: 'tkQuit', panPanel: 'pnQuit', quizPanel: 'qzQuit', newsPanel: 'newsClose', briefPanel: 'briefClose', supPanel: 'supClose',
     phPanel: 'phQuit', snPanel: 'snQuit', scPanel: 'scClose', glossPanel: 'glossClose', pausePanel: 'pzResume', resumePanel: 'rsBack' };
   let downOn = null;
@@ -1610,7 +1610,7 @@
   /* ================= Tableau des meilleurs scores (gardés dans ce navigateur uniquement) ================= */
   function openScores() {
     const ul = $('scList'); ul.textContent = '';
-    const rows = [['pickServerT', 'jg-firewall-best', 0], ['pickSupportT', 'jg-support-best', 50], ['pickSupport2T', 'jg-support2-best', 50], ['pickPanneT', 'jg-panne-best', PN_ROUND * 100], ['pickQuizT', 'jg-quiz-best', QZ_ROUND * 10], ['pickPhishT', 'jg-phish-best', 60], ['pickSubnetT', 'jg-subnet-best', 0], ['pickItilT', 'jg-itil-best', 160], ['pickPsT', 'jg-ps-best', 80], ['pickRjT', 'jg-rj45-best', 200], ['pickCallT', 'jg-call-best', 16], ['pickPrepT', 'jg-prep-best', 80], ['pickRansomT', 'jg-ransom-best', 100], ['pickReplyT', 'jg-reply-best', 80]];
+    const rows = [['pickServerT', 'jg-firewall-best', 0], ['pickSupportT', 'jg-support-best', 50], ['pickSupport2T', 'jg-support2-best', 50], ['pickPanneT', 'jg-panne-best', PN_ROUND * 100], ['pickQuizT', 'jg-quiz-best', QZ_ROUND * 10], ['pickPhishT', 'jg-phish-best', 60], ['pickSubnetT', 'jg-subnet-best', 0], ['pickItilT', 'jg-itil-best', 160], ['pickPsT', 'jg-ps-best', 80], ['pickRjT', 'jg-rj45-best', 200], ['pickCallT', 'jg-call-best', 16], ['pickPrepT', 'jg-prep-best', 80], ['pickRansomT', 'jg-ransom-best', 100], ['pickReplyT', 'jg-reply-best', 80], ['pickNoNetT', 'jg-noint-best', NI_ROUND * NI_PTS]];
     const nf = new Intl.NumberFormat(t('locale'));
     const add = (k, v, none) => { const li = document.createElement('li'), a = document.createElement('span'), b = document.createElement('b'); a.textContent = k; b.textContent = v; if (none) b.className = 'none'; li.append(a, b); ul.append(li); };
     for (const [name, key, max] of rows) { const raw = store.get(key); add(t(name), raw === null || raw === undefined || raw === '' ? t('scNone') : nf.format(+raw) + (max ? '/' + nf.format(max) : ''), raw === null || raw === undefined || raw === ''); }
@@ -1854,7 +1854,7 @@
   for (const id of ['briefSlot', 'contactSlot', 'recSlot', 'faqSlot']) $(id).addEventListener('click', () => { if (id === 'recSlot') closeRec(); openSlots(); });
 
   /* 3. Compétences du titre TAI, chacune reliée aux jeux qui la montrent */
-  const SK_GAMES = [['pickSupport', 'pickSupport2', 'pickCall', 'pickItil', 'pickReply'], ['pickPrep', 'pickRj', 'pickPanne', 'pickPhish', 'pickRansom'], ['pickSubnet', 'pickQuiz', 'pickPs']];
+  const SK_GAMES = [['pickSupport', 'pickSupport2', 'pickCall', 'pickItil', 'pickReply'], ['pickPrep', 'pickRj', 'pickPanne', 'pickPhish', 'pickRansom'], ['pickSubnet', 'pickNoNet', 'pickQuiz', 'pickPs']];
   function openSkills() {
     const box = $('skList'); box.textContent = '';
     t('skBlocks').forEach(([title, items], i) => {
@@ -2218,9 +2218,79 @@
   $('pickRansom').addEventListener('click', openRansom);
   $('pickReply').addEventListener('click', openReply);
 
+  /* « Plus d'Internet » : la méthode de diagnostic réseau, du câble au navigateur.
+     3 postes tirés parmi 6 pannes (la panne n° k se trouve à l'étape k ; k = 5 : tout répond, c'est le proxy).
+     50 points par poste : 30 pour la méthode (10 de moins par mauvais choix), 20 pour la bonne action du premier coup. */
+  const NI_CASES = 6, NI_STEPS = 5, NI_ROUND = 3, NI_PTS = 50;
+  const NI = { list: [], i: 0, step: 0, phase: 'step', wrong: 0, fixWrong: false, okTxt: '', score: 0, done: false };
+  function openNoNet() { closeTerm(); Object.assign(NI, { list: shuffle([...Array(NI_CASES).keys()]).slice(0, NI_ROUND), i: 0, score: 0, done: false }); niCase(); openPanel('niPanel', null); SND.level(); }
+  function niCase() {
+    const sc = t('niScen')[NI.list[NI.i]]; Object.assign(NI, { step: 0, phase: 'step', wrong: 0, fixWrong: false });
+    $('niTag').textContent = t('niTag')(NI.i + 1, NI.list.length); $('niTitle').textContent = '« ' + sc.t + ' »';
+    $('niFrom').textContent = t('tkFromL') + ' ' + sc.who; $('niFrom').hidden = false;
+    $('niLog').textContent = ''; $('niLog').hidden = false; $('niSteps').hidden = false; $('niStepsL').hidden = false;
+    $('niExpl').hidden = true; $('niNext').hidden = true; niLadder(); niAsk();
+  }
+  function niLadder() {
+    const k = NI.list[NI.i], ol = $('niSteps'); ol.textContent = '';
+    t('niSteps').forEach((name, s) => {
+      const li = document.createElement('li'); li.textContent = name;
+      li.className = s < NI.step ? 'ok' : s === NI.step && NI.phase === 'fix' && s === k ? 'ko' : s === NI.step && NI.phase === 'step' ? 'now' : '';
+      if (li.className === 'now') li.setAttribute('aria-current', 'step'); ol.append(li);
+    });
+  }
+  function niAsk() {
+    const k = NI.list[NI.i], box = $('niOpts'); box.textContent = ''; box.hidden = false; $('niAsk').hidden = false; $('niScore').textContent = t('qzPts')(NI.score);
+    let opts;
+    if (NI.phase === 'step') {
+      const C = t('niChecks'), bad = shuffle(t('niBad')), s = NI.step;
+      const later = s < NI_STEPS - 1 ? C[s + 1 + ((Math.random() * (NI_STEPS - 1 - s)) | 0)] : null;
+      NI.okTxt = C[s]; $('niAsk').textContent = t('niAskStep');
+      opts = [[C[s], 'ok'], later ? [later, 'early'] : [bad[1], 'rash'], [bad[0], 'rash']];
+    } else {
+      const sc = t('niScen')[k]; NI.okTxt = sc.fix[0][0]; $('niAsk').textContent = k < NI_STEPS ? t('niFound')(sc.cause) : t('niAskEnd');
+      opts = sc.fix.map((f, j) => [f[0], j ? 'fix' : 'ok', f[1]]);
+    }
+    shuffle(opts).forEach(o => box.append(optBtn(o[0], b => niChoose(o, b))));
+  }
+  function niLog(txt, cls) { const p = document.createElement('p'); p.textContent = txt; p.className = cls; $('niLog').append(p); }
+  function niChoose(o, b) {
+    const k = NI.list[NI.i], ex = $('niExpl'); ex.hidden = false;
+    if (o[1] !== 'ok') {
+      b.classList.add('bad'); b.disabled = true; SND.wrong(); ex.className = 'tk-expl ko';
+      if (NI.phase === 'step') { NI.wrong++; ex.textContent = '✗ ' + (o[1] === 'early' ? t('niEarly')(t('niSteps')[NI.step]) : t('niRash')); }
+      else { NI.fixWrong = true; ex.textContent = '✗ ' + o[2]; }
+      return;
+    }
+    SND.block();
+    if (NI.phase === 'step') {
+      const s = NI.step, found = s === k;
+      niLog((found ? '✗ ' : '✓ ') + (found ? t('niScen')[k].ko : t('niOk')[s]), found ? 'bad' : 'good');
+      ex.className = 'tk-expl ok'; ex.textContent = '✓ ' + (found ? t('niFoundL') : t('niGood'));
+      if (found) NI.phase = 'fix'; else { NI.step++; if (NI.step === NI_STEPS) NI.phase = 'fix'; }
+      niLadder(); niAsk(); return;
+    }
+    const pts = Math.max(0, 30 - NI.wrong * 10) + (NI.fixWrong ? 0 : 20); NI.score += pts;
+    b.classList.add('good'); niLog('→ ' + o[0], 'good');
+    ex.className = 'tk-expl ok'; ex.textContent = '✓ ' + o[2] + ' ' + t('niCasePts')(pts, NI_PTS);
+    $('niScore').textContent = t('qzPts')(NI.score); $('niOpts').hidden = true; $('niAsk').hidden = true;
+    const nx = $('niNext'); nx.hidden = false; nx.textContent = NI.i < NI.list.length - 1 ? t('niNext') : t('niEnd'); nx.focus();
+  }
+  $('niNext').addEventListener('click', () => {
+    if (NI.done) { openNoNet(); return; }
+    if (NI.i < NI.list.length - 1) { NI.i++; niCase(); return; }
+    const m = NI.list.length * NI_PTS, best = bestOf('jg-noint-best', NI.score);
+    $('niTag').textContent = t('qzDoneTag'); $('niTitle').textContent = t('niDoneTitle'); $('niFrom').hidden = true;
+    $('niLog').hidden = true; $('niSteps').hidden = true; $('niStepsL').hidden = true;
+    const ex = $('niExpl'); ex.hidden = false; ex.className = 'tk-expl'; ex.textContent = t('niDoneMsg')(NI.score, m) + ' ' + t('pnBest')(best) + ' · ' + t('niMethod');
+    NI.done = true; const nx = $('niNext'); nx.textContent = t('again') || '↻'; nx.focus(); SND.end();
+  });
+  $('niQuit').addEventListener('click', closePanels);
+  $('pickNoNet').addEventListener('click', openNoNet);
+
   /* Badges : calculés à partir des meilleurs scores enregistrés dans ce navigateur (rien n'est envoyé) */
   const num = k => +store.get(k) || 0, has = k => { const v = store.get(k); return v !== null && v !== undefined && v !== ''; };
-  const GAME_KEYS = ['jg-firewall-best', 'jg-support-best', 'jg-support2-best', 'jg-panne-best', 'jg-quiz-best', 'jg-phish-best', 'jg-subnet-best', 'jg-itil-best', 'jg-ps-best', 'jg-rj45-best', 'jg-call-best', 'jg-prep-best', 'jg-ransom-best', 'jg-reply-best'];
+  const GAME_KEYS = ['jg-firewall-best', 'jg-support-best', 'jg-support2-best', 'jg-panne-best', 'jg-quiz-best', 'jg-phish-best', 'jg-subnet-best', 'jg-itil-best', 'jg-ps-best', 'jg-rj45-best', 'jg-call-best', 'jg-prep-best', 'jg-ransom-best', 'jg-reply-best', 'jg-noint-best'];
   const BADGES = [
     ['🎮', () => GAME_KEYS.some(has)], ['🛡️', () => num('jg-firewall-best') > 0], ['🎧', () => num('jg-support-best') >= 50], ['🧰', () => num('jg-support2-best') >= 50],
     ['🔍', () => num('jg-panne-best') >= PN_ROUND * 100], ['🗂️', () => num('jg-quiz-best') >= QZ_ROUND * 10], ['🎣', () => num('jg-phish-best') >= 60], ['🧮', () => num('jg-subnet-best') > 0],
@@ -2311,6 +2381,7 @@
     pickPrep: [['rect', { x: 3, y: 4, width: 18, height: 12, rx: 2 }], ['path', { d: 'M8 20h8M12 16v4' }]],
     pickRansom: [['rect', { x: 5, y: 10, width: 14, height: 10, rx: 2 }], ['path', { d: 'M8 10V7a4 4 0 0 1 8 0v3', class: 'a-shk' }], ['path', { d: 'M12 14v2' }]],
     pickReply: [['path', { d: 'M4 5h16v11H9l-5 4z' }], ['path', { d: 'M8 9h8M8 12h5' }]],
+    pickNoNet: [['circle', { cx: 12, cy: 12, r: 8 }], ['path', { d: 'M4 12h16M12 4c-3 3-3 13 0 16M12 4c3 3 3 13 0 16' }], ['path', { d: 'M5 5l14 14', class: 'a-shk' }]],
     pickSubnet: [['circle', { cx: 12, cy: 5, r: 2 }], ['circle', { cx: 5, cy: 19, r: 2 }], ['circle', { cx: 19, cy: 19, r: 2 }], ['path', { d: 'M12 7v5M12 12l-6 5M12 12l6 5' }]]
   };
   function drawParts(parent, parts) { for (const [tg, at, kids] of parts) { const e = svgEl(tg, at); if (kids) drawParts(e, kids); parent.append(e); } }
@@ -2318,16 +2389,16 @@
   const GAMES = [
     ['pickDaily', 'all', 1, 1, null, 0, 'dyPanel'],
     ['pickServer', 'sec', 3, 2, 'jg-firewall-best', 0, 'intro'], ['pickSupport', 'sup', 3, 1, 'jg-support-best', 50, 'supportPanel'],
-    ['pickSupport2', 'sup', 4, 3, 'jg-support2-best', 50, 'supportPanel'], ['pickPanne', 'net', 4, 2, 'jg-panne-best', PN_ROUND * 100, 'panPanel'],
+    ['pickSupport2', 'sup', 4, 3, 'jg-support2-best', 50, 'supportPanel'], ['pickPanne', 'net', 4, 2, 'jg-panne-best', PN_ROUND * 100, 'panPanel'], ['pickNoNet', 'net', 3, 2, 'jg-noint-best', NI_ROUND * NI_PTS, 'niPanel'],
     ['pickQuiz', 'sys', 4, 2, 'jg-quiz-best', QZ_ROUND * 10, 'quizPanel'], ['pickPhish', 'sec', 3, 1, 'jg-phish-best', 60, 'phPanel'],
     ['pickItil', 'sup', 3, 2, 'jg-itil-best', 160, 'itPanel'], ['pickPs', 'sys', 3, 3, 'jg-ps-best', 80, 'psPanel'],
     ['pickRj', 'net', 2, 2, 'jg-rj45-best', 200, 'rjPanel'], ['pickCall', 'sup', 2, 1, 'jg-call-best', 16, 'clPanel'],
     ['pickPrep', 'sys', 2, 1, 'jg-prep-best', 80, 'prPanel'], ['pickRansom', 'sec', 2, 2, 'jg-ransom-best', 100, 'rwPanel'],
     ['pickReply', 'sup', 2, 1, 'jg-reply-best', 80, 'rpPanel'], ['pickSubnet', 'net', 3, 3, 'jg-subnet-best', 200, 'snPanel']
   ];
-  const GNEW = ['pickPrep', 'pickRansom', 'pickReply'];
+  const GNEW = ['pickNoNet'];
   const CATS = [['all', 'catAll'], ['sup', 'catSup'], ['sys', 'catSys'], ['net', 'catNet'], ['sec', 'catSec']];
-  const GAME_PANELS = ['supportPanel', 'panPanel', 'quizPanel', 'phPanel', 'snPanel', 'itPanel', 'psPanel', 'rjPanel', 'clPanel', 'dyPanel', 'prPanel', 'rwPanel', 'rpPanel'];
+  const GAME_PANELS = ['supportPanel', 'panPanel', 'quizPanel', 'phPanel', 'snPanel', 'itPanel', 'psPanel', 'rjPanel', 'clPanel', 'dyPanel', 'prPanel', 'rwPanel', 'rpPanel', 'niPanel'];
   let gTab = (() => { const v = store.get('jg-games-tab'); return CATS.some(c => c[0] === v) ? v : 'all'; })();
   const nfmt = v => { try { return new Intl.NumberFormat(t('locale')).format(v); } catch (e) { return String(v); } };
   function decoratePicks() {
@@ -2387,6 +2458,7 @@
       case 'prPanel': return [Math.max(0, t('prSteps').length * 10 - PR.err * 10), t('prSteps').length * 10];
       case 'rwPanel': return [RS.score, t('ransom').length * 20];
       case 'rpPanel': return [RP.score, t('replies').length * 40];
+      case 'niPanel': return [NI.score, NI.list.length * NI_PTS];
       case 'over': return [G.score, 0];
     }
     return null;
@@ -2588,6 +2660,7 @@
     prPanel: { box: 'prOpts', ok: () => t('prSteps')[PR.pos][0], pen: () => { PR.err++; $('prScore').textContent = t('qzPts')(Math.max(0, t('prSteps').length * 10 - PR.err * 10)); }, cost: true },
     rwPanel: { box: 'rwOpts', ok: () => t('ransom')[RS.i][1][0], pen: () => { RS.wrong = true; }, cost: true },
     rpPanel: { box: 'rpOpts', ok: () => t('replies')[RP.i][2][RP.slot][0][0], pen: () => {} },
+    niPanel: { box: 'niOpts', ok: () => NI.okTxt, pen: () => { if (NI.phase === 'step') NI.wrong++; else NI.fixWrong = true; }, cost: true },
     phPanel: { box: 'phOpts', phish: true, sig: () => 'm' + PH.i }
   };
   const HS = {};

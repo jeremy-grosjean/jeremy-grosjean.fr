@@ -102,7 +102,7 @@ etape('Traductions (6 langues)')
 CODE = r"""
 const fs = require('fs'), vm = require('vm'), base = process.argv[1];
 const w = {}; const ctx = { window: w }; vm.createContext(ctx);
-for (const f of ['i18n.js', 'labs.js', 'labs2.js', 'labs3.js', 'labs4.js', 'labs5.js', 'labs6.js']) vm.runInContext(fs.readFileSync(base + '/assets/' + f, 'utf8'), ctx);
+for (const f of ['i18n.js', 'labs.js', 'labs2.js', 'labs3.js', 'labs4.js', 'labs5.js', 'labs6.js', 'labs7.js']) vm.runInContext(fs.readFileSync(base + '/assets/' + f, 'utf8'), ctx);
 const L = w.JG_I18N, out = {};
 const forme = v => Array.isArray(v) ? 'tableau:' + v.length : typeof v === 'object' && v ? 'objet:' + Object.keys(v).sort().join(',') : typeof v;
 for (const k of Object.keys(L)) { out[k] = {}; for (const c of Object.keys(L[k])) out[k][c] = forme(L[k][c]); }
@@ -110,7 +110,7 @@ console.log(JSON.stringify(out));
 """
 r = subprocess.run(['node', '-e', CODE, str(SITE)], capture_output=True, text=True)
 if r.returncode:
-    erreur('i18n.js / labs.js / labs2.js / labs3.js / labs4.js / labs5.js / labs6.js : chargement impossible ' + r.stderr.strip()[:200])
+    erreur('i18n.js / labs.js / labs2.js / labs3.js / labs4.js / labs5.js / labs6.js / labs7.js : chargement impossible ' + r.stderr.strip()[:200])
 else:
     T = json.loads(r.stdout)
     manquantes = [l for l in LANGUES if l not in T]
@@ -136,7 +136,7 @@ const fs = require('fs'), vm = require('vm'), base = process.argv[1];
 const w = {}; const ctx = { window: w }; vm.createContext(ctx);
 const ser = v => typeof v === 'function' ? v.toString() : JSON.stringify(v);
 let avant = {}; const out = [];
-for (const f of ['i18n.js', 'labs.js', 'labs2.js', 'labs3.js', 'labs4.js', 'labs5.js', 'labs6.js']) {
+for (const f of ['i18n.js', 'labs.js', 'labs2.js', 'labs3.js', 'labs4.js', 'labs5.js', 'labs6.js', 'labs7.js']) {
   vm.runInContext(fs.readFileSync(base + '/assets/' + f, 'utf8'), ctx);
   const L = w.JG_I18N;
   for (const k in avant) for (const c in avant[k]) if (L[k] && c in L[k] && !Array.isArray(L[k][c]) && ser(L[k][c]) !== avant[k][c]) out.push([f, k, c]);
