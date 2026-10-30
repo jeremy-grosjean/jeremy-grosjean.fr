@@ -745,7 +745,10 @@ body.has-local main { padding-top: calc(max(1rem, env(safe-area-inset-top)) + 5.
 @media (max-width: 300px) {
   .topbar { gap: .3rem; }
   .lang-btn #langCur { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); }
-  .domain { font-size: clamp(1rem, 10.5vw, 1.7rem); }
+  .domain { font-size: clamp(1rem, 10.5vw, 1.7rem); max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+  /* l'horloge reste sur 3 lignes au plus, quelle que soit la longueur de la date ou du fuseau */
+  .clock { max-width: calc(100vw - 32px); }
+  #cDate, .c-local { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
   .brand { font-size: .68rem; gap: .35rem; max-width: 100%; } .brand > span:last-child { overflow-wrap: anywhere; min-width: 0; }
   .bootlog { font-size: .6rem; padding: .45rem .5rem; overflow-wrap: anywhere; }
   .typeline { overflow-wrap: anywhere; }

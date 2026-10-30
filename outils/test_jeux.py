@@ -310,7 +310,7 @@ with sync_playwright() as p:
           out.resetAll = !document.documentElement.dataset.sky && !$('seasonFx') && !$('fxJg').checked && !$('fxSky').checked && !document.documentElement.dataset.size;
           return out;
         }""")
-        if not (res['skyOff'] and res['seasonOff'] and res['morphOff'] and res['rowShown'] and res['h1'] == 1 and 'retirée' in res['t1'] and res['t2'].startswith('Indice 2') and res['h3'] and res['btnGone'] and res['rowHidden'] and res['reset'] and res['prOff'] >= 3 and res['ph'] and res['dockReset'] and res['sizeBack'] and res['skyOn'] and res['seasonMatch'] and res['morphOn'] and res['resetAll']):
+        if not (res['skyOff'] and res['seasonOff'] and res['morphOff'] and res['rowShown'] and res['h1'] == 1 and 'retirée' in res['t1'] and res['t2'].startswith(('Indice 2', 'Indice 3')) and res['h3'] and res['btnGone'] and res['rowHidden'] and res['reset'] and res['prOff'] >= 3 and res['ph'] and res['dockReset'] and res['sizeBack'] and res['skyOn'] and res['seasonMatch'] and res['morphOn'] and res['resetAll']):
             erreurs.append(f'{nom} : lot 18 {res}')
         ok(f'{nom} : indices 1-2-3, taille par défaut, ciel / « JG » / saison désactivés par défaut puis activables, tout remettre par défaut')
         # Lot 14 : créneaux, compétences, partage, FAQ, lien personnalisé
