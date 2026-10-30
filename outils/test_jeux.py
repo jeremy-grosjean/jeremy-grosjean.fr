@@ -183,10 +183,10 @@ with sync_playwright() as p:
                 erreurs.append(f'{nom} : la fenêtre {panneau} ne s’ouvre pas')
         ok(f'{nom} : fenêtres Contact, Nouveautés, Supervision, Sécurité, Glossaire, Scores')
         pg.evaluate("document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open')); document.getElementById('availBtn').click()"); pg.wait_for_timeout(200)
-        if not pg.evaluate("document.querySelectorAll('#briefList .gl-t').length"):
+        if not pg.evaluate("document.querySelectorAll('#briefPanel .gl-t').length"):
             erreurs.append(f'{nom} : aucun mot du glossaire souligné dans la fiche')
         else:
-            pg.click('#briefList .gl-t'); pg.wait_for_timeout(150)
+            pg.click('#briefPanel .gl-t'); pg.wait_for_timeout(150)
             if pg.evaluate("document.getElementById('glTip').hidden"):
                 erreurs.append(f'{nom} : la bulle de définition ne s’affiche pas')
         pg.evaluate("window.print = () => {}; document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open')); document.getElementById('secReport').click()"); pg.wait_for_timeout(200)
@@ -546,6 +546,29 @@ with sync_playwright() as p:
             erreurs.append(f'raccourci {ancre} : la fenêtre {panneau} ne s’ouvre pas')
     ctx.close()
     ok('application installable : manifeste complet (portrait et paysage), icônes, raccourcis #contact et #jeux')
+    # Fenêtre « En 30 secondes » en tuiles : 4 tuiles, 6 domaines en pastilles, 2 boutons principaux, plus de « Fermer »
+    # (la croix suffit) ; rien ne déborde, dans les 6 langues, du téléphone (320 px) à l'ordinateur
+    for w, h in [(320, 568), (402, 874), (874, 402), (1280, 800)]:
+        ctx = nav.new_context(viewport={'width': w, 'height': h}, has_touch=w < 1100, is_mobile=w < 1100, locale='fr-FR', timezone_id='Europe/Paris')
+        pg = ctx.new_page(); suivre(pg, f'tuiles {w}×{h}'); pg.add_init_script("localStorage.setItem('jg-tour', '1')")
+        pg.goto(BASE + '/'); pg.wait_for_timeout(700)
+        for lg in pg.evaluate("Object.keys(window.JG_I18N)"):
+            pg.evaluate(f"localStorage.setItem('jg-lang', '{lg}')")
+            pg.reload(); pg.wait_for_timeout(500)
+            r = pg.evaluate("""(() => { document.getElementById('availBtn').click(); const c = document.querySelector('#briefPanel .card'), out = [];
+              const tu = c.querySelectorAll('#briefList > div'), pa = c.querySelectorAll('#briefDoms li');
+              if (tu.length !== 4) out.push(tu.length + ' tuiles');
+              if (pa.length !== 6) out.push(pa.length + ' pastilles');
+              if (c.querySelector('#briefClose')) out.push('bouton Fermer encore là');
+              if (c.querySelectorAll('.actions button').length !== 2) out.push('pas 2 boutons principaux');
+              const cr = c.getBoundingClientRect();
+              c.querySelectorAll('#briefList > div, #briefDoms li, .actions button, .brief-links button').forEach(e => { const q = e.getBoundingClientRect(); if (q.right > cr.right + 1 || q.left < cr.left - 1 || e.scrollWidth > e.clientWidth + 2) out.push('déborde : ' + e.textContent.slice(0, 30)); });
+              if (cr.right > innerWidth + 1 || cr.left < -1) out.push('fenêtre hors écran');
+              if (!document.getElementById('briefDomLbl').textContent.trim()) out.push('titre des domaines vide');
+              return out; })()""")
+            for p_ in r: erreurs.append(f'{w}×{h} {lg} : fiche « En 30 secondes » : {p_}')
+        ctx.close()
+    ok('fiche « En 30 secondes » en tuiles : 4 tuiles, 6 domaines, 2 boutons, dans les 6 langues, du 320 px à l’ordinateur')
     # Fluidité : le jeu va à la même vitesse sur un écran 30 Hz, 60 Hz, 144 Hz ou 240 Hz (hasard figé pour comparer)
     # Une machine surchargée (GitHub lance plusieurs vérifications à la fois) peut ralentir une seule mesure :
     # en cas d'écart, on refait la mesure (2 fois au plus) et on garde le meilleur temps de chaque fréquence.

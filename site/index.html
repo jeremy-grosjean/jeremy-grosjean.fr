@@ -29,7 +29,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="J. Grosjean">
 <link rel="manifest" href="/site.webmanifest?v=7885a6aedf">
-<link rel="stylesheet" href="/assets/app.css?v=7add0c2183">
+<link rel="stylesheet" href="/assets/app.css?v=58dc25ea4a">
 <script src="/assets/i18n.js?v=e3234991b4" defer></script>
 <script src="/assets/labs.js?v=28d66e0db4" defer></script>
 <script src="/assets/labs2.js?v=194508f5f9" defer></script>
@@ -37,10 +37,10 @@
 <script src="/assets/labs4.js?v=1f113c584a" defer></script>
 <script src="/assets/labs5.js?v=60720498d6" defer></script>
 <script src="/assets/labs6.js?v=716e5179dc" defer></script>
-<script src="/assets/labs7.js?v=139f325add" defer></script>
+<script src="/assets/labs7.js?v=e8dbf7c1c1" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=84c57dfe3b" defer></script>
+<script src="/assets/app.js?v=f6b5ef57d6" defer></script>
 </head>
 <body>
 <canvas id="net" aria-hidden="true"></canvas>
@@ -583,9 +583,11 @@
 <div class="panel" id="briefPanel" role="dialog" aria-modal="true" aria-labelledby="briefTitle">
   <div class="card">
     <h2 id="briefTitle" data-i="briefTitle">En 30 secondes</h2>
-    <dl class="brief" id="briefList"></dl>
-    <div class="brief-more"><button class="chip-btn" id="briefSkills" type="button" data-i="skBtn">Mes compétences</button><button class="chip-btn" id="briefFaq" type="button" data-i="faqBtn">Questions fréquentes</button><button class="chip-btn" id="briefSlot" type="button" data-i="slotBtn">Proposer un créneau</button><button class="chip-btn" id="briefShare" type="button" data-i="shBtn">Partager</button></div>
-    <div class="actions"><button class="btn" id="briefContact" type="button" data-i="contactBtn">Me contacter</button><button class="btn-ghost" id="briefRec" type="button" data-i="recOpen">Vue sur une page</button><button class="btn-ghost" id="briefClose" type="button" data-i="close">Fermer</button></div>
+    <dl class="brief-tiles" id="briefList"></dl>
+    <p class="brief-dom-lbl" id="briefDomLbl"></p>
+    <ul class="brief-doms" id="briefDoms"></ul>
+    <div class="actions"><button class="btn" id="briefContact" type="button" data-i="contactBtn">Me contacter</button><button class="btn-ghost" id="briefSlot" type="button" data-i="slotBtn">Proposer un créneau</button></div>
+    <div class="brief-links"><button class="link-btn" id="briefSkills" type="button" data-i="skBtn">Mes compétences</button><button class="link-btn" id="briefFaq" type="button" data-i="faqBtn">Questions fréquentes</button><button class="link-btn" id="briefRec" type="button" data-i="recOpen">Vue sur une page</button><button class="link-btn" id="briefShare" type="button" data-i="shBtn">Partager</button></div>
   </div>
 </div>
 

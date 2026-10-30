@@ -1167,9 +1167,12 @@
 
   /* ================= Fiche « En 30 secondes » ================= */
   function openBrief() {
-    const dl = $('briefList'); dl.textContent = '';
-    for (const [k, v] of t('brief')) { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; dl.append(dt, dd); }
-    glossify(dl); closeTerm(); openPanel('briefPanel', 'briefContact');
+    /* 4 tuiles (l'essentiel en gros, lisible en 5 secondes), puis les domaines de la formation en pastilles */
+    const dl = $('briefList'), ul = $('briefDoms'); dl.textContent = ''; ul.textContent = '';
+    for (const [k, v] of t('briefTiles')) { const d = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; d.append(dt, dd); dl.append(d); }
+    const b = t('brief'); $('briefDomLbl').textContent = (b[b.length - 1] || [''])[0];
+    for (const x of t('domains')) { const li = document.createElement('li'); li.textContent = x.charAt(0).toLocaleUpperCase(lang) + x.slice(1); ul.append(li); }
+    glossify(dl); glossify(ul); closeTerm(); openPanel('briefPanel', 'briefContact');
   }
   $('availBtn').addEventListener('click', openBrief);
 
@@ -1202,7 +1205,6 @@
   window.addEventListener('beforeprint', fillRec);
   window.addEventListener('hashchange', () => { if (REC_HASH.includes(location.hash)) openRec(); else if (recOn()) closeRec(); });
   if (REC_HASH.includes(location.hash)) setTimeout(openRec, 0);
-  $('briefClose').addEventListener('click', closePanels);
   $('briefContact').addEventListener('click', () => $('contactBtn').click());
 
   /* ================= Choix du jeu + simulateur de support N1 ================= */

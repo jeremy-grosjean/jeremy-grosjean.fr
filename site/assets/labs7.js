@@ -6,6 +6,7 @@
     fr: {
       playN: (n) => `Jouer : ${n} mini-jeux`, tourPlayN: (n) => `${n} mini-jeux sur mon métier : support, systèmes, réseau et sécurité.`,
       verTitle: 'Version en ligne : voir le code correspondant sur GitHub',
+      briefTiles: [['Titre obtenu', 'TAI niveau 4 (2023)'], ['Alternance recherchée', 'Technicien informatique (Bac+2)'], ['Rythme', '4 j entreprise / 1 j formation'], ['Durée · disponibilité', '12 mois · immédiate']],
       wmApp: 'Ma messagerie', wmAppSub: 'Mail, Outlook, Thunderbird… installée sur l’ordinateur', keepLbl: 'Garder mon contact :',
       pickNoNetT: 'Plus d’Internet', pickNoNetD: 'Un utilisateur n’a plus Internet : vérifiez dans le bon ordre, du câble au navigateur.',
       niTag: (n, t) => `Poste ${n}/${t} · Réseau`, niMethodL: 'La méthode', niLogL: 'Vos vérifications',
@@ -38,6 +39,7 @@
     en: {
       playN: (n) => `Play: ${n} mini-games`, tourPlayN: (n) => `${n} mini-games about my job: support, systems, network and security.`,
       verTitle: 'Live version: see the matching code on GitHub',
+      briefTiles: [['Title earned', 'TAI level 4 (2023)'], ['Looking for', 'Work-study, IT Technician (2-year degree)'], ['Schedule', '4 days work / 1 day training'], ['Length · start', '12 months · now']],
       wmApp: 'My mail app', wmAppSub: 'Mail, Outlook, Thunderbird… installed on this computer', keepLbl: 'Keep my contact:',
       pickNoNetT: 'No more Internet', pickNoNetD: 'A user has lost the Internet: check things in the right order, from the cable to the browser.',
       niTag: (n, t) => `Computer ${n}/${t} · Network`, niMethodL: 'The method', niLogL: 'Your checks',
@@ -70,6 +72,7 @@
     'zh-Hans': {
       playN: (n) => `玩：${n} 个小游戏`, tourPlayN: (n) => `${n} 个与我的职业相关的小游戏：技术支持、系统、网络和安全。`,
       verTitle: '当前在线版本：在 GitHub 上查看对应代码',
+      briefTiles: [['已获资格', 'TAI 4 级（2023）'], ['寻找', '工学交替：IT 技术员（Bac+2）'], ['节奏', '每周 4 天企业 / 1 天培训'], ['时长 · 入职', '12 个月 · 立即']],
       wmApp: '本机邮件应用', wmAppSub: '电脑上安装的 Mail、Outlook、Thunderbird 等', keepLbl: '保存我的联系方式：',
       pickNoNetT: '上不了网', pickNoNetD: '用户上不了网：按正确顺序排查，从网线到浏览器。',
       niTag: (n, t) => `电脑 ${n}/${t} · 网络`, niMethodL: '排查方法', niLogL: '你的检查',
@@ -102,6 +105,7 @@
     'zh-Hant': {
       playN: (n) => `玩：${n} 個小遊戲`, tourPlayN: (n) => `${n} 個與我的職業相關的小遊戲：技術支援、系統、網路和資安。`,
       verTitle: '目前上線版本：在 GitHub 上查看對應程式碼',
+      briefTiles: [['已取得資格', 'TAI 第 4 級（2023）'], ['尋找', '建教合作：IT 技術員（Bac+2）'], ['節奏', '每週 4 天企業 / 1 天上課'], ['期間 · 到職', '12 個月 · 立即']],
       wmApp: '本機郵件程式', wmAppSub: '電腦上安裝的 Mail、Outlook、Thunderbird 等', keepLbl: '儲存我的聯絡方式：',
       pickNoNetT: '上不了網', pickNoNetD: '使用者上不了網：依正確順序檢查，從網路線到瀏覽器。',
       niTag: (n, t) => `電腦 ${n}/${t} · 網路`, niMethodL: '檢查方法', niLogL: '你的檢查',
@@ -134,6 +138,7 @@
     yue: {
       playN: (n) => `玩：${n} 個小遊戲`, tourPlayN: (n) => `${n} 個同我份工有關嘅小遊戲：技術支援、系統、網絡同保安。`,
       verTitle: '而家上線嘅版本：喺 GitHub 睇對應嘅程式碼',
+      briefTiles: [['已攞資格', 'TAI 第 4 級（2023）'], ['搵緊', '工讀交替：IT 技術員（Bac+2）'], ['節奏', '每星期 4 日返公司 / 1 日上堂'], ['為期 · 開工', '12 個月 · 即刻']],
       wmApp: '部電腦嘅電郵程式', wmAppSub: '電腦裝咗嘅 Mail、Outlook、Thunderbird 等等', keepLbl: '儲低我嘅聯絡方法：',
       pickNoNetT: '上唔到網', pickNoNetD: '用戶上唔到網：跟正確次序檢查，由網線查到瀏覽器。',
       niTag: (n, t) => `電腦 ${n}/${t} · 網絡`, niMethodL: '檢查方法', niLogL: '你嘅檢查',
@@ -166,6 +171,7 @@
     ko: {
       playN: (n) => `게임하기: 미니게임 ${n}개`, tourPlayN: (n) => `제 직무에 관한 미니게임 ${n}개: 지원, 시스템, 네트워크, 보안.`,
       verTitle: '현재 버전: GitHub에서 해당 코드 보기',
+      briefTiles: [['취득 자격', 'TAI 4단계 (2023)'], ['구직', '일·학습 병행: IT 기술자 (Bac+2)'], ['일정', '주 4일 근무 / 1일 교육'], ['기간 · 시작', '12개월 · 즉시']],
       wmApp: '내 메일 앱', wmAppSub: '이 컴퓨터에 설치된 Mail, Outlook, Thunderbird 등', keepLbl: '내 연락처 저장:',
       pickNoNetT: '인터넷이 안 돼요', pickNoNetD: '사용자의 인터넷이 끊겼습니다. 케이블부터 브라우저까지 올바른 순서로 점검하세요.',
       niTag: (n, t) => `PC ${n}/${t} · 네트워크`, niMethodL: '점검 방법', niLogL: '점검 내용',
