@@ -29,7 +29,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="J. Grosjean">
 <link rel="manifest" href="/site.webmanifest?v=9b028ebede">
-<link rel="stylesheet" href="/assets/app.css?v=38b66c88e1">
+<link rel="stylesheet" href="/assets/app.css?v=9a18aca8bc">
 <script src="/assets/i18n.js?v=e3234991b4" defer></script>
 <script src="/assets/labs.js?v=28d66e0db4" defer></script>
 <script src="/assets/labs2.js?v=194508f5f9" defer></script>
@@ -37,10 +37,10 @@
 <script src="/assets/labs4.js?v=1f113c584a" defer></script>
 <script src="/assets/labs5.js?v=60720498d6" defer></script>
 <script src="/assets/labs6.js?v=716e5179dc" defer></script>
-<script src="/assets/labs7.js?v=4ed440bdb3" defer></script>
+<script src="/assets/labs7.js?v=4720be6dc1" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=52e2e1be18" defer></script>
+<script src="/assets/app.js?v=b460fc5d90" defer></script>
 </head>
 <body>
 <a class="skip" id="skipLink" href="#contactBtn" data-i="skipLink">Aller au contenu</a>
@@ -157,7 +157,7 @@
     </button>
     <button class="pill" id="sizeBtn" type="button">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 19 7.5 6l5 13M4.4 14.5h6.2"/><path d="M14 19l3.5-8 3.5 8M15.2 16.2h4.6"/></svg>
-      <span class="lbl">A</span><span class="lbl-s" aria-hidden="true" data-i="sizeShort">Texte</span>
+      <span class="size-w" aria-hidden="true">Taille du texte :</span><span class="lbl">A</span><span class="lbl-s" aria-hidden="true" data-i="sizeShort">Texte</span>
     </button>
     <button class="pill size-reset-dock" id="sizeResetDock" type="button" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>
@@ -387,7 +387,9 @@
   <div class="card">
     <h2 id="glossTitle" data-i="glossTitle">Le jargon expliqué</h2>
     <p data-i="glossSub">Les mots techniques du site, en une phrase chacun.</p>
+    <div class="gl-search"><input type="search" id="glossQ" autocomplete="off" spellcheck="false" enterkeyhint="search" aria-label="Chercher un mot" placeholder="Chercher : DNS, VLAN, GPO…"><span class="gl-n" id="glossN" aria-live="polite"></span></div>
     <dl class="gl-list" id="glossList"></dl>
+    <p class="gl-none" id="glossNone" hidden></p>
     <div class="actions"><button class="btn-ghost" id="glossClose" type="button" data-i="close">Fermer</button></div>
   </div>
 </div>
@@ -592,6 +594,7 @@
 <div class="panel" id="briefPanel" role="dialog" aria-modal="true" aria-labelledby="briefTitle">
   <div class="card">
     <h2 id="briefTitle" data-i="briefTitle">En 30 secondes</h2>
+    <p class="brief-avail"><span class="avail-dot" aria-hidden="true"></span><span data-i="briefAvail">Disponible immédiatement</span></p>
     <dl class="brief-tiles" id="briefList"></dl>
     <p class="brief-dom-lbl" id="briefDomLbl"></p>
     <ul class="brief-doms" id="briefDoms"></ul>

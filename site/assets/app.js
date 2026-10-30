@@ -1207,7 +1207,7 @@
   function openBrief() {
     /* 4 tuiles (l'essentiel en gros, lisible en 5 secondes), puis les domaines de la formation en pastilles */
     const dl = $('briefList'), ul = $('briefDoms'); dl.textContent = ''; ul.textContent = '';
-    for (const [k, v] of t('briefTiles')) { const d = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; d.append(dt, dd); dl.append(d); }
+    for (const [k, v, sub] of t('briefTiles')) { const d = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; if (sub) { const s = document.createElement('span'); s.className = 'sub'; s.textContent = sub; dd.append(s); } d.append(dt, dd); dl.append(d); }
     const b = t('brief'); $('briefDomLbl').textContent = (b[b.length - 1] || [''])[0];
     for (const x of t('domains')) { const li = document.createElement('li'); li.textContent = x.charAt(0).toLocaleUpperCase(lang) + x.slice(1); ul.append(li); }
     glossify(dl); glossify(ul); closeTerm(); openPanel('briefPanel', 'briefContact');
@@ -1742,9 +1742,28 @@
   function openGloss() {
     hideTip();
     const dl = $('glossList'); dl.textContent = '';
-    for (const [term, def] of glossEntries()) { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = term; dd.textContent = def; dl.append(dt, dd); }
+    for (const [term, def] of glossEntries()) { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = term; dd.textContent = def; dt.dataset.t = term; dd.dataset.t = def; dl.append(dt, dd); }
+    const q = $('glossQ'); q.value = ''; q.placeholder = t('glQ'); q.setAttribute('aria-label', t('glQLbl')); glossFilter();
     closeTerm(); openPanel('glossPanel', null); $('glossClose').focus({ preventScroll: true }); $('glossPanel').querySelector('.card').scrollTop = 0;
   }
+  /* Recherche dans le glossaire : filtre les mots et les définitions (sans tenir compte des accents) et surligne ce qui est trouvé */
+  const sansAccent = ch => ch.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().charAt(0) || ch;
+  const normTxt = s => Array.from(s, sansAccent).join('');
+  function surligne(el, k) {
+    const txt = el.dataset.t || ''; el.textContent = '';
+    const n = k ? normTxt(txt) : '', i = k ? n.indexOf(k) : -1, chars = Array.from(txt);
+    if (i < 0) { el.textContent = txt; return; }
+    const m = document.createElement('mark'); m.textContent = chars.slice(i, i + k.length).join('');
+    el.append(chars.slice(0, i).join(''), m, chars.slice(i + k.length).join(''));
+  }
+  function glossFilter() {
+    const k = normTxt($('glossQ').value.trim()), dl = $('glossList'), dts = [...dl.querySelectorAll('dt')]; let c = 0;
+    for (const dt of dts) { const dd = dt.nextElementSibling; const ok = !k || normTxt(dt.dataset.t).includes(k) || normTxt(dd.dataset.t).includes(k); dt.hidden = dd.hidden = !ok; if (ok) { c++; surligne(dt, k); surligne(dd, k); } }
+    $('glossN').textContent = typeof t('glN') === 'function' ? t('glN')(c, dts.length) : '';
+    const none = $('glossNone'); none.hidden = c > 0; none.textContent = c ? '' : t('glNone');
+    try { const cd = $('glossPanel').querySelector('.card'); cd.scrollTop = 0; suiteEnDessous(cd); } catch (e) {}
+  }
+  $('glossQ').addEventListener('input', glossFilter);
   $('glTipMore').addEventListener('click', openGloss);
   $('glossBtn').addEventListener('click', openGloss);
   $('glossClose').addEventListener('click', closePanels);
@@ -2636,7 +2655,7 @@
   const SIZES = ['m', 'l', 'xl'];
   function sizeUI() {
     const b = $('sizeBtn'); if (!b) return; const nm = t('sizeNames')[A11Y.size] || 'A';
-    b.querySelector('.lbl').textContent = nm; try { fxUI(); } catch (e) {} const lbl = t('sizeBtn') + (lang === 'fr' ? ' : ' : (lang === 'en' || lang === 'ko') ? ': ' : '：') + nm; b.setAttribute('aria-label', lbl); b.title = lbl;
+    b.querySelector('.lbl').textContent = nm; { const sw = b.querySelector('.size-w'); if (sw) sw.textContent = t('sizeBtn') + (lang === 'fr' ? ' :' : ':'); } try { fxUI(); } catch (e) {} const lbl = t('sizeBtn') + (lang === 'fr' ? ' : ' : (lang === 'en' || lang === 'ko') ? ': ' : '：') + nm; b.setAttribute('aria-label', lbl); b.title = lbl;
   }
   { const seg = document.querySelector('.a11y .seg');
     if (seg && !seg.querySelector('[data-size="xl"]')) { const x = document.createElement('button'); x.type = 'button'; x.dataset.size = 'xl'; x.setAttribute('aria-pressed', String(A11Y.size === 'xl')); x.textContent = 'A++'; seg.append(x);

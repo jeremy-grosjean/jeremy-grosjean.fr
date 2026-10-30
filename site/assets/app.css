@@ -1244,3 +1244,61 @@ body.deja-vu .hint, body.deja-vu .keys { display: none; }
 .skip:focus, .skip:focus-visible { transform: translate(-50%, 0); outline: 2px solid var(--cyan); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { .skip { transition: none; } }
 .fit-probe { position: absolute; left: 0; top: 0; width: 0; height: 0; overflow: hidden; visibility: hidden; pointer-events: none; }
+
+/* ================= Lot 21 : cinq finitions mesurées ================= */
+/* 15 · Retour visuel au toucher : le bouton s'enfonce légèrement pendant l'appui (le surlignage du navigateur est coupé) */
+.btn:active { transform: translateY(0) scale(.96); filter: brightness(.92); }
+.btn-ghost:active, .pill:active, .icon-btn:active, .lang-btn:active, .score:active, .wm:active, .pick:active, .panel-x:active { transform: scale(.95); filter: brightness(.94); }
+/* 16 · Les fenêtres s'ouvrent avec un fondu court, comme le menu des langues */
+.panel.open { animation: panFade .18s ease both; }
+.panel.open .card { animation: cardIn .2s cubic-bezier(.2, .9, .25, 1.1) both; }
+@keyframes panFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes cardIn { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .panel.open, .panel.open .card { animation: none; } }
+/* 17 · Ordinateur : « Taille du texte : A » écrit sur le bouton */
+.size-w { display: none; }
+@media (min-width: 1100px) { #sizeBtn .size-w { display: inline; color: var(--dim); font-weight: 500; } }
+/* 18 · Glossaire : recherche */
+.gl-search { display: flex; align-items: center; gap: .6rem; margin: 0 0 .9rem; }
+.gl-search input { flex: 1; min-width: 0; font: inherit; font-size: .95rem; color: var(--ink); background: rgba(var(--node-rgb), .05); border: 1px solid var(--line); border-radius: 10px; padding: .55rem .75rem; -webkit-user-select: text; user-select: text; }
+.gl-search input:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }
+.gl-n { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .78rem; color: var(--dim); white-space: nowrap; }
+.gl-list mark { background: rgba(var(--warn-rgb), .3); color: inherit; border-radius: 3px; padding: 0 1px; }
+.gl-list dt[hidden], .gl-list dd[hidden] { display: none; }
+.gl-none { text-align: center; color: var(--dim); font-size: .92rem; }
+/* 19 · Écran tactile : croix des fenêtres et langues du menu à 44 px */
+@media (pointer: coarse) and (min-width: 301px) {
+  .panel-x { width: 2.75rem; height: 2.75rem; }
+  .lang-list li { min-height: 2.75rem; }
+  .card > .panel-x-wrap + .g-band, .card > .panel-x-wrap + .g-band.slim { margin-right: 2.1rem; }
+}
+
+/* ================= Lot 22 : fiche « En 30 secondes » rangée et alignée ================= */
+/* Deux espacements seulement : .5rem (8 px) dans un groupe, 1rem (16 px) entre les groupes */
+#briefPanel .card { text-align: left; }
+#briefPanel .card h2 { text-align: center; margin-bottom: .5rem; }
+/* La disponibilité, information la plus forte, juste sous le titre */
+#briefPanel .brief-avail { display: flex; align-items: center; gap: .45rem; width: fit-content; margin: 0 auto 1rem; padding: .3rem .85rem; border-radius: 999px; background: rgba(var(--ok-rgb), .12); color: var(--ok); font-size: .85rem; font-weight: 600; }
+/* 4 tuiles de même construction : libellé, valeur en gras, complément en gris */
+.brief-tiles { gap: .5rem; margin: 0 0 1rem; }
+.brief-tiles > div { display: flex; flex-direction: column; gap: .15rem; }
+.brief-tiles dt { margin: 0; }
+.brief-tiles .sub { display: block; margin-top: .15rem; font-weight: 400; font-size: .8rem; color: var(--dim); }
+/* Domaines : titre aligné sur les tuiles, pastilles en 2 colonnes (plus de pastille seule sur sa ligne) */
+#briefPanel .brief-dom-lbl { text-align: left; margin: 0 0 .5rem; }
+.brief-doms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; margin: 0 0 1rem; }
+.brief-doms li { display: block; text-align: center; white-space: normal; text-wrap: balance; padding: .35rem .6rem; line-height: 1.3; }
+/* Deux boutons de même largeur, alignés sur les colonnes */
+#briefPanel .actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; margin: 0; }
+#briefPanel .actions > button { width: 100%; padding-left: .6rem; padding-right: .6rem; }
+/* Quatre liens en vrais boutons, rangés 2 par 2 */
+.brief-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; margin: .5rem 0 0; }
+.brief-links .link-btn { display: flex; align-items: center; justify-content: center; text-align: center; min-height: 2.75rem; padding: .35rem .5rem; border: 1px solid var(--line); border-radius: 12px; text-decoration: none; line-height: 1.25; }
+.brief-links .link-btn:hover { border-color: var(--line-accent); color: var(--ink); }
+.brief-links .link-btn:active { transform: scale(.96); }
+@media (max-width: 380px) { #briefPanel .actions { grid-template-columns: 1fr; } }
+/* La croix ✕ et le titre ont le même centre : le titre prend la hauteur de la croix, la croix part du haut du titre */
+#briefPanel .panel-x-wrap { top: 0; } #briefPanel .panel-x { top: 0; }
+#briefPanel .card > .panel-x-wrap + h2 { display: flex; align-items: center; justify-content: center; min-height: 2.4rem; }
+@media (pointer: coarse) and (min-width: 301px) { #briefPanel .card > .panel-x-wrap + h2 { min-height: 2.75rem; } }
+@media (max-width: 300px) { #briefPanel .card > .panel-x-wrap + h2 { min-height: 2.2rem; } }
