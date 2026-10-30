@@ -462,6 +462,12 @@ with sync_playwright() as p:
               return out; }})()""")
             for p_ in pb:
                 erreurs.append(f'{w}×{h} : fenêtre {panneau} : {p_}')
+            if panneau == 'contactPanel':
+                # Fenêtre contact : messageries de même hauteur, plus de bouton « Fermer » (la croix suffit), QR code = fiche contact
+                ct = pg.evaluate("""(() => { const c = document.querySelector('#contactPanel .card'), h = [...c.querySelectorAll('.webmail .wm:not(.wm-wide)')].map(b => Math.round(b.getBoundingClientRect().height));
+                  return { ecart: Math.max(...h) - Math.min(...h), fermer: !!document.getElementById('contactClose'), qr: document.getElementById('qrImg').getAttribute('src'), app: !!c.querySelector('.webmail #openMail') }; })()""")
+                if ct['ecart'] > 1 or ct['fermer'] or 'qr-contact.svg' not in ct['qr'] or not ct['app']:
+                    erreurs.append(f'{w}×{h} : fenêtre contact {ct}')
             pg.evaluate("document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open'))")
         ctx.close()
     ok(f'{len(ECRANS)} formes d’écran, du 200×200 au 8K : rien ne déborde ni ne se chevauche, la croix ne touche aucun bandeau')

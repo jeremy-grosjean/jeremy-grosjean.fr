@@ -175,7 +175,7 @@ else
   fi
   exit 1
 fi
-for f in assets/app.css assets/app.js assets/i18n.js assets/labs.js assets/labs2.js assets/labs3.js assets/labs4.js assets/labs5.js assets/labs6.js assets/labs7.js assets/fonts/sora.woff assets/news.js .well-known/security.txt favicon.ico favicon.svg apple-touch-icon.png site.webmanifest og.jpg 404.html assets/404.css assets/404.js mentions-legales.html accessibilite.html assets/legal.css assets/legal.js assets/a11y.js sw.js qr.svg contact.vcf assets/status.js; do
+for f in assets/app.css assets/app.js assets/i18n.js assets/labs.js assets/labs2.js assets/labs3.js assets/labs4.js assets/labs5.js assets/labs6.js assets/labs7.js assets/fonts/sora.woff assets/news.js .well-known/security.txt favicon.ico favicon.svg apple-touch-icon.png site.webmanifest og.jpg 404.html assets/404.css assets/404.js mentions-legales.html accessibilite.html assets/legal.css assets/legal.js assets/a11y.js sw.js qr.svg qr-contact.svg contact.vcf assets/status.js; do
   C="$(curl -s -o /dev/null -w '%{http_code}' "$SITE/$f")"
   [ "$C" = "200" ] && ok "$f (HTTP 200)" || printf '%s✗ %s (code %s)%s\n' "$ROUGE" "$f" "$C" "$FIN"
 done

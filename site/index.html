@@ -26,18 +26,18 @@
 <link rel="icon" href="/favicon.svg?v=c653120d20" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=ea10cf004d">
 <link rel="manifest" href="/site.webmanifest?v=1170d79b15">
-<link rel="stylesheet" href="/assets/app.css?v=6750dd7284">
-<script src="/assets/i18n.js?v=405758b458" defer></script>
+<link rel="stylesheet" href="/assets/app.css?v=92878c37e3">
+<script src="/assets/i18n.js?v=e3234991b4" defer></script>
 <script src="/assets/labs.js?v=28d66e0db4" defer></script>
 <script src="/assets/labs2.js?v=194508f5f9" defer></script>
 <script src="/assets/labs3.js?v=e42ceff3d6" defer></script>
 <script src="/assets/labs4.js?v=1f113c584a" defer></script>
 <script src="/assets/labs5.js?v=60720498d6" defer></script>
 <script src="/assets/labs6.js?v=716e5179dc" defer></script>
-<script src="/assets/labs7.js?v=daf6f9b419" defer></script>
+<script src="/assets/labs7.js?v=41d2cee30f" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=ccd2bbd3cc" defer></script>
+<script src="/assets/app.js?v=dd931b3d09" defer></script>
 </head>
 <body>
 <canvas id="net" aria-hidden="true"></canvas>
@@ -246,26 +246,26 @@
     <h2 id="contactTitle" data-i="contactTitle">Me contacter</h2>
     <p data-i="contactIntro">Pour une alternance, une question ou un échange, écrivez-moi :</p>
     <p class="mail-box"><span id="mailAddr">contact [at] jeremy-grosjean.fr</span></p>
+    <div class="actions contact-main">
+      <button class="btn" id="copyMail" type="button" data-i="copyMail">Copier l’adresse</button>
+      <button class="btn-ghost" id="contactSlot" type="button" data-i="slotBtn">Proposer un créneau</button>
+    </div>
     <p class="wm-lbl" data-i="wmLabel">Écrire en un clic avec :</p>
     <div class="webmail">
-      <a class="wm" id="wmGmail" href="#" target="_blank" rel="noopener noreferrer"><i class="wm-dot g" aria-hidden="true"></i><span>Gmail</span></a>
-      <a class="wm" id="wmOutlook" href="#" target="_blank" rel="noopener noreferrer"><i class="wm-dot o" aria-hidden="true"></i><span>Outlook</span></a>
-      <a class="wm" id="wmPro" href="#" target="_blank" rel="noopener noreferrer"><i class="wm-dot p" aria-hidden="true"></i><span data-i="wmPro">Outlook pro</span><small>Microsoft 365</small></a>
-      <a class="wm" id="wmYahoo" href="#" target="_blank" rel="noopener noreferrer"><i class="wm-dot y" aria-hidden="true"></i><span>Yahoo Mail</span></a>
+      <a class="wm" id="wmGmail" href="#" target="_blank" rel="noopener noreferrer"><i class="wm-dot g" aria-hidden="true"></i><span class="wm-t"><span>Gmail</span><small>Google</small></span></a>
+      <a class="wm" id="wmOutlook" href="#" target="_blank" rel="noopener noreferrer"><i class="wm-dot o" aria-hidden="true"></i><span class="wm-t"><span>Outlook</span><small>Outlook.com</small></span></a>
+      <a class="wm" id="wmPro" href="#" target="_blank" rel="noopener noreferrer"><i class="wm-dot p" aria-hidden="true"></i><span class="wm-t"><span data-i="wmPro">Outlook pro</span><small>Microsoft 365</small></span></a>
+      <a class="wm" id="wmYahoo" href="#" target="_blank" rel="noopener noreferrer"><i class="wm-dot y" aria-hidden="true"></i><span class="wm-t"><span>Yahoo Mail</span><small>Yahoo</small></span></a>
+      <a class="wm wm-wide" id="openMail" href="#"><i class="wm-dot m" aria-hidden="true"></i><span class="wm-t"><span data-i="wmApp">Ma messagerie</span><small data-i="wmAppSub">Mail, Outlook, Thunderbird… installée sur l’ordinateur</small></span></a>
     </div>
     <p class="wm-note" data-i="wmNote">Le message s’ouvre déjà rempli dans votre compte. Rien ne passe par ce site.</p>
+    <p class="wm-lbl" data-i="keepLbl">Garder mon contact :</p>
     <div class="contact-extra">
-      <img class="qr" src="/qr.svg" width="120" height="120" alt="QR code : https://jeremy-grosjean.fr" id="qrImg">
+      <img class="qr" src="/qr-contact.svg" width="140" height="140" alt="QR code : fiche contact de Jérémy Grosjean" id="qrImg">
       <div class="contact-side">
-        <p class="qr-cap" data-i="qrCap">Scannez pour ouvrir le site sur un téléphone</p>
+        <p class="qr-cap" data-i="qrCap">Scannez pour enregistrer ma fiche dans votre téléphone</p>
         <a class="btn-ghost vcf" href="/contact.vcf" id="vcfLink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="3.2"/><path d="M3.5 19c.8-3 3-4.6 5.5-4.6s4.7 1.6 5.5 4.6M17 8v6M14 11h6"/></svg><span data-i="saveContact">Ajouter à mes contacts</span></a>
       </div>
-    </div>
-    <div class="actions">
-      <button class="btn-ghost" id="contactSlot" type="button" data-i="slotBtn">Proposer un créneau</button>
-      <button class="btn" id="copyMail" type="button" data-i="copyMail">Copier l’adresse</button>
-      <a class="btn-ghost" id="openMail" href="#" data-i="openMail">Ouvrir ma messagerie</a>
-      <button class="btn-ghost" id="contactClose" type="button" data-i="close">Fermer</button>
     </div>
   </div>
 </div>

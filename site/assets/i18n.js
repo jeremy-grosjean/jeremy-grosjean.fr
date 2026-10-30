@@ -398,7 +398,7 @@ window.JG_I18N = {
 (function (L) {
   const add = (k, o) => { if (L[k]) Object.assign(L[k], o); };
   add('fr', {
-    qrCap: 'Scannez pour ouvrir le site sur un téléphone', saveContact: 'Ajouter à mes contacts',
+    qrCap: 'Scannez pour enregistrer ma fiche dans votre téléphone', saveContact: 'Ajouter à mes contacts',
     secRerun: "Relancer l’audit", secScore: (a, b) => a === b ? `${a}/${b} protections actives · note A+ sur securityheaders.com` : `${a}/${b} protections actives`,
     ecoTitle: 'Léger et accessible', ecoWeight: 'Poids de la page (mesuré)', kb: 'Ko', ecoReq: 'Fichiers chargés', ecoExt: 'Requêtes vers d’autres sites', ecoCookies: 'Cookies',
     ecoFacts: ['Utilisable entièrement au clavier', 'Thème clair ou sombre selon votre appareil', 'Mouvements réduits si votre appareil le demande', 'Disponible en 6 langues', 'Fonctionne sans connexion après une première visite'],
@@ -416,7 +416,7 @@ window.JG_I18N = {
     helpExtra: [['device', 'votre appareil, vu par le site'], ['neofetch', 'fiche système'], ['secrets', 'secrets trouvés']]
   });
   add('en', {
-    qrCap: 'Scan to open the site on a phone', saveContact: 'Add to my contacts',
+    qrCap: 'Scan to save my contact card on your phone', saveContact: 'Add to my contacts',
     secRerun: 'Run the audit again', secScore: (a, b) => a === b ? `${a}/${b} protections active · A+ grade on securityheaders.com` : `${a}/${b} protections active`,
     ecoTitle: 'Light and accessible', ecoWeight: 'Page weight (measured)', kb: 'KB', ecoReq: 'Files loaded', ecoExt: 'Requests to other sites', ecoCookies: 'Cookies',
     ecoFacts: ['Fully usable with a keyboard', 'Light or dark theme from your device', 'Reduced motion if your device asks for it', 'Available in 6 languages', 'Works offline after a first visit'],
@@ -434,7 +434,7 @@ window.JG_I18N = {
     helpExtra: [['device', 'your device, as seen by the site'], ['neofetch', 'system info'], ['secrets', 'secrets found']]
   });
   add('zh-Hans', {
-    qrCap: '扫码在手机上打开本网站', saveContact: '添加到通讯录',
+    qrCap: '扫码把我的名片存到手机里', saveContact: '添加到通讯录',
     secRerun: '重新检测', secScore: (a, b) => a === b ? `${a}/${b} 项防护已启用 · securityheaders.com 评级 A+` : `${a}/${b} 项防护已启用`,
     ecoTitle: '轻量且无障碍', ecoWeight: '页面大小（实测）', kb: 'KB', ecoReq: '加载的文件', ecoExt: '对其他网站的请求', ecoCookies: 'Cookie',
     ecoFacts: ['可完全使用键盘操作', '根据设备自动切换浅色或深色主题', '设备要求时减少动画', '提供 6 种语言', '首次访问后可离线使用'],
@@ -452,7 +452,7 @@ window.JG_I18N = {
     helpExtra: [['device', '网站眼中的您的设备'], ['neofetch', '系统信息'], ['secrets', '已发现的秘密']]
   });
   add('zh-Hant', {
-    qrCap: '掃描即可在手機上開啟本網站', saveContact: '加入聯絡人',
+    qrCap: '掃描即可把我的名片存到手機', saveContact: '加入聯絡人',
     secRerun: '重新檢測', secScore: (a, b) => a === b ? `${a}/${b} 項防護已啟用 · securityheaders.com 評等 A+` : `${a}/${b} 項防護已啟用`,
     ecoTitle: '輕量且無障礙', ecoWeight: '頁面大小（實測）', kb: 'KB', ecoReq: '載入的檔案', ecoExt: '對其他網站的請求', ecoCookies: 'Cookie',
     ecoFacts: ['可完全使用鍵盤操作', '依裝置自動切換淺色或深色主題', '裝置要求時減少動畫', '提供 6 種語言', '首次造訪後可離線使用'],
@@ -470,7 +470,7 @@ window.JG_I18N = {
     helpExtra: [['device', '網站眼中的您的裝置'], ['neofetch', '系統資訊'], ['secrets', '已發現的祕密']]
   });
   add('yue', {
-    qrCap: '掃一掃就可以喺手機打開呢個網站', saveContact: '加入聯絡人',
+    qrCap: '掃一掃就可以將我張名片存落手機', saveContact: '加入聯絡人',
     secRerun: '再檢查一次', secScore: (a, b) => a === b ? `${a}/${b} 項保護已經開咗 · securityheaders.com 評級 A+` : `${a}/${b} 項保護已經開咗`,
     ecoTitle: '輕巧又無障礙', ecoWeight: '頁面大細（實測）', kb: 'KB', ecoReq: '載入咗嘅檔案', ecoExt: '去其他網站嘅請求', ecoCookies: 'Cookie',
     ecoFacts: ['淨用鍵盤都用得晒', '跟你部機自動轉淺色或者深色', '你部機要求嘅話會減少動畫', '有 6 種語言', '第一次睇過之後冇網都用得'],
@@ -488,7 +488,7 @@ window.JG_I18N = {
     helpExtra: [['device', '網站眼中你部機'], ['neofetch', '系統資料'], ['secrets', '搵到嘅秘密']]
   });
   add('ko', {
-    qrCap: '스캔하면 휴대폰에서 사이트가 열립니다', saveContact: '연락처에 추가',
+    qrCap: '스캔하면 휴대폰에 제 연락처가 저장됩니다', saveContact: '연락처에 추가',
     secRerun: '다시 점검', secScore: (a, b) => a === b ? `보호 기능 ${a}/${b} 작동 중 · securityheaders.com 등급 A+` : `보호 기능 ${a}/${b} 작동 중`,
     ecoTitle: '가볍고 접근성 있는 사이트', ecoWeight: '페이지 용량 (측정값)', kb: 'KB', ecoReq: '불러온 파일', ecoExt: '다른 사이트로의 요청', ecoCookies: '쿠키',
     ecoFacts: ['키보드만으로 모두 사용 가능', '기기에 따라 라이트 또는 다크 테마', '기기가 요청하면 움직임 줄이기', '6개 언어 지원', '첫 방문 후 오프라인에서도 작동'],

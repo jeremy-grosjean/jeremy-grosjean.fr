@@ -1109,3 +1109,24 @@ body.rec-on .season-fx, body.playing .season-fx, body.forum-on .season-fx { disp
 @media (max-width: 300px) { .card > .panel-x-wrap + .g-band, .card > .panel-x-wrap + .g-band.slim { margin-right: 1.85rem; } }
 .nobr { white-space: nowrap; }
 @media (max-width: 300px) { .nobr { white-space: normal; } }
+
+/* Fenêtre « Me contacter » : 2 actions principales, messageries de même hauteur, « garder mon contact » */
+.contact-main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; margin: .8rem 0 0; }
+.contact-main > * { width: 100%; justify-content: center; }
+@media (max-width: 440px) { .contact-main { grid-template-columns: minmax(0, 1fr); } }
+.webmail .wm { min-height: 3.3rem; }
+.webmail .wm { flex-wrap: nowrap; }
+.wm-t { display: grid; gap: .05rem; flex: 1; min-width: 0; text-align: left; line-height: 1.25; }
+.wm-t > span { overflow-wrap: anywhere; }
+.wm .wm-t small { flex-basis: auto; margin: 0; }
+.wm-wide { grid-column: 1 / -1; }
+.wm-dot.m { background: var(--dim); }
+.contact-extra .qr { width: 140px; height: 140px; }
+/* Très petits écrans (montres, moins de 300 px) : titre du bandeau sans coupure au milieu d'un mot, messageries sur une colonne */
+@media (max-width: 300px) {
+  .g-band.slim .gb-ic { display: none; }
+  .g-band.slim h2 { font-size: 1.05rem; overflow-wrap: normal; hyphens: auto; }
+  .webmail { grid-template-columns: minmax(0, 1fr); }
+  .wm-t small { overflow-wrap: anywhere; }
+}
+@media (max-width: 360px) { .webmail { grid-template-columns: minmax(0, 1fr); } }

@@ -370,12 +370,12 @@
   document.addEventListener('click', e => {
     const p = e.target;
     if (!p.classList || !p.classList.contains('panel') || !p.classList.contains('open') || downOn !== p) return;
-    const b = $(PANEL_CLOSE[p.id] || ''); if (b) b.click();
+    const b = document.getElementById(PANEL_CLOSE[p.id] || ''); if (b) b.click(); else closePanels();
   });
   for (const [pid, bid] of Object.entries(PANEL_CLOSE)) {
     const card = document.querySelector('#' + pid + ' .card'); if (!card || pid === 'pausePanel') continue;
     const x = document.createElement('button'); x.type = 'button'; x.className = 'panel-x'; x.textContent = '×';
-    x.addEventListener('click', () => { const b = $(bid); if (b) b.click(); });
+    x.addEventListener('click', () => { const b = document.getElementById(bid); if (b) b.click(); else closePanels(); });
     const wrap = document.createElement('div'); wrap.className = 'panel-x-wrap'; wrap.append(x); card.prepend(wrap);
   }
   function openPanel(id, focusId) {
@@ -814,7 +814,6 @@
     toast(t(ok ? 'copied' : 'copyFail')); if (ok) SND.key();
     if (!ok) { const r = document.createRange(); r.selectNodeContents($('mailAddr')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
   }));
-  $('contactClose').addEventListener('click', closePanels);
 
   /* ================= Secrets à trouver (progression gardée sur l'appareil du visiteur) ================= */
   const SECRETS = ['term', 'konami', 'win', 'sudo', 'neofetch', 'keys', 'support', 'support2', 'matrix', 'htop', 'retro'];

@@ -1,9 +1,10 @@
 /* jeremy-grosjean.fr — Lot 19 : jeu « Plus d'Internet », la méthode de diagnostic réseau pas à pas
-   (câble → adresse IP → passerelle → Internet → DNS → navigateur). Textes en 6 langues. */
+   (câble → adresse IP → passerelle → Internet → DNS → navigateur), et fenêtre « Me contacter » rangée en 3 groupes. Textes en 6 langues. */
 (function (L) {
   'use strict';
   const D = {
     fr: {
+      wmApp: 'Ma messagerie', wmAppSub: 'Mail, Outlook, Thunderbird… installée sur l’ordinateur', keepLbl: 'Garder mon contact :',
       pickNoNetT: 'Plus d’Internet', pickNoNetD: 'Un utilisateur n’a plus Internet : vérifiez dans le bon ordre, du câble au navigateur.',
       niTag: (n, t) => `Poste ${n}/${t} · Réseau`, niMethodL: 'La méthode', niLogL: 'Vos vérifications',
       niSteps: ['Câble / Wi-Fi', 'Adresse IP', 'Passerelle', 'Internet', 'DNS'],
@@ -33,6 +34,7 @@
       ]
     },
     en: {
+      wmApp: 'My mail app', wmAppSub: 'Mail, Outlook, Thunderbird… installed on this computer', keepLbl: 'Keep my contact:',
       pickNoNetT: 'No more Internet', pickNoNetD: 'A user has lost the Internet: check things in the right order, from the cable to the browser.',
       niTag: (n, t) => `Computer ${n}/${t} · Network`, niMethodL: 'The method', niLogL: 'Your checks',
       niSteps: ['Cable / Wi-Fi', 'IP address', 'Gateway', 'Internet', 'DNS'],
@@ -62,6 +64,7 @@
       ]
     },
     'zh-Hans': {
+      wmApp: '本机邮件应用', wmAppSub: '电脑上安装的 Mail、Outlook、Thunderbird 等', keepLbl: '保存我的联系方式：',
       pickNoNetT: '上不了网', pickNoNetD: '用户上不了网：按正确顺序排查，从网线到浏览器。',
       niTag: (n, t) => `电脑 ${n}/${t} · 网络`, niMethodL: '排查方法', niLogL: '你的检查',
       niSteps: ['网线 / Wi-Fi', 'IP 地址', '网关', '互联网', 'DNS'],
@@ -91,6 +94,7 @@
       ]
     },
     'zh-Hant': {
+      wmApp: '本機郵件程式', wmAppSub: '電腦上安裝的 Mail、Outlook、Thunderbird 等', keepLbl: '儲存我的聯絡方式：',
       pickNoNetT: '上不了網', pickNoNetD: '使用者上不了網：依正確順序檢查，從網路線到瀏覽器。',
       niTag: (n, t) => `電腦 ${n}/${t} · 網路`, niMethodL: '檢查方法', niLogL: '你的檢查',
       niSteps: ['網路線 / Wi-Fi', 'IP 位址', '閘道', '網際網路', 'DNS'],
@@ -120,6 +124,7 @@
       ]
     },
     yue: {
+      wmApp: '部電腦嘅電郵程式', wmAppSub: '電腦裝咗嘅 Mail、Outlook、Thunderbird 等等', keepLbl: '儲低我嘅聯絡方法：',
       pickNoNetT: '上唔到網', pickNoNetD: '用戶上唔到網：跟正確次序檢查，由網線查到瀏覽器。',
       niTag: (n, t) => `電腦 ${n}/${t} · 網絡`, niMethodL: '檢查方法', niLogL: '你嘅檢查',
       niSteps: ['網線 / Wi-Fi', 'IP 地址', '閘道', '互聯網', 'DNS'],
@@ -149,6 +154,7 @@
       ]
     },
     ko: {
+      wmApp: '내 메일 앱', wmAppSub: '이 컴퓨터에 설치된 Mail, Outlook, Thunderbird 등', keepLbl: '내 연락처 저장:',
       pickNoNetT: '인터넷이 안 돼요', pickNoNetD: '사용자의 인터넷이 끊겼습니다. 케이블부터 브라우저까지 올바른 순서로 점검하세요.',
       niTag: (n, t) => `PC ${n}/${t} · 네트워크`, niMethodL: '점검 방법', niLogL: '점검 내용',
       niSteps: ['케이블 / Wi-Fi', 'IP 주소', '게이트웨이', '인터넷', 'DNS'],
