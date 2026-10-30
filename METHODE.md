@@ -76,7 +76,7 @@ La version en ligne est minifiée et servie avec une politique de sécurité str
 - à chaque demande de fusion ;
 - chaque lundi, pour détecter un problème venu d'une mise à jour du navigateur ou d'un outil.
 
-Les tests tournent dans trois fuseaux horaires, plus sur la version en ligne. Dependabot propose les mises à jour des actions GitHub utilisées.
+Les tests tournent dans trois fuseaux horaires, plus sur la version en ligne. Dependabot signale par une simple alerte les actions GitHub à mettre à jour, sans jamais écrire de commit : chaque commit est signé par Jérémy Grosjean seul, ce que vérifient le crochet commit-msg, outils/verifier.py à chaque envoi et la surveillance de chaque matin (liste des contributeurs sur GitHub).
 
 Aucun mot de passe ni clé n'est confié à GitHub.
 

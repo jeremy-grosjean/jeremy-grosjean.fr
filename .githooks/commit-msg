@@ -3,6 +3,14 @@
 # et des Nouveautés du site propres. Types : feat fix perf docs style refactor test ci chore build
 PREMIERE="$(grep -v '^#' "$1" | head -n 1)"
 case "$PREMIERE" in Merge\ *|Revert\ *|fixup!\ *|squash!\ *) exit 0 ;; esac
+# Un seul auteur autorisé : Jérémy Grosjean, sans aucune ligne de co-auteur
+case "$(git var GIT_AUTHOR_IDENT)" in
+  "Jérémy Grosjean <200603264+jeremy-grosjean@users.noreply.github.com>"*) ;;
+  *) echo "✗ Commit refusé : l'auteur doit être Jérémy Grosjean <200603264+jeremy-grosjean@users.noreply.github.com>" >&2; exit 1 ;;
+esac
+if grep -v '^#' "$1" | grep -qiE '^[[:space:]]*(co-authored-by|generated[ -]with)'; then
+  echo "✗ Commit refusé : ligne de co-auteur interdite dans le message" >&2; exit 1
+fi
 if printf '%s' "$PREMIERE" | grep -qE '^(feat|fix|perf|docs|style|refactor|test|ci|chore|build)(\([a-z0-9._-]+\))?!?: .{3,}'; then
   exit 0
 fi

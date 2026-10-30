@@ -5,7 +5,8 @@
 # 3. JavaScript : syntaxe valide (node --check)
 # 4. Traductions : les 6 langues ont les mêmes textes
 # 5. Secrets : aucun mot de passe, jeton ou clé privée dans le dépôt
-# 6. Poids : le site reste léger
+# 6. Auteurs : chaque commit est écrit par Jérémy Grosjean seul (aucun autre auteur, aucune ligne de co-auteur)
+# 7. Poids : le site reste léger
 import html.parser, json, pathlib, re, subprocess, sys
 
 RACINE = pathlib.Path(__file__).resolve().parent.parent
@@ -189,6 +190,24 @@ for f in suivis:
         if re.search(motif, texte):
             erreur(f'{f} : {quoi} détecté')
 print(f'  {len(suivis)} fichiers du dépôt analysés')
+
+etape('Auteurs')
+# Chaque commit doit être écrit par Jérémy Grosjean seul : aucun autre auteur ni robot, aucune ligne « co-auteur »
+AUTEUR = ('Jérémy Grosjean', '200603264+jeremy-grosjean@users.noreply.github.com')
+if (RACINE / '.git' / 'shallow').exists():  # GitHub Actions ne récupère que le dernier commit : on lit tout l'historique
+    subprocess.run(['git', '-C', str(RACINE), 'fetch', '--quiet', '--unshallow'], capture_output=True)
+journal = subprocess.run(['git', '-C', str(RACINE), 'log', '--format=%H%x1f%an%x1f%ae%x1f%B%x1e'], capture_output=True, text=True).stdout
+nb = 0
+for bloc in journal.split('\x1e'):
+    if not bloc.strip():
+        continue
+    h, nom, mail, corps = bloc.strip('\n').split('\x1f', 3)
+    nb += 1
+    if (nom, mail) != AUTEUR:
+        erreur(f'commit {h[:7]} : auteur « {nom} <{mail}> » (seul {AUTEUR[0]} est autorisé)')
+    if re.search(r'(?im)^\s*(co-authored-by|generated[ -]with)\b', corps):
+        erreur(f'commit {h[:7]} : ligne de co-auteur dans le message')
+print(f'  {nb} commits vérifiés : un seul auteur autorisé, {AUTEUR[0]}')
 
 etape('Poids')
 total = sum(f.stat().st_size for f in SITE.rglob('*') if f.is_file())

@@ -4,7 +4,7 @@
 #   python3 outils/surveiller.py                     vérifie le site en ligne
 #   python3 outils/surveiller.py --url http://…      vérifie une autre adresse (essais locaux : contrôles HTTPS sautés)
 # Nécessite : pip install playwright && python -m playwright install chromium
-import datetime, socket, ssl, sys, urllib.request
+import datetime, json, socket, ssl, sys, urllib.request
 from urllib.parse import urlparse
 from playwright.sync_api import sync_playwright
 
@@ -65,6 +65,18 @@ if HTTPS:
         ok(f'security.txt valable encore {reste} jours') if reste >= 30 else ko(f'security.txt : expire dans {reste} jours')
     except Exception:
         ko(f'security.txt illisible (code {c})')
+
+# Contributeurs du dépôt sur GitHub : uniquement Jérémy Grosjean (ni autre personne, ni robot)
+if URL == 'https://jeremy-grosjean.fr':
+    try:
+        req = urllib.request.Request('https://api.github.com/repos/jeremy-grosjean/jeremy-grosjean.fr/contributors?anon=1',
+                                     headers={'User-Agent': 'surveillance-jeremy-grosjean.fr', 'Accept': 'application/vnd.github+json'})
+        with urllib.request.urlopen(req, timeout=20) as r:
+            noms = [c.get('login') or c.get('name') or c.get('email') for c in json.loads(r.read())]
+        autres = [n for n in noms if n != 'jeremy-grosjean']
+        ok('contributeurs GitHub : uniquement jeremy-grosjean') if noms and not autres else ko(f'contributeurs GitHub inattendus : {autres or noms}')
+    except Exception as e:
+        print(f'  ⚠ liste des contributeurs illisible pour l’instant ({str(e)[:80]})')
 
 # 4. Dans un vrai navigateur, sur ordinateur et sur téléphone : aucune erreur, fenêtres et jeu « Plus d'Internet » jouable
 JEU = """async () => {
