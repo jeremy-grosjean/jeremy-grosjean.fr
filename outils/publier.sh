@@ -54,20 +54,49 @@ elif command -v git >/dev/null 2>&1 && git -C "$DEPOT" rev-parse >/dev/null 2>&1
     demander '  Publier sans attendre la vérification GitHub ?' || arret "Faites Push origin dans GitHub Desktop, attendez la coche verte, puis relancez."
   else
     REPO="$(git -C "$DEPOT" remote get-url origin 2>/dev/null | sed -E 's#(git@github.com:|https://github.com/)##; s#\.git$##')"
-    ETAT="$(curl -s -m 15 -H 'Accept: application/vnd.github+json' "https://api.github.com/repos/$REPO/commits/$SHA/check-runs" | python3 -c '
-import json, sys
+    # État de la vérification GitHub : « état terminés total secondes_écoulées » (lecture publique, sans identifiant)
+    lire_ci() {
+      curl -s -m 15 -H 'Accept: application/vnd.github+json' "https://api.github.com/repos/$REPO/commits/$SHA/check-runs" | python3 -c '
+import json, sys, time, calendar
 try: runs = json.load(sys.stdin).get("check_runs", [])
-except Exception: print("inconnu"); sys.exit()
-if not runs: print("aucun")
-elif any(r.get("status") != "completed" for r in runs): print("encours")
-elif all(r.get("conclusion") in ("success", "skipped", "neutral") for r in runs): print("vert")
-else: print("rouge")' 2>/dev/null || echo inconnu)"
-    case "$ETAT" in
+except Exception: print("inconnu 0 0 0"); sys.exit()
+faits = sum(r.get("status") == "completed" for r in runs)
+debuts = [calendar.timegm(time.strptime(r["started_at"], "%Y-%m-%dT%H:%M:%SZ")) for r in runs if r.get("started_at")]
+ecoule = int(time.time() - min(debuts)) if debuts else 0
+if not runs: etat = "aucun"
+elif faits < len(runs): etat = "encours"
+elif all(r.get("conclusion") in ("success", "skipped", "neutral") for r in runs): etat = "vert"
+else: etat = "rouge"
+print(etat, faits, len(runs), max(0, ecoule))' 2>/dev/null || echo "inconnu 0 0 0"
+    }
+    # Attente avec barre de progression (la vérification dure environ 4 min 30). Ctrl+C pour abandonner.
+    attendre_ci() {
+      local duree=270 debut ecoule pct n barre i derniere=0 limite=$(( $(date +%s) + 900 ))
+      trap 'printf "\n"; arret "Attente interrompue. Relancez la publication quand la vérification sera terminée."' INT
+      printf '%s›%s La vérification GitHub est en cours : je patiente et je continue tout seul (Ctrl+C pour abandonner).\n' "$CYAN" "$FIN"
+      debut=$(( $(date +%s) - ${CI[3]} ))
+      while [ "${CI[0]}" = encours ] || [ "${CI[0]}" = aucun ]; do
+        [ "$(date +%s)" -lt "$limite" ] || break
+        ecoule=$(( $(date +%s) - debut )); pct=$(( ecoule * 100 / duree ))
+        if [ "${CI[2]}" -gt 0 ]; then n=$(( CI[1] * 100 / CI[2] )); [ "$n" -gt "$pct" ] && pct=$n; fi
+        [ "$pct" -gt 99 ] && pct=99
+        barre=''; for ((i = 0; i < 20; i++)); do if [ $(( i * 5 )) -lt "$pct" ]; then barre+='█'; else barre+='░'; fi; done
+        if [ "${CI[0]}" = aucun ]; then printf '\r  ⏳ [%s] la vérification démarre…                    ' "$barre"
+        else printf '\r  ⏳ [%s] %3d %% · %s/%s tests terminés · %d min %02d s   ' "$barre" "$pct" "${CI[1]}" "${CI[2]}" $(( ecoule / 60 )) $(( ecoule % 60 )); fi
+        sleep 1
+        if [ $(( $(date +%s) - derniere )) -ge 20 ]; then derniere=$(date +%s); read -r -a CI <<< "$(lire_ci)"; fi
+      done
+      trap - INT
+      printf '\r  %-78s\r' ''
+    }
+    read -r -a CI <<< "$(lire_ci)"
+    if [ "${CI[0]}" = encours ] || [ "${CI[0]}" = aucun ]; then attendre_ci; fi
+    case "${CI[0]}" in
       vert) printf '%s✓%s Vérification GitHub réussie pour ce commit (%s)\n' "$VERT" "$FIN" "${SHA:0:7}" ;;
       rouge) arret "La vérification GitHub de ce commit a échoué : corrigez d'abord (onglet Actions du dépôt)." ;;
-      encours) printf '%s! La vérification GitHub est encore en cours (environ 4 minutes).%s\n' "$JAUNE" "$FIN"
+      encours|aucun) printf '%s! La vérification GitHub dure anormalement longtemps (plus de 15 minutes).%s\n' "$JAUNE" "$FIN"
                demander '  Publier sans attendre son résultat ?' || arret "Relancez la publication quand la vérification sera terminée." ;;
-      *) printf '%s! Résultat de la vérification GitHub introuvable (%s).%s\n' "$JAUNE" "$ETAT" "$FIN"
+      *) printf '%s! Résultat de la vérification GitHub introuvable (%s).%s\n' "$JAUNE" "${CI[0]}" "$FIN"
          demander '  Publier quand même ?' || arret "Publication annulée." ;;
     esac
   fi
