@@ -1414,6 +1414,12 @@
     const st = ST(), el = $('updLine');
     if (!st || !st.checked) { el.hidden = true; return; }
     el.textContent = ' · ' + t('updatedOn')(fmtDate(st.checked, false)); el.hidden = false;
+    /* Numéro de la version en ligne (écrit par publier.sh), lien vers le code correspondant sur GitHub */
+    const V = window.JG_VERSION;
+    if (V && /^v\d{4}\.\d{2}\.\d{2}\.\d+$/.test(V.v) && /^https:\/\/github\.com\//.test(V.url)) {
+      const a = document.createElement('a'); a.className = 'legal-link ver-link'; a.href = V.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      a.textContent = V.v; a.title = t('verTitle'); el.append(' · ', a);
+    }
   }
   function supRows() {
     const st = ST(), S = t('supLabels'); if (!st) return null;

@@ -102,6 +102,20 @@ Si le site ne répond plus, le `.htaccess` est retiré automatiquement.
 
 En cas d'urgence seulement : `bash outils/publier.sh --forcer` ignore les garde-fous.
 
+Pendant l'attente de la vérification GitHub, le script affiche l'avancement test par test et le temps restant (estimé d'après les dernières vérifications), puis envoie une notification sur le Mac. `bash outils/publier.sh --essai` fait tout sauf l'envoi, pour voir ce qui partirait.
+
+Chaque mise en ligne reçoit un numéro de version (`v2026.10.30.1` : date, puis numéro du jour) : une étiquette Git, affichée en bas du site avec un lien vers le code exact.
+
+## 6 bis. Surveiller le site en ligne
+
+Chaque matin, `.github/workflows/surveiller.yml` lance `outils/surveiller.py` : le vrai site est visité comme par un visiteur, sur ordinateur et sur téléphone.
+
+- Il vérifie la page d'accueil, les fichiers principaux et la page 404.
+- Il vérifie les en-têtes de sécurité, le certificat HTTPS (au moins 14 jours) et `security.txt` (au moins 30 jours).
+- Il ouvre les fenêtres, joue le jeu « Plus d'Internet » jusqu'au bout et contrôle qu'il n'y a aucune erreur dans le navigateur.
+
+En cas de problème (hébergeur, certificat, fichier abîmé), la vérification échoue et GitHub envoie un e-mail. C'est de la surveillance synthétique : on détecte la panne avant les visiteurs.
+
 ## 7. Pouvoir revenir en arrière
 
 Chaque publication réussie est archivée : `~/Downloads/jeremy-grosjean-archives/`. Les 10 dernières versions sont gardées, et chaque archive porte le numéro du commit.

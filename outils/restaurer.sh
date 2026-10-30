@@ -25,8 +25,12 @@ i=1
 for f in "${VERSIONS[@]}"; do
   n="$(basename "$f" .zip)"; c="${n##*-}"
   etiquette=""; [ "$i" = 1 ] && etiquette="  ← en ligne actuellement"
-  msg=""; if [ "${#c}" = 7 ] && git -C "$ICI/.." cat-file -e "$c" 2>/dev/null; then msg="  $(git -C "$ICI/.." log -1 --format='%s' "$c" | cut -c1-70)"; fi
-  printf '  %2d) %s%s%s\n' "$i" "$n" "$msg" "$etiquette"
+  msg=""; ver=""
+  if [ "${#c}" = 7 ] && git -C "$ICI/.." cat-file -e "$c" 2>/dev/null; then
+    msg="  $(git -C "$ICI/.." log -1 --format='%s' "$c" | cut -c1-60)"
+    ver="$(git -C "$ICI/.." tag --points-at "$c" -l 'v*' | sort -t. -k4 -n | tail -n 1)"
+  fi
+  printf '  %2d) %s%s%s\n' "$i" "${ver:-$n}" "$msg" "$etiquette"
   i=$((i + 1))
 done
 

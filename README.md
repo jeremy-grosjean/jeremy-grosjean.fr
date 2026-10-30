@@ -1,5 +1,7 @@
 # jeremy-grosjean.fr
 
+[![Vérifier le site](https://github.com/jeremy-grosjean/jeremy-grosjean.fr/actions/workflows/verifier.yml/badge.svg)](https://github.com/jeremy-grosjean/jeremy-grosjean.fr/actions/workflows/verifier.yml) [![Site en ligne surveillé chaque matin](https://github.com/jeremy-grosjean/jeremy-grosjean.fr/actions/workflows/surveiller.yml/badge.svg)](https://github.com/jeremy-grosjean/jeremy-grosjean.fr/actions/workflows/surveiller.yml)
+
 Site personnel de **Jérémy Grosjean**, technicien informatique, disponible pour une alternance Technicien informatique (Bac+2).
 
 **➜ [jeremy-grosjean.fr](https://jeremy-grosjean.fr)**
@@ -76,6 +78,7 @@ outils/
   mettre-a-jour-site.sh   mise en ligne par SFTP, vérifications et annulation automatique
   qr.py                   générateur de QR code (sans dépendance)
   verifier.py             vérifications automatiques (HTML, liens, JS, traductions, secrets, poids)
+  surveiller.py           surveillance du site en ligne (lancée chaque matin par GitHub Actions)
   apostrophes.py          apostrophes typographiques dans les textes affichés (--corriger pour réparer)
   test_jeux.py            test des pages et des jeux dans un navigateur
   signer-security-txt.sh  signe security.txt avec ma clé PGP (source : outils/security.txt)
@@ -91,6 +94,14 @@ bash outils/publier.sh
 ```
 
 Avant d'envoyer quoi que ce soit, elle vérifie que tout est enregistré dans Git, relance les vérifications locales, contrôle que la vérification GitHub de ce commit est verte, et affiche ce qui a changé depuis la dernière mise en ligne. Ensuite, elle prépare la version en ligne (minification avec esbuild si présent, empreintes anti-cache, service worker), l'envoie par **SFTP** (le mot de passe est demandé à chaque fois et n'est jamais enregistré), relève la supervision, puis vérifie en ligne les fichiers, les en-têtes, les redirections, la page 404 et le refus des requêtes autres que `GET`/`HEAD`. En cas de panne, le `.htaccess` est retiré automatiquement. Pour finir, elle archive la version envoyée et signale si GitHub n'est pas à jour.
+
+Si la vérification GitHub est encore en cours, le script patiente en affichant l'avancement test par test et le temps restant, puis prévient par une **notification sur le Mac**. Chaque mise en ligne reçoit un **numéro de version** (`v2026.10.30.1`, …) : étiquette dans Git, affichée en bas du site avec un lien vers le code correspondant.
+
+Pour voir ce qui partirait en ligne sans rien envoyer :
+
+```
+bash outils/publier.sh --essai
+```
 
 En cas de problème après une mise en ligne, retour à la version précédente en une commande :
 

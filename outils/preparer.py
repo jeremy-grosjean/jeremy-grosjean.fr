@@ -59,6 +59,13 @@ try:
     (DIST / 'assets' / 'news.js').write_text('/* Journal des nouveautés, généré le ' + news[0]['d'] + ' */\nwindow.JG_NEWS = '
                                              + json.dumps(news, ensure_ascii=False) + ';\n' if news else (DIST / 'assets' / 'news.js').read_text())
     print('Journal des nouveautés :', len(news), 'entrées')
+    # Numéro de version de cette mise en ligne (fourni par publier.sh), affiché en bas du site avec un lien vers le code
+    import os
+    v, sha = os.environ.get('JG_VERSION', ''), os.environ.get('JG_VERSION_SHA', '')
+    if re.fullmatch(r'v\d{4}\.\d{2}\.\d{2}\.\d+', v) and re.fullmatch(r'[0-9a-f]{40}', sha):
+        with open(DIST / 'assets' / 'news.js', 'a', encoding='utf-8') as f:
+            f.write('window.JG_VERSION = ' + json.dumps({'v': v, 'url': 'https://github.com/jeremy-grosjean/jeremy-grosjean.fr/commit/' + sha}) + ';\n')
+        print('Version affichée en bas du site :', v)
 except (OSError, subprocess.CalledProcessError, IndexError):
     print('Journal des nouveautés : git indisponible, journal inchangé')
 
