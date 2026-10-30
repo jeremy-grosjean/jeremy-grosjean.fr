@@ -2944,6 +2944,14 @@
   });
 
   $('openGame').addEventListener('click', openGames);
+  /* Raccourcis de l'application installée (appui long sur l'icône, Android) et liens directs : /#contact, /#jeux */
+  function ouvrirDepuisAdresse() {
+    const h = location.hash;
+    if (h === '#contact') { history.replaceState(null, '', location.pathname + location.search); $('contactBtn').click(); }
+    else if (h === '#jeux' || h === '#games') { history.replaceState(null, '', location.pathname + location.search); openGames(); }
+  }
+  if (location.hash === '#contact' || location.hash === '#jeux' || location.hash === '#games') setTimeout(ouvrirDepuisAdresse, 0);
+  window.addEventListener('hashchange', ouvrirDepuisAdresse);
   $('start').addEventListener('click', startGame);
   $('lvGo').addEventListener('click', beginLevel);
   $('again').addEventListener('click', startGame);

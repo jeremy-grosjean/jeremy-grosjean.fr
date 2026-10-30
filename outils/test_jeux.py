@@ -525,6 +525,27 @@ with sync_playwright() as p:
             erreurs.append(f'{nom} : la page d’accueil défile alors qu’elle tient dans l’écran')
         ctx.close()
     ok('page d’accueil sans défilement inutile, sur téléphone tenu droit comme sur ordinateur')
+    # Application installable (Android, iPhone, ordinateur) : manifeste complet, portrait et paysage,
+    # icônes présentes, raccourcis de l'icône (/#contact, /#jeux, /#recruteur) qui ouvrent bien la bonne fenêtre
+    ctx = nav.new_context(viewport={'width': 402, 'height': 874}, has_touch=True, is_mobile=True, locale='fr-FR', timezone_id='Europe/Paris')
+    pg = ctx.new_page(); suivre(pg, 'application'); pg.add_init_script("localStorage.setItem('jg-tour', '1')")
+    pg.goto(BASE + '/'); pg.wait_for_timeout(600)
+    # lu par le test lui-même (la CSP de la version en ligne interdit à la page de télécharger quoi que ce soit, c'est voulu)
+    lien = pg.evaluate("document.querySelector('link[rel=manifest]').href")
+    m_ = pg.request.get(lien).json()
+    man = {'m': m_, 'ic': [pg.request.get(BASE + i['src']).ok and 'png' in pg.request.get(BASE + i['src']).headers.get('content-type', '') for i in m_['icons']],
+           'ios': pg.evaluate("!!document.querySelector('meta[name=apple-mobile-web-app-title]') && !!document.querySelector('link[rel=apple-touch-icon]')")}
+    m = man['m']
+    if not (m.get('display') == 'standalone' and m.get('orientation') == 'any' and m.get('start_url') == '/' and m.get('lang') == 'fr'
+            and any(i.get('purpose') == 'maskable' for i in m['icons']) and all(man['ic']) and man['ios'] and 0 < len(m.get('short_name', '')) <= 12
+            and {x['url'] for x in m.get('shortcuts', [])} == {'/#contact', '/#jeux', '/#recruteur'}):
+        erreurs.append(f'application installable : manifeste incomplet {man}')
+    for ancre, panneau in (('#contact', 'contactPanel'), ('#jeux', 'gamesPanel')):
+        pg.goto(BASE + '/' + ancre); pg.wait_for_timeout(700)
+        if not pg.evaluate(f"document.getElementById('{panneau}').classList.contains('open')"):
+            erreurs.append(f'raccourci {ancre} : la fenêtre {panneau} ne s’ouvre pas')
+    ctx.close()
+    ok('application installable : manifeste complet (portrait et paysage), icônes, raccourcis #contact et #jeux')
     # Fluidité : le jeu va à la même vitesse sur un écran 30 Hz, 60 Hz, 144 Hz ou 240 Hz (hasard figé pour comparer)
     # Une machine surchargée (GitHub lance plusieurs vérifications à la fois) peut ralentir une seule mesure :
     # en cas d'écart, on refait la mesure (2 fois au plus) et on garde le meilleur temps de chaque fréquence.

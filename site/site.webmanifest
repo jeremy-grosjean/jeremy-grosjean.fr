@@ -1,16 +1,79 @@
 {
-  "name": "jeremy-grosjean.fr",
-  "short_name": "JG",
-  "start_url": "/",
-  "display": "standalone",
-  "scope": "/",
+  "name": "Jérémy Grosjean · Technicien informatique",
+  "short_name": "J. Grosjean",
+  "description": "Jérémy Grosjean, technicien informatique en recherche d’alternance",
+  "lang": "fr",
+  "dir": "ltr",
   "id": "/",
-  "description": "Jérémy Grosjean, technicien informatique",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "any",
   "background_color": "#0A0F24",
   "theme_color": "#0A0F24",
+  "categories": [
+    "business",
+    "education",
+    "productivity"
+  ],
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Me contacter",
+      "short_name": "Contact",
+      "url": "/#contact",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Jouer aux mini-jeux",
+      "short_name": "Mini-jeux",
+      "url": "/#jeux",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Vue recruteur",
+      "short_name": "Recruteur",
+      "url": "/#recruteur",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
   ]
 }
