@@ -1374,3 +1374,4 @@ body.deja-vu .hint, body.deja-vu .keys { display: none; }
 .slot-dur-lbl { font-size: .82rem; color: var(--dim); }
 .slot-dur { flex-wrap: wrap; justify-content: center; }
 .slot-dur button { font-size: .82rem; padding: .3rem .55rem; min-width: 0; }
+.card .slot-range { margin: -.5rem 0 .8rem; font-size: .78rem; color: var(--dim); text-align: center; }
