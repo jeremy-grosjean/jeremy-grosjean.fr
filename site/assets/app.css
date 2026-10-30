@@ -1368,3 +1368,9 @@ body.deja-vu .hint, body.deja-vu .keys { display: none; }
 .card .hire-src { font-size: .78rem; color: var(--dim); margin: 0 0 1rem; text-align: center; }
 .hire-src a { color: var(--cyan); }
 .card .ct-delay { display: flex; align-items: center; justify-content: center; gap: .4rem; width: fit-content; margin: -.4rem auto .8rem; padding: .25rem .8rem; border-radius: 999px; background: rgba(var(--ok-rgb), .12); color: var(--ok); font-size: .82rem; font-weight: 600; }
+
+/* ================= Lot 27 : créneaux de 8 h à 18 h, durée de 15 min à 3 h, pause de midi ================= */
+.slot-dur-wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .4rem .6rem; margin: -.4rem 0 .9rem; }
+.slot-dur-lbl { font-size: .82rem; color: var(--dim); }
+.slot-dur { flex-wrap: wrap; justify-content: center; }
+.slot-dur button { font-size: .82rem; padding: .3rem .55rem; min-width: 0; }

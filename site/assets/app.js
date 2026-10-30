@@ -1869,8 +1869,11 @@
   }
 
   /* 2. Proposer un créneau : jours ouvrés à venir (hors week-ends et jours fériés fixes), heure de Paris, e-mail prérempli + fichier agenda */
-  const SLOT_TIMES = ['09:30', '11:00', '14:00', '16:00'], FR_OFF = ['01-01', '05-01', '05-08', '07-14', '08-15', '11-01', '11-11', '12-25'];
-  const SL = { mode: 0, pick: null };
+  /* Créneaux de 8 h à 18 h, début toutes les 30 min ; pause de 12 h à 13 h jamais proposée ; durée au choix de 15 min à 3 h */
+  const SLOT_DURS = [15, 30, 45, 60, 90, 120, 180], SLOT_DEF = 2, FR_OFF = ['01-01', '05-01', '05-08', '07-14', '08-15', '11-01', '11-11', '12-25'];
+  const slotStarts = dur => { const out = []; for (let m = 8 * 60; m + dur <= 18 * 60; m += 30) { const fin = m + dur; if (fin <= 12 * 60 || m >= 13 * 60) out.push(m); } return out; };
+  const hhmm = m => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+  const SL = { mode: 0, pick: null, dur: SLOT_DURS[SLOT_DEF] };
   function parisYMD(ts) {
     const p = {}; for (const x of new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date(ts))) p[x.type] = x.value;
     return { y: +p.year, m: +p.month, d: +p.day, h: +p.hour, mi: +p.minute };
@@ -1890,28 +1893,38 @@
     }
     return out;
   }
-  function slotLabel(ts) {
-    try { return new Intl.DateTimeFormat(regionLocale(lang), { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' }).format(new Date(ts)); } catch (e) { return new Date(ts).toISOString(); }
+  function slotLabel(ts, dur) {
+    try {
+      const jour = new Intl.DateTimeFormat(regionLocale(lang), { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Paris' }).format(new Date(ts));
+      const h = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: 'Europe/Paris' });
+      return jour + ', ' + h.format(new Date(ts)) + ' – ' + h.format(new Date(ts + (dur || SL.dur) * 60000));
+    } catch (e) { return new Date(ts).toISOString(); }
   }
   function openSlots() {
     SL.pick = null;
     const seg = $('slotMode'); seg.querySelectorAll('button').forEach(b => b.remove());
     t('slotModes').forEach((m, i) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = m; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', String(i === SL.mode)); b.addEventListener('click', () => { SL.mode = i; seg.querySelectorAll('button').forEach((x, j) => x.setAttribute('aria-checked', String(j === i))); slotUpdate(); }); seg.append(b); });
+    const dg = $('slotDur'); dg.textContent = '';
+    (t('slotDurs') || []).forEach((lbl, i) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = lbl; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', String(SLOT_DURS[i] === SL.dur));
+      b.addEventListener('click', () => { SL.dur = SLOT_DURS[i]; dg.querySelectorAll('button').forEach((x, j) => x.setAttribute('aria-checked', String(j === i))); SL.pick = null; slotDaysBuild(); $('slotSend').hidden = true; }); dg.append(b); });
+    slotDaysBuild();
+    $('slotSend').hidden = true; $('slotMsg').hidden = true;
+    closeTerm(); openPanel('slotPanel', 'slotClose');
+  }
+  function slotDaysBuild() {
     const box = $('slotDays'); box.textContent = '';
     let fDay; try { fDay = new Intl.DateTimeFormat(regionLocale(lang), { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }); } catch (e) { fDay = null; }
     for (const d of slotDays(8)) {
       const wrap = document.createElement('div'), h = document.createElement('p'), row = document.createElement('div');
       wrap.className = 'slot-day'; h.className = 'slot-dlabel'; h.textContent = fDay ? fDay.format(new Date(Date.UTC(d.y, d.m - 1, d.d, 12))) : `${d.d}/${d.m}`; row.className = 'slot-row';
-      for (const hm of SLOT_TIMES) {
-        const [hh, mm] = hm.split(':').map(Number), ts = parisToUtc(d.y, d.m, d.d, hh, mm), b = document.createElement('button');
+      for (const m0 of slotStarts(SL.dur)) {
+        const hm = hhmm(m0), ts = parisToUtc(d.y, d.m, d.d, Math.floor(m0 / 60), m0 % 60), b = document.createElement('button');
         b.type = 'button'; b.className = 'slot'; b.textContent = hm; b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', slotLabel(ts));
         b.addEventListener('click', () => { box.querySelectorAll('.slot').forEach(x => x.setAttribute('aria-pressed', 'false')); b.setAttribute('aria-pressed', 'true'); SL.pick = ts; slotUpdate(); });
         row.append(b);
       }
       wrap.append(h, row); box.append(wrap);
     }
-    $('slotSend').hidden = true; $('slotMsg').hidden = true;
-    closeTerm(); openPanel('slotPanel', 'slotClose');
   }
   function slotUpdate() {
     if (SL.pick === null) return;
@@ -1926,7 +1939,7 @@
     if (SL.pick === null) { const m = $('slotMsg'); m.hidden = false; m.className = 'tk-expl ko'; m.textContent = t('slotPick'); return; }
     const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//jeremy-grosjean.fr//entretien//FR', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT',
       'UID:' + icsDate(SL.pick) + '-' + Math.random().toString(36).slice(2, 10) + '@jeremy-grosjean.fr', 'DTSTAMP:' + icsDate(Date.now()),
-      'DTSTART:' + icsDate(SL.pick), 'DTEND:' + icsDate(SL.pick + 45 * 60000), 'SUMMARY:' + icsEsc(t('slotIcsTitle') + (coName() ? ' · ' + coName() : '')),
+      'DTSTART:' + icsDate(SL.pick), 'DTEND:' + icsDate(SL.pick + SL.dur * 60000), 'SUMMARY:' + icsEsc(t('slotIcsTitle') + (coName() ? ' · ' + coName() : '')),
       'DESCRIPTION:' + icsEsc(t('slotModes')[SL.mode] + ' · ' + MAIL + ' · ' + SITE_URL), 'END:VEVENT', 'END:VCALENDAR'].join('\r\n') + '\r\n';
     try {
       const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' })), a = document.createElement('a');

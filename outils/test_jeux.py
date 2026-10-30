@@ -404,9 +404,9 @@ with sync_playwright() as p:
           $('faqClose').click();
           return out;
         }""")
-        if not (res['slotOpen'] and res['days'] == 8 and res['slots'] == 32 and not res['wkend'] and res['needPick'] and 'par téléphone' in res['mail'] and res['gmail'] and res['slotClosed'] and res['skills'] == 4 and res['chips'] == 14 and res['chipGame'] and res['share'] and res['faq'] == 12 and res['faqTxt']):
+        if not (res['slotOpen'] and res['days'] == 8 and res['slots'] == 128 and not res['wkend'] and res['needPick'] and 'par téléphone' in res['mail'] and res['gmail'] and res['slotClosed'] and res['skills'] == 4 and res['chips'] == 14 and res['chipGame'] and res['share'] and res['faq'] == 12 and res['faqTxt']):
             erreurs.append(f'{nom} : créneaux / compétences / partage / FAQ {res}')
-        ok(f'{nom} : créneaux (8 jours ouvrés, e-mail prérempli), compétences reliées aux jeux et outils, partage, FAQ de 12 questions')
+        ok(f'{nom} : créneaux (8 jours ouvrés, de 8 h à 18 h hors pause de midi, durée au choix, e-mail prérempli), compétences reliées aux jeux et outils, partage, FAQ de 12 questions')
         pg.goto(BASE + '/?pour=Société%20Générale%20<b>'); pg.wait_for_timeout(1200)
         res = pg.evaluate("""() => ({ hello: document.getElementById('helloLine').hidden ? '' : document.getElementById('helloTxt').textContent,
           mail: decodeURIComponent(document.getElementById('openMail').href), html: document.getElementById('helloTxt').innerHTML })""")
