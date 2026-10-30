@@ -514,28 +514,17 @@ with sync_playwright() as p:
         erreurs.append(f'rotation du téléphone : le journal de démarrage reste vide après retour à la verticale {vis}')
     ctx.close()
     ok('téléphone tourné puis remis droit : le journal de démarrage reste affiché')
-    # Plein écran sur téléphone (écran de 874 px, barres du navigateur visibles : 744 px visibles) :
-    # la page peut glisser pour cacher les barres, la barre du bas reste visible ; barres cachées (800 px visibles),
-    # le site occupe tout l'écran sans rien à faire défiler ; barres revenues, la page peut de nouveau glisser
-    ctx = nav.new_context(viewport={'width': 402, 'height': 744}, screen={'width': 402, 'height': 874}, has_touch=True, is_mobile=True, locale='fr-FR', timezone_id='Europe/Paris')
-    pg = ctx.new_page(); suivre(pg, 'plein écran')
-    pg.add_init_script("localStorage.setItem('jg-tour', '1')")
-    pg.goto(BASE + '/'); pg.wait_for_timeout(1200)
-    M = "({ doc: document.documentElement.scrollHeight, corps: Math.round(document.body.getBoundingClientRect().height), dock: Math.round(document.querySelector('.dock').getBoundingClientRect().bottom), vh: innerHeight })"
-    a_ = pg.evaluate(M)
-    pg.set_viewport_size({'width': 402, 'height': 800}); pg.wait_for_timeout(500); b_ = pg.evaluate(M)
-    pg.set_viewport_size({'width': 402, 'height': 744}); pg.wait_for_timeout(500); c_ = pg.evaluate(M)
-    if not (a_['doc'] >= 874 and a_['dock'] <= a_['vh'] and b_['doc'] <= b_['vh'] + 1 and b_['corps'] >= b_['vh'] - 1 and b_['dock'] > b_['vh'] - 60 and c_['doc'] >= c_['vh'] + 50 and c_['dock'] <= c_['vh']):
-        erreurs.append(f'plein écran sur téléphone : barres visibles {a_}, barres cachées {b_}, barres revenues {c_}')
-    ctx.close()
-    # Sur ordinateur (souris), rien ne change : la page ne défile pas
-    ctx = nav.new_context(viewport={'width': 1280, 'height': 800}, screen={'width': 1440, 'height': 900}, locale='fr-FR')
-    pg = ctx.new_page(); suivre(pg, 'plein écran ordinateur'); pg.add_init_script("localStorage.setItem('jg-tour', '1')")
-    pg.goto(BASE + '/'); pg.wait_for_timeout(800)
-    if pg.evaluate("document.documentElement.scrollHeight > innerHeight + 1"):
-        erreurs.append('ordinateur : la page défile alors qu’elle tient dans l’écran')
-    ctx.close()
-    ok('téléphone : la page peut glisser pour cacher les barres du navigateur, puis occupe tout l’écran')
+    # Téléphone tenu droit : la page d'accueil tient dans l'écran et ne défile pas (même si l'écran du téléphone
+    # est plus grand que la zone visible, à cause des barres du navigateur) ; sur ordinateur non plus
+    for nom, opts in (('téléphone', {'viewport': {'width': 402, 'height': 744}, 'screen': {'width': 402, 'height': 874}, 'has_touch': True, 'is_mobile': True}),
+                      ('ordinateur', {'viewport': {'width': 1280, 'height': 800}, 'screen': {'width': 1440, 'height': 900}})):
+        ctx = nav.new_context(locale='fr-FR', timezone_id='Europe/Paris', **opts)
+        pg = ctx.new_page(); suivre(pg, f'sans défilement {nom}'); pg.add_init_script("localStorage.setItem('jg-tour', '1')")
+        pg.goto(BASE + '/'); pg.wait_for_timeout(900)
+        if pg.evaluate("document.documentElement.scrollHeight > innerHeight + 1"):
+            erreurs.append(f'{nom} : la page d’accueil défile alors qu’elle tient dans l’écran')
+        ctx.close()
+    ok('page d’accueil sans défilement inutile, sur téléphone tenu droit comme sur ordinateur')
     # Fluidité : le jeu va à la même vitesse sur un écran 30 Hz, 60 Hz, 144 Hz ou 240 Hz (hasard figé pour comparer)
     # Une machine surchargée (GitHub lance plusieurs vérifications à la fois) peut ralentir une seule mesure :
     # en cas d'écart, on refait la mesure (2 fois au plus) et on garde le meilleur temps de chaque fréquence.
