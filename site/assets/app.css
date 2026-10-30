@@ -1130,3 +1130,7 @@ body.rec-on .season-fx, body.playing .season-fx, body.forum-on .season-fx { disp
   .wm-t small { overflow-wrap: anywhere; }
 }
 @media (max-width: 360px) { .webmail { grid-template-columns: minmax(0, 1fr); } }
+
+/* Texte d'aide placé au-dessus des boutons du bas (hauteur mesurée en direct, voir placeHint) */
+.hint { bottom: var(--hint-b, calc(max(16px, env(safe-area-inset-bottom)) + 52px)); }
+.hint.hint-cache { visibility: hidden; }

@@ -67,10 +67,14 @@
       if (part === 'jeremy-grosjean.fr') { const s = document.createElement('span'); s.className = 'nobr'; s.textContent = part; el.append(s); } else if (part) el.append(part);
     }
   }
+  let NB_JEUX = 0;
   function applyLang() {
     document.documentElement.lang = t('htmlLang');
     document.title = t('title');
     document.querySelectorAll('[data-i]').forEach(el => { const v = t(el.dataset.i); if (typeof v === 'string') setText(el, v); });
+    /* Nombre de mini-jeux compté dans la liste (le défi du jour et le niveau N2 du support ne comptent pas) : toujours à jour */
+    { const n = document.querySelectorAll('#gamesPanel .pick:not(#pickDaily):not(#pickSupport2)').length;
+      if (n && typeof t('playN') === 'function') { $('openGame').textContent = t('playN')(n); NB_JEUX = n; } }
     langUI();
     $('langLabel').textContent = t('langLabel');
     $('termClose').setAttribute('aria-label', t('close'));
@@ -2795,6 +2799,22 @@
   function lot16Lang() { sizeUI(); if ($('gamesPanel').classList.contains('open')) decoratePicks(); document.querySelectorAll('.end-other').forEach(b => { b.textContent = t('endOther'); }); }
   lot16Lang();
 
+  /* Texte d'aide « Bougez la souris… » : toujours juste au-dessus des boutons du bas, même quand ils tiennent sur deux lignes */
+  function placeHint() {
+    const d = document.querySelector('.dock'); if (!d) return;
+    const r = d.getBoundingClientRect();
+    if (r.height && r.top < innerHeight && r.bottom > 0) document.documentElement.style.setProperty('--hint-b', Math.round(innerHeight - r.top + 6) + 'px');
+    else document.documentElement.style.removeProperty('--hint-b');
+    /* sur un petit écran, si le texte d'aide tomberait sur les boutons ou le contenu, on ne l'affiche pas (simple conseil passager) */
+    const h = document.querySelector('.hint'); if (!h) return; h.classList.remove('hint-cache');
+    requestAnimationFrame(() => {
+      const s = [...h.querySelectorAll('span')].map(x => x.getBoundingClientRect()).find(x => x.width > 0); if (!s) return;
+      const gene = [...document.querySelectorAll('.cta, .keys, .scores, .avail, .bootlog')].some(e => { const q = e.getBoundingClientRect(); return q.width > 0 && s.left < q.right && q.left < s.right && s.top < q.bottom && q.top < s.bottom; });
+      h.classList.toggle('hint-cache', gene);
+    });
+  }
+  placeHint(); addEventListener('resize', placeHint); addEventListener('scroll', placeHint, { passive: true }); setTimeout(placeHint, 1200);
+
   /* ================= Visite guidée (une seule fois, passable) ================= */
   const tourRing = $('tourRing'), tourTip = $('tourTip');
   let tourSteps = [], tourI = 0;
@@ -2802,7 +2822,7 @@
   function startTour(force) {
     if (!force && store.get('jg-tour') === '1') return;
     if (G.on || panels.some(p => $(p).classList.contains('open')) || termOpen()) { if (!force) return; closePanels(); closeTerm(); }
-    const map = { contactBtn: 'tourContact', availBtn: 'tourBrief', openGame: 'tourPlay', termBtn: 'tourTerm', secBtn: 'tourSec', supBtn: 'tourSup', keysBtn: 'tourKeys' };
+    const map = { contactBtn: 'tourContact', availBtn: 'tourBrief', openGame: NB_JEUX && typeof t('tourPlayN') === 'function' ? 'tourPlayN' : 'tourPlay', termBtn: 'tourTerm', secBtn: 'tourSec', supBtn: 'tourSup', keysBtn: 'tourKeys' };
     tourSteps = Object.keys(map).filter(id => visible(document.getElementById(id))).map(id => [id, map[id]]);
     if (!tourSteps.length) return;
     tourI = 0; showStep();
@@ -2820,7 +2840,7 @@
   }
   function showStep() {
     const [, key] = tourSteps[tourI];
-    $('tourText').textContent = t(key);
+    const tx = t(key); $('tourText').textContent = typeof tx === 'function' ? tx(NB_JEUX) : tx;
     $('tourStep').textContent = `${tourI + 1}/${tourSteps.length}`;
     $('tourNext').textContent = tourI < tourSteps.length - 1 ? t('tourNext') : t('tourDone');
     tourRing.hidden = false; tourTip.hidden = false; placeTour(); SND.key();

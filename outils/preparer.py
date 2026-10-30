@@ -75,4 +75,5 @@ with zipfile.ZipFile(ZIP, 'w', zipfile.ZIP_DEFLATED) as z:
     for f in sorted(DIST.rglob('*')):
         if f.is_file():
             z.write(f, f.relative_to(DIST))
-print('Prêt :', ZIP, '→ lancez ensuite outils/mettre-a-jour-site.sh')
+import os
+print('Prêt :', ZIP) if os.environ.get('JG_PUBLIER') else print('Prêt :', ZIP, '→ lancez ensuite outils/mettre-a-jour-site.sh')

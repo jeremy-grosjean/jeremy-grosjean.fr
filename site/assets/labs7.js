@@ -4,6 +4,7 @@
   'use strict';
   const D = {
     fr: {
+      playN: (n) => `Jouer : ${n} mini-jeux`, tourPlayN: (n) => `${n} mini-jeux sur mon métier : support, systèmes, réseau et sécurité.`,
       verTitle: 'Version en ligne : voir le code correspondant sur GitHub',
       wmApp: 'Ma messagerie', wmAppSub: 'Mail, Outlook, Thunderbird… installée sur l’ordinateur', keepLbl: 'Garder mon contact :',
       pickNoNetT: 'Plus d’Internet', pickNoNetD: 'Un utilisateur n’a plus Internet : vérifiez dans le bon ordre, du câble au navigateur.',
@@ -35,6 +36,7 @@
       ]
     },
     en: {
+      playN: (n) => `Play: ${n} mini-games`, tourPlayN: (n) => `${n} mini-games about my job: support, systems, network and security.`,
       verTitle: 'Live version: see the matching code on GitHub',
       wmApp: 'My mail app', wmAppSub: 'Mail, Outlook, Thunderbird… installed on this computer', keepLbl: 'Keep my contact:',
       pickNoNetT: 'No more Internet', pickNoNetD: 'A user has lost the Internet: check things in the right order, from the cable to the browser.',
@@ -66,6 +68,7 @@
       ]
     },
     'zh-Hans': {
+      playN: (n) => `玩：${n} 个小游戏`, tourPlayN: (n) => `${n} 个与我的职业相关的小游戏：技术支持、系统、网络和安全。`,
       verTitle: '当前在线版本：在 GitHub 上查看对应代码',
       wmApp: '本机邮件应用', wmAppSub: '电脑上安装的 Mail、Outlook、Thunderbird 等', keepLbl: '保存我的联系方式：',
       pickNoNetT: '上不了网', pickNoNetD: '用户上不了网：按正确顺序排查，从网线到浏览器。',
@@ -97,6 +100,7 @@
       ]
     },
     'zh-Hant': {
+      playN: (n) => `玩：${n} 個小遊戲`, tourPlayN: (n) => `${n} 個與我的職業相關的小遊戲：技術支援、系統、網路和資安。`,
       verTitle: '目前上線版本：在 GitHub 上查看對應程式碼',
       wmApp: '本機郵件程式', wmAppSub: '電腦上安裝的 Mail、Outlook、Thunderbird 等', keepLbl: '儲存我的聯絡方式：',
       pickNoNetT: '上不了網', pickNoNetD: '使用者上不了網：依正確順序檢查，從網路線到瀏覽器。',
@@ -128,6 +132,7 @@
       ]
     },
     yue: {
+      playN: (n) => `玩：${n} 個小遊戲`, tourPlayN: (n) => `${n} 個同我份工有關嘅小遊戲：技術支援、系統、網絡同保安。`,
       verTitle: '而家上線嘅版本：喺 GitHub 睇對應嘅程式碼',
       wmApp: '部電腦嘅電郵程式', wmAppSub: '電腦裝咗嘅 Mail、Outlook、Thunderbird 等等', keepLbl: '儲低我嘅聯絡方法：',
       pickNoNetT: '上唔到網', pickNoNetD: '用戶上唔到網：跟正確次序檢查，由網線查到瀏覽器。',
@@ -159,6 +164,7 @@
       ]
     },
     ko: {
+      playN: (n) => `게임하기: 미니게임 ${n}개`, tourPlayN: (n) => `제 직무에 관한 미니게임 ${n}개: 지원, 시스템, 네트워크, 보안.`,
       verTitle: '현재 버전: GitHub에서 해당 코드 보기',
       wmApp: '내 메일 앱', wmAppSub: '이 컴퓨터에 설치된 Mail, Outlook, Thunderbird 등', keepLbl: '내 연락처 저장:',
       pickNoNetT: '인터넷이 안 돼요', pickNoNetD: '사용자의 인터넷이 끊겼습니다. 케이블부터 브라우저까지 올바른 순서로 점검하세요.',

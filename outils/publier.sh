@@ -188,7 +188,7 @@ if ! command -v esbuild >/dev/null 2>&1 && [ ! -x "$DEPOT/node_modules/.bin/esbu
 fi
 [ -x "$DEPOT/node_modules/.bin/esbuild" ] && export PATH="$DEPOT/node_modules/.bin:$PATH"
 printf '%s›%s Préparation de la version en ligne\n' "$CYAN" "$FIN"
-python3 "$ICI/preparer.py" || { printf '%s✗ La préparation a échoué, rien n'"'"'a été envoyé.%s\n' "$ROUGE" "$FIN"; exit 1; }
+JG_PUBLIER=1 python3 "$ICI/preparer.py" || { printf '%s✗ La préparation a échoué, rien n'"'"'a été envoyé.%s\n' "$ROUGE" "$FIN"; exit 1; }
 if [ "$ESSAI" = 1 ]; then printf '\n%s✓ Mode essai terminé : rien n'"'"'a été envoyé.%s Pour publier pour de vrai : bash outils/publier.sh\n' "$VERT" "$FIN"; exit 0; fi
 
 # 2. Envoyer et vérifier -----------------------------------------------------------

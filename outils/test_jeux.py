@@ -449,6 +449,17 @@ with sync_playwright() as p:
         large = pg.evaluate('Math.max(document.documentElement.scrollWidth, innerWidth)')
         if large > w + 1:
             erreurs.append(f'{w}×{h} : la page déborde sur le côté ({large} px)')
+        # Régressions : le texte d'aide ne passe jamais derrière les boutons ou le contenu ; le nombre de jeux du bouton est exact
+        pg.wait_for_timeout(400)
+        aide = pg.evaluate("""(() => { const h = document.querySelector('.hint'), n = document.querySelectorAll('#gamesPanel .pick:not(#pickDaily):not(#pickSupport2)').length, out = [];
+          if (!document.getElementById('openGame').textContent.includes(String(n))) out.push('le bouton Jouer annonce un mauvais nombre de jeux : ' + document.getElementById('openGame').textContent + ' (' + n + ' jeux)');
+          if (getComputedStyle(h).display !== 'none' && !h.classList.contains('hint-cache')) {
+            const s = [...h.querySelectorAll('span')].map(x => x.getBoundingClientRect()).find(x => x.width > 0);
+            if (s) [...document.querySelectorAll('.dock .pill, .dock button, .dock-mid, .cta, .keys, .scores, .avail')].forEach(e => { const q = e.getBoundingClientRect(); if (q.width > 0 && s.left < q.right - 1 && q.left < s.right - 1 && s.top < q.bottom - 1 && q.top < s.bottom - 1) out.push('le texte d’aide chevauche ' + (e.id || e.className)); });
+          }
+          return out; })()""")
+        for pb in aide:
+            erreurs.append(f'{w}×{h} : {pb}')
         for pb in pg.evaluate(MESURE, CLES):
             erreurs.append(f'{w}×{h} : {pb}')
         for panneau, bouton in (('contactPanel', 'contactBtn'), ('secPanel', 'secBtn'), ('supPanel', 'supBtn'), ('gamesPanel', 'openGame'), ('niPanel', 'pickNoNet'), ('rwPanel', 'pickRansom')):
