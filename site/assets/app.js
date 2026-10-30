@@ -67,6 +67,10 @@
       if (part === 'jeremy-grosjean.fr') { const s = document.createElement('span'); s.className = 'nobr'; s.textContent = part; el.append(s); } else if (part) el.append(part);
     }
   }
+  /* L'aide « Bougez la souris » et « Terminal : Ctrl + K » s'affiche à la première visite, puis plus : l'accueil reste épuré */
+  try { if (localStorage.getItem('jg-vu')) document.body.classList.add('deja-vu'); else localStorage.setItem('jg-vu', '1'); } catch (e) {}
+  /* Lien d'évitement (clavier) : la première touche Tab propose d'aller directement à « Me contacter » */
+  { const sk = document.getElementById('skipLink'); if (sk) sk.addEventListener('click', e => { e.preventDefault(); const c = document.getElementById('contactBtn'); if (c) c.focus(); }); }
   let NB_JEUX = 0;
   function applyLang() {
     document.documentElement.lang = t('htmlLang');
@@ -79,6 +83,8 @@
     $('langLabel').textContent = t('langLabel');
     $('termClose').setAttribute('aria-label', t('close'));
     tick(); setSoundUI(); setThemeUI(); buildSecSoon(); heroLang(); netUI();
+    /* Badges de notes : une bulle dit qu'ils ouvrent le site de test dans un nouvel onglet */
+    if (typeof t('extTip') === 'function') document.querySelectorAll('#scores a.score').forEach(a => { const n = a.querySelector('span'); if (n) a.title = t('extTip')(n.textContent); });
     if (typeof MAIL !== 'undefined') { $('openMail').href = mailHref(); webmailHrefs(); if (document.body.classList.contains('rec-on')) fillRec(); }
     { const el = $('loadT'); if (el.dataset && el.dataset.v) el.textContent = ' · ' + t('loadedIn')(el.dataset.v); }
     if (typeof htopOn !== 'undefined' && htopOn) htopDraw();
@@ -198,6 +204,7 @@
     const lbl = t('themeLabel') + colon + name;
     $('themeBtn').setAttribute('aria-label', lbl); $('themeBtn').title = lbl;
     drawIcon($('themeIcon'), ICONS[themeMode]);
+    const tl = $('themeLbl'); if (tl) tl.textContent = (t('themeS') || {})[themeMode] || '';
   }
   function applyTheme() {
     if (themeMode === 'auto') document.documentElement.removeAttribute('data-theme');
@@ -383,7 +390,12 @@
     const wrap = document.createElement('div'); wrap.className = 'panel-x-wrap'; wrap.append(x); card.prepend(wrap);
   }
   function openPanel(id, focusId) {
-    const x = document.querySelector('#' + id + ' .panel-x'); if (x) { x.setAttribute('aria-label', t('close')); x.title = t('close'); } closePanels(); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (focusId) $(focusId).focus({ preventScroll: true }); const c = $(id).querySelector('.card'); if (c) c.scrollTop = 0; try { onPanelOpen(id); } catch (e) {} }
+    const x = document.querySelector('#' + id + ' .panel-x'); if (x) { x.setAttribute('aria-label', t('close')); x.title = t('close'); } closePanels(); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (focusId) $(focusId).focus({ preventScroll: true }); const c = $(id).querySelector('.card'); if (c) c.scrollTop = 0; try { onPanelOpen(id); } catch (e) {} if (c) { suiteEnDessous(c); setTimeout(() => suiteEnDessous(c), 350); } }
+  /* Fenêtre plus haute que l'écran : un fondu et une flèche ↓ montrent qu'il y a une suite, ils disparaissent une fois en bas */
+  function suiteEnDessous(c) { c.classList.toggle('more', c.scrollHeight - c.scrollTop - c.clientHeight > 12); }
+  document.querySelectorAll('.panel .card').forEach(c => c.addEventListener('scroll', () => suiteEnDessous(c), { passive: true }));
+  document.addEventListener('click', e => { const c = e.target && e.target.closest ? e.target.closest('.panel .card') : null; if (c) setTimeout(() => suiteEnDessous(c), 80); });
+  window.addEventListener('resize', () => document.querySelectorAll('.panel.open .card').forEach(suiteEnDessous), { passive: true });
   /* Partie sauvegardée (dans ce navigateur uniquement) : à l'ouverture du jeu, on propose de la reprendre ou d'en commencer une nouvelle */
   const SAVE_KEY = 'jg-firewall-save';
   const readSave = () => { try { const s = JSON.parse(store.get(SAVE_KEY) || 'null'); return s && s.v === 1 && s.lv >= 0 && s.lv < LEVELS.length ? s : null; } catch (e) { return null; } };
@@ -704,9 +716,11 @@
   const whoText = () => 'whoami → ' + (t('whoRole') || '');
   let whoDone = false;
   let heroStarted = false, rotGen = 0;
+  /* Sur téléphone, le journal est raccourci : une ligne par information, sans retour à la ligne */
+  const bootCourt = () => innerWidth < 600 && Array.isArray(t('bootShort'));
   function buildBoot() {
-    const list = t('boot'); if (!Array.isArray(list)) return;
-    bootUl.textContent = '';
+    const court = bootCourt(), list = court ? t('bootShort') : t('boot'); if (!Array.isArray(list)) return;
+    bootUl.textContent = ''; bootUl.dataset.court = court ? '1' : '';
     for (const [k, txt] of list) {
       const li = document.createElement('li'), st = document.createElement('span'), tx = document.createElement('span');
       st.className = 'st ' + k; st.textContent = BOOT_TAG[k] || BOOT_TAG.info; tx.textContent = txt;
@@ -718,7 +732,31 @@
     buildBoot();
     if (!heroStarted || whoDone) whoEl.textContent = whoText();
     if (heroStarted) startRotate(0);
+    fitLines();
   }
+  /* Les deux lignes « $ whoami » et « $ domaines » gardent la largeur du domaine le plus long :
+     pendant la frappe, le début de ligne ne bouge plus (avant : jusqu'à 91 px de décalage) */
+  const whoLine = whoEl.parentElement;
+  function fitLines() {
+    try {
+      /* Mesure sur des copies placées dans une boîte de largeur nulle : la page ne s'élargit jamais pendant la mesure */
+      const probe = document.createElement('div'); probe.className = 'fit-probe'; probe.setAttribute('aria-hidden', 'true');
+      const cw = whoLine.cloneNode(true), cr = rotLine.cloneNode(true);
+      for (const e of [cw, cr]) { e.removeAttribute('id'); e.querySelectorAll('[id]').forEach(x => x.removeAttribute('id')); e.classList.remove('fit', 'idle'); e.classList.add('fit-m'); }
+      probe.append(cw, cr); document.body.append(probe);
+      const rot = cr.querySelector('.rot'), who = cw.querySelector('span:not(.pr):not(.cur)');
+      let w = 0;
+      for (const x of (t('domains') || [])) { rot.textContent = x; w = Math.max(w, cr.getBoundingClientRect().width); }
+      if (who) who.textContent = whoText(); w = Math.max(w, cw.getBoundingClientRect().width);
+      probe.remove();
+      const m = document.querySelector('main'), cs = m ? getComputedStyle(m) : null;
+      const dispo = m ? m.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) : 0;
+      const ok = w > 0 && w + 2 <= dispo; /* écran trop étroit : on garde le retour à la ligne habituel */
+      for (const e of [whoLine, rotLine]) { if (ok) { e.style.setProperty('--fit-w', Math.ceil(w + 2) + 'px'); e.classList.add('fit'); } else e.classList.remove('fit'); }
+    } catch (e) {}
+  }
+  { let tm = 0; window.addEventListener('resize', () => { clearTimeout(tm); tm = setTimeout(() => { fitLines(); if (bootCourt() !== (bootUl.dataset.court === '1')) buildBoot(); }, 150); }, { passive: true }); }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitLines, () => {});
   function scrambleName(done) {
     const full = nameFx.textContent, CH = '!<>-_\\/[]{}=+*^?#01ABCDEFX';
     if (!full) { done(); return; }

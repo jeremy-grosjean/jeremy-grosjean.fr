@@ -1152,3 +1152,95 @@ body.rec-on .season-fx, body.playing .season-fx, body.forum-on .season-fx { disp
 /* Texte d'aide placé au-dessus des boutons du bas (hauteur mesurée en direct, voir placeHint) */
 .hint { bottom: var(--hint-b, calc(max(16px, env(safe-area-inset-bottom)) + 52px)); }
 .hint.hint-cache { visibility: hidden; }
+
+/* ================= Lot 20 : améliorations visuelles (constatées sur v2026.10.30.11) ================= */
+/* 01 · Le réseau s'efface derrière le texte : plus aucun trait sur le nom ni sur les boutons, l'animation reste vive sur les bords */
+body:not(.playing) #net {
+  -webkit-mask-image: radial-gradient(ellipse min(46vw, 600px) min(42vh, 380px) at 50% 50%, rgba(0, 0, 0, .12) 55%, #000 100%);
+  mask-image: radial-gradient(ellipse min(46vw, 600px) min(42vh, 380px) at 50% 50%, rgba(0, 0, 0, .12) 55%, #000 100%);
+}
+@media (max-width: 560px) {
+  body:not(.playing) #net {
+    -webkit-mask-image: radial-gradient(ellipse 64vw 32vh at 50% 46%, rgba(0, 0, 0, .14) 55%, #000 100%);
+    mask-image: radial-gradient(ellipse 64vw 32vh at 50% 46%, rgba(0, 0, 0, .14) 55%, #000 100%);
+  }
+}
+/* 02 · Lignes « $ whoami » et « $ domaines » à largeur fixe : le début de ligne ne bouge plus pendant la frappe */
+.typeline.fit-m { display: inline-block !important; width: auto !important; max-width: none !important; white-space: nowrap; }
+.typeline.fit { width: var(--fit-w); max-width: 100%; margin-left: auto; margin-right: auto; text-align: left; }
+/* 03 · Bas de page allégé : les notes et « 0 cookie · 0 traceur » sur une ligne, l'aide seulement à la première visite */
+body.deja-vu .hint, body.deja-vu .keys { display: none; }
+.score-priv { cursor: default; }
+@media (min-width: 561px) { .dock-mid > .privacy, .dock-mid > .loadt, .dock-mid > .loadt + .sep { display: none !important; } }
+@media (max-width: 560px) { .score-priv { display: none; } }
+/* 04 · Les badges disent qu'ils ouvrent un autre site */
+.score .ext { font-size: .78em; opacity: .55; margin-left: -.15rem; }
+.score:hover .ext, .score:focus-visible .ext { opacity: 1; }
+/* 06 · 07 · Téléphone : boutons du bas de 44 × 44 px au moins, avec un mot sous chaque icône */
+.lbl-s { display: none; }
+@media (max-width: 560px) and (min-width: 330px) {
+  .dock .pill { flex-direction: column; justify-content: center; gap: 3px; min-width: 44px; min-height: 44px; padding: .3rem .4rem; }
+  .dock .pill .lbl-s { display: block; font-size: .6rem; line-height: 1; font-weight: 500; white-space: nowrap; color: var(--dim); font-family: inherit; }
+  .dock .pill.mono .lbl-s { font-family: inherit; font-weight: 600; }
+}
+/* 08 · Téléphone : liens du pied de page plus grands et faciles à toucher (44 px de haut) */
+@media (max-width: 560px) and (min-width: 330px) {
+  .legal-row { font-size: .78rem; }
+  .legal-link { min-height: 40px; padding: 0 .35rem; }
+}
+/* 09 · Téléphone : « En ligne » reste écrit à côté du point vert */
+@media (max-width: 560px) and (min-width: 360px) {
+  .net-pill { width: auto; padding: 0 .75rem; }
+  .net-pill .net-lbl { position: static; width: auto; height: auto; overflow: visible; clip: auto; clip-path: none; }
+}
+/* 10 · Fiche « En 30 secondes » : pastilles nettes, sans pointillés (la définition s'ouvre toujours au toucher) */
+.brief-doms .gl-t { text-decoration: none; }
+/* 11 · Téléphone à l'horizontale : « Me contacter » en deux colonnes, tout tient dans l'écran */
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 600px) {
+  #contactPanel .card { width: min(52rem, 100%); display: grid; grid-template-columns: 1fr 1fr; grid-template-areas: "x x" "b b" "m w" "k w"; column-gap: 1.4rem; align-items: start; padding: 1rem 1.2rem .9rem; }
+  #contactPanel .card > .panel-x-wrap { grid-area: x; }
+  #contactPanel .card > .g-band, #contactPanel .card > h2 { grid-area: b; margin-bottom: .5rem; }
+  #contactPanel .c-main { grid-area: m; }
+  #contactPanel .c-mail { grid-area: w; }
+  #contactPanel .c-keep { grid-area: k; }
+  #contactPanel .c-main p, #contactPanel .c-mail p { margin-bottom: .6rem; }
+  #contactPanel .qr, #contactPanel .qr-cap { display: none; } /* sur le téléphone lui-même, scanner son propre écran ne sert à rien : le bouton de la fiche suffit */
+  #contactPanel .c-keep { display: grid; justify-items: center; gap: .3rem; }
+  #contactPanel .c-keep .wm-lbl { margin: 0; }
+  #contactPanel .contact-extra { flex-direction: row; text-align: left; gap: .8rem; margin: 0; }
+  #contactPanel .contact-side { align-items: flex-start; }
+  #contactPanel .qr-cap { margin: 0 0 .3rem; font-size: .8rem; }
+  #contactPanel .card > .g-band { margin-bottom: .4rem; }
+  #contactPanel .wm-note { font-size: .78rem; margin-bottom: 0; }
+  #contactPanel .card > .g-band { padding-top: .35rem; padding-bottom: .35rem; }
+  #contactPanel .card > .g-band .gb-ic { width: 2rem; height: 2rem; }
+  #contactPanel .card > .g-band h2 { font-size: 1.15rem; }
+  #contactPanel .c-main > p:first-child { font-size: .88rem; line-height: 1.4; }
+  #contactPanel .mail-box { padding-top: .45rem; padding-bottom: .45rem; }
+  #contactPanel .contact-main { margin-bottom: .4rem; }
+  #contactPanel .contact-main .btn, #contactPanel .contact-main .btn-ghost { padding-top: .55rem; padding-bottom: .55rem; font-size: .88rem; }
+  #contactPanel .wm { padding-top: .4rem; padding-bottom: .4rem; }
+  #contactPanel .wm-lbl { margin-bottom: .35rem; }
+  #contactPanel .card.more::after { grid-column: 1 / -1; }
+}
+/* 12 · Fenêtre plus haute que l'écran : fondu et flèche ↓ tant qu'il reste du contenu en dessous */
+.card.more::after {
+  content: "↓"; position: sticky; bottom: 0; z-index: 3; display: flex; align-items: flex-end; justify-content: center;
+  height: 2.8rem; margin: -2.8rem 0 0; padding-bottom: .3rem; pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--surface-strong) 72%); color: var(--cyan); font-size: 1rem; font-weight: 700;
+}
+@media print { .card.more::after { display: none; } }
+/* 13 · Bouton thème : le mode est écrit à côté de l'icône (ordinateur) */
+.theme-lbl { display: none; }
+@media (min-width: 901px) {
+  #themeBtn { display: inline-flex; align-items: center; width: auto; padding: 0 .75rem 0 .65rem; gap: .4rem; }
+  #themeBtn .theme-lbl { display: inline; font-size: .8rem; font-weight: 500; }
+}
+/* 14 · Lien d'évitement : visible seulement au clavier */
+.skip {
+  position: fixed; z-index: 30; left: 50%; top: max(10px, env(safe-area-inset-top)); transform: translate(-50%, -220%);
+  padding: .55rem 1rem; border-radius: 10px; background: var(--ink); color: var(--bg-1); font-weight: 600; font-size: .9rem; text-decoration: none; transition: transform .15s ease;
+}
+.skip:focus, .skip:focus-visible { transform: translate(-50%, 0); outline: 2px solid var(--cyan); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .skip { transition: none; } }
+.fit-probe { position: absolute; left: 0; top: 0; width: 0; height: 0; overflow: hidden; visibility: hidden; pointer-events: none; }

@@ -29,7 +29,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="J. Grosjean">
 <link rel="manifest" href="/site.webmanifest?v=9b028ebede">
-<link rel="stylesheet" href="/assets/app.css?v=58dc25ea4a">
+<link rel="stylesheet" href="/assets/app.css?v=38b66c88e1">
 <script src="/assets/i18n.js?v=e3234991b4" defer></script>
 <script src="/assets/labs.js?v=28d66e0db4" defer></script>
 <script src="/assets/labs2.js?v=194508f5f9" defer></script>
@@ -37,12 +37,13 @@
 <script src="/assets/labs4.js?v=1f113c584a" defer></script>
 <script src="/assets/labs5.js?v=60720498d6" defer></script>
 <script src="/assets/labs6.js?v=716e5179dc" defer></script>
-<script src="/assets/labs7.js?v=e8dbf7c1c1" defer></script>
+<script src="/assets/labs7.js?v=4ed440bdb3" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=c7f98e4527" defer></script>
+<script src="/assets/app.js?v=52e2e1be18" defer></script>
 </head>
 <body>
+<a class="skip" id="skipLink" href="#contactBtn" data-i="skipLink">Aller au contenu</a>
 <canvas id="net" aria-hidden="true"></canvas>
 
 <main>
@@ -64,9 +65,10 @@
       <button class="btn-ghost play" id="openGame" type="button" data-i="play">Jouer : protéger le serveur</button>
     </div>
     <p class="scores" id="scores">
-      <a class="score" href="https://www.ssllabs.com/ssltest/analyze.html?d=jeremy-grosjean.fr" target="_blank" rel="noopener noreferrer"><b>A+</b><span>SSL Labs</span></a>
-      <a class="score" href="https://developer.mozilla.org/fr/observatory/analyze?host=jeremy-grosjean.fr" target="_blank" rel="noopener noreferrer"><b>A+</b><span>Mozilla</span></a>
-      <a class="score" href="https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fjeremy-grosjean.fr" target="_blank" rel="noopener noreferrer"><b>100</b><span>PageSpeed</span></a>
+      <a class="score" href="https://www.ssllabs.com/ssltest/analyze.html?d=jeremy-grosjean.fr" target="_blank" rel="noopener noreferrer"><b>A+</b><span>SSL Labs</span><span class="ext" aria-hidden="true">↗</span></a>
+      <a class="score" href="https://developer.mozilla.org/fr/observatory/analyze?host=jeremy-grosjean.fr" target="_blank" rel="noopener noreferrer"><b>A+</b><span>Mozilla</span><span class="ext" aria-hidden="true">↗</span></a>
+      <a class="score" href="https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fjeremy-grosjean.fr" target="_blank" rel="noopener noreferrer"><b>100</b><span>PageSpeed</span><span class="ext" aria-hidden="true">↗</span></a>
+      <span class="score score-priv"><span data-i="privacyLine">0 cookie · 0 traceur</span></span>
     </p>
     <p class="keys"><span data-i="keysHint">Terminal :</span> <kbd id="kbdMod" title="Ctrl">Ctrl</kbd> + <kbd>K</kbd><span class="keys-sep" aria-hidden="true"> · </span><button class="keys-help" id="keysBtn" type="button"><kbd>?</kbd> <span data-i="keysHelp">raccourcis</span></button></p>
   </div>
@@ -116,6 +118,7 @@
   <span class="net-pill" id="netPill" role="status" aria-live="polite"><i aria-hidden="true"></i><span class="net-lbl" id="netTxt">En ligne</span></span>
   <button class="icon-btn" id="themeBtn" type="button" aria-label="Thème : automatique" title="Thème : automatique">
     <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg>
+    <span class="theme-lbl" id="themeLbl" aria-hidden="true">Auto</span>
   </button>
   <div class="lang" id="langBox">
     <span class="sr" id="langLabel">Langue</span>
@@ -142,19 +145,19 @@
   <div class="dock-left">
     <button class="pill" id="secBtn" type="button" aria-haspopup="dialog">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6z"/><path class="ok" d="m9 12 2 2 4-4"/></svg>
-      <span class="lbl" data-i="secBtn">Sécurité</span>
+      <span class="lbl" data-i="secBtn">Sécurité</span><span class="lbl-s" aria-hidden="true" data-i="secBtn">Sécurité</span>
     </button>
     <button class="pill" id="supBtn" type="button" aria-haspopup="dialog">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2.5-6 4 12 2.5-6H21"/></svg>
-      <span class="lbl" data-i="supBtn">Supervision</span>
+      <span class="lbl" data-i="supBtn">Supervision</span><span class="lbl-s" aria-hidden="true" data-i="supBtn">Supervision</span>
     </button>
     <button class="pill mono" id="termBtn" type="button" aria-haspopup="dialog">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 8 4 4-4 4M12 16h7"/></svg>
-      <span class="lbl" data-i="termBtn">Terminal</span>
+      <span class="lbl" data-i="termBtn">Terminal</span><span class="lbl-s" aria-hidden="true" data-i="termBtn">Terminal</span>
     </button>
     <button class="pill" id="sizeBtn" type="button">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 19 7.5 6l5 13M4.4 14.5h6.2"/><path d="M14 19l3.5-8 3.5 8M15.2 16.2h4.6"/></svg>
-      <span class="lbl">A</span>
+      <span class="lbl">A</span><span class="lbl-s" aria-hidden="true" data-i="sizeShort">Texte</span>
     </button>
     <button class="pill size-reset-dock" id="sizeResetDock" type="button" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>
@@ -163,7 +166,7 @@
   <p class="dock-mid"><span class="privacy" data-i="privacyLine">0 cookie · 0 traceur</span><span class="loadt" id="loadT" hidden></span><span class="sep" aria-hidden="true"> · </span><span class="legal-row"><a class="legal-link" href="/mentions-legales.html" data-i="legalLink">Mentions légales</a><span class="sep lr-sep" aria-hidden="true"> · </span><a class="legal-link" href="/accessibilite.html" data-i="a11yLink">Accessibilité</a><span class="sep lr-sep" aria-hidden="true"> · </span><button class="legal-link news-link" id="newsBtn" type="button" aria-haspopup="dialog" data-i="newsLink">Nouveautés</button><span class="sep lr-sep gl-sep" aria-hidden="true"> · </span><button class="legal-link" id="glossBtn" type="button" aria-haspopup="dialog" data-i="glossLink">Glossaire</button></span><span class="upd" id="updLine" hidden></span></p>
   <button class="pill sound" id="sound" type="button" aria-pressed="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path id="sWave" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" opacity=".25"/></svg>
-    <span class="lbl" id="sLabel">Activer le son</span>
+    <span class="lbl" id="sLabel">Activer le son</span><span class="lbl-s" aria-hidden="true" data-i="soundShort">Son</span>
   </button>
 </div>
 
@@ -247,12 +250,15 @@
 <div class="panel" id="contactPanel" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
   <div class="card">
     <h2 id="contactTitle" data-i="contactTitle">Me contacter</h2>
+    <div class="c-col c-main">
     <p data-i="contactIntro">Pour une alternance, une question ou un échange, écrivez-moi :</p>
     <p class="mail-box"><span id="mailAddr">contact [at] jeremy-grosjean.fr</span></p>
     <div class="actions contact-main">
       <button class="btn" id="copyMail" type="button" data-i="copyMail">Copier l’adresse</button>
       <button class="btn-ghost" id="contactSlot" type="button" data-i="slotBtn">Proposer un créneau</button>
     </div>
+    </div>
+    <div class="c-col c-mail">
     <p class="wm-lbl" data-i="wmLabel">Écrire en un clic avec :</p>
     <div class="webmail">
       <a class="wm" id="wmGmail" href="#" target="_blank" rel="noopener noreferrer"><i class="wm-dot g" aria-hidden="true"></i><span class="wm-t"><span>Gmail</span><small>Google</small></span></a>
@@ -262,6 +268,8 @@
       <a class="wm wm-wide" id="openMail" href="#"><i class="wm-dot m" aria-hidden="true"></i><span class="wm-t"><span data-i="wmApp">Ma messagerie</span><small data-i="wmAppSub">Mail, Outlook, Thunderbird… installée sur l’ordinateur</small></span></a>
     </div>
     <p class="wm-note" data-i="wmNote">Le message s’ouvre déjà rempli dans votre compte. Rien ne passe par ce site.</p>
+    </div>
+    <div class="c-col c-keep">
     <p class="wm-lbl" data-i="keepLbl">Garder mon contact :</p>
     <div class="contact-extra">
       <img class="qr" src="/qr-contact.svg" width="140" height="140" alt="QR code : fiche contact de Jérémy Grosjean" id="qrImg">
@@ -269,6 +277,7 @@
         <p class="qr-cap" data-i="qrCap">Scannez pour enregistrer ma fiche dans votre téléphone</p>
         <a class="btn-ghost vcf" href="/contact.vcf" id="vcfLink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="3.2"/><path d="M3.5 19c.8-3 3-4.6 5.5-4.6s4.7 1.6 5.5 4.6M17 8v6M14 11h6"/></svg><span data-i="saveContact">Ajouter à mes contacts</span></a>
       </div>
+    </div>
     </div>
   </div>
 </div>
