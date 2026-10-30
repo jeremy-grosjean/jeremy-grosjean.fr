@@ -514,21 +514,26 @@ with sync_playwright() as p:
         erreurs.append(f'rotation du téléphone : le journal de démarrage reste vide après retour à la verticale {vis}')
     ctx.close()
     ok('téléphone tourné puis remis droit : le journal de démarrage reste affiché')
-    # Plein écran sur téléphone : barres du navigateur visibles (écran 744 px, 874 px sans les barres),
-    # la page peut glisser pour les cacher et la barre du bas reste visible ; barres cachées, le site occupe tout l'écran sans défiler
-    ctx = nav.new_context(viewport={'width': 402, 'height': 744}, has_touch=True, is_mobile=True, locale='fr-FR', timezone_id='Europe/Paris')
+    # Plein écran sur téléphone (écran de 874 px, barres du navigateur visibles : 744 px visibles) :
+    # la page peut glisser pour cacher les barres, la barre du bas reste visible ; barres cachées (800 px visibles),
+    # le site occupe tout l'écran sans rien à faire défiler ; barres revenues, la page peut de nouveau glisser
+    ctx = nav.new_context(viewport={'width': 402, 'height': 744}, screen={'width': 402, 'height': 874}, has_touch=True, is_mobile=True, locale='fr-FR', timezone_id='Europe/Paris')
     pg = ctx.new_page(); suivre(pg, 'plein écran')
     pg.add_init_script("localStorage.setItem('jg-tour', '1')")
     pg.goto(BASE + '/'); pg.wait_for_timeout(1200)
-    # hauteur « barres cachées » simulée (CSSOM : autorisé par la CSP stricte de la version en ligne) ; le site doit déclarer 100lvh
-    if 'lvh' not in pg.evaluate("[...document.styleSheets].flatMap(f => { try { return [...f.cssRules].map(r => r.cssText); } catch (e) { return []; } }).join(' ')"):
-        erreurs.append('plein écran sur téléphone : la règle min-height 100lvh a disparu')
-    pg.evaluate("document.documentElement.style.setProperty('min-height', '874px', 'important')"); pg.wait_for_timeout(300)
-    a_ = pg.evaluate("({ doc: document.documentElement.scrollHeight, dock: document.querySelector('.dock').getBoundingClientRect().bottom, vh: innerHeight })")
-    pg.set_viewport_size({'width': 402, 'height': 874}); pg.wait_for_timeout(700)
-    b_ = pg.evaluate("({ doc: document.documentElement.scrollHeight, corps: document.body.getBoundingClientRect().height, dock: document.querySelector('.dock').getBoundingClientRect().bottom, vh: innerHeight })")
-    if not (a_['doc'] > a_['vh'] + 50 and a_['dock'] <= a_['vh'] and b_['doc'] <= b_['vh'] + 1 and b_['corps'] >= b_['vh'] - 1 and b_['dock'] > b_['vh'] - 60):
-        erreurs.append(f'plein écran sur téléphone : barres visibles {a_}, barres cachées {b_}')
+    M = "({ doc: document.documentElement.scrollHeight, corps: Math.round(document.body.getBoundingClientRect().height), dock: Math.round(document.querySelector('.dock').getBoundingClientRect().bottom), vh: innerHeight })"
+    a_ = pg.evaluate(M)
+    pg.set_viewport_size({'width': 402, 'height': 800}); pg.wait_for_timeout(500); b_ = pg.evaluate(M)
+    pg.set_viewport_size({'width': 402, 'height': 744}); pg.wait_for_timeout(500); c_ = pg.evaluate(M)
+    if not (a_['doc'] >= 874 and a_['dock'] <= a_['vh'] and b_['doc'] <= b_['vh'] + 1 and b_['corps'] >= b_['vh'] - 1 and b_['dock'] > b_['vh'] - 60 and c_['doc'] >= c_['vh'] + 50 and c_['dock'] <= c_['vh']):
+        erreurs.append(f'plein écran sur téléphone : barres visibles {a_}, barres cachées {b_}, barres revenues {c_}')
+    ctx.close()
+    # Sur ordinateur (souris), rien ne change : la page ne défile pas
+    ctx = nav.new_context(viewport={'width': 1280, 'height': 800}, screen={'width': 1440, 'height': 900}, locale='fr-FR')
+    pg = ctx.new_page(); suivre(pg, 'plein écran ordinateur'); pg.add_init_script("localStorage.setItem('jg-tour', '1')")
+    pg.goto(BASE + '/'); pg.wait_for_timeout(800)
+    if pg.evaluate("document.documentElement.scrollHeight > innerHeight + 1"):
+        erreurs.append('ordinateur : la page défile alors qu’elle tient dans l’écran')
     ctx.close()
     ok('téléphone : la page peut glisser pour cacher les barres du navigateur, puis occupe tout l’écran')
     # Fluidité : le jeu va à la même vitesse sur un écran 30 Hz, 60 Hz, 144 Hz ou 240 Hz (hasard figé pour comparer)

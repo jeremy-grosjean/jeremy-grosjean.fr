@@ -2972,6 +2972,25 @@
     if (!G.on && nodes.length && Math.abs(window.innerWidth / UIS - W) < 1 && Math.abs(Math.min(window.devicePixelRatio || 1, 2) - dpr) < .01) refit(); else setup();
   }, 150); });
 
+  /* Plein écran sur téléphone. Les navigateurs mobiles (Safari, Brave, Firefox…) ne cachent leurs barres que si la page
+     peut défiler d'au moins leur hauteur, et beaucoup ne donnent pas cette hauteur au CSS (100lvh = écran visible).
+     On donne donc à la page la hauteur totale de l'écran du téléphone : la page glisse, les barres se cachent.
+     Dès que l'écran visible grandit (barres cachées), on retient cette hauteur exacte : la page remplit alors
+     l'écran sans rien à faire défiler, et redevient glissable si les barres reviennent. */
+  (function pleinEcran() {
+    if (!window.matchMedia || !matchMedia('(pointer: coarse)').matches || !window.screen) return;
+    let cle = '', depart = 0, max = 0;
+    const ajuster = () => {
+      const paysage = innerWidth > innerHeight, k = (paysage ? 'P' : 'V') + innerWidth;
+      if (k !== cle) { cle = k; depart = innerHeight; max = innerHeight; }
+      max = Math.max(max, innerHeight);
+      const ecran = paysage ? Math.min(screen.width, screen.height) : Math.max(screen.width, screen.height);
+      const cible = max > depart ? max : Math.max(ecran, innerHeight);
+      document.documentElement.style.setProperty('--jg-plein', cible + 'px');
+    };
+    ajuster(); addEventListener('resize', ajuster, { passive: true });
+  })();
+
   /* Raccourci affiché selon l'appareil : ⌘ + K sur Mac, iPhone et iPad ; Ctrl + K ailleurs */
   (function showShortcut() {
     const ua = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || navigator.userAgent || '';
