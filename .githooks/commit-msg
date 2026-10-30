@@ -1,0 +1,17 @@
+#!/bin/bash
+# Message de commit au format « type: description » (Conventional Commits), pour un historique lisible
+# et des Nouveautés du site propres. Types : feat fix perf docs style refactor test ci chore build
+PREMIERE="$(grep -v '^#' "$1" | head -n 1)"
+case "$PREMIERE" in Merge\ *|Revert\ *|fixup!\ *|squash!\ *) exit 0 ;; esac
+if printf '%s' "$PREMIERE" | grep -qE '^(feat|fix|perf|docs|style|refactor|test|ci|chore|build)(\([a-z0-9._-]+\))?!?: .{3,}'; then
+  exit 0
+fi
+cat >&2 <<MSG
+✗ Message de commit refusé : « $PREMIERE »
+  Format attendu :  type: description courte
+  Exemples :        feat: jeu de priorisation des tickets
+                    fix: le minuteur ne repart plus après une pause
+                    docs: explication du retour arrière
+  Types : feat (nouveauté) · fix (correction) · perf · docs · style · refactor · test · ci · chore · build
+MSG
+exit 1

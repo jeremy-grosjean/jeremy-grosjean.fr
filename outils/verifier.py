@@ -128,6 +128,29 @@ else:
                 if ref[c].startswith('tableau') or ref[c].startswith('objet'):
                     erreur(f'{l} : « {c} » n’a pas la même forme qu’en français ({T[l][c]} au lieu de {ref[c]})')
     print(f'  {len(ref)} textes comparés dans {len(T)} langues')
+# Un fichier de textes chargé plus tard ne doit pas écraser par erreur un texte existant
+# (déjà arrivé : « tickets » et « rsTitle »). Seules les clés de VOULUS sont redéfinies exprès.
+VOULUS = {'play', 'tourPlay', 'supLabels'}
+CODE2 = r"""
+const fs = require('fs'), vm = require('vm'), base = process.argv[1];
+const w = {}; const ctx = { window: w }; vm.createContext(ctx);
+const ser = v => typeof v === 'function' ? v.toString() : JSON.stringify(v);
+let avant = {}; const out = [];
+for (const f of ['i18n.js', 'labs.js', 'labs2.js', 'labs3.js', 'labs4.js', 'labs5.js', 'labs6.js']) {
+  vm.runInContext(fs.readFileSync(base + '/assets/' + f, 'utf8'), ctx);
+  const L = w.JG_I18N;
+  for (const k in avant) for (const c in avant[k]) if (L[k] && c in L[k] && !Array.isArray(L[k][c]) && ser(L[k][c]) !== avant[k][c]) out.push([f, k, c]);
+  avant = {}; for (const k in L) { avant[k] = {}; for (const c in L[k]) if (!Array.isArray(L[k][c])) avant[k][c] = ser(L[k][c]); }
+}
+console.log(JSON.stringify(out));
+"""
+r = subprocess.run(['node', '-e', CODE2, str(SITE)], capture_output=True, text=True)
+if not r.returncode:
+    ecrases = sorted({(f, c) for f, k, c in json.loads(r.stdout) if c not in VOULUS})
+    for f, c in ecrases[:12]:
+        erreur(f'{f} : le texte « {c} » écrase un texte déjà défini (choisissez un autre nom de clé)')
+    if not ecrases:
+        print('  aucun texte écrasé par erreur entre les fichiers de traduction')
 for f in ['legal.js', 'a11y.js', '404.js']:
     texte = (SITE / 'assets' / f).read_text(encoding='utf-8')
     absentes = [l for l in LANGUES if not re.search(r'["\']?' + re.escape(l) + r'["\']?\s*:', texte)]

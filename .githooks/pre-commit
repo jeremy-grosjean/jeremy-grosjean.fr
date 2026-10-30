@@ -1,0 +1,17 @@
+#!/bin/bash
+# Avant chaque commit : vérifications rapides (HTML, liens, JavaScript, traductions, secrets, poids).
+# Un commit qui casse le site est refusé. Activé une fois avec : git config core.hooksPath .githooks
+# Contourner en cas de besoin réel (à éviter) : git commit --no-verify
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+RACINE="$(git rev-parse --show-toplevel)"
+if ! command -v python3 >/dev/null 2>&1 || ! command -v node >/dev/null 2>&1; then
+  echo "! pre-commit : python3 ou node introuvable, vérifications sautées (GitHub les fera)." >&2
+  exit 0
+fi
+if python3 "$RACINE/outils/verifier.py" > /tmp/jg-precommit.txt 2>&1; then
+  exit 0
+fi
+echo "✗ Commit refusé : les vérifications ont trouvé un problème." >&2
+grep -E '✗' /tmp/jg-precommit.txt | head -n 20 >&2
+echo "  Détail complet : python3 outils/verifier.py" >&2
+exit 1

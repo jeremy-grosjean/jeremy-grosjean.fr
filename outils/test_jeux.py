@@ -1,9 +1,35 @@
-# Test dans un vrai navigateur (Chromium) : les pages et les 7 jeux s'ouvrent sans aucune erreur JavaScript.
-#   python3 outils/test_jeux.py      (nécessite : pip install playwright && python -m playwright install chromium)
-import functools, http.server, pathlib, sys, threading
+# Test dans un vrai navigateur (Chromium) : les pages et les jeux s'ouvrent et se jouent sans aucune erreur JavaScript.
+#   python3 outils/test_jeux.py           teste les sources (site/)
+#   python3 outils/test_jeux.py --prod    teste la version en ligne (dist/, après outils/preparer.py),
+#                                         avec les en-têtes de sécurité du .htaccess (CSP, Trusted Types…)
+#   (nécessite : pip install playwright && python -m playwright install chromium)
+import functools, http.server, pathlib, re, sys, threading
 from playwright.sync_api import sync_playwright
 
-SITE = pathlib.Path(__file__).resolve().parent.parent / 'site'
+PROD = '--prod' in sys.argv
+SITE = pathlib.Path(__file__).resolve().parent.parent / ('dist' if PROD else 'site')
+if PROD and not (SITE / 'index.html').exists():
+    sys.exit('✗ dist/ introuvable : lancez d’abord python3 outils/preparer.py')
+
+
+def entetes_htaccess():
+    # Les en-têtes « Header always set » du serveur (OVH), pour que le navigateur de test applique la même politique.
+    # HSTS et upgrade-insecure-requests sont retirés : le serveur de test est en http local.
+    regles = (SITE / '.htaccess').read_text()
+    general, sw = {}, {}
+    bloc_sw = re.search(r'<Files "sw\.js">(.*?)</Files>', regles, re.S)
+    for nom, val in re.findall(r'^\s*Header always set ([\w-]+) "([^"]*)"', regles.replace(bloc_sw.group(0), '') if bloc_sw else regles, re.M):
+        if nom.lower() != 'strict-transport-security':
+            general[nom] = val.replace('; upgrade-insecure-requests', '')
+    if bloc_sw:
+        sw = dict(re.findall(r'Header always set ([\w-]+) "([^"]*)"', bloc_sw.group(1)))
+    return general, sw
+
+
+ENTETES, ENTETES_SW = entetes_htaccess() if PROD else ({}, {})
+if PROD:
+    assert 'Content-Security-Policy' in ENTETES, 'CSP absente du .htaccess de dist/'
+    print('  › version en ligne (dist/) avec', len(ENTETES), 'en-têtes de sécurité du .htaccess')
 
 
 class Serveur(http.server.SimpleHTTPRequestHandler):
@@ -12,6 +38,15 @@ class Serveur(http.server.SimpleHTTPRequestHandler):
             self.send_response(404); self.send_header('Content-Type', 'text/html; charset=utf-8'); self.end_headers()
             return open(SITE / '404.html', 'rb')
         return super().send_head()
+
+    def end_headers(self):
+        chemin = self.path.split('?')[0]
+        for nom, val in (ENTETES_SW if chemin.endswith('/sw.js') else {}).items():
+            self.send_header(nom, val)
+        for nom, val in ENTETES.items():
+            if not (chemin.endswith('/sw.js') and nom in ENTETES_SW):
+                self.send_header(nom, val)
+        super().end_headers()
 
     def log_message(self, *a):
         pass
@@ -88,6 +123,10 @@ with sync_playwright() as p:
         pg.evaluate("document.getElementById('openGame').click(); document.getElementById('pickServer').click()"); pg.wait_for_timeout(150)
         if not pg.evaluate("document.getElementById('resumePanel').classList.contains('open')"):
             erreurs.append(f'{nom} : la partie sauvegardée n’est pas proposée à la reprise')
+        # Régression : ce titre avait été écrasé par un autre texte (« rsTitle » défini deux fois)
+        titre = pg.evaluate("document.getElementById('rsTitle').textContent.trim()")
+        if titre not in ('Partie en cours', 'Game in progress'):
+            erreurs.append(f'{nom} : titre de la fenêtre de reprise inattendu : « {titre} »')
         pg.evaluate("document.getElementById('rsResume').click()"); pg.wait_for_timeout(150)
         apres = pg.evaluate("[document.getElementById('hLevel').textContent, document.getElementById('hScore').textContent, document.getElementById('hTime').textContent]")
         if apres != avant or not pg.evaluate("document.getElementById('pausePanel').classList.contains('open')"):
@@ -289,7 +328,7 @@ with sync_playwright() as p:
           const hb = row.querySelector('.hint-btn'); hb.click(); await w(30);
           out.h1 = document.querySelectorAll('#qzOpts .hint-off').length; out.t1 = row.querySelector('.hint-txt').textContent;
           hb.click(); await w(30); out.t2 = row.querySelector('.hint-txt').textContent;
-          hb.click(); await w(30); out.h3 = !!document.querySelector('#qzOpts .hint-good'); out.btnGone = hb.hidden;
+          hb.click(); await w(30); out.h3 = !!document.querySelector('#qzOpts .hint-good'); out.good = out.h3 ? document.querySelector('#qzOpts .hint-good').textContent.trim() : ''; out.btnGone = hb.hidden;
           document.querySelector('#qzOpts .hint-good').click(); await w(40); out.rowHidden = row.hidden;
           $('qzNext').click(); await w(60); out.reset = !row.hidden && row.querySelector('.hint-txt').textContent === '' && !hb.hidden;
           $('qzQuit').click(); await w(80);
@@ -310,6 +349,9 @@ with sync_playwright() as p:
           out.resetAll = !document.documentElement.dataset.sky && !$('seasonFx') && !$('fxJg').checked && !$('fxSky').checked && !document.documentElement.dataset.size;
           return out;
         }""")
+        # Régression : l'indice 2 ne doit jamais donner la réponse entière (déjà arrivé avec une réponse chiffrée)
+        if res.get('good') and len(res['good']) > 1 and res['good'] in res['t2']:
+            erreurs.append(f"{nom} : l’indice 2 révèle la réponse entière ({res['t2']})")
         if not (res['skyOff'] and res['seasonOff'] and res['morphOff'] and res['rowShown'] and res['h1'] == 1 and 'retirée' in res['t1'] and res['t2'].startswith(('Indice 2', 'Indice 3')) and res['h3'] and res['btnGone'] and res['rowHidden'] and res['reset'] and res['prOff'] >= 3 and res['ph'] and res['dockReset'] and res['sizeBack'] and res['skyOn'] and res['seasonMatch'] and res['morphOn'] and res['resetAll']):
             erreurs.append(f'{nom} : lot 18 {res}')
         ok(f'{nom} : indices 1-2-3, taille par défaut, ciel / « JG » / saison désactivés par défaut puis activables, tout remettre par défaut')

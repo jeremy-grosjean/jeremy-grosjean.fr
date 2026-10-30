@@ -43,10 +43,15 @@ Site personnel de **Jérémy Grosjean**, technicien informatique, disponible pou
 
 ## Vérifications automatiques
 
-À chaque envoi sur GitHub, [GitHub Actions](.github/workflows/verifier.yml) lance :
+Ma façon de travailler (tests, contrôles avant publication, retour arrière) est expliquée dans [METHODE.md](METHODE.md).
 
-- `outils/verifier.py` : HTML (langue, titre, identifiants uniques, textes alternatifs, aucun script ni style en ligne, comme l'exige la CSP), liens internes, syntaxe JavaScript, traductions complètes dans les 6 langues, recherche de mots de passe, jetons ou clés privées, poids du site ;
-- `outils/test_jeux.py` : ouverture des pages, des fenêtres et des 7 jeux dans un vrai navigateur (Chromium), sur ordinateur et sur mobile, sans aucune erreur JavaScript.
+À chaque envoi sur GitHub, chaque semaine, et avant chaque mise en ligne, [GitHub Actions](.github/workflows/verifier.yml) lance :
+
+- `outils/verifier.py` : HTML (langue, titre, identifiants uniques, textes alternatifs, aucun script ni style en ligne, comme l'exige la CSP), liens internes, syntaxe JavaScript, traductions complètes dans les 6 langues (et aucun texte écrasé par erreur), recherche de mots de passe, jetons ou clés privées, poids du site ;
+- `outils/test_jeux.py` : les pages, les fenêtres et tous les jeux joués jusqu'au bout dans un vrai navigateur (Chromium), sur ordinateur, mobile et téléphone à l'horizontale, 18 tailles d'écran, plusieurs fréquences d'écran, et dans trois fuseaux horaires ;
+- `outils/test_jeux.py --prod` : les mêmes tests sur la **version en ligne** (minifiée), avec les vrais en-têtes de sécurité du `.htaccess` (CSP, Trusted Types).
+
+Les mêmes vérifications tournent aussi sur l'ordinateur avant chaque commit (`.githooks/`), et `publier.sh` refuse d'envoyer une version dont la vérification GitHub a échoué.
 
 Aucun mot de passe ni clé n'est confié à GitHub.
 
@@ -61,11 +66,13 @@ site/                     le site, tel qu'il est publié (version lisible)
   assets/                 styles, scripts, traductions (i18n.js, labs.js, labs2.js, labs3.js, labs4.js, labs5.js, labs6.js), fonts/ (police Sora, licence SIL OFL)
   sw.js                   service worker (mode hors ligne)
   .htaccess               en-têtes de sécurité et redirections (Apache)
+.githooks/                vérifications avant chaque commit et format des messages de commit
 docs/                     politique MTA-STS, publiée par GitHub Pages sur mta-sts.jeremy-grosjean.fr
 outils/
   preparer.py             minifie, intègre la feuille de style (empreinte CSP), versionne et crée le zip
   empreintes.py           empreintes ?v=… anti-cache + génération du service worker
-  publier.sh              tout en une commande : préparer, envoyer, vérifier
+  publier.sh              tout en une commande : garde-fous, préparer, envoyer, vérifier, archiver
+  restaurer.sh            retour à une version précédente du site (10 versions archivées)
   mettre-a-jour-site.sh   mise en ligne par SFTP, vérifications et annulation automatique
   qr.py                   générateur de QR code (sans dépendance)
   verifier.py             vérifications automatiques (HTML, liens, JS, traductions, secrets, poids)
@@ -82,7 +89,13 @@ Une seule commande :
 bash outils/publier.sh
 ```
 
-Elle prépare la version en ligne (minification avec esbuild si présent, empreintes anti-cache, service worker), l'envoie par **SFTP** (le mot de passe est demandé à chaque fois et n'est jamais enregistré), relève la supervision, puis vérifie en ligne les fichiers, les en-têtes, les redirections, la page 404 et le refus des requêtes autres que `GET`/`HEAD`. En cas de panne, le `.htaccess` est retiré automatiquement. Pour finir, elle signale si GitHub n'est pas à jour.
+Avant d'envoyer quoi que ce soit, elle vérifie que tout est enregistré dans Git, relance les vérifications locales, contrôle que la vérification GitHub de ce commit est verte, et affiche ce qui a changé depuis la dernière mise en ligne. Ensuite, elle prépare la version en ligne (minification avec esbuild si présent, empreintes anti-cache, service worker), l'envoie par **SFTP** (le mot de passe est demandé à chaque fois et n'est jamais enregistré), relève la supervision, puis vérifie en ligne les fichiers, les en-têtes, les redirections, la page 404 et le refus des requêtes autres que `GET`/`HEAD`. En cas de panne, le `.htaccess` est retiré automatiquement. Pour finir, elle archive la version envoyée et signale si GitHub n'est pas à jour.
+
+En cas de problème après une mise en ligne, retour à la version précédente en une commande :
+
+```
+bash outils/restaurer.sh
+```
 
 Les deux étapes existent aussi séparément : `outils/preparer.py` puis `outils/mettre-a-jour-site.sh`.
 
