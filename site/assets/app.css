@@ -717,6 +717,11 @@ html:lang(ko) .gl-list, html:lang(ko) .gl-tip, html:lang(ko) .ph-mail, html:lang
 html, body { height: auto; min-height: 100%; }
 body { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; overflow-x: hidden; overflow-y: auto; touch-action: pan-y; }
 body.playing { overflow: hidden; touch-action: none; }
+/* Plein écran sur téléphone : les navigateurs mobiles ne cachent leurs barres (adresse, boutons) que si la page défile.
+   Le contenu (body) occupe l'écran visible (dvh) ; la page (html) mesure la hauteur de l'écran barres cachées (lvh).
+   Il reste donc juste la place de faire glisser la page : les barres se cachent, l'écran visible grandit,
+   le contenu s'étend sur tout l'écran et il n'y a plus rien à faire défiler. Sur ordinateur : aucun changement. */
+@supports (height: 100lvh) { html { min-height: 100lvh; } }
 main { flex: 1 0 auto; min-height: 0;
   padding: calc(max(1rem, env(safe-area-inset-top)) + 4rem) max(1rem, env(safe-area-inset-right)) .75rem max(1rem, env(safe-area-inset-left)); }
 body.has-local main { padding-top: calc(max(1rem, env(safe-area-inset-top)) + 5.2rem); }

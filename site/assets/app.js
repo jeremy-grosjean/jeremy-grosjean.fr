@@ -2961,7 +2961,16 @@
   window.addEventListener('pagehide', () => { if (G.on) writeSave(); });
   /* Changement d'onglet ou d'application pendant la partie : pause automatique */
   document.addEventListener('visibilitychange', () => { if (document.hidden && G.on && G.active) pauseGame(); else if (!document.hidden && G.on) G.last = performance.now(); });
-  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(setup, 150); });
+  /* Barres du navigateur mobile qui se cachent ou reviennent : seule la hauteur change.
+     Le réseau est alors étiré à la nouvelle hauteur au lieu d'être redessiné au hasard (pas de saut à l'écran). */
+  function refit() {
+    const ph = window.innerHeight, nh = ph / UIS, k = nh / H;
+    c.height = Math.round(ph * dpr); H = nh; glow.y *= k;
+    for (const n of nodes) n.y *= k;
+  }
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => {
+    if (!G.on && nodes.length && Math.abs(window.innerWidth / UIS - W) < 1 && Math.abs(Math.min(window.devicePixelRatio || 1, 2) - dpr) < .01) refit(); else setup();
+  }, 150); });
 
   /* Raccourci affiché selon l'appareil : ⌘ + K sur Mac, iPhone et iPad ; Ctrl + K ailleurs */
   (function showShortcut() {
