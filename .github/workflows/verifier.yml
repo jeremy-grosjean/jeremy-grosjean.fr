@@ -1,11 +1,15 @@
-# Vérifications automatiques à chaque envoi sur GitHub : HTML, liens, JavaScript, traductions, secrets, poids,
-# puis test des pages et des jeux dans un vrai navigateur. Aucun mot de passe ni clé n'est utilisé.
+# Vérifications automatiques à chaque envoi sur GitHub, à chaque demande de fusion et chaque lundi :
+# HTML, liens, JavaScript, traductions, secrets, poids, puis pages et jeux dans un vrai navigateur,
+# dans trois fuseaux horaires, et sur la version en ligne (minifiée, avec les en-têtes du .htaccess).
+# Aucun mot de passe ni clé n'est utilisé. Méthode complète : METHODE.md
 name: Vérifier le site
 
 on:
   push:
     branches: [main]
   pull_request:
+  schedule:
+    - cron: '17 6 * * 1'
   workflow_dispatch:
 
 permissions:
@@ -17,9 +21,15 @@ concurrency:
 
 jobs:
   verifier:
-    name: Vérifier le site
+    name: Sources (${{ matrix.tz }})
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        tz: [Europe/Paris, UTC, America/New_York]
+    env:
+      TZ: ${{ matrix.tz }}
     steps:
       - name: Récupérer le code
         uses: actions/checkout@v5
@@ -46,3 +56,38 @@ jobs:
 
       - name: Pages et jeux dans un vrai navigateur
         run: python3 outils/test_jeux.py
+
+  version-en-ligne:
+    name: Version en ligne (minifiée, CSP)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          fetch-depth: 40
+
+      - name: Installer Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Préparer la version en ligne (comme publier.sh)
+        run: |
+          npm install --no-save --no-audit --no-fund esbuild@0.25.10
+          export PATH="$PWD/node_modules/.bin:$PATH"
+          python3 outils/preparer.py
+
+      - name: Installer le navigateur de test
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.63.0
+          python -m playwright install --with-deps chromium
+
+      - name: Pages et jeux sur la version en ligne
+        run: python3 outils/test_jeux.py --prod
