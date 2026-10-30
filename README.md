@@ -47,7 +47,7 @@ Ma façon de travailler (tests, contrôles avant publication, retour arrière) e
 
 À chaque envoi sur GitHub, chaque semaine, et avant chaque mise en ligne, [GitHub Actions](.github/workflows/verifier.yml) lance :
 
-- `outils/verifier.py` : HTML (langue, titre, identifiants uniques, textes alternatifs, aucun script ni style en ligne, comme l'exige la CSP), liens internes, syntaxe JavaScript, traductions complètes dans les 6 langues (et aucun texte écrasé par erreur), recherche de mots de passe, jetons ou clés privées, poids du site ;
+- `outils/verifier.py` : HTML (langue, titre, identifiants uniques, textes alternatifs, aucun script ni style en ligne, comme l'exige la CSP), liens internes, syntaxe JavaScript, traductions complètes dans les 6 langues (et aucun texte écrasé par erreur), apostrophes typographiques, recherche de mots de passe, jetons ou clés privées, poids du site ;
 - `outils/test_jeux.py` : les pages, les fenêtres et tous les jeux joués jusqu'au bout dans un vrai navigateur (Chromium), sur ordinateur, mobile et téléphone à l'horizontale, 18 tailles d'écran, plusieurs fréquences d'écran, et dans trois fuseaux horaires ;
 - `outils/test_jeux.py --prod` : les mêmes tests sur la **version en ligne** (minifiée), avec les vrais en-têtes de sécurité du `.htaccess` (CSP, Trusted Types).
 
@@ -76,6 +76,7 @@ outils/
   mettre-a-jour-site.sh   mise en ligne par SFTP, vérifications et annulation automatique
   qr.py                   générateur de QR code (sans dépendance)
   verifier.py             vérifications automatiques (HTML, liens, JS, traductions, secrets, poids)
+  apostrophes.py          apostrophes typographiques dans les textes affichés (--corriger pour réparer)
   test_jeux.py            test des pages et des jeux dans un navigateur
   signer-security-txt.sh  signe security.txt avec ma clé PGP (source : outils/security.txt)
   cle-uptime.sh           enregistre la clé UptimeRobot en lecture seule (vérifiée, jamais affichée)

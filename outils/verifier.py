@@ -157,6 +157,14 @@ for f in ['legal.js', 'a11y.js', '404.js']:
     if absentes:
         erreur(f'{f} : langues absentes {absentes}')
 
+etape('Typographie')
+# Apostrophes typographiques (’) dans tous les textes affichés : voir outils/apostrophes.py (--corriger pour réparer)
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import apostrophes
+for f, k in apostrophes.restantes(SITE):
+    erreur(f'{f} : {k} apostrophe(s) droite(s) dans un texte affiché (python3 outils/apostrophes.py --corriger)')
+print('  apostrophes vérifiées dans les textes affichés')
+
 etape('Secrets')
 MOTIFS = [
     (r'-----BEGIN (RSA |EC |OPENSSH |DSA |PGP )?PRIVATE KEY', 'clé privée'),

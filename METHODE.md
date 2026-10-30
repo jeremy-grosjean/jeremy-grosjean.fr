@@ -28,6 +28,7 @@ Le hook `.githooks/pre-commit` lance `outils/verifier.py` avant chaque commit. I
 
 - le HTML, les liens et la syntaxe JavaScript ;
 - les traductions dans les 6 langues ;
+- la typographie : apostrophes courbes (’) dans tous les textes affichés, réparables avec `python3 outils/apostrophes.py --corriger` ;
 - l'absence de mots de passe, de clés et de jetons ;
 - le poids du site.
 

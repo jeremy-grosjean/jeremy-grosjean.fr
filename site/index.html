@@ -27,8 +27,8 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=ea10cf004d">
 <link rel="manifest" href="/site.webmanifest?v=1170d79b15">
 <link rel="stylesheet" href="/assets/app.css?v=6750dd7284">
-<script src="/assets/i18n.js?v=91faf46deb" defer></script>
-<script src="/assets/labs.js?v=24e840f65d" defer></script>
+<script src="/assets/i18n.js?v=405758b458" defer></script>
+<script src="/assets/labs.js?v=28d66e0db4" defer></script>
 <script src="/assets/labs2.js?v=194508f5f9" defer></script>
 <script src="/assets/labs3.js?v=e42ceff3d6" defer></script>
 <script src="/assets/labs4.js?v=1f113c584a" defer></script>
@@ -191,7 +191,7 @@
     <p id="lvWhat"></p>
     <div class="legend" id="lvLegend"></div>
     <p class="defense" id="lvHow"></p>
-    <div class="actions"><button class="btn" id="lvGo" type="button" data-i="go">C'est parti</button><button class="btn-ghost" id="lvQuit" type="button" data-i="lvQuit">Quitter le jeu</button></div>
+    <div class="actions"><button class="btn" id="lvGo" type="button" data-i="go">C’est parti</button><button class="btn-ghost" id="lvQuit" type="button" data-i="lvQuit">Quitter le jeu</button></div>
   </div>
 </div>
 
@@ -237,7 +237,7 @@
     <h3 class="eco-title" data-i="ecoTitle">Léger et accessible</h3>
     <ul class="eco-list" id="ecoList"></ul>
     <p class="eco-note" id="ecoNote"></p>
-    <div class="actions"><button class="btn" id="secRerun" type="button" data-i="secRerun">Relancer l'audit</button><button class="btn-ghost" id="secReport" type="button" data-i="secReport">Rapport PDF</button><button class="btn-ghost" id="secClose" type="button" data-i="close">Fermer</button></div>
+    <div class="actions"><button class="btn" id="secRerun" type="button" data-i="secRerun">Relancer l’audit</button><button class="btn-ghost" id="secReport" type="button" data-i="secReport">Rapport PDF</button><button class="btn-ghost" id="secClose" type="button" data-i="close">Fermer</button></div>
   </div>
 </div>
 
@@ -253,7 +253,7 @@
       <a class="wm" id="wmPro" href="#" target="_blank" rel="noopener noreferrer"><i class="wm-dot p" aria-hidden="true"></i><span data-i="wmPro">Outlook pro</span><small>Microsoft 365</small></a>
       <a class="wm" id="wmYahoo" href="#" target="_blank" rel="noopener noreferrer"><i class="wm-dot y" aria-hidden="true"></i><span>Yahoo Mail</span></a>
     </div>
-    <p class="wm-note" data-i="wmNote">Le message s'ouvre déjà rempli dans votre compte. Rien ne passe par ce site.</p>
+    <p class="wm-note" data-i="wmNote">Le message s’ouvre déjà rempli dans votre compte. Rien ne passe par ce site.</p>
     <div class="contact-extra">
       <img class="qr" src="/qr.svg" width="120" height="120" alt="QR code : https://jeremy-grosjean.fr" id="qrImg">
       <div class="contact-side">
@@ -263,7 +263,7 @@
     </div>
     <div class="actions">
       <button class="btn-ghost" id="contactSlot" type="button" data-i="slotBtn">Proposer un créneau</button>
-      <button class="btn" id="copyMail" type="button" data-i="copyMail">Copier l'adresse</button>
+      <button class="btn" id="copyMail" type="button" data-i="copyMail">Copier l’adresse</button>
       <a class="btn-ghost" id="openMail" href="#" data-i="openMail">Ouvrir ma messagerie</a>
       <button class="btn-ghost" id="contactClose" type="button" data-i="close">Fermer</button>
     </div>
@@ -275,11 +275,11 @@
     <h2 id="gamesTitle" data-i="gamesTitle">Choisissez un jeu</h2>
     <div class="game-pick">
       <button class="pick" id="pickServer" type="button"><b data-i="pickServerT">Protéger le serveur</b><span data-i="pickServerD">Bloquez les attaques : logiciel malveillant, DDoS, hameçonnage.</span></button>
-      <button class="pick" id="pickSupport" type="button"><b data-i="pickSupportT">Support informatique N1</b><span data-i="pickSupportD">Résolvez 5 tickets d'utilisateurs en choisissant le bon diagnostic.</span></button>
-      <button class="pick" id="pickSupport2" type="button"><b data-i="pickSupport2T">Support informatique N2</b><span data-i="pickSupport2D">Niveau avancé : réseau, DHCP, Active Directory, DNS, droits d'accès.</span></button>
-      <button class="pick" id="pickPanne" type="button"><b data-i="pickPanneT">Trouve la panne</b><span data-i="pickPanneD">Un PC n'accède plus au réseau : lancez les bonnes commandes et trouvez la cause.</span></button>
+      <button class="pick" id="pickSupport" type="button"><b data-i="pickSupportT">Support informatique N1</b><span data-i="pickSupportD">Résolvez 5 tickets d’utilisateurs en choisissant le bon diagnostic.</span></button>
+      <button class="pick" id="pickSupport2" type="button"><b data-i="pickSupport2T">Support informatique N2</b><span data-i="pickSupport2D">Niveau avancé : réseau, DHCP, Active Directory, DNS, droits d’accès.</span></button>
+      <button class="pick" id="pickPanne" type="button"><b data-i="pickPanneT">Trouve la panne</b><span data-i="pickPanneD">Un PC n’accède plus au réseau : lancez les bonnes commandes et trouvez la cause.</span></button>
       <button class="pick" id="pickNoNet" type="button"><b data-i="pickNoNetT">Plus d’Internet</b><span data-i="pickNoNetD">Un utilisateur n’a plus Internet : vérifiez dans le bon ordre, du câble au navigateur.</span></button>
-      <button class="pick" id="pickQuiz" type="button"><b data-i="pickQuizT">Quiz Active Directory et GPO</b><span data-i="pickQuizD">10 questions sur AD, les GPO et le DNS, avec l'explication de chaque réponse.</span></button>
+      <button class="pick" id="pickQuiz" type="button"><b data-i="pickQuizT">Quiz Active Directory et GPO</b><span data-i="pickQuizD">10 questions sur AD, les GPO et le DNS, avec l’explication de chaque réponse.</span></button>
       <button class="pick" id="pickPhish" type="button"><b data-i="pickPhishT">Repère l’hameçonnage</b><span data-i="pickPhishD">6 e-mails : fiables ou pièges ? Les indices s’affichent après chaque réponse.</span></button>
       <button class="pick" id="pickItil" type="button"><b data-i="pickItilT">Priorise les tickets</b><span data-i="pickItilD"></span></button>
       <button class="pick" id="pickPs" type="button"><b data-i="pickPsT">Défi PowerShell</b><span data-i="pickPsD"></span></button>
@@ -616,7 +616,7 @@
       <label class="tog"><input type="checkbox" id="fxSeason"> <span><span data-i="a11ySeason">Décor de saison</span> <small class="fx-now" id="fxSeasonNow"></small></span></label>
       <button class="chip-btn" id="a11yResetAll" type="button" data-i="a11yResetAll">Tout remettre par défaut</button>
     </div>
-    <div class="actions"><button class="btn" id="installBtn" type="button" hidden data-i="installBtn">Installer l'application</button><button class="btn-ghost" id="keysClose" type="button" data-i="close">Fermer</button></div>
+    <div class="actions"><button class="btn" id="installBtn" type="button" hidden data-i="installBtn">Installer l’application</button><button class="btn-ghost" id="keysClose" type="button" data-i="close">Fermer</button></div>
     <p class="install-ios" id="installIos" hidden></p>
   </div>
 </div>

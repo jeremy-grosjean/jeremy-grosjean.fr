@@ -26,8 +26,8 @@
       ui: {
         play: 'Jouer : 4 mini-jeux',
         tourPlay: 'Quatre mini-jeux : protéger un serveur, résoudre des tickets de support, trouver une panne réseau ou répondre au quiz Active Directory.',
-        pickPanneT: 'Trouve la panne', pickPanneD: "Un PC n'accède plus au réseau : lancez les bonnes commandes et trouvez la cause.",
-        pickQuizT: 'Quiz Active Directory et GPO', pickQuizD: "10 questions sur AD, les GPO et le DNS, avec l'explication de chaque réponse.",
+        pickPanneT: 'Trouve la panne', pickPanneD: "Un PC n’accède plus au réseau : lancez les bonnes commandes et trouvez la cause.",
+        pickQuizT: 'Quiz Active Directory et GPO', pickQuizD: "10 questions sur AD, les GPO et le DNS, avec l’explication de chaque réponse.",
         pnTag: (n, t) => `Panne ${n}/${t} · Réseau`, pnPts: (s) => `${s} pts`, pnTitle: (n) => `Incident n° ${n}`, pnFrom: 'De :',
         pnCmdsL: 'Lancez des commandes sur le poste :', pnAskL: 'Votre diagnostic :', pnNeed: 'Lancez au moins une commande avant de répondre.',
         pnGood: '✓ Bon diagnostic.', pnBad: '✗ Ce n’est pas ça : relisez les résultats, du plus proche au plus lointain.', pnNext: 'Panne suivante', pnEnd: 'Voir le résultat',

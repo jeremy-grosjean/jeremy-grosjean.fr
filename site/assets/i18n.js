@@ -6,10 +6,10 @@ window.JG_I18N = {
     play: 'Jouer : protéger le serveur', keysHint: 'Terminal :',
     level: 'Niveau', score: 'Score', breaches: 'Intrusions', time: 'Temps', quit: 'Quitter',
     introTitle: 'Protégez le serveur',
-    introMouse: "Trois vagues d'attaques arrivent vers le serveur. Cliquez sur les menaces pour les bloquer avant qu'elles l'atteignent, et laissez passer le trafic légitime.",
-    introTouch: "Trois vagues d'attaques arrivent vers le serveur. Touchez les menaces pour les bloquer avant qu'elles l'atteignent, et laissez passer le trafic légitime.",
+    introMouse: "Trois vagues d’attaques arrivent vers le serveur. Cliquez sur les menaces pour les bloquer avant qu’elles l’atteignent, et laissez passer le trafic légitime.",
+    introTouch: "Trois vagues d’attaques arrivent vers le serveur. Touchez les menaces pour les bloquer avant qu’elles l’atteignent, et laissez passer le trafic légitime.",
     rules: '3 niveaux : logiciel malveillant, DDoS, hameçonnage. 3 intrusions et le serveur tombe.',
-    start: 'Commencer', cancel: 'Retour', go: "C'est parti", again: 'Rejouer', back: 'Retour au site', close: 'Fermer',
+    start: 'Commencer', cancel: 'Retour', go: "C’est parti", again: 'Rejouer', back: 'Retour au site', close: 'Fermer',
     hintMouse: 'Bougez la souris, cliquez pour envoyer une onde', hintTouch: 'Glissez le doigt, touchez pour envoyer une onde',
     soundOff: 'Activer le son', soundOn: 'Son activé', secBtn: 'Sécurité', termBtn: 'Terminal',
     themeLabel: 'Thème', themeAuto: 'automatique', themeLight: 'clair', themeDark: 'sombre',
@@ -19,31 +19,31 @@ window.JG_I18N = {
     wrong: 'Paquet légitime bloqué : −5', breach: 'Intrusion détectée', overload: 'Serveur surchargé',
     lgBad: 'Malveillant : bloquer', lgGood: 'Légitime : laisser passer', lgDdos: 'DDoS : filtrer la zone', lgPhish: 'Faux légitime : bloquer',
     levels: [
-      { name: 'Logiciel malveillant', what: "Des paquets infectés tentent d'installer un virus ou un rançongiciel sur le serveur. Bloquez-les un par un.", how: 'antivirus ou EDR à jour, mises à jour régulières et filtrage du trafic par le pare-feu.' },
-      { name: 'Attaque DDoS', what: "Des milliers de requêtes arrivent en même temps pour saturer le serveur. Chaque blocage filtre toute une zone : visez les essaims et épargnez le trafic légitime.", how: "limitation de débit, filtrage en amont et protection anti-DDoS de l'hébergeur." },
-      { name: 'Hameçonnage', what: "Certains paquets imitent le trafic légitime pour tromper le serveur. Repérez le contour en pointillés rouges et bloquez-les.", how: "vérifier l'expéditeur et les liens, activer la double authentification, publier SPF, DKIM et DMARC." }
+      { name: 'Logiciel malveillant', what: "Des paquets infectés tentent d’installer un virus ou un rançongiciel sur le serveur. Bloquez-les un par un.", how: 'antivirus ou EDR à jour, mises à jour régulières et filtrage du trafic par le pare-feu.' },
+      { name: 'Attaque DDoS', what: "Des milliers de requêtes arrivent en même temps pour saturer le serveur. Chaque blocage filtre toute une zone : visez les essaims et épargnez le trafic légitime.", how: "limitation de débit, filtrage en amont et protection anti-DDoS de l’hébergeur." },
+      { name: 'Hameçonnage', what: "Certains paquets imitent le trafic légitime pour tromper le serveur. Repérez le contour en pointillés rouges et bloquez-les.", how: "vérifier l’expéditeur et les liens, activer la double authentification, publier SPF, DKIM et DMARC." }
     ],
     secTitle: 'Ce site est sécurisé', secIntro: 'Les protections réellement en place sur jeremy-grosjean.fr :',
     sec: [
-      ['HTTPS', "Connexion chiffrée par TLS, certificat Let's Encrypt."],
+      ['HTTPS', "Connexion chiffrée par TLS, certificat Let’s Encrypt."],
       ['HSTS', 'Le navigateur refuse toute connexion non chiffrée pendant un an.'],
-      ['CSP', "Seuls les fichiers de ce site peuvent s'exécuter : aucun script externe."],
+      ['CSP', "Seuls les fichiers de ce site peuvent s’exécuter : aucun script externe."],
       ['Anti-clickjacking', 'Le site ne peut pas être intégré dans une autre page.'],
       ['DNSSEC', 'Les réponses DNS du domaine sont signées et vérifiables.'],
-      ['SPF', "Seuls les serveurs d'OVHcloud peuvent envoyer des e-mails au nom du domaine."],
+      ['SPF', "Seuls les serveurs d’OVHcloud peuvent envoyer des e-mails au nom du domaine."],
       ['DKIM', 'Chaque e-mail envoyé est signé numériquement.'],
       ['DMARC', 'Les e-mails qui usurpent le domaine sont mis en quarantaine.'],
-      ['Aucun traceur', "Ni cookie, ni publicité, ni outil de mesure d'audience."]
+      ['Aucun traceur', "Ni cookie, ni publicité, ni outil de mesure d’audience."]
     ],
     tWelcome: 'Bienvenue sur jeremy-grosjean.fr. Tapez help pour voir les commandes.',
     tHelp: [
       ['help', 'afficher cette aide'], ['whoami', 'qui êtes-vous ?'], ['about', 'à propos de ce site'], ['security', 'protections du site'],
       ['ping <hôte>', 'tester une connexion (essayez : ping recruteur)'], ['date', 'date et heure à Paris'],
       ['lang <code>', 'changer de langue : fr, en, zh-Hans, zh-Hant, yue, ko'], ['theme <mode>', 'thème : auto, light ou dark'],
-      ['play', 'lancer le jeu'], ['konami', "déclencher l'effet secret"], ['contact', 'adresse e-mail'], ['clear', "effacer l'écran"], ['exit', 'fermer le terminal']
+      ['play', 'lancer le jeu'], ['konami', "déclencher l’effet secret"], ['contact', 'adresse e-mail'], ['clear', "effacer l’écran"], ['exit', 'fermer le terminal']
     ],
     tWhoami: 'visiteur : accès invité, lecture seule.', tAbout: 'jeremy-grosjean.fr, site personnel de Jérémy Grosjean. En construction.',
-    tSoon: 'Bientôt disponible.', tSudo: "Permission refusée : cet incident sera signalé à l'administrateur. 😉",
+    tSoon: 'Bientôt disponible.', tSudo: "Permission refusée : cet incident sera signalé à l’administrateur. 😉",
     tUnknown: c => `commande introuvable : ${c}. Tapez help.`, tLangSet: l => `Langue : ${l}`, tThemeSet: m => `Thème : ${m}`,
     tUsageLang: 'Usage : lang fr | en | zh-Hans | zh-Hant | yue | ko', tUsageTheme: 'Usage : theme auto | light | dark',
     tPingReply: 'Réponse reçue : disponible pour échanger. Tapez contact.', tContact: 'E-mail :', tSecHead: 'Protections actives :',
@@ -59,7 +59,7 @@ window.JG_I18N = {
     introMouse: 'Three waves of attacks are heading for the server. Click the threats to block them before they get through, and let legitimate traffic pass.',
     introTouch: 'Three waves of attacks are heading for the server. Tap the threats to block them before they get through, and let legitimate traffic pass.',
     rules: '3 levels: malware, DDoS, phishing. 3 breaches and the server goes down.',
-    start: 'Start', cancel: 'Back', go: "Let's go", again: 'Play again', back: 'Back to site', close: 'Close',
+    start: 'Start', cancel: 'Back', go: "Let’s go", again: 'Play again', back: 'Back to site', close: 'Close',
     hintMouse: 'Move your mouse, click to send a wave', hintTouch: 'Slide your finger, tap to send a wave',
     soundOff: 'Turn sound on', soundOn: 'Sound on', secBtn: 'Security', termBtn: 'Terminal',
     themeLabel: 'Theme', themeAuto: 'automatic', themeLight: 'light', themeDark: 'dark',
@@ -70,29 +70,29 @@ window.JG_I18N = {
     lgBad: 'Malicious: block', lgGood: 'Legitimate: let through', lgDdos: 'DDoS: filter the area', lgPhish: 'Fake legitimate: block',
     levels: [
       { name: 'Malware', what: 'Infected packets are trying to install a virus or ransomware on the server. Block them one by one.', how: 'up-to-date antivirus or EDR, regular updates and firewall traffic filtering.' },
-      { name: 'DDoS attack', what: 'Thousands of requests arrive at once to overwhelm the server. Each block filters a whole area: aim for the swarms and spare legitimate traffic.', how: "rate limiting, upstream filtering and the host's DDoS protection." },
+      { name: 'DDoS attack', what: 'Thousands of requests arrive at once to overwhelm the server. Each block filters a whole area: aim for the swarms and spare legitimate traffic.', how: "rate limiting, upstream filtering and the host’s DDoS protection." },
       { name: 'Phishing', what: 'Some packets imitate legitimate traffic to fool the server. Spot the red dashed outline and block them.', how: 'check the sender and links, turn on two-factor authentication, publish SPF, DKIM and DMARC.' }
     ],
     secTitle: 'This site is secure', secIntro: 'The protections actually in place on jeremy-grosjean.fr:',
     sec: [
-      ['HTTPS', "TLS-encrypted connection with a Let's Encrypt certificate."],
+      ['HTTPS', "TLS-encrypted connection with a Let’s Encrypt certificate."],
       ['HSTS', 'Browsers refuse any unencrypted connection for one year.'],
       ['CSP', 'Only files from this site can run: no third-party scripts.'],
       ['Anti-clickjacking', 'The site cannot be embedded in another page.'],
-      ['DNSSEC', "The domain's DNS answers are signed and verifiable."],
-      ['SPF', "Only OVHcloud's servers may send email for the domain."],
+      ['DNSSEC', "The domain’s DNS answers are signed and verifiable."],
+      ['SPF', "Only OVHcloud’s servers may send email for the domain."],
       ['DKIM', 'Every outgoing email is digitally signed.'],
       ['DMARC', 'Emails spoofing the domain are quarantined.'],
       ['No trackers', 'No cookies, no ads, no analytics.']
     ],
     tWelcome: 'Welcome to jeremy-grosjean.fr. Type help to see the commands.',
     tHelp: [
-      ['help', 'show this help'], ['whoami', 'who are you?'], ['about', 'about this site'], ['security', "the site's protections"],
+      ['help', 'show this help'], ['whoami', 'who are you?'], ['about', 'about this site'], ['security', "the site’s protections"],
       ['ping <host>', 'test a connection (try: ping recruiter)'], ['date', 'date and time in Paris'],
       ['lang <code>', 'change language: fr, en, zh-Hans, zh-Hant, yue, ko'], ['theme <mode>', 'theme: auto, light or dark'],
       ['play', 'start the game'], ['konami', 'trigger the secret effect'], ['contact', 'email address'], ['clear', 'clear the screen'], ['exit', 'close the terminal']
     ],
-    tWhoami: 'visitor: guest access, read-only.', tAbout: "jeremy-grosjean.fr, Jérémy Grosjean's personal site. Under construction.",
+    tWhoami: 'visitor: guest access, read-only.', tAbout: "jeremy-grosjean.fr, Jérémy Grosjean’s personal site. Under construction.",
     tSoon: 'Coming soon.', tSudo: 'Permission denied: this incident will be reported to the administrator. 😉',
     tUnknown: c => `command not found: ${c}. Type help.`, tLangSet: l => `Language: ${l}`, tThemeSet: m => `Theme: ${m}`,
     tUsageLang: 'Usage: lang fr | en | zh-Hans | zh-Hant | yue | ko', tUsageTheme: 'Usage: theme auto | light | dark',
@@ -125,7 +125,7 @@ window.JG_I18N = {
     ],
     secTitle: '本网站安全可靠', secIntro: 'jeremy-grosjean.fr 实际启用的防护措施：',
     sec: [
-      ['HTTPS', '采用 TLS 加密连接，证书由 Let\'s Encrypt 签发。'],
+      ['HTTPS', '采用 TLS 加密连接，证书由 Let’s Encrypt 签发。'],
       ['HSTS', '一年内浏览器会拒绝任何未加密的连接。'],
       ['CSP', '只有本站的文件可以执行：没有任何外部脚本。'],
       ['防点击劫持', '本站无法被嵌入其他网页。'],
@@ -175,7 +175,7 @@ window.JG_I18N = {
     ],
     secTitle: '本網站安全可靠', secIntro: 'jeremy-grosjean.fr 實際啟用的防護措施：',
     sec: [
-      ['HTTPS', '採用 TLS 加密連線，憑證由 Let\'s Encrypt 簽發。'],
+      ['HTTPS', '採用 TLS 加密連線，憑證由 Let’s Encrypt 簽發。'],
       ['HSTS', '一年內瀏覽器會拒絕任何未加密的連線。'],
       ['CSP', '只有本站的檔案可以執行：沒有任何外部指令碼。'],
       ['防點擊劫持', '本站無法被嵌入其他網頁。'],
@@ -225,7 +225,7 @@ window.JG_I18N = {
     ],
     secTitle: '呢個網站好安全', secIntro: 'jeremy-grosjean.fr 真正用緊嘅防護：',
     sec: [
-      ['HTTPS', '用 TLS 加密連線，證書由 Let\'s Encrypt 簽發。'],
+      ['HTTPS', '用 TLS 加密連線，證書由 Let’s Encrypt 簽發。'],
       ['HSTS', '一年之內瀏覽器會拒絕任何冇加密嘅連線。'],
       ['CSP', '淨係本站嘅檔案先可以執行：冇任何外部程式碼。'],
       ['防點擊劫持', '本站唔可以俾人嵌入其他網頁。'],
@@ -275,7 +275,7 @@ window.JG_I18N = {
     ],
     secTitle: '이 사이트는 안전합니다', secIntro: 'jeremy-grosjean.fr에 실제로 적용된 보호 조치:',
     sec: [
-      ['HTTPS', 'TLS로 암호화된 연결, Let\'s Encrypt 인증서.'],
+      ['HTTPS', 'TLS로 암호화된 연결, Let’s Encrypt 인증서.'],
       ['HSTS', '1년 동안 브라우저가 암호화되지 않은 연결을 모두 거부합니다.'],
       ['CSP', '이 사이트의 파일만 실행됩니다: 외부 스크립트 없음.'],
       ['클릭재킹 방지', '이 사이트는 다른 페이지에 삽입될 수 없습니다.'],
@@ -308,7 +308,7 @@ window.JG_I18N = {
     availLine: 'Disponible immédiatement pour une alternance',
     privacyLine: '0 cookie · 0 traceur', secPrivacy: ['Vie privée (RGPD)', 'Aucun cookie, aucun traceur, aucun formulaire : le site ne collecte aucune donnée. Vos préférences restent sur votre appareil.'],
     legalLink: 'Mentions légales',
-    contactBtn: 'Me contacter', contactTitle: 'Me contacter', contactIntro: 'Pour une alternance, une question ou un échange, écrivez-moi :', copyMail: 'Copier l\'adresse', openMail: 'Ouvrir ma messagerie', copied: 'Adresse copiée', copyFail: 'Copie impossible : sélectionnez l\'adresse',
+    contactBtn: 'Me contacter', contactTitle: 'Me contacter', contactIntro: 'Pour une alternance, une question ou un échange, écrivez-moi :', copyMail: 'Copier l’adresse', openMail: 'Ouvrir ma messagerie', copied: 'Adresse copiée', copyFail: 'Copie impossible : sélectionnez l’adresse',
     netOn: 'En ligne', netOff: 'Hors ligne', netLost: 'Connexion perdue : le site continue de fonctionner', netBack: 'Connexion rétablie',
     whoRole: 'technicien informatique',
     title: 'Jérémy Grosjean · Technicien informatique', domainsLbl: 'domaines :',
@@ -399,7 +399,7 @@ window.JG_I18N = {
   const add = (k, o) => { if (L[k]) Object.assign(L[k], o); };
   add('fr', {
     qrCap: 'Scannez pour ouvrir le site sur un téléphone', saveContact: 'Ajouter à mes contacts',
-    secRerun: "Relancer l'audit", secScore: (a, b) => a === b ? `${a}/${b} protections actives · note A+ sur securityheaders.com` : `${a}/${b} protections actives`,
+    secRerun: "Relancer l’audit", secScore: (a, b) => a === b ? `${a}/${b} protections actives · note A+ sur securityheaders.com` : `${a}/${b} protections actives`,
     ecoTitle: 'Léger et accessible', ecoWeight: 'Poids de la page (mesuré)', kb: 'Ko', ecoReq: 'Fichiers chargés', ecoExt: 'Requêtes vers d’autres sites', ecoCookies: 'Cookies',
     ecoFacts: ['Utilisable entièrement au clavier', 'Thème clair ou sombre selon votre appareil', 'Mouvements réduits si votre appareil le demande', 'Disponible en 6 langues', 'Fonctionne sans connexion après une première visite'],
     ecoNote: 'Mesuré à l’instant dans votre navigateur. Pour comparer : une page web moyenne pèse plus de 2 Mo (HTTP Archive).',
@@ -514,21 +514,21 @@ window.JG_I18N = {
   add('fr', {
     play: 'Jouer : 2 mini-jeux',
     mailSubject: 'Alternance Technicien informatique : prise de contact',
-    mailBody: "Bonjour Jérémy,\n\nJe vous contacte au sujet d'une alternance Technicien informatique.\n\nEntreprise :\nVille :\nDate de début souhaitée :\nTéléphone :\n\nCordialement,\n",
+    mailBody: "Bonjour Jérémy,\n\nJe vous contacte au sujet d’une alternance Technicien informatique.\n\nEntreprise :\nVille :\nDate de début souhaitée :\nTéléphone :\n\nCordialement,\n",
     briefTitle: 'En 30 secondes',
-    brief: [['Titre', "Technicien d'assistance en informatique (TAI), niveau 4, obtenu en 2023"], ['Recherche', 'Alternance Technicien informatique (Bac+2)'], ['Rythme', '4 jours en entreprise, 1 jour en formation'], ['Durée', '12 mois'], ['Disponibilité', 'Immédiate'], ['Domaines de la formation', 'Support, réseaux, Active Directory, PowerShell, parc informatique, cybersécurité']],
-    gamesTitle: 'Choisissez un jeu', pickServerT: 'Protéger le serveur', pickServerD: 'Bloquez les attaques : logiciel malveillant, DDoS, hameçonnage.', pickSupportT: 'Support informatique N1', pickSupportD: "Résolvez 5 tickets d'utilisateurs en choisissant le bon diagnostic.",
+    brief: [['Titre', "Technicien d’assistance en informatique (TAI), niveau 4, obtenu en 2023"], ['Recherche', 'Alternance Technicien informatique (Bac+2)'], ['Rythme', '4 jours en entreprise, 1 jour en formation'], ['Durée', '12 mois'], ['Disponibilité', 'Immédiate'], ['Domaines de la formation', 'Support, réseaux, Active Directory, PowerShell, parc informatique, cybersécurité']],
+    gamesTitle: 'Choisissez un jeu', pickServerT: 'Protéger le serveur', pickServerD: 'Bloquez les attaques : logiciel malveillant, DDoS, hameçonnage.', pickSupportT: 'Support informatique N1', pickSupportD: "Résolvez 5 tickets d’utilisateurs en choisissant le bon diagnostic.",
     tkTag: (n, tot, p) => `Ticket ${n}/${tot} · Incident · Priorité ${p}`, tkPts: s => `${s} pts`, tkTitle: n => `Ticket n° ${n}`, tkFromL: 'De :',
-    tkGood: '✓ Bonne réponse.', tkBad: '✗ Pas la meilleure piste.', tkRetry: "Essayez une autre option : en support, on cherche d'abord la cause la plus simple.",
+    tkGood: '✓ Bonne réponse.', tkBad: '✗ Pas la meilleure piste.', tkRetry: "Essayez une autre option : en support, on cherche d’abord la cause la plus simple.",
     tkNext: 'Ticket suivant', tkEnd: 'Voir le résultat', tkDoneTag: 'Résultat',
     tkDoneTitle: (p, t) => p === t ? 'Niveau N1 validé ✔' : `${p}/${t} tickets résolus du premier coup`,
     tkDoneMsg: (s, m) => `Score : ${s}/${m} points. En support, la méthode compte : écouter, diagnostiquer du plus simple au plus complexe, puis documenter.`,
     tickets: [
-      { from: 'Comptabilité, poste fixe', prio: 'moyenne', msg: "Je n'ai plus internet sur mon poste, alors que mon collègue à côté l'a.", opts: ['Réinstaller Windows sur le poste', "Vérifier le câble réseau, puis l'adresse IP avec ipconfig", "Redémarrer le serveur de l'entreprise"], ok: 1, why: "Un seul poste touché : on commence par le plus simple et le plus proche. ipconfig montre si l'adresse IP est valide ; une adresse en 169.254.x.x signale un problème de DHCP." },
-      { from: 'Ressources humaines', prio: 'haute', msg: "J'ai cliqué sur un lien dans un e-mail de « la banque » et j'ai tapé mon mot de passe.", opts: ["Lui dire que ce n'est pas grave", "Supprimer l'e-mail et passer à autre chose", "Faire changer son mot de passe tout de suite et signaler l'e-mail à la sécurité"], ok: 2, why: "C'est de l'hameçonnage : le mot de passe est compromis. On le change immédiatement, on vérifie les connexions suspectes et on signale l'e-mail pour le bloquer chez tout le monde." },
-      { from: 'Accueil, 2e étage', prio: 'moyenne', msg: "L'imprimante du 2e étage n'imprime plus, pour personne.", opts: ["Vérifier l'imprimante (papier, message d'erreur), puis la file d'impression", 'Réinstaller le pilote sur un seul poste', 'Commander une nouvelle imprimante'], ok: 0, why: "Tout le monde est touché : la panne vient de l'imprimante ou du serveur d'impression, pas d'un poste. On vérifie l'appareil, puis on débloque la file d'attente." },
-      { from: 'Commercial en télétravail', prio: 'haute', msg: 'Mon compte est bloqué, je ne peux plus me connecter.', opts: ["Lui donner le mot de passe d'un collègue en attendant", "Vérifier son identité, puis déverrouiller le compte dans l'Active Directory", 'Désactiver la politique de mots de passe pour tout le monde'], ok: 1, why: "On vérifie d'abord que c'est bien lui (contre l'ingénierie sociale), puis on déverrouille le compte dans l'Active Directory. Ensuite, on cherche la cause : trop d'essais, ancien mot de passe enregistré sur un téléphone…" },
-      { from: 'Direction', prio: 'basse', msg: 'Mon PC est très lent depuis ce matin.', opts: ['Ouvrir le Gestionnaire des tâches : processeur, mémoire, disque', 'Formater le disque dur', 'Ajouter de la mémoire tout de suite'], ok: 0, why: "On mesure avant d'agir : le Gestionnaire des tâches montre quel programme consomme. Souvent, c'est une mise à jour en cours, un disque presque plein ou un logiciel bloqué." }
+      { from: 'Comptabilité, poste fixe', prio: 'moyenne', msg: "Je n’ai plus internet sur mon poste, alors que mon collègue à côté l’a.", opts: ['Réinstaller Windows sur le poste', "Vérifier le câble réseau, puis l’adresse IP avec ipconfig", "Redémarrer le serveur de l’entreprise"], ok: 1, why: "Un seul poste touché : on commence par le plus simple et le plus proche. ipconfig montre si l’adresse IP est valide ; une adresse en 169.254.x.x signale un problème de DHCP." },
+      { from: 'Ressources humaines', prio: 'haute', msg: "J’ai cliqué sur un lien dans un e-mail de « la banque » et j’ai tapé mon mot de passe.", opts: ["Lui dire que ce n’est pas grave", "Supprimer l’e-mail et passer à autre chose", "Faire changer son mot de passe tout de suite et signaler l’e-mail à la sécurité"], ok: 2, why: "C’est de l’hameçonnage : le mot de passe est compromis. On le change immédiatement, on vérifie les connexions suspectes et on signale l’e-mail pour le bloquer chez tout le monde." },
+      { from: 'Accueil, 2e étage', prio: 'moyenne', msg: "L’imprimante du 2e étage n’imprime plus, pour personne.", opts: ["Vérifier l’imprimante (papier, message d’erreur), puis la file d’impression", 'Réinstaller le pilote sur un seul poste', 'Commander une nouvelle imprimante'], ok: 0, why: "Tout le monde est touché : la panne vient de l’imprimante ou du serveur d’impression, pas d’un poste. On vérifie l’appareil, puis on débloque la file d’attente." },
+      { from: 'Commercial en télétravail', prio: 'haute', msg: 'Mon compte est bloqué, je ne peux plus me connecter.', opts: ["Lui donner le mot de passe d’un collègue en attendant", "Vérifier son identité, puis déverrouiller le compte dans l’Active Directory", 'Désactiver la politique de mots de passe pour tout le monde'], ok: 1, why: "On vérifie d’abord que c’est bien lui (contre l’ingénierie sociale), puis on déverrouille le compte dans l’Active Directory. Ensuite, on cherche la cause : trop d’essais, ancien mot de passe enregistré sur un téléphone…" },
+      { from: 'Direction', prio: 'basse', msg: 'Mon PC est très lent depuis ce matin.', opts: ['Ouvrir le Gestionnaire des tâches : processeur, mémoire, disque', 'Formater le disque dur', 'Ajouter de la mémoire tout de suite'], ok: 0, why: "On mesure avant d’agir : le Gestionnaire des tâches montre quel programme consomme. Souvent, c’est une mise à jour en cours, un disque presque plein ou un logiciel bloqué." }
     ],
     supBtn: 'Supervision', supTitle: 'Supervision',
     supLabels: { web: 'Site web', tls: 'Certificat TLS', mx: 'E-mail (MX)', spf: 'SPF', dmarc: 'DMARC', tlsrpt: 'TLS-RPT', dnssec: 'DNSSEC' },
@@ -538,22 +538,22 @@ window.JG_I18N = {
     updatedOn: d => `Mis à jour le ${d}`,
     ipUsage: 'Usage : ipcalc 192.168.1.10/24',
     ipLabels: { addr: 'Adresse', net: 'Réseau', mask: 'Masque', wild: 'Masque inversé', first: 'Premier hôte', last: 'Dernier hôte', bc: 'Diffusion', hosts: 'Hôtes', type: 'Type', priv: 'privée (RFC 1918)', pub: 'publique' },
-    digNote: d => `relevé du ${d} (votre navigateur n'interroge aucun serveur)`,
+    digNote: d => `relevé du ${d} (votre navigateur n’interroge aucun serveur)`,
     digOnly: 'Disponible pour ce domaine : dig, dig mx, dig txt, dig _dmarc.jeremy-grosjean.fr',
-    installBtn: "Installer l'application", installIos: "Sur iPhone ou iPad : touchez Partager, puis « Sur l'écran d'accueil ».",
-    installManual: "Utilisez le menu de votre navigateur : « Installer » ou « Ajouter à l'écran d'accueil ».", installAlready: "L'application est déjà installée.", installed: 'Application installée ✔',
+    installBtn: "Installer l’application", installIos: "Sur iPhone ou iPad : touchez Partager, puis « Sur l’écran d’accueil ».",
+    installManual: "Utilisez le menu de votre navigateur : « Installer » ou « Ajouter à l’écran d’accueil ».", installAlready: "L’application est déjà installée.", installed: 'Application installée ✔',
     keysTitle: 'Raccourcis et affichage', a11yTitle: 'Affichage', a11ySize: 'Taille du texte', a11yContrast: 'Contraste renforcé', a11yFont: 'Texte plus espacé',
     tourSkip: 'Passer', tourNext: 'Suivant', tourDone: 'Terminer',
-    tourContact: "Pour m'écrire : l'adresse à copier, la carte de contact et un QR code.",
+    tourContact: "Pour m’écrire : l’adresse à copier, la carte de contact et un QR code.",
     tourBrief: 'Mon profil en 30 secondes : titre, alternance recherchée, rythme, disponibilité.',
     tourPlay: 'Deux mini-jeux : protéger un serveur ou résoudre des tickets de support.',
     tourTerm: 'Un vrai terminal caché : tapez help pour voir les commandes.',
     tourSec: 'Un audit de sécurité du site en direct, avec des mesures réelles.',
-    tourSup: "La supervision : l'état des services du site et des e-mails.",
-    tourKeys: "Tous les raccourcis clavier et les réglages d'affichage.",
+    tourSup: "La supervision : l’état des services du site et des e-mails.",
+    tourKeys: "Tous les raccourcis clavier et les réglages d’affichage.",
     secretNames2: { support: 'Support N1 parfait (5/5)', matrix: 'Entrer dans la Matrice' },
     secretsHint: 'Indice : un vieux code de jeu vidéo, une commande d’administrateur, un point d’interrogation, un film culte, un sans-faute…',
-    helpExtra2: [['support', 'jeu : tickets de support N1'], ['status', 'supervision des services'], ['dig', 'enregistrements DNS du domaine'], ['ipcalc <ip/cidr>', 'calculer un sous-réseau'], ['install', "installer l'application"], ['tour', 'revoir la visite guidée'], ['matrix', '…']]
+    helpExtra2: [['support', 'jeu : tickets de support N1'], ['status', 'supervision des services'], ['dig', 'enregistrements DNS du domaine'], ['ipcalc <ip/cidr>', 'calculer un sous-réseau'], ['install', "installer l’application"], ['tour', 'revoir la visite guidée'], ['matrix', '…']]
   });
   add('en', {
     play: 'Play: 2 mini-games',
@@ -568,10 +568,10 @@ window.JG_I18N = {
     tkDoneTitle: (p, t) => p === t ? 'Level 1 support passed ✔' : `${p}/${t} tickets solved on the first try`,
     tkDoneMsg: (s, m) => `Score: ${s}/${m} points. In support, method matters: listen, diagnose from simplest to most complex, then document.`,
     tickets: [
-      { from: 'Accounting, desktop PC', prio: 'medium', msg: 'My computer has no internet, but my colleague next to me does.', opts: ['Reinstall Windows on the computer', 'Check the network cable, then the IP address with ipconfig', "Restart the company's server"], ok: 1, why: 'Only one computer is affected: start with the simplest, closest cause. ipconfig shows whether the IP address is valid; an address in 169.254.x.x points to a DHCP problem.' },
-      { from: 'Human resources', prio: 'high', msg: 'I clicked a link in an email from "the bank" and typed my password.', opts: ["Tell them it's no big deal", 'Delete the email and move on', 'Have them change the password right away and report the email to security'], ok: 2, why: 'This is phishing: the password is compromised. Change it immediately, check for suspicious sign-ins and report the email so it gets blocked for everyone.' },
-      { from: 'Reception, 2nd floor', prio: 'medium', msg: "The 2nd-floor printer doesn't print anymore, for anyone.", opts: ['Check the printer (paper, error message), then the print queue', 'Reinstall the driver on one computer', 'Order a new printer'], ok: 0, why: "Everyone is affected: the fault is on the printer or the print server, not a single computer. Check the device, then clear the stuck queue." },
-      { from: 'Sales, working from home', prio: 'high', msg: "My account is locked, I can't sign in.", opts: ["Give them a colleague's password for now", 'Verify their identity, then unlock the account in Active Directory', 'Turn off the password policy for everyone'], ok: 1, why: "First make sure it's really them (against social engineering), then unlock the account in Active Directory. Then find the cause: too many attempts, an old password saved on a phone…" },
+      { from: 'Accounting, desktop PC', prio: 'medium', msg: 'My computer has no internet, but my colleague next to me does.', opts: ['Reinstall Windows on the computer', 'Check the network cable, then the IP address with ipconfig', "Restart the company’s server"], ok: 1, why: 'Only one computer is affected: start with the simplest, closest cause. ipconfig shows whether the IP address is valid; an address in 169.254.x.x points to a DHCP problem.' },
+      { from: 'Human resources', prio: 'high', msg: 'I clicked a link in an email from "the bank" and typed my password.', opts: ["Tell them it’s no big deal", 'Delete the email and move on', 'Have them change the password right away and report the email to security'], ok: 2, why: 'This is phishing: the password is compromised. Change it immediately, check for suspicious sign-ins and report the email so it gets blocked for everyone.' },
+      { from: 'Reception, 2nd floor', prio: 'medium', msg: "The 2nd-floor printer doesn’t print anymore, for anyone.", opts: ['Check the printer (paper, error message), then the print queue', 'Reinstall the driver on one computer', 'Order a new printer'], ok: 0, why: "Everyone is affected: the fault is on the printer or the print server, not a single computer. Check the device, then clear the stuck queue." },
+      { from: 'Sales, working from home', prio: 'high', msg: "My account is locked, I can’t sign in.", opts: ["Give them a colleague’s password for now", 'Verify their identity, then unlock the account in Active Directory', 'Turn off the password policy for everyone'], ok: 1, why: "First make sure it’s really them (against social engineering), then unlock the account in Active Directory. Then find the cause: too many attempts, an old password saved on a phone…" },
       { from: 'Management', prio: 'low', msg: 'My PC has been very slow since this morning.', opts: ['Open Task Manager: CPU, memory, disk', 'Format the hard drive', 'Add more memory right away'], ok: 0, why: 'Measure before acting: Task Manager shows which program is using resources. Often it is an update in progress, a nearly full disk or a frozen program.' }
     ],
     supBtn: 'Monitoring', supTitle: 'Monitoring',
@@ -597,7 +597,7 @@ window.JG_I18N = {
     tourKeys: 'All keyboard shortcuts and display settings.',
     secretNames2: { support: 'Perfect level 1 support (5/5)', matrix: 'Enter the Matrix' },
     secretsHint: 'Hint: an old video game code, an admin command, a question mark, a cult film, a perfect score…',
-    helpExtra2: [['support', 'game: level 1 support tickets'], ['status', 'service monitoring'], ['dig', "the domain's DNS records"], ['ipcalc <ip/cidr>', 'subnet calculator'], ['install', 'install the app'], ['tour', 'replay the guided tour'], ['matrix', '…']]
+    helpExtra2: [['support', 'game: level 1 support tickets'], ['status', 'service monitoring'], ['dig', "the domain’s DNS records"], ['ipcalc <ip/cidr>', 'subnet calculator'], ['install', 'install the app'], ['tour', 'replay the guided tour'], ['matrix', '…']]
   });
   add('zh-Hans', {
     play: '玩：2 个小游戏',
@@ -786,24 +786,24 @@ window.JG_I18N = {
 (function (L) {
   const add = (k, o, n1, help) => { if (!L[k]) return; Object.assign(L[k], o); if (Array.isArray(L[k].tickets)) L[k].tickets.push(...n1); if (L[k].tHelp) { const h = L[k].tHelp.find(x => x[0] === 'support'); if (h) h[1] = help; } };
   add('fr', {
-    pickSupportT: 'Support informatique N1', pickSupportD: "Débutant : résolvez 5 tickets d'utilisateurs en choisissant le bon diagnostic.",
-    pickSupport2T: 'Support informatique N2', pickSupport2D: "Avancé : réseau, DHCP, Active Directory, DNS, droits d'accès.",
+    pickSupportT: 'Support informatique N1', pickSupportD: "Débutant : résolvez 5 tickets d’utilisateurs en choisissant le bon diagnostic.",
+    pickSupport2T: 'Support informatique N2', pickSupport2D: "Avancé : réseau, DHCP, Active Directory, DNS, droits d’accès.",
     tkTag: (n, tot, p, lv) => `Ticket ${n}/${tot} · ${lv} · Incident · Priorité ${p}`,
     tkDoneTitle: (p, t, lv) => p === t ? `Niveau N${lv} validé ✔` : `${p}/${t} tickets résolus du premier coup`,
     tkToN2: 'Passer au niveau N2 →',
     secretNames3: { support2: 'Support N2 parfait (5/5)' },
     ticketsN2: [
-      { from: 'Responsable du 3e étage', prio: 'haute', msg: "Plus personne n'a le réseau au 3e étage, alors que les autres étages fonctionnent.", opts: ['Réinstaller les postes du 3e étage un par un', 'Vérifier le switch du 3e étage et son lien vers la baie principale', 'Changer la box internet'], ok: 1, why: "Toute une zone est touchée : la cause est un équipement commun. On contrôle le switch de l'étage (voyants, alimentation, ports) et son lien montant vers la baie, sans oublier le VLAN." },
-      { from: 'Service informatique', prio: 'haute', msg: 'Les nouveaux PC reçoivent une adresse en 169.254.x.x et n’ont pas de réseau.', opts: ['Vérifier le serveur DHCP : service démarré et étendue pas pleine', 'Mettre une adresse IP fixe sur chaque poste', 'Désactiver le pare-feu de tous les postes'], ok: 0, why: "Une adresse 169.254 (APIPA) signifie qu'aucun serveur DHCP n'a répondu. On vérifie que le service tourne et qu'il reste des adresses libres dans l'étendue ; sinon, on l'agrandit ou on réduit la durée des baux." },
-      { from: 'Comptabilité', prio: 'haute', msg: 'Le dossier partagé de la comptabilité est ouvert à tout le monde, même aux stagiaires.', opts: ['Supprimer le partage', "Donner un mot de passe commun à l'équipe comptable", "Revoir les droits NTFS et de partage avec un groupe Active Directory « Compta »"], ok: 2, why: "Principe du moindre privilège : chacun n'accède qu'à ce dont il a besoin. On crée un groupe AD, on donne les droits à ce groupe (partage et NTFS) et on retire « Tout le monde »." },
-      { from: 'Accueil', prio: 'basse', msg: "Le fond d'écran de l'entreprise, défini par GPO, ne s'applique pas sur mon poste.", opts: ['Recréer toute la stratégie de groupe', "Vérifier l'unité d'organisation du poste, puis gpupdate /force et gpresult /r", 'Sortir le poste du domaine et le remettre'], ok: 1, why: "Une GPO s'applique selon l'unité d'organisation (OU) et le filtrage de sécurité. On vérifie où se trouve le poste, on force la mise à jour, puis gpresult /r montre les stratégies réellement appliquées." },
-      { from: 'Équipe commerciale', prio: 'moyenne', msg: "L'intranet ne s'ouvre plus avec son nom, mais il marche avec son adresse IP.", opts: ['Vérifier la résolution DNS avec nslookup (enregistrement et serveur DNS du poste)', 'Redémarrer le serveur web', 'Vider seulement le cache du navigateur'], ok: 0, why: "Si l'adresse IP marche mais pas le nom, le serveur web va bien : c'est la résolution de nom. nslookup montre la réponse du DNS ; on corrige l'enregistrement ou le serveur DNS du poste, puis ipconfig /flushdns." },
-      { from: 'Direction', prio: 'haute', msg: 'Le serveur de fichiers est plein à 98 %.', opts: ['Supprimer les fichiers les plus anciens sans prévenir', 'Arrêter les sauvegardes pour libérer de la place', "Analyser ce qui occupe l'espace, archiver avec les équipes, puis prévoir l'extension et des quotas"], ok: 2, why: "On mesure d'abord (outil d'analyse de l'espace disque), on informe les utilisateurs, on archive ou on nettoie avec leur accord, puis on met des quotas et on prévoit plus de stockage. On ne touche jamais aux sauvegardes." }
+      { from: 'Responsable du 3e étage', prio: 'haute', msg: "Plus personne n’a le réseau au 3e étage, alors que les autres étages fonctionnent.", opts: ['Réinstaller les postes du 3e étage un par un', 'Vérifier le switch du 3e étage et son lien vers la baie principale', 'Changer la box internet'], ok: 1, why: "Toute une zone est touchée : la cause est un équipement commun. On contrôle le switch de l’étage (voyants, alimentation, ports) et son lien montant vers la baie, sans oublier le VLAN." },
+      { from: 'Service informatique', prio: 'haute', msg: 'Les nouveaux PC reçoivent une adresse en 169.254.x.x et n’ont pas de réseau.', opts: ['Vérifier le serveur DHCP : service démarré et étendue pas pleine', 'Mettre une adresse IP fixe sur chaque poste', 'Désactiver le pare-feu de tous les postes'], ok: 0, why: "Une adresse 169.254 (APIPA) signifie qu’aucun serveur DHCP n’a répondu. On vérifie que le service tourne et qu’il reste des adresses libres dans l’étendue ; sinon, on l’agrandit ou on réduit la durée des baux." },
+      { from: 'Comptabilité', prio: 'haute', msg: 'Le dossier partagé de la comptabilité est ouvert à tout le monde, même aux stagiaires.', opts: ['Supprimer le partage', "Donner un mot de passe commun à l’équipe comptable", "Revoir les droits NTFS et de partage avec un groupe Active Directory « Compta »"], ok: 2, why: "Principe du moindre privilège : chacun n’accède qu’à ce dont il a besoin. On crée un groupe AD, on donne les droits à ce groupe (partage et NTFS) et on retire « Tout le monde »." },
+      { from: 'Accueil', prio: 'basse', msg: "Le fond d’écran de l’entreprise, défini par GPO, ne s’applique pas sur mon poste.", opts: ['Recréer toute la stratégie de groupe', "Vérifier l’unité d’organisation du poste, puis gpupdate /force et gpresult /r", 'Sortir le poste du domaine et le remettre'], ok: 1, why: "Une GPO s’applique selon l’unité d’organisation (OU) et le filtrage de sécurité. On vérifie où se trouve le poste, on force la mise à jour, puis gpresult /r montre les stratégies réellement appliquées." },
+      { from: 'Équipe commerciale', prio: 'moyenne', msg: "L’intranet ne s’ouvre plus avec son nom, mais il marche avec son adresse IP.", opts: ['Vérifier la résolution DNS avec nslookup (enregistrement et serveur DNS du poste)', 'Redémarrer le serveur web', 'Vider seulement le cache du navigateur'], ok: 0, why: "Si l’adresse IP marche mais pas le nom, le serveur web va bien : c’est la résolution de nom. nslookup montre la réponse du DNS ; on corrige l’enregistrement ou le serveur DNS du poste, puis ipconfig /flushdns." },
+      { from: 'Direction', prio: 'haute', msg: 'Le serveur de fichiers est plein à 98 %.', opts: ['Supprimer les fichiers les plus anciens sans prévenir', 'Arrêter les sauvegardes pour libérer de la place', "Analyser ce qui occupe l’espace, archiver avec les équipes, puis prévoir l’extension et des quotas"], ok: 2, why: "On mesure d’abord (outil d’analyse de l’espace disque), on informe les utilisateurs, on archive ou on nettoie avec leur accord, puis on met des quotas et on prévoit plus de stockage. On ne touche jamais aux sauvegardes." }
     ]
   }, [
     { from: 'Logistique', prio: 'moyenne', msg: 'Je ne reçois plus aucun e-mail depuis ce matin.', opts: ['Recréer son compte de messagerie', 'Vérifier si sa boîte est pleine et ses règles de tri, puis tester sur le webmail', 'Installer un autre logiciel de messagerie'], ok: 1, why: "Souvent, la boîte est pleine ou une règle de tri déplace les messages. Tester sur le webmail permet de savoir si le problème vient du poste ou du serveur." },
-    { from: 'Atelier', prio: 'moyenne', msg: "Mon écran reste noir, mais l'ordinateur fait du bruit.", opts: ["Vérifier l'alimentation et le câble de l'écran, puis la source (HDMI, DisplayPort)", 'Remplacer la carte mère', 'Réinstaller le pilote graphique à distance'], ok: 0, why: "Le PC démarre : on teste d'abord le plus simple. L'écran est-il allumé, le câble bien branché des deux côtés, la bonne entrée sélectionnée ?" },
-    { from: 'Ressources humaines', prio: 'critique', msg: 'Un message dit que mes fichiers sont chiffrés et demande une rançon.', opts: ['Payer la rançon pour récupérer les fichiers', 'Redémarrer pour voir si le message disparaît', 'Débrancher le poste du réseau tout de suite et prévenir la sécurité'], ok: 2, why: "C'est un rançongiciel. On isole le poste du réseau pour éviter la propagation, on ne paie pas, on prévient immédiatement la sécurité, puis on restaure depuis les sauvegardes." }
+    { from: 'Atelier', prio: 'moyenne', msg: "Mon écran reste noir, mais l’ordinateur fait du bruit.", opts: ["Vérifier l’alimentation et le câble de l’écran, puis la source (HDMI, DisplayPort)", 'Remplacer la carte mère', 'Réinstaller le pilote graphique à distance'], ok: 0, why: "Le PC démarre : on teste d’abord le plus simple. L’écran est-il allumé, le câble bien branché des deux côtés, la bonne entrée sélectionnée ?" },
+    { from: 'Ressources humaines', prio: 'critique', msg: 'Un message dit que mes fichiers sont chiffrés et demande une rançon.', opts: ['Payer la rançon pour récupérer les fichiers', 'Redémarrer pour voir si le message disparaît', 'Débrancher le poste du réseau tout de suite et prévenir la sécurité'], ok: 2, why: "C’est un rançongiciel. On isole le poste du réseau pour éviter la propagation, on ne paie pas, on prévient immédiatement la sécurité, puis on restaure depuis les sauvegardes." }
   ], 'jeu : tickets de support (support n2 : niveau avancé)');
   add('en', {
     pickSupportT: 'IT support, level 1', pickSupportD: 'Beginner: solve 5 user tickets by choosing the right diagnosis.',
@@ -816,14 +816,14 @@ window.JG_I18N = {
       { from: '3rd-floor manager', prio: 'high', msg: 'Nobody on the 3rd floor has network access, but the other floors are fine.', opts: ['Reinstall the 3rd-floor computers one by one', 'Check the 3rd-floor switch and its uplink to the main rack', 'Replace the internet router'], ok: 1, why: 'A whole area is affected, so the cause is shared equipment. Check the floor switch (lights, power, ports) and its uplink to the rack, and the VLAN.' },
       { from: 'IT department', prio: 'high', msg: 'New PCs get a 169.254.x.x address and have no network.', opts: ['Check the DHCP server: service running and scope not full', 'Set a static IP address on every computer', 'Turn off the firewall on all computers'], ok: 0, why: 'A 169.254 (APIPA) address means no DHCP server answered. Check the service is running and the scope still has free addresses; if not, enlarge it or shorten the lease time.' },
       { from: 'Accounting', prio: 'high', msg: "The accounting shared folder is open to everyone, even interns.", opts: ['Delete the share', 'Give the accounting team a shared password', 'Review the NTFS and share permissions with an Active Directory "Accounting" group'], ok: 2, why: 'Least privilege: everyone only gets what they need. Create an AD group, grant rights to that group (share and NTFS) and remove "Everyone".' },
-      { from: 'Reception', prio: 'low', msg: "The company wallpaper, set by GPO, doesn't apply on my computer.", opts: ['Recreate the whole Group Policy', "Check the computer's organizational unit, then gpupdate /force and gpresult /r", 'Remove the computer from the domain and rejoin it'], ok: 1, why: 'A GPO applies according to the organizational unit (OU) and security filtering. Check where the computer is, force the update, then gpresult /r shows the policies actually applied.' },
-      { from: 'Sales team', prio: 'medium', msg: "The intranet no longer opens by its name, but it works with its IP address.", opts: ["Check name resolution with nslookup (record and the computer's DNS server)", 'Restart the web server', 'Only clear the browser cache'], ok: 0, why: "If the IP works but not the name, the web server is fine: it's name resolution. nslookup shows the DNS answer; fix the record or the computer's DNS server, then ipconfig /flushdns." },
+      { from: 'Reception', prio: 'low', msg: "The company wallpaper, set by GPO, doesn’t apply on my computer.", opts: ['Recreate the whole Group Policy', "Check the computer’s organizational unit, then gpupdate /force and gpresult /r", 'Remove the computer from the domain and rejoin it'], ok: 1, why: 'A GPO applies according to the organizational unit (OU) and security filtering. Check where the computer is, force the update, then gpresult /r shows the policies actually applied.' },
+      { from: 'Sales team', prio: 'medium', msg: "The intranet no longer opens by its name, but it works with its IP address.", opts: ["Check name resolution with nslookup (record and the computer’s DNS server)", 'Restart the web server', 'Only clear the browser cache'], ok: 0, why: "If the IP works but not the name, the web server is fine: it’s name resolution. nslookup shows the DNS answer; fix the record or the computer’s DNS server, then ipconfig /flushdns." },
       { from: 'Management', prio: 'high', msg: 'The file server is 98% full.', opts: ['Delete the oldest files without telling anyone', 'Stop backups to free up space', "Analyze what uses the space, archive with the teams, then plan more storage and quotas"], ok: 2, why: 'Measure first (disk usage analysis), inform users, archive or clean up with their agreement, then set quotas and plan more storage. Never touch the backups.' }
     ]
   }, [
-    { from: 'Logistics', prio: 'medium', msg: "I haven't received any email since this morning.", opts: ['Recreate their mail account', 'Check whether the mailbox is full and their mail rules, then test in webmail', 'Install another mail program'], ok: 1, why: 'Often the mailbox is full or a rule moves the messages. Testing in webmail shows whether the problem is the computer or the server.' },
-    { from: 'Workshop', prio: 'medium', msg: 'My screen stays black, but the computer is making noise.', opts: ["Check the monitor's power and cable, then the input (HDMI, DisplayPort)", 'Replace the motherboard', 'Reinstall the graphics driver remotely'], ok: 0, why: 'The PC starts, so test the simplest things first: is the monitor on, the cable plugged in at both ends, the right input selected?' },
-    { from: 'Human resources', prio: 'critical', msg: 'A message says my files are encrypted and asks for a ransom.', opts: ['Pay the ransom to get the files back', 'Restart to see if the message goes away', 'Unplug the computer from the network right away and alert security'], ok: 2, why: "It's ransomware. Isolate the computer from the network to stop it spreading, don't pay, alert security immediately, then restore from backups." }
+    { from: 'Logistics', prio: 'medium', msg: "I haven’t received any email since this morning.", opts: ['Recreate their mail account', 'Check whether the mailbox is full and their mail rules, then test in webmail', 'Install another mail program'], ok: 1, why: 'Often the mailbox is full or a rule moves the messages. Testing in webmail shows whether the problem is the computer or the server.' },
+    { from: 'Workshop', prio: 'medium', msg: 'My screen stays black, but the computer is making noise.', opts: ["Check the monitor’s power and cable, then the input (HDMI, DisplayPort)", 'Replace the motherboard', 'Reinstall the graphics driver remotely'], ok: 0, why: 'The PC starts, so test the simplest things first: is the monitor on, the cable plugged in at both ends, the right input selected?' },
+    { from: 'Human resources', prio: 'critical', msg: 'A message says my files are encrypted and asks for a ransom.', opts: ['Pay the ransom to get the files back', 'Restart to see if the message goes away', 'Unplug the computer from the network right away and alert security'], ok: 2, why: "It’s ransomware. Isolate the computer from the network to stop it spreading, don’t pay, alert security immediately, then restore from backups." }
   ], 'game: support tickets (support n2: advanced level)');
   add('zh-Hans', {
     pickSupportT: '一线 IT 支持', pickSupportD: '入门：选择正确的诊断，解决 5 个用户工单。',
@@ -952,10 +952,10 @@ window.JG_I18N = {
     const at = H.findIndex(x => x[0] === 'clear');
     H.splice(at < 0 ? H.length : at, 0, ['cv', h.cv], ['print', h.print], ['a11y', h.a11y]);
   };
-  add('fr', { wmLabel: 'Écrire en un clic avec :', wmPro: 'Outlook pro', wmNote: "Le message s'ouvre déjà rempli dans votre compte. Rien ne passe par ce site.",
+  add('fr', { wmLabel: 'Écrire en un clic avec :', wmPro: 'Outlook pro', wmNote: "Le message s’ouvre déjà rempli dans votre compte. Rien ne passe par ce site.",
     recProfile: 'Profil', recAreas: 'Domaines', recContactH: 'Contact', recPrint: 'Imprimer ou PDF', recExit: '← Version animée', recPrintNote: 'Version interactive, jeux et démonstrations :', recOpen: 'Vue sur une page',
     tWmOpen: n => `Ouverture de ${n}…`, tWmHint: 'Astuce : contact gmail, contact outlook, contact pro ou contact yahoo ouvre un message prêt.', tRecOpen: 'Ouverture de la vue recruteur…', tPrint: 'Impression de la fiche…', a11yLink: 'Accessibilité' },
-    { who: 'qui êtes-vous ? (--long : le profil)', contact: 'e-mail (ajoutez gmail, outlook, pro ou yahoo)', cv: 'fiche recruteur sur une page', print: "imprimer la fiche ou l'enregistrer en PDF", a11y: "déclaration d'accessibilité" });
+    { who: 'qui êtes-vous ? (--long : le profil)', contact: 'e-mail (ajoutez gmail, outlook, pro ou yahoo)', cv: 'fiche recruteur sur une page', print: "imprimer la fiche ou l’enregistrer en PDF", a11y: "déclaration d’accessibilité" });
   add('en', { wmLabel: 'Write in one click with:', wmPro: 'Outlook work', wmNote: 'The message opens pre-filled in your own account. Nothing goes through this site.',
     recProfile: 'Profile', recAreas: 'Areas', recContactH: 'Contact', recPrint: 'Print or PDF', recExit: '← Animated version', recPrintNote: 'Interactive version, games and demos:', recOpen: 'One-page view',
     tWmOpen: n => `Opening ${n}…`, tWmHint: 'Tip: contact gmail, contact outlook, contact pro or contact yahoo opens a ready-made message.', tRecOpen: 'Opening the recruiter view…', tPrint: 'Printing the profile…', a11yLink: 'Accessibility' },
@@ -980,7 +980,7 @@ window.JG_I18N = {
 
 /* Lot 9 : aucune messagerie installée sur l'ordinateur */
 (function (L) {
-  const T = {"fr": "Aucune messagerie ne s'est ouverte : choisissez Gmail ou Outlook ci-dessus, ou copiez l'adresse.", "en": "No mail app opened: choose Gmail or Outlook above, or copy the address.", "zh-Hans": "没有打开邮件应用：请选择上方的 Gmail 或 Outlook，或复制邮箱地址。", "zh-Hant": "沒有開啟郵件應用程式：請選擇上方的 Gmail 或 Outlook，或複製電郵地址。", "yue": "冇郵件程式打開到：揀上面嘅 Gmail 或者 Outlook，或者複製個地址。", "ko": "메일 앱이 열리지 않았습니다. 위의 Gmail 또는 Outlook을 선택하거나 주소를 복사하세요."};
+  const T = {"fr": "Aucune messagerie ne s’est ouverte : choisissez Gmail ou Outlook ci-dessus, ou copiez l’adresse.", "en": "No mail app opened: choose Gmail or Outlook above, or copy the address.", "zh-Hans": "没有打开邮件应用：请选择上方的 Gmail 或 Outlook，或复制邮箱地址。", "zh-Hant": "沒有開啟郵件應用程式：請選擇上方的 Gmail 或 Outlook，或複製電郵地址。", "yue": "冇郵件程式打開到：揀上面嘅 Gmail 或者 Outlook，或者複製個地址。", "ko": "메일 앱이 열리지 않았습니다. 위의 Gmail 또는 Outlook을 선택하거나 주소를 복사하세요."};
   for (const k in T) if (L[k]) L[k].mailNone = T[k];
 })(window.JG_I18N || {});
 
