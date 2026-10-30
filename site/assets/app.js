@@ -368,12 +368,12 @@
     $('hScore').textContent = G.score; $('hBreach').textContent = G.breach + '/3'; $('hTime').textContent = Math.ceil(G.time);
   }
   const server = () => ({ x: W / 2, y: H / 2, s: Math.min(64, Math.max(46, W / 22)) });
-  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel', 'phPanel', 'snPanel', 'scPanel', 'glossPanel', 'pausePanel', 'resumePanel', 'slotPanel', 'skillsPanel', 'sharePanel', 'faqPanel', 'itPanel', 'psPanel', 'rjPanel', 'clPanel', 'dyPanel', 'prPanel', 'rwPanel', 'rpPanel', 'niPanel', 'bdPanel'];
+  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel', 'phPanel', 'snPanel', 'scPanel', 'glossPanel', 'pausePanel', 'resumePanel', 'slotPanel', 'skillsPanel', 'sharePanel', 'faqPanel', 'parcoursPanel', 'itPanel', 'psPanel', 'rjPanel', 'clPanel', 'dyPanel', 'prPanel', 'rwPanel', 'rpPanel', 'niPanel', 'bdPanel'];
   function closePanels() { panels.forEach(p => $(p).classList.remove('open')); }
   /* La fenêtre s'ouvre toujours en haut de son contenu (sur un écran bas, le focus sur un bouton du bas la faisait défiler) */
   /* Fermer une fenêtre : clic sur le fond flou autour (même action que son bouton Fermer / Quitter), ou sur le ✕ en haut à droite.
      Un clic dans la fenêtre ne la ferme pas ; un glisser qui commence dans la fenêtre et finit dehors non plus. */
-  const PANEL_CLOSE = { prPanel: 'prQuit', rwPanel: 'rwQuit', rpPanel: 'rpQuit', niPanel: 'niQuit', bdPanel: 'bdClose', slotPanel: 'slotClose', skillsPanel: 'skClose', sharePanel: 'shClose', faqPanel: 'faqClose', itPanel: 'itQuit', psPanel: 'psQuit', rjPanel: 'rjQuit', clPanel: 'clQuit', dyPanel: 'dyClose', intro: 'cancel', over: 'back', secPanel: 'secClose', contactPanel: 'contactClose', keysPanel: 'keysClose', gamesPanel: 'gamesClose',
+  const PANEL_CLOSE = { prPanel: 'prQuit', rwPanel: 'rwQuit', rpPanel: 'rpQuit', niPanel: 'niQuit', bdPanel: 'bdClose', slotPanel: 'slotClose', skillsPanel: 'skClose', sharePanel: 'shClose', faqPanel: 'faqClose', parcoursPanel: 'pcClose', itPanel: 'itQuit', psPanel: 'psQuit', rjPanel: 'rjQuit', clPanel: 'clQuit', dyPanel: 'dyClose', intro: 'cancel', over: 'back', secPanel: 'secClose', contactPanel: 'contactClose', keysPanel: 'keysClose', gamesPanel: 'gamesClose',
     supportPanel: 'tkQuit', panPanel: 'pnQuit', quizPanel: 'qzQuit', newsPanel: 'newsClose', briefPanel: 'briefClose', supPanel: 'supClose',
     phPanel: 'phQuit', snPanel: 'snQuit', scPanel: 'scClose', glossPanel: 'glossClose', pausePanel: 'pzResume', resumePanel: 'rsBack' };
   let downOn = null;
@@ -1223,6 +1223,7 @@
     const ul = $('recTags'); ul.textContent = '';
     for (const d of t('domains')) { const li = document.createElement('li'); li.textContent = d; ul.append(li); }
     const a = $('recMail'); a.href = mailHref(); a.textContent = MAIL;
+    { const pc = $('recPc'); pc.textContent = ''; const ol = document.createElement('ol'); ol.className = 'pc-list pc-short'; pcItems(ol, true); pc.append(ol); }
     glossify(dl); glossify(ul); try { fillRecSkills(); } catch (e) {}
   }
   function recOn() { return document.body.classList.contains('rec-on'); }
@@ -1946,11 +1947,22 @@
       for (const g of SK_GAMES[i]) { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip-btn'; b.textContent = t(g + 'T') + ' ▸'; b.addEventListener('click', () => { closePanels(); $(g).click(); }); chips.append(b); }
       card.append(h, ul, chips); box.append(card);
     });
+    skExtra(box);
     closeTerm(); openPanel('skillsPanel', 'skClose');
+  }
+  /* Outils, langues et veille, sous les blocs de compétences */
+  function skExtra(box) {
+    const card = document.createElement('div'); card.className = 'sk-block sk-extra';
+    const h = document.createElement('h3'); h.textContent = t('skToolsT'); const tools = document.createElement('ul'); tools.className = 'sk-tools';
+    for (const x of (t('skTools') || [])) { const li = document.createElement('li'); li.textContent = x; tools.append(li); }
+    const lg = document.createElement('p'), b1 = document.createElement('b'); b1.textContent = t('skLangT'); lg.append(b1, document.createElement('br'), t('skLang'));
+    const vw = document.createElement('p'), b2 = document.createElement('b'); b2.textContent = t('skVeilleT'); vw.append(b2, document.createElement('br'), t('skVeille'));
+    card.append(h, tools, lg, vw); box.append(card);
   }
   function fillRecSkills() {
     const box = $('recSkills'); if (!box) return; box.textContent = '';
     t('skBlocks').forEach(([title, items], i) => { const p = document.createElement('p'), b = document.createElement('b'); b.textContent = `${i + 1} · ${title}`; p.append(b, document.createElement('br'), items.join(' · ')); box.append(p); });
+    const p = document.createElement('p'), b = document.createElement('b'); b.textContent = t('skToolsT'); p.append(b, document.createElement('br'), (t('skTools') || []).join(' · '), document.createElement('br'), t('skLang')); box.append(p);
   }
   $('briefSkills').addEventListener('click', openSkills);
   $('skClose').addEventListener('click', closePanels);
@@ -1982,6 +1994,27 @@
     closeTerm(); openPanel('faqPanel', 'faqClose');
   }
   $('briefFaq').addEventListener('click', openFaq);
+
+  /* Mon parcours : postes et formation, du plus récent au plus ancien, puis l'objectif */
+  function pcItems(list, short) {
+    const out = [];
+    for (const [kind, dates, role, org, pts] of (t('pcItems') || [])) {
+      const li = document.createElement('li'); li.className = 'pc-item pc-' + kind;
+      const d = document.createElement('p'), h = document.createElement('h3'), o = document.createElement('p');
+      d.className = 'pc-date'; d.textContent = kind === 'edu' ? dates + ' · ' + t('pcEdu') : dates;
+      h.textContent = role; o.className = 'pc-org'; o.textContent = org; li.append(d, h, o);
+      if (!short && pts.length) { const ul = document.createElement('ul'); for (const x of pts) { const p = document.createElement('li'); p.textContent = x; ul.append(p); } li.append(ul); }
+      list.append(li); out.push(li);
+    }
+    return out;
+  }
+  function openParcours() {
+    const ol = $('pcList'); ol.textContent = ''; pcItems(ol, false); glossify(ol);
+    closeTerm(); openPanel('parcoursPanel', 'pcClose');
+  }
+  $('briefParcours').addEventListener('click', openParcours);
+  $('pcClose').addEventListener('click', closePanels);
+  $('pcContact').addEventListener('click', () => $('contactBtn').click());
   $('faqClose').addEventListener('click', closePanels);
 
   /* Petit outil commun aux nouveaux jeux : boutons de réponse */
@@ -3009,8 +3042,9 @@
     if (h === '#contact') { history.replaceState(null, '', location.pathname + location.search); $('contactBtn').click(); }
     else if (h === '#jeux' || h === '#games') { history.replaceState(null, '', location.pathname + location.search); openGames(); }
     else if (h === '#fiche' || h === '#30s') { history.replaceState(null, '', location.pathname + location.search); openBrief(); }
+    else if (h === '#parcours' || h === '#career') { history.replaceState(null, '', location.pathname + location.search); openParcours(); }
   }
-  if (['#contact', '#jeux', '#games', '#fiche', '#30s'].includes(location.hash)) setTimeout(ouvrirDepuisAdresse, 0);
+  if (['#contact', '#jeux', '#games', '#fiche', '#30s', '#parcours', '#career'].includes(location.hash)) setTimeout(ouvrirDepuisAdresse, 0);
   window.addEventListener('hashchange', ouvrirDepuisAdresse);
   $('start').addEventListener('click', startGame);
   $('lvGo').addEventListener('click', beginLevel);

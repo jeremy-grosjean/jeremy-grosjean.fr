@@ -404,9 +404,9 @@ with sync_playwright() as p:
           $('faqClose').click();
           return out;
         }""")
-        if not (res['slotOpen'] and res['days'] == 8 and res['slots'] == 32 and not res['wkend'] and res['needPick'] and 'par téléphone' in res['mail'] and res['gmail'] and res['slotClosed'] and res['skills'] == 3 and res['chips'] == 14 and res['chipGame'] and res['share'] and res['faq'] == 8 and res['faqTxt']):
+        if not (res['slotOpen'] and res['days'] == 8 and res['slots'] == 32 and not res['wkend'] and res['needPick'] and 'par téléphone' in res['mail'] and res['gmail'] and res['slotClosed'] and res['skills'] == 4 and res['chips'] == 14 and res['chipGame'] and res['share'] and res['faq'] == 12 and res['faqTxt']):
             erreurs.append(f'{nom} : créneaux / compétences / partage / FAQ {res}')
-        ok(f'{nom} : créneaux (8 jours ouvrés, e-mail prérempli), compétences reliées aux jeux, partage, FAQ')
+        ok(f'{nom} : créneaux (8 jours ouvrés, e-mail prérempli), compétences reliées aux jeux et outils, partage, FAQ de 12 questions')
         pg.goto(BASE + '/?pour=Société%20Générale%20<b>'); pg.wait_for_timeout(1200)
         res = pg.evaluate("""() => ({ hello: document.getElementById('helloLine').hidden ? '' : document.getElementById('helloTxt').textContent,
           mail: decodeURIComponent(document.getElementById('openMail').href), html: document.getElementById('helloTxt').innerHTML })""")
@@ -546,7 +546,7 @@ with sync_playwright() as p:
             erreurs.append(f'raccourci {ancre} : la fenêtre {panneau} ne s’ouvre pas')
     ctx.close()
     ok('application installable : manifeste complet (portrait et paysage), icônes, 4 raccourcis (#contact, #jeux, #recruteur, #fiche)')
-    # Fenêtre « En 30 secondes » en tuiles : 4 tuiles, 6 domaines en pastilles, 2 boutons principaux, plus de « Fermer »
+    # Fenêtre « En 30 secondes » en tuiles : 6 tuiles, 6 domaines en pastilles, 2 boutons principaux, plus de « Fermer »
     # (la croix suffit) ; rien ne déborde, dans les 6 langues, du téléphone (320 px) à l'ordinateur
     for w, h in [(320, 568), (402, 874), (874, 402), (1280, 800)]:
         ctx = nav.new_context(viewport={'width': w, 'height': h}, has_touch=w < 1100, is_mobile=w < 1100, locale='fr-FR', timezone_id='Europe/Paris')
@@ -557,7 +557,7 @@ with sync_playwright() as p:
             pg.reload(); pg.wait_for_timeout(500)
             r = pg.evaluate("""(() => { document.getElementById('availBtn').click(); const c = document.querySelector('#briefPanel .card'), out = [];
               const tu = c.querySelectorAll('#briefList > div'), pa = c.querySelectorAll('#briefDoms li');
-              if (tu.length !== 4) out.push(tu.length + ' tuiles');
+              if (tu.length !== 6) out.push(tu.length + ' tuiles');
               if (pa.length !== 6) out.push(pa.length + ' pastilles');
               if (c.querySelector('#briefClose')) out.push('bouton Fermer encore là');
               if (c.querySelectorAll('.actions button').length !== 2) out.push('pas 2 boutons principaux');
@@ -568,7 +568,7 @@ with sync_playwright() as p:
               return out; })()""")
             for p_ in r: erreurs.append(f'{w}×{h} {lg} : fiche « En 30 secondes » : {p_}')
         ctx.close()
-    ok('fiche « En 30 secondes » en tuiles : 4 tuiles, 6 domaines, 2 boutons, dans les 6 langues, du 320 px à l’ordinateur')
+    ok('fiche « En 30 secondes » en tuiles : 6 tuiles, 6 domaines, 2 boutons, dans les 6 langues, du 320 px à l’ordinateur')
     # Fluidité : le jeu va à la même vitesse sur un écran 30 Hz, 60 Hz, 144 Hz ou 240 Hz (hasard figé pour comparer)
     # Une machine surchargée (GitHub lance plusieurs vérifications à la fois) peut ralentir une seule mesure :
     # en cas d'écart, on refait la mesure (2 fois au plus) et on garde le meilleur temps de chaque fréquence.
