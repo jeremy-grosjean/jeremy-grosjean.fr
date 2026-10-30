@@ -502,6 +502,18 @@ with sync_playwright() as p:
             erreurs.append(f'{w}×{h} : {pb}')
         ctx.close()
     ok('pied de page en ligne : « Activer le son » sur une ligne, numéro de version visible de l’ordinateur au téléphone')
+    # Régression : téléphone tourné à l'horizontale puis remis droit, le journal de démarrage ([ OK ] …) s'affiche tout de suite
+    ctx = nav.new_context(viewport={'width': 402, 'height': 874}, has_touch=True, is_mobile=True, locale='fr-FR', timezone_id='Europe/Paris')
+    pg = ctx.new_page(); suivre(pg, 'rotation')
+    pg.add_init_script("localStorage.setItem('jg-tour', '1')")
+    pg.goto(BASE + '/'); pg.wait_for_timeout(6500)
+    pg.set_viewport_size({'width': 874, 'height': 402}); pg.wait_for_timeout(1500)
+    pg.set_viewport_size({'width': 402, 'height': 874}); pg.wait_for_timeout(400)
+    vis = pg.evaluate("[...document.querySelectorAll('#bootlog li')].map(li => +getComputedStyle(li).opacity)")
+    if len(vis) < 4 or min(vis) < 0.99:
+        erreurs.append(f'rotation du téléphone : le journal de démarrage reste vide après retour à la verticale {vis}')
+    ctx.close()
+    ok('téléphone tourné puis remis droit : le journal de démarrage reste affiché')
     # Fluidité : le jeu va à la même vitesse sur un écran 30 Hz, 60 Hz, 144 Hz ou 240 Hz (hasard figé pour comparer)
     # Une machine surchargée (GitHub lance plusieurs vérifications à la fois) peut ralentir une seule mesure :
     # en cas d'écart, on refait la mesure (2 fois au plus) et on garde le meilleur temps de chaque fréquence.

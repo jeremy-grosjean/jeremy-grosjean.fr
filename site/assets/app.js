@@ -766,6 +766,9 @@
     setTimeout(typeWho, 1450);
     setTimeout(() => rotLine.classList.remove('idle'), 3300);
     startRotate(3400);
+    /* Animation du journal jouée une seule fois : sans cela, quand le téléphone passe à l'horizontale (journal masqué)
+       puis revient à la verticale, le navigateur rejoue l'animation et le cadre reste vide 5 secondes */
+    setTimeout(() => bootUl.classList.add('static'), 5500);
   }
 
   /* ================= Voyant de connexion (en direct) ================= */
