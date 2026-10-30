@@ -1223,11 +1223,13 @@ body.deja-vu .hint, body.deja-vu .keys { display: none; }
   #contactPanel .wm-lbl { margin-bottom: .35rem; }
   #contactPanel .card.more::after { grid-column: 1 / -1; }
 }
-/* 12 · Fenêtre plus haute que l'écran : fondu et flèche ↓ tant qu'il reste du contenu en dessous */
+/* 12 · Fenêtre plus haute que l'écran : petite pastille ↓ dans le coin tant qu'il reste du contenu en dessous.
+   Elle ne voile plus le contenu (avant : un fondu blanc passait sur le QR code) */
 .card.more::after {
-  content: "↓"; position: sticky; bottom: 0; z-index: 3; display: flex; align-items: flex-end; justify-content: center;
-  height: 2.8rem; margin: -2.8rem 0 0; padding-bottom: .3rem; pointer-events: none;
-  background: linear-gradient(to bottom, transparent, var(--surface-strong) 72%); color: var(--cyan); font-size: 1rem; font-weight: 700;
+  content: "↓"; position: sticky; bottom: .55rem; z-index: 3; display: grid; place-items: center;
+  width: 2.1rem; height: 2.1rem; margin: -2.1rem 0 0 auto; border-radius: 50%; pointer-events: none;
+  background: var(--surface-strong); border: 1px solid var(--line-accent); box-shadow: var(--shadow);
+  color: var(--cyan); font-size: 1rem; font-weight: 700;
 }
 @media print { .card.more::after { display: none; } }
 /* 13 · Bouton thème : le mode est écrit à côté de l'icône (ordinateur) */
@@ -1340,3 +1342,29 @@ body.deja-vu .hint, body.deja-vu .keys { display: none; }
 .rec-id { flex: 1 1 12rem; min-width: 0; }
 @media print { .me-photo { box-shadow: none; border: 0; } }
 .rec .pc-item h3 { margin: .1rem 0 0; font-size: .95rem; letter-spacing: 0; text-transform: none; color: var(--ink); }
+
+/* ================= Lot 25 : « Me contacter » sans défilement sur les ordinateurs portables (720 à 860 px de haut) ================= */
+@media (min-width: 760px) and (max-height: 860px) and (min-height: 501px) {
+  #contactPanel .card { width: min(50rem, 100%); display: grid; grid-template-columns: 1fr 1fr; grid-template-areas: "x x" "b b" "m w" "k w"; column-gap: 1.6rem; align-items: start; }
+  #contactPanel .card > .panel-x-wrap { grid-area: x; }
+  #contactPanel .card > .g-band, #contactPanel .card > h2 { grid-area: b; }
+  #contactPanel .c-main { grid-area: m; }
+  #contactPanel .c-mail { grid-area: w; }
+  #contactPanel .c-keep { grid-area: k; }
+  #contactPanel .qr { width: 104px; height: 104px; }
+  #contactPanel .card.more::after { grid-column: 1 / -1; }
+}
+
+/* ================= Lot 26 : m'embaucher (démarches et coût), délai de réponse ================= */
+#hirePanel .card { width: min(34rem, 100%); text-align: left; }
+#hirePanel .card > h2, #hirePanel .card > p:first-of-type { text-align: center; }
+.hire-h { margin: 1rem 0 .5rem; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--dim); }
+.hire-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: .55rem; counter-reset: hs; }
+.hire-steps li { display: grid; grid-template-columns: 1.6rem 1fr; column-gap: .6rem; counter-increment: hs; font-size: .9rem; line-height: 1.4; }
+.hire-steps li::before { content: counter(hs); grid-row: 1 / span 2; width: 1.6rem; height: 1.6rem; border-radius: 50%; display: grid; place-items: center; background: var(--violet); color: #fff; font-size: .8rem; font-weight: 700; }
+.hire-steps b { color: var(--ink); }
+.hire-steps span { color: var(--dim); font-size: .86rem; }
+.hire-cost { margin-bottom: .6rem; }
+.card .hire-src { font-size: .78rem; color: var(--dim); margin: 0 0 1rem; text-align: center; }
+.hire-src a { color: var(--cyan); }
+.card .ct-delay { display: flex; align-items: center; justify-content: center; gap: .4rem; width: fit-content; margin: -.4rem auto .8rem; padding: .25rem .8rem; border-radius: 999px; background: rgba(var(--ok-rgb), .12); color: var(--ok); font-size: .82rem; font-weight: 600; }

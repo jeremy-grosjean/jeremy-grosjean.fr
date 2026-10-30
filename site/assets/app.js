@@ -368,12 +368,12 @@
     $('hScore').textContent = G.score; $('hBreach').textContent = G.breach + '/3'; $('hTime').textContent = Math.ceil(G.time);
   }
   const server = () => ({ x: W / 2, y: H / 2, s: Math.min(64, Math.max(46, W / 22)) });
-  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel', 'phPanel', 'snPanel', 'scPanel', 'glossPanel', 'pausePanel', 'resumePanel', 'slotPanel', 'skillsPanel', 'sharePanel', 'faqPanel', 'parcoursPanel', 'itPanel', 'psPanel', 'rjPanel', 'clPanel', 'dyPanel', 'prPanel', 'rwPanel', 'rpPanel', 'niPanel', 'bdPanel'];
+  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel', 'phPanel', 'snPanel', 'scPanel', 'glossPanel', 'pausePanel', 'resumePanel', 'slotPanel', 'skillsPanel', 'sharePanel', 'faqPanel', 'parcoursPanel', 'hirePanel', 'itPanel', 'psPanel', 'rjPanel', 'clPanel', 'dyPanel', 'prPanel', 'rwPanel', 'rpPanel', 'niPanel', 'bdPanel'];
   function closePanels() { panels.forEach(p => $(p).classList.remove('open')); }
   /* La fenêtre s'ouvre toujours en haut de son contenu (sur un écran bas, le focus sur un bouton du bas la faisait défiler) */
   /* Fermer une fenêtre : clic sur le fond flou autour (même action que son bouton Fermer / Quitter), ou sur le ✕ en haut à droite.
      Un clic dans la fenêtre ne la ferme pas ; un glisser qui commence dans la fenêtre et finit dehors non plus. */
-  const PANEL_CLOSE = { prPanel: 'prQuit', rwPanel: 'rwQuit', rpPanel: 'rpQuit', niPanel: 'niQuit', bdPanel: 'bdClose', slotPanel: 'slotClose', skillsPanel: 'skClose', sharePanel: 'shClose', faqPanel: 'faqClose', parcoursPanel: 'pcClose', itPanel: 'itQuit', psPanel: 'psQuit', rjPanel: 'rjQuit', clPanel: 'clQuit', dyPanel: 'dyClose', intro: 'cancel', over: 'back', secPanel: 'secClose', contactPanel: 'contactClose', keysPanel: 'keysClose', gamesPanel: 'gamesClose',
+  const PANEL_CLOSE = { prPanel: 'prQuit', rwPanel: 'rwQuit', rpPanel: 'rpQuit', niPanel: 'niQuit', bdPanel: 'bdClose', slotPanel: 'slotClose', skillsPanel: 'skClose', sharePanel: 'shClose', faqPanel: 'faqClose', parcoursPanel: 'pcClose', hirePanel: 'hireClose', itPanel: 'itQuit', psPanel: 'psQuit', rjPanel: 'rjQuit', clPanel: 'clQuit', dyPanel: 'dyClose', intro: 'cancel', over: 'back', secPanel: 'secClose', contactPanel: 'contactClose', keysPanel: 'keysClose', gamesPanel: 'gamesClose',
     supportPanel: 'tkQuit', panPanel: 'pnQuit', quizPanel: 'qzQuit', newsPanel: 'newsClose', briefPanel: 'briefClose', supPanel: 'supClose',
     phPanel: 'phQuit', snPanel: 'snQuit', scPanel: 'scClose', glossPanel: 'glossClose', pausePanel: 'pzResume', resumePanel: 'rsBack' };
   let downOn = null;
@@ -2016,6 +2016,16 @@
     closeTerm(); openPanel('parcoursPanel', 'pcClose');
   }
   $('briefParcours').addEventListener('click', openParcours);
+  /* M'embaucher : les démarches du contrat de professionnalisation et son coût (sources officielles, date de vérification) */
+  function openHire() {
+    const ol = $('hireSteps'), dl = $('hireCost'); ol.textContent = ''; dl.textContent = '';
+    for (const [title, txt] of (t('hireSteps') || [])) { const li = document.createElement('li'), b = document.createElement('b'), p = document.createElement('span'); b.textContent = title; p.textContent = txt; li.append(b, p); ol.append(li); }
+    for (const [k, v, sub] of (t('hireCost') || [])) { const d = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; if (sub) { const s = document.createElement('span'); s.className = 'sub'; s.textContent = sub; dd.append(s); } d.append(dt, dd); dl.append(d); }
+    glossify(ol); closeTerm(); openPanel('hirePanel', 'hireClose');
+  }
+  $('briefHire').addEventListener('click', openHire);
+  $('hireClose').addEventListener('click', closePanels);
+  $('hireContact').addEventListener('click', () => $('contactBtn').click());
   $('pcClose').addEventListener('click', closePanels);
   $('pcContact').addEventListener('click', () => $('contactBtn').click());
   $('faqClose').addEventListener('click', closePanels);
@@ -3046,8 +3056,9 @@
     else if (h === '#jeux' || h === '#games') { history.replaceState(null, '', location.pathname + location.search); openGames(); }
     else if (h === '#fiche' || h === '#30s') { history.replaceState(null, '', location.pathname + location.search); openBrief(); }
     else if (h === '#parcours' || h === '#career') { history.replaceState(null, '', location.pathname + location.search); openParcours(); }
+    else if (h === '#embaucher' || h === '#hire') { history.replaceState(null, '', location.pathname + location.search); openHire(); }
   }
-  if (['#contact', '#jeux', '#games', '#fiche', '#30s', '#parcours', '#career'].includes(location.hash)) setTimeout(ouvrirDepuisAdresse, 0);
+  if (['#contact', '#jeux', '#games', '#fiche', '#30s', '#parcours', '#career', '#embaucher', '#hire'].includes(location.hash)) setTimeout(ouvrirDepuisAdresse, 0);
   window.addEventListener('hashchange', ouvrirDepuisAdresse);
   $('start').addEventListener('click', startGame);
   $('lvGo').addEventListener('click', beginLevel);

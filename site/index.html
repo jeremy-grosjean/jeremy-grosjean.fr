@@ -29,7 +29,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="J. Grosjean">
 <link rel="manifest" href="/site.webmanifest?v=9b028ebede">
-<link rel="stylesheet" href="/assets/app.css?v=32c49df2c9">
+<link rel="stylesheet" href="/assets/app.css?v=b09fdf1ea1">
 <script src="/assets/i18n.js?v=ead1d74824" defer></script>
 <script src="/assets/labs.js?v=28d66e0db4" defer></script>
 <script src="/assets/labs2.js?v=194508f5f9" defer></script>
@@ -37,10 +37,10 @@
 <script src="/assets/labs4.js?v=1f113c584a" defer></script>
 <script src="/assets/labs5.js?v=60720498d6" defer></script>
 <script src="/assets/labs6.js?v=716e5179dc" defer></script>
-<script src="/assets/labs7.js?v=7955973ab4" defer></script>
+<script src="/assets/labs7.js?v=f1e3bb2feb" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=0c3f9864ae" defer></script>
+<script src="/assets/app.js?v=3723899587" defer></script>
 </head>
 <body>
 <a class="skip" id="skipLink" href="#contactBtn" data-i="skipLink">Aller au contenu</a>
@@ -255,6 +255,7 @@
     <h2 id="contactTitle" data-i="contactTitle">Me contacter</h2>
     <div class="c-col c-main">
     <p data-i="contactIntro">Pour une alternance, une question ou un échange, écrivez-moi :</p>
+    <p class="ct-delay"><span aria-hidden="true">⏱</span> <span data-i="ctDelay">Réponse sous 24 h, du lundi au vendredi</span></p>
     <p class="mail-box"><span id="mailAddr">contact [at] jeremy-grosjean.fr</span></p>
     <div class="actions contact-main">
       <button class="btn" id="copyMail" type="button" data-i="copyMail">Copier l’adresse</button>
@@ -439,6 +440,19 @@
   </div>
 </div>
 
+<div class="panel" id="hirePanel" role="dialog" aria-modal="true" aria-labelledby="hireTitle">
+  <div class="card">
+    <h2 id="hireTitle" data-i="hireTitle">M’embaucher en contrat pro</h2>
+    <p data-i="hireSub">Les démarches et le coût, vérifiés sur les sites officiels.</p>
+    <h3 class="hire-h" data-i="hireStepsT">Les démarches</h3>
+    <ol class="hire-steps" id="hireSteps"></ol>
+    <h3 class="hire-h" data-i="hireCostT">Ce que ça coûte</h3>
+    <dl class="brief-tiles hire-cost" id="hireCost"></dl>
+    <p class="hire-src"><span data-i="hireSrcL">Sources :</span> <a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F15478" target="_blank" rel="noopener noreferrer">service-public.gouv.fr</a> · <a href="https://www.francetravail.fr/employeur/aides-aux-recrutements/les-aides-a-lembauche/aide-a-lembauche-dun-demandeur-d.html" target="_blank" rel="noopener noreferrer">francetravail.fr</a> · <span data-i="hireChecked">Vérifié le 30 octobre 2026</span></p>
+    <div class="actions"><button class="btn" id="hireContact" type="button" data-i="contactBtn">Me contacter</button><button class="btn-ghost" id="hireClose" type="button" data-i="close">Fermer</button></div>
+  </div>
+</div>
+
 <div class="panel" id="parcoursPanel" role="dialog" aria-modal="true" aria-labelledby="pcTitle">
   <div class="card">
     <h2 id="pcTitle" data-i="pcTitle">Mon parcours</h2>
@@ -612,7 +626,7 @@
     <p class="brief-dom-lbl" id="briefDomLbl"></p>
     <ul class="brief-doms" id="briefDoms"></ul>
     <div class="actions"><button class="btn" id="briefContact" type="button" data-i="contactBtn">Me contacter</button><button class="btn-ghost" id="briefSlot" type="button" data-i="slotBtn">Proposer un créneau</button></div>
-    <div class="brief-links"><button class="link-btn pc-link" id="briefParcours" type="button" data-i="pcBtn">Mon parcours</button><button class="link-btn" id="briefSkills" type="button" data-i="skBtn">Mes compétences</button><button class="link-btn" id="briefFaq" type="button" data-i="faqBtn">Questions fréquentes</button><button class="link-btn" id="briefRec" type="button" data-i="recOpen">Vue sur une page</button><button class="link-btn" id="briefShare" type="button" data-i="shBtn">Partager</button></div>
+    <div class="brief-links"><button class="link-btn pc-link" id="briefParcours" type="button" data-i="pcBtn">Mon parcours</button><button class="link-btn pc-link" id="briefHire" type="button" data-i="hireBtn">M’embaucher : démarches et coût</button><button class="link-btn" id="briefSkills" type="button" data-i="skBtn">Mes compétences</button><button class="link-btn" id="briefFaq" type="button" data-i="faqBtn">Questions fréquentes</button><button class="link-btn" id="briefRec" type="button" data-i="recOpen">Vue sur une page</button><button class="link-btn" id="briefShare" type="button" data-i="shBtn">Partager</button></div>
   </div>
 </div>
 
