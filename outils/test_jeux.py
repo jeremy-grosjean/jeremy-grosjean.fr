@@ -451,13 +451,20 @@ with sync_playwright() as p:
             erreurs.append(f'{w}×{h} : la page déborde sur le côté ({large} px)')
         for pb in pg.evaluate(MESURE, CLES):
             erreurs.append(f'{w}×{h} : {pb}')
-        for panneau, bouton in (('contactPanel', 'contactBtn'), ('secPanel', 'secBtn'), ('gamesPanel', 'openGame'), ('niPanel', 'pickNoNet')):
+        for panneau, bouton in (('contactPanel', 'contactBtn'), ('secPanel', 'secBtn'), ('supPanel', 'supBtn'), ('gamesPanel', 'openGame'), ('niPanel', 'pickNoNet'), ('rwPanel', 'pickRansom')):
             pg.evaluate(f"document.getElementById('{bouton}').click()"); pg.wait_for_timeout(200)
             if pg.evaluate(f"(() => {{ const c = document.querySelector('#{panneau} .card'), r = c.getBoundingClientRect(); return r.left < -1 || r.right > innerWidth + 1 || r.top < -1 || r.bottom > innerHeight + 1 || c.scrollWidth > c.clientWidth + 2; }})()"):
                 erreurs.append(f'{w}×{h} : la fenêtre {panneau} sort de l’écran')
+            # Régression : la croix ✕ ne doit jamais recouvrir le bandeau de la fenêtre ; le domaine n'est jamais coupé au tiret
+            pb = pg.evaluate(f"""(() => {{ const c = document.querySelector('#{panneau} .card'), x = c.querySelector('.panel-x'), b = c.querySelector(':scope > .g-band'), out = [];
+              if (x && b) {{ const r = x.getBoundingClientRect(), q = b.getBoundingClientRect(); if (r.left < q.right - 1 && q.left < r.right - 1 && r.top < q.bottom - 1 && q.top < r.bottom - 1) out.push('la croix recouvre le bandeau de ' + Math.round(q.right - r.left) + ' px'); }}
+              if (innerWidth > 300) c.querySelectorAll('.nobr').forEach(n => {{ if (n.getClientRects().length > 1) out.push('le domaine est coupé en deux'); }});
+              return out; }})()""")
+            for p_ in pb:
+                erreurs.append(f'{w}×{h} : fenêtre {panneau} : {p_}')
             pg.evaluate("document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open'))")
         ctx.close()
-    ok(f'{len(ECRANS)} formes d’écran, du 200×200 au 8K : rien ne déborde ni ne se chevauche')
+    ok(f'{len(ECRANS)} formes d’écran, du 200×200 au 8K : rien ne déborde ni ne se chevauche, la croix ne touche aucun bandeau')
     # Fluidité : le jeu va à la même vitesse sur un écran 30 Hz, 60 Hz, 144 Hz ou 240 Hz (hasard figé pour comparer)
     # Une machine surchargée (GitHub lance plusieurs vérifications à la fois) peut ralentir une seule mesure :
     # en cas d'écart, on refait la mesure (2 fois au plus) et on garde le meilleur temps de chaque fréquence.

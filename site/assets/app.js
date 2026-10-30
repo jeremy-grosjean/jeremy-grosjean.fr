@@ -59,10 +59,18 @@
     fDate = new Intl.DateTimeFormat(loc, { timeZone: 'Europe/Paris', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   }
 
+  /* Le nom du domaine n'est jamais coupé au tiret (« jeremy- » / « grosjean.fr ») : il est gardé d'un seul bloc */
+  function setText(el, v) {
+    if (!v.includes('jeremy-grosjean.fr')) { el.textContent = v; return; }
+    el.textContent = '';
+    for (const part of v.split(/(jeremy-grosjean\.fr)/)) {
+      if (part === 'jeremy-grosjean.fr') { const s = document.createElement('span'); s.className = 'nobr'; s.textContent = part; el.append(s); } else if (part) el.append(part);
+    }
+  }
   function applyLang() {
     document.documentElement.lang = t('htmlLang');
     document.title = t('title');
-    document.querySelectorAll('[data-i]').forEach(el => { const v = t(el.dataset.i); if (typeof v === 'string') el.textContent = v; });
+    document.querySelectorAll('[data-i]').forEach(el => { const v = t(el.dataset.i); if (typeof v === 'string') setText(el, v); });
     langUI();
     $('langLabel').textContent = t('langLabel');
     $('termClose').setAttribute('aria-label', t('close'));
@@ -2597,7 +2605,7 @@
   const CAT_KEY = { sup: 'catSup', sys: 'catSys', net: 'catNet', sec: 'catSec' };
   const BAND_ICON = {
     contactPanel: ['cyan', [['rect', { x: 3, y: 5, width: 18, height: 14, rx: 2 }], ['path', { d: 'M3 8l9 6 9-6' }]]],
-    secPanel: ['sec', [['path', { d: 'M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z' }], ['path', { d: 'M9 12l2 2 4-4' }]]],
+    secPanel: ['ok', [['path', { d: 'M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z' }], ['path', { d: 'M9 12l2 2 4-4' }]]],
     supPanel: ['net', [['path', { d: 'M3 12h4l2.5-6 4 12 2.5-6H21' }]]]
   };
   /* Bandeau en tête d'une fenêtre : grande icône sur un dégradé de la couleur de la catégorie */
