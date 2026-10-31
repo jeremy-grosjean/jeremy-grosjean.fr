@@ -1485,3 +1485,5 @@ html.app-mode[data-theme="light"] body::before { content: ""; position: fixed; z
 @media (prefers-reduced-motion: reduce) { .avail.glow-once { animation: none; } }
 .card .hire-rncp { margin-bottom: .35rem; }
 .play-wrap, .play-link { pointer-events: auto; } /* l’accueil laisse passer les clics vers le fond animé : chaque bouton doit les reprendre */
+/* Onglets des jeux : depuis le passage à 44 px (affichage en flex), l'espace entre le nom et le nombre disparaissait (« Tous16 ») */
+.g-tabs button, .chip-btn { gap: .3em; }
