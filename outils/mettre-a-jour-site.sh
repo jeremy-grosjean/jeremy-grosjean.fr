@@ -198,6 +198,9 @@ if [ "$AVEC_HTACCESS" = 1 ]; then
   # Site statique : un envoi de données (POST) doit être refusé (405)
   NEW_METHODS="$(curl -s -o /dev/null -m 15 -w '%{http_code}' --data 'test=1' "$SITE/")"; NEW_METHODS=$((10#${NEW_METHODS:-0}))
   if [ "$NEW_METHODS" = 405 ]; then ok "Méthodes HTTP : lecture seule (POST refusé, code 405)"; else printf '%s✗ Méthodes HTTP : POST renvoie %s (405 attendu)%s\n' "$ROUGE" "$NEW_METHODS" "$FIN"; fi
+  # Compression : simple information (la règle de .htaccess est ignorée si le serveur n'a pas le module)
+  GZ="$(curl -s -o /dev/null -m 15 -H 'Accept-Encoding: gzip' -w '%{size_download}' "$SITE/")"; RAW="$(curl -s -o /dev/null -m 15 -w '%{size_download}' "$SITE/")"
+  if curl -sI -m 15 -H 'Accept-Encoding: gzip' "$SITE/" | grep -qi '^content-encoding: *gzip'; then ok "Compression gzip active (accueil : $((RAW / 1024)) Ko → $((GZ / 1024)) Ko)"; else printf '  ℹ Compression gzip non disponible sur le serveur (accueil envoyé en %s Ko)\n' "$((RAW / 1024))"; fi
   # Mettre la supervision à jour avec ce nouveau relevé (même connexion, pas de nouveau mot de passe)
   if [ "$NEW_METHODS" != "$METHODS" ]; then
     METHODS="$NEW_METHODS"; ecrire_status
