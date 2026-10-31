@@ -245,6 +245,7 @@
     if (typeof SND !== 'undefined') (m === 'light' ? SND.themeLight : m === 'dark' ? SND.themeDark : SND.themeAuto)();
     return true;
   }
+  $('themeBtn').addEventListener('click', () => { stillDone = false; });
   $('themeBtn').addEventListener('click', () => setTheme({ auto: 'light', light: 'dark', dark: 'auto' }[themeMode]));
   const onScheme = () => { if (themeMode === 'auto') readPalette(); };
   if (mqLight.addEventListener) mqLight.addEventListener('change', onScheme); else if (mqLight.addListener) mqLight.addListener(onScheme);
@@ -646,7 +647,9 @@
 
   /* ================= Rendu ================= */
   /* Qualité adaptative : si l'appareil n'arrive pas à suivre (moins de 30 images/s pendant 3 s), le réseau de fond est allégé */
-  let slowMs = 0, avgMs = 16.7;
+  let slowMs = 0, avgMs = 16.7, stillDone = false;
+  const stillRedraw = () => { stillDone = false; };
+  window.addEventListener('resize', stillRedraw, { passive: true });
   function frame(now) {
     const dt = lastFrame ? now - lastFrame : 16.7; lastFrame = now;
     FR = Math.min(7.2, Math.max(.05, dt / 16.667));
@@ -654,6 +657,9 @@
     if (avgMs > 34 && !G.on && !morph.on && !document.hidden) { slowMs += dt; if (slowMs > 3000 && nodes.length > 28) { nodes.splice(Math.round(nodes.length * .8)); baseCount = nodes.length; slowMs = 0; avgMs = 22; } } else slowMs = 0;
     /* Vue recruteur ouverte (elle couvre tout l'écran) : rien à dessiner, on économise le processeur et la batterie */
     if (document.body.classList.contains('rec-on')) { requestAnimationFrame(frame); return; }
+    /* Option « Arrêter l'animation du fond » : une image fixe, redessinée seulement si la taille ou le thème change (le jeu reste animé) */
+    if (A11Y.still && !G.on && !morph.on && stillDone) { requestAnimationFrame(frame); return; }
+    stillDone = !!A11Y.still && !G.on && !morph.on;
     try { drawFrame(now); } catch (e) { if (window.console) console.warn('[jeremy-grosjean.fr] rendu :', e); }
     requestAnimationFrame(frame);
   }
@@ -2578,12 +2584,14 @@
     if (A11Y.contrast) r.dataset.contrast = '1'; else delete r.dataset.contrast;
     if (A11Y.font) r.dataset.font = '1'; else delete r.dataset.font;
     document.querySelectorAll('.seg [data-size]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.size === A11Y.size)));
-    $('a11yContrast').checked = A11Y.contrast; $('a11yFont').checked = A11Y.font;
+    $('a11yContrast').checked = A11Y.contrast; $('a11yFont').checked = A11Y.font; $('a11yStill').checked = !!A11Y.still;
+    document.documentElement.classList.toggle('bg-still', !!A11Y.still);
     store.set('jg-a11y', JSON.stringify(A11Y));
   }
   document.querySelectorAll('.seg [data-size]').forEach(b => b.addEventListener('click', () => { A11Y.size = b.dataset.size; applyA11y(); SND.key(); setup(); }));
   $('a11yContrast').addEventListener('change', e => { A11Y.contrast = e.target.checked; applyA11y(); requestAnimationFrame(readPalette); });
   $('a11yFont').addEventListener('change', e => { A11Y.font = e.target.checked; applyA11y(); });
+  $('a11yStill').addEventListener('change', e => { A11Y.still = e.target.checked; stillDone = false; applyA11y(); try { store.set('jg-a11y', JSON.stringify(A11Y)); } catch (x) {} SND.key(); });
 
 
   /* ================= Lot 16 : ergonomie et visuel des jeux ================= */
@@ -2969,7 +2977,7 @@
   $('fxSeason').addEventListener('change', e => { A11Y.season = e.target.checked; saveA11y(); seasonDraw(); SND.key(); });
   $('a11yResetAll').addEventListener('click', () => {
     for (const k of Object.keys(A11Y)) delete A11Y[k];
-    Object.assign(A11Y, { size: 'm', contrast: !!matchMedia('(prefers-contrast: more)').matches, font: false, sky: false, jg: false, season: false });
+    Object.assign(A11Y, { size: 'm', contrast: !!matchMedia('(prefers-contrast: more)').matches, font: false, sky: false, jg: false, season: false, still: false }); stillDone = false;
     applyA11y(); requestAnimationFrame(readPalette); setup(); sizeUI(); skyNow(); seasonDraw(); fxUI(); SND.key(); toast(t('a11yResetDone'), 2200);
   });
 

@@ -1487,3 +1487,5 @@ html.app-mode[data-theme="light"] body::before { content: ""; position: fixed; z
 .play-wrap, .play-link { pointer-events: auto; } /* l’accueil laisse passer les clics vers le fond animé : chaque bouton doit les reprendre */
 /* Onglets des jeux : depuis le passage à 44 px (affichage en flex), l'espace entre le nom et le nombre disparaissait (« Tous16 ») */
 .g-tabs button, .chip-btn { gap: .3em; }
+/* Fond arrêté : plus d'invitation à bouger la souris ou toucher l'écran */
+html.bg-still .hint { display: none; }
