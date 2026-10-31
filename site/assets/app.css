@@ -67,15 +67,6 @@ html:not([data-ready]) .stack { visibility: hidden; animation: jgReveal 0s linea
 body.playing .stack, body.term-open .stack, body.morph .stack { opacity: 0; transform: scale(.96); }
 /* Accueil caché = accueil non cliquable (sinon un clic dans le jeu ouvrait « Me contacter » ou la fiche) */
 body.playing main, body.playing .clock, body.playing .scores, body.term-open .stack, body.morph .stack { pointer-events: none; }
-.brand {
-  margin: 0 0 1.1rem; display: inline-flex; align-items: center; gap: .55rem;
-  color: var(--dim); font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .85rem; letter-spacing: .01em;
-}
-.brand-mark {
-  width: 1.6rem; height: 1.6rem; border-radius: .42rem; display: inline-flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #5EE7FF, #8B7CFF); color: #0A0F24;
-  font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, sans-serif; font-weight: 800; font-size: .72rem; letter-spacing: -.02em;
-}
 .domain {
   margin: 0;
   font-size: clamp(2.2rem, 9vw, 5.2rem);
@@ -531,7 +522,7 @@ body.playing .hint, body.term-open .hint { display: none; }
 /* petits téléphones : l'horloge occupe le haut, le logo de l'en-tête est masqué */
 @media (max-width: 560px) and (max-height: 700px) {
   main { padding-top: calc(max(16px, env(safe-area-inset-top)) + 96px); padding-bottom: calc(max(16px, env(safe-area-inset-bottom)) + 52px); }
-  .brand, .hint { display: none; }
+  .hint { display: none; }
   .domain { font-size: clamp(1.9rem, 9vw, 2.4rem); }
   .typeline { margin-top: .45rem; font-size: .8rem; }
   .who-line + .rot-line { margin-top: .15rem; }
@@ -547,7 +538,7 @@ body.playing .hint, body.term-open .hint { display: none; }
 /* téléphone tenu à l'horizontale : on garde l'essentiel */
 @media (max-height: 500px) {
   main { padding-top: calc(max(12px, env(safe-area-inset-top)) + 52px); padding-bottom: calc(max(12px, env(safe-area-inset-bottom)) + 48px); }
-  .brand, .bootlog, .hint, .scores { display: none; }
+  .bootlog, .hint, .scores { display: none; }
   .avail-wrap { margin-top: .55rem; }
   .avail { padding: .28rem .75rem; font-size: .74rem; }
   .domain { font-size: clamp(1.8rem, 6vw, 2.6rem); }
@@ -633,7 +624,7 @@ html[data-retro] body { font-family: ui-monospace, "SF Mono", Menlo, Consolas, m
 html[data-retro] body::after { content: ""; position: fixed; inset: 0; z-index: 9; pointer-events: none;
   background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, .22) 0 1px, transparent 1px 3px), radial-gradient(130% 100% at 50% 50%, transparent 60%, rgba(0, 0, 0, .55)); }
 html[data-retro] .btn { background: var(--ink); color: var(--on-accent); text-shadow: none; }
-html[data-retro] .brand-mark, html[data-retro] .contact-extra .qr { filter: grayscale(1) sepia(1) hue-rotate(70deg) saturate(3); }
+html[data-retro] .contact-extra .qr { filter: grayscale(1) sepia(1) hue-rotate(70deg) saturate(3); }
 @media print { html[data-retro] body::after { display: none; } html[data-retro] body { text-shadow: none; } }
 
 /* Journal « Quoi de neuf » */
@@ -757,7 +748,6 @@ body.has-local main { padding-top: calc(max(1rem, env(safe-area-inset-top)) + 5.
   /* l'horloge reste sur 3 lignes au plus, quelle que soit la longueur de la date ou du fuseau */
   .clock { max-width: calc(100vw - 32px); }
   #cDate, .c-local { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-  .brand { font-size: .68rem; gap: .35rem; max-width: 100%; } .brand > span:last-child { overflow-wrap: anywhere; min-width: 0; }
   .bootlog { font-size: .6rem; padding: .45rem .5rem; overflow-wrap: anywhere; }
   .typeline { overflow-wrap: anywhere; }
   .cta { flex-direction: column; align-items: stretch; }
@@ -1445,3 +1435,17 @@ body.deja-vu .hint, body.deja-vu .keys { display: none; }
 }
 /* 12 · « Quoi de neuf » dans une autre langue : petite étiquette FR devant les entrées écrites en français */
 .news-fr { font: 600 .62rem ui-monospace, "SF Mono", Menlo, Consolas, monospace; text-decoration: none; border: 1px solid var(--cyan); color: var(--cyan); border-radius: 4px; padding: 0 .25rem; vertical-align: .1em; }
+
+/* ===== Lot 33 : le site installé sur l'écran d'accueil ===== */
+/* Bouton « Partager » : seulement dans l'app ; sur écran tactile il prend la place de « Supervision » (toujours dans le terminal) */
+.app-share { display: none; }
+html.app-mode .dock .app-share { display: inline-flex; }
+@media (hover: none) { html.app-mode .dock #supBtn { display: none; } }
+/* Bandeau en bas : nouvelle version disponible, ou proposition d'ajout à l'écran d'accueil */
+.upd-bar { position: fixed; z-index: 60; left: max(12px, env(safe-area-inset-left)); right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom));
+  margin: 0 auto; max-width: 26rem; display: flex; align-items: center; gap: .6rem; padding: .55rem .6rem .55rem .9rem; border-radius: 14px;
+  background: var(--surface-strong); color: var(--ink); border: 1px solid var(--line-accent); box-shadow: var(--shadow); font-size: .88rem; }
+.upd-bar span { flex: 1; min-width: 0; }
+.upd-bar button { font: inherit; font-weight: 600; cursor: pointer; border-radius: 999px; padding: .45rem .9rem; min-height: 40px; border: 1px solid var(--cyan); background: rgba(var(--cyan-rgb), .12); color: var(--ink); }
+.upd-bar .a2hs-x { border-color: var(--line); background: none; padding: .45rem .7rem; }
+@media print { .upd-bar { display: none; } }

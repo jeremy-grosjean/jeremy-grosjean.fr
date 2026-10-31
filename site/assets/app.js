@@ -6,6 +6,9 @@
   const ghost = {};
   const $ = id => document.getElementById(id) || ghost[id] || (ghost[id] = document.createElement(id === 'net' ? 'canvas' : 'div'));
   const T = window.JG_I18N;
+  /* Site ouvert depuis l'icône de l'écran d'accueil (« app web ») */
+  const appMode = () => { try { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) { return false; } };
+  document.documentElement.classList.toggle('app-mode', appMode());
   /* Typographie française : espace insécable avant « : » et « ; ? ! », et à l'intérieur des guillemets,
      pour qu'aucun de ces signes ne commence une ligne. Appliqué une fois à tous les textes français, fonctions comprises. */
   (function espacesFr(o) {
@@ -397,9 +400,15 @@
     for (const el of document.querySelectorAll('main, .clock, .topbar, .dock, #recView')) { if (open || playing) el.setAttribute('inert', ''); else el.removeAttribute('inert'); }
     const tm = document.getElementById('term'); if (tm) { if (open || playing || !termOn) tm.setAttribute('inert', ''); else tm.removeAttribute('inert'); }
   }
-  function closePanels() {
+  /* Fenêtres d'information inscrites dans l'historique : le geste retour (iPhone) ou le bouton ◀ (Android) les ferme */
+  const HIST = new Set(['secPanel', 'contactPanel', 'gamesPanel', 'glossPanel', 'slotPanel', 'skillsPanel', 'sharePanel', 'faqPanel', 'parcoursPanel', 'hirePanel', 'newsPanel', 'briefPanel', 'supPanel', 'keysPanel', 'bdPanel']);
+  let popSkip = false;
+  const histOn = () => !!(history.state && history.state.jgp);
+  window.addEventListener('popstate', () => { if (popSkip) { popSkip = false; return; } if (document.querySelector('.panel.open')) closePanels(true); });
+  function closePanels(fromPop) {
     const was = panels.some(p => $(p).classList.contains('open'));
     panels.forEach(p => $(p).classList.remove('open')); backdropInert();
+    if (was && fromPop !== true && histOn()) Promise.resolve().then(() => { if (!document.querySelector('.panel.open') && histOn()) { popSkip = true; history.back(); } });
     if (was) setTimeout(() => {
       if (document.querySelector('.panel.open') || document.body.classList.contains('term-open')) return;
       const a = document.activeElement; if (a && a !== document.body && !a.closest('.panel')) return;
@@ -436,7 +445,7 @@
   function qrLoad() { const q = $('qrImg'); if (q && !q.getAttribute('src') && q.dataset.src && getComputedStyle(q).display !== 'none') q.src = q.dataset.src; }
   function openPanel(id, focusId) {
     { const a = document.activeElement; if (a && a !== document.body && !a.closest('.panel')) panelOpener = a; }
-    const x = document.querySelector('#' + id + ' .panel-x'); if (x) { x.setAttribute('aria-label', t('close')); x.title = t('close'); } closePanels(); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (id === 'contactPanel') qrLoad(); if (focusId) $(focusId).focus({ preventScroll: true }); const c = $(id).querySelector('.card'); if (c) c.scrollTop = 0; try { onPanelOpen(id); } catch (e) {} if (c) { suiteEnDessous(c); setTimeout(() => suiteEnDessous(c), 350); } backdropInert();
+    const x = document.querySelector('#' + id + ' .panel-x'); if (x) { x.setAttribute('aria-label', t('close')); x.title = t('close'); } closePanels(true); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (HIST.has(id) && !histOn()) { try { history.pushState({ jgp: 1 }, '', location.href); } catch (e) {} } if (id === 'contactPanel') qrLoad(); if (focusId) $(focusId).focus({ preventScroll: true }); const c = $(id).querySelector('.card'); if (c) c.scrollTop = 0; try { onPanelOpen(id); } catch (e) {} if (c) { suiteEnDessous(c); setTimeout(() => suiteEnDessous(c), 350); } backdropInert();
     if (!focusId && c) setTimeout(() => { if (!$(id).classList.contains('open') || c.contains(document.activeElement)) return; const b = c.querySelector('.tk-opt:not([disabled]), button:not(.panel-x):not([disabled]):not([hidden]), a[href]'); if (b) b.focus({ preventScroll: true }); }, 80); }
   /* Fenêtre plus haute que l'écran : un fondu et une flèche ↓ montrent qu'il y a une suite, ils disparaissent une fois en bas */
   function suiteEnDessous(c) { c.classList.toggle('more', c.scrollHeight - c.scrollTop - c.clientHeight > 12); }
@@ -846,6 +855,7 @@
   }
   function startHero() {
     heroStarted = true;
+    if (appMode()) { whoEl.textContent = whoText(); whoDone = true; whoCur.classList.add('off'); rotLine.classList.remove('idle'); startRotate(0); bootUl.classList.add('static'); return; }
     whoEl.textContent = '';
     rotLine.classList.add('idle');
     scrambleName(() => {});
@@ -864,6 +874,7 @@
     const on = isOnline();
     netPill.classList.toggle('off', !on);
     netTxt.textContent = t(on ? 'netOn' : 'netOff') || '';
+    if (!on) { const V = window.JG_VERSION, m = V && /^v(\d{4})\.(\d{2})\.(\d{2})/.exec(V.v || ''); if (m && t('netOffVer')) { let d = m[3] + '/' + m[2]; try { d = new Intl.DateTimeFormat(regionLocale(lang), { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], 12))); } catch (e) {} netTxt.textContent = t('netOffVer')(d); } }
     netPill.title = netTxt.textContent;
   }
   window.addEventListener('offline', () => { netUI(); toast(t('netLost')); tone(330, .3, 'triangle', .05, .6); setTimeout(() => tone(220, .4, 'sine', .04), 140); });
@@ -2067,7 +2078,7 @@
   }
   $('shCopy').addEventListener('click', async () => { if (await copyText(SHARE_URL)) toast(t('shCopied')); });
   $('shClose').addEventListener('click', closePanels);
-  for (const id of ['briefShare', 'recShare']) $(id).addEventListener('click', openShare);
+  for (const id of ['briefShare', 'recShare', 'appShare']) $(id).addEventListener('click', openShare);
 
   /* 8. Questions fréquentes : les réponses reprennent la fiche « En 30 secondes » (aucune information inventée) */
   function openFaq() {
@@ -3224,10 +3235,37 @@
         const pol = trustedTypes.createPolicy('jg', { createScriptURL: u => { if (u === '/sw.js') return u; throw new TypeError('adresse refusée'); } });
         url = pol.createScriptURL('/sw.js');
       }
-      navigator.serviceWorker.register(url).catch(() => {});
+      const hadSw = !!navigator.serviceWorker.controller;
+      navigator.serviceWorker.register(url).then(reg => {
+        /* L'app installée vérifie s'il existe une version plus récente chaque fois qu'on y revient */
+        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') reg.update().catch(() => {}); });
+      }).catch(() => {});
+      navigator.serviceWorker.addEventListener('controllerchange', () => { if (hadSw) updReady(); });
     }
     if (!isOnline()) setTimeout(() => toast(t('netCached')), 1800);
   });
+  /* iPhone / iPad dans Safari : une seule proposition discrète d'ajout à l'écran d'accueil, après 20 s, refermable */
+  safe('ajout écran d’accueil', () => {
+    const ios = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (!ios || appMode() || store.get('jg-a2hs')) return;
+    setTimeout(() => {
+      if (document.querySelector('.panel.open') || document.body.classList.contains('playing') || document.body.classList.contains('rec-on')) return;
+      store.set('jg-a2hs', '1');
+      const bar = document.createElement('div'), tx = document.createElement('span'), b = document.createElement('button'), x = document.createElement('button');
+      bar.className = 'upd-bar a2hs'; bar.setAttribute('role', 'status'); tx.textContent = t('a2hsAsk');
+      b.type = 'button'; b.textContent = t('a2hsHow'); b.addEventListener('click', () => { bar.remove(); openKeys(); });
+      x.type = 'button'; x.className = 'a2hs-x'; x.textContent = '✕'; x.setAttribute('aria-label', t('close')); x.addEventListener('click', () => bar.remove());
+      bar.append(tx, b, x); document.body.append(bar);
+      setTimeout(() => bar.remove(), 15000);
+    }, 20000);
+  });
+  function updReady() {
+    if ($('updBar')) return;
+    const bar = document.createElement('div'), tx = document.createElement('span'), b = document.createElement('button');
+    bar.id = 'updBar'; bar.className = 'upd-bar'; bar.setAttribute('role', 'status');
+    tx.textContent = t('updReady'); b.type = 'button'; b.textContent = t('updBtn'); b.addEventListener('click', () => location.reload());
+    bar.append(tx, b); document.body.append(bar);
+  }
   setInterval(() => safe('heure', tick), 1000);
   /* L'animation démarre quand le navigateur donne la taille du canevas (ResizeObserver) : cette taille arrive
      après sa mise en page normale, au lieu d'être calculée de force pendant le script (« innerWidth ») */
