@@ -1267,7 +1267,7 @@
      une seule petite taille (240 px), ni clic droit, ni glisser, ni appui long pour l'enregistrer */
   function showPhoto(id) { const im = $(id); if (!im) return; if (!im.getAttribute('src')) im.src = '/assets/jg.webp'; im.alt = t('photoAlt') || ''; im.hidden = false; }
   function openBrief() {
-    /* 4 tuiles (l'essentiel en gros, lisible en 5 secondes), puis les domaines de la formation en pastilles */
+    /* 8 tuiles (l'essentiel en gros, lisible en 5 secondes), puis les domaines de la formation en pastilles */
     const dl = $('briefList'), ul = $('briefDoms'); dl.textContent = ''; ul.textContent = '';
     for (const [k, v, sub] of t('briefTiles')) { const d = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; if (sub) { const s = document.createElement('span'); s.className = 'sub'; s.textContent = sub; dd.append(s); } d.append(dt, dd); dl.append(d); }
     const b = t('brief'); $('briefDomLbl').textContent = (b[b.length - 1] || [''])[0];
@@ -1283,6 +1283,9 @@
     const dl = $('recBrief'); dl.textContent = '';
     const recRows = t('brief').slice(), lieu = (t('briefTiles') || [])[5];
     if (lieu) recRows.push([lieu[0], lieu[1] + ' · ' + lieu[2]]);
+    { const tl = t('briefTiles') || [];
+      if (tl[6]) recRows.push([tl[6][0], tl[6][1] + ' · ' + tl[6][2]]); /* mobilité */
+      if (tl[7] && t('rncpOk')) recRows.push([tl[7][0], `RNCP225 (${t('rncpOk')}) · RNCP40357 (${t('rncpGoal')})`]); /* codes officiels */ }
     if (t('recReplyL')) recRows.push([t('recReplyL'), t('recReply')]);
     for (const [k, v] of recRows) { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; dl.append(dt, dd); }
     const ul = $('recTags'); ul.textContent = '';

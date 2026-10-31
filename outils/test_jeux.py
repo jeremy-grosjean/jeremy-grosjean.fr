@@ -450,6 +450,11 @@ with sync_playwright() as p:
         large = pg.evaluate('Math.max(document.documentElement.scrollWidth, innerWidth)')
         if large > w + 1:
             erreurs.append(f'{w}×{h} : la page déborde sur le côté ({large} px)')
+        touchables = pg.evaluate("""(() => ['contactBtn', 'briefBtn', 'openGame', 'availBtn'].filter(id => { const b = document.getElementById(id); if (!b || !b.getClientRects().length) return false;
+          const r = b.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2; if (y < 0 || y > innerHeight) return false;
+          const e = document.elementFromPoint(x, y); return !(e && (e === b || b.contains(e))); }))()""")
+        for id_ in touchables:
+            erreurs.append(f'{w}×{h} : le bouton {id_} ne reçoit pas le toucher (élément masqué ou non cliquable)')
         # Régressions : le texte d'aide ne passe jamais derrière les boutons ou le contenu ; le nombre de jeux du bouton est exact
         pg.wait_for_timeout(400)
         aide = pg.evaluate("""(() => { const h = document.querySelector('.hint'), n = document.querySelectorAll('#gamesPanel .pick').length, out = [];
@@ -547,7 +552,7 @@ with sync_playwright() as p:
             erreurs.append(f'raccourci {ancre} : la fenêtre {panneau} ne s’ouvre pas')
     ctx.close()
     ok('application installable : manifeste complet (portrait et paysage), icônes, 4 raccourcis (#contact, #jeux, #recruteur, #fiche)')
-    # Fenêtre « En 30 secondes » en tuiles : 6 tuiles, 6 domaines en pastilles, 2 boutons principaux, plus de « Fermer »
+    # Fenêtre « En 30 secondes » en tuiles : 8 tuiles, 6 domaines en pastilles, 2 boutons principaux, plus de « Fermer »
     # (la croix suffit) ; rien ne déborde, dans les 6 langues, du téléphone (320 px) à l'ordinateur
     for w, h in [(320, 568), (402, 874), (874, 402), (1280, 800)]:
         ctx = nav.new_context(viewport={'width': w, 'height': h}, has_touch=w < 1100, is_mobile=w < 1100, locale='fr-FR', timezone_id='Europe/Paris')
@@ -558,7 +563,7 @@ with sync_playwright() as p:
             pg.reload(); pg.wait_for_timeout(500)
             r = pg.evaluate("""(() => { document.getElementById('availBtn').click(); const c = document.querySelector('#briefPanel .card'), out = [];
               const tu = c.querySelectorAll('#briefList > div'), pa = c.querySelectorAll('#briefDoms li');
-              if (tu.length !== 6) out.push(tu.length + ' tuiles');
+              if (tu.length !== 8) out.push(tu.length + ' tuiles');
               if (pa.length !== 6) out.push(pa.length + ' pastilles');
               if (c.querySelector('#briefClose')) out.push('bouton Fermer encore là');
               if (c.querySelectorAll('.actions button').length !== 2) out.push('pas 2 boutons principaux');
@@ -569,7 +574,7 @@ with sync_playwright() as p:
               return out; })()""")
             for p_ in r: erreurs.append(f'{w}×{h} {lg} : fiche « En 30 secondes » : {p_}')
         ctx.close()
-    ok('fiche « En 30 secondes » en tuiles : 6 tuiles, 6 domaines, 2 boutons, dans les 6 langues, du 320 px à l’ordinateur')
+    ok('fiche « En 30 secondes » en tuiles : 8 tuiles, 6 domaines, 2 boutons, dans les 6 langues, du 320 px à l’ordinateur')
     # Fluidité : le jeu va à la même vitesse sur un écran 30 Hz, 60 Hz, 144 Hz ou 240 Hz (hasard figé pour comparer)
     # Une machine surchargée (GitHub lance plusieurs vérifications à la fois) peut ralentir une seule mesure :
     # en cas d'écart, on refait la mesure (2 fois au plus) et on garde le meilleur temps de chaque fréquence.
