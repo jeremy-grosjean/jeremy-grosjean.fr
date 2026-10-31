@@ -13,7 +13,9 @@ body { background: radial-gradient(1200px 700px at 50% 30%, var(--bg-1), var(--b
 .box { width: 100%; max-width: 30rem; text-align: center; }
 .brand { margin: 0; display: inline-flex; align-items: center; gap: .55rem; color: var(--dim); font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .85rem; }
 .mark { width: 1.6rem; height: 1.6rem; border-radius: .42rem; display: inline-flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #5EE7FF, #8B7CFF); color: #0A0F24; font-weight: 800; font-size: .72rem; font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  background: #0A0F24; color: #5EE7FF; font-weight: 700; font-size: .66rem; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; gap: 1px; }
+/* Logo « JG▮ » : initiales en police de terminal et curseur violet, comme l'icône de l'application */
+.mark::after { content: ""; width: .3rem; height: .62rem; background: #8B7CFF; border-radius: 1px; }
 .code { margin: 1rem 0 0; font-size: clamp(4.5rem, 22vw, 7.5rem); line-height: 1.1; font-weight: 800; letter-spacing: -.04em;
   background: linear-gradient(120deg, var(--cyan), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .term { margin: 1rem auto 0; display: table; text-align: left; padding: .8rem 1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface);
