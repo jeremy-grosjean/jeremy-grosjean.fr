@@ -855,7 +855,6 @@
   }
   function startHero() {
     heroStarted = true;
-    if (appMode()) { whoEl.textContent = whoText(); whoDone = true; whoCur.classList.add('off'); rotLine.classList.remove('idle'); startRotate(0); bootUl.classList.add('static'); return; }
     whoEl.textContent = '';
     rotLine.classList.add('idle');
     scrambleName(() => {});
@@ -3146,6 +3145,16 @@
   });
 
   $('openGame').addEventListener('click', openGames);
+  $('briefBtn').addEventListener('click', () => $('availBtn').click());
+  /* Pastille « Disponible » : un halo vert léger, une seule fois par visiteur, 3 s après l'arrivée (rien si l'appareil demande moins d'animations) */
+  (() => { try {
+    if (reduce || store.get('jg-glow')) return;
+    setTimeout(() => {
+      if (document.querySelector('.panel.open') || document.body.classList.contains('playing') || document.body.classList.contains('rec-on')) return;
+      store.set('jg-glow', '1'); const a = $('availBtn'); a.classList.add('glow-once');
+      a.addEventListener('animationend', () => a.classList.remove('glow-once'), { once: true });
+    }, 3000);
+  } catch (e) {} })();
   /* Raccourcis de l'application installée (appui long sur l'icône, Android) et liens directs : /#contact, /#jeux, /#fiche (« En 30 secondes ») */
   function ouvrirDepuisAdresse() {
     const h = location.hash;

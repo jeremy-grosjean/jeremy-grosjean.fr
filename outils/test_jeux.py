@@ -390,7 +390,7 @@ with sync_playwright() as p:
           out.slotOpen = $('slotPanel').classList.contains('open'); out.days = $('slotDays').querySelectorAll('.slot-tab').length; out.slots = $('slotDays').querySelectorAll('.slot').length;
           out.wkend = [...$('slotDays').querySelectorAll('.slot, .slot-tab')].some(b => /samedi|dimanche/i.test(b.getAttribute('aria-label')));
           $('slotMail').click(); out.needPick = !$('slotMsg').hidden;
-          $('slotMode').querySelectorAll('button')[1].click(); $('slotDays').querySelector('.slot').click();
+          $('slotMode').querySelectorAll('button')[0].click(); $('slotDays').querySelector('.slot').click();
           out.mail = decodeURIComponent($('slotMail').href); out.gmail = $('slGmail').href.startsWith('https://mail.google.com/');
           $('slotPanel').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })); $('slotPanel').click(); await w(60); out.slotClosed = !$('slotPanel').classList.contains('open');
           $('briefSkills').click(); await w(80);

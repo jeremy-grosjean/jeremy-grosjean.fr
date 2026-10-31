@@ -2,9 +2,9 @@
    Pages : réseau d'abord (toujours la dernière version en ligne), copie locale seulement sans connexion.
    Fichiers versionnés (?v=…) : copie locale d'abord. Aucune donnée personnelle n'est stockée. */
 'use strict';
-const VERSION = 'bc50668fa0ab';
+const VERSION = '34bcc65a069b';
 const CACHE = 'jg-' + VERSION;
-const PRECACHE = ["/", "/mentions-legales.html", "/accessibilite.html", "/404.html", "/favicon.ico?v=207d79eba8", "/favicon.svg?v=3b2a8a60bb", "/apple-touch-icon.png?v=8f2070778e", "/site.webmanifest?v=638d654df0", "/assets/app.css?v=35b53b3322", "/assets/i18n.js?v=ef5f779df9", "/assets/labs.js?v=20998f7cc8", "/assets/labs2.js?v=1e3d821f80", "/assets/labs3.js?v=a55aa0576a", "/assets/labs4.js?v=08596d3504", "/assets/labs5.js?v=60720498d6", "/assets/labs6.js?v=716e5179dc", "/assets/labs7.js?v=3b501af691", "/assets/status.js", "/assets/news.js?v=5b80be41d3", "/assets/app.js?v=ba54deebea", "/qr.svg", "/qr-contact.svg", "/assets/legal.css?v=c3b1ed11b9", "/assets/legal.js?v=910215cffa", "/assets/a11y.js?v=d63478cad2", "/assets/404.css?v=545c5df718", "/assets/404.js?v=645aece7b5", "/icon-192.png", "/assets/fonts/sora.woff"];
+const PRECACHE = ["/", "/mentions-legales.html", "/accessibilite.html", "/404.html", "/favicon.ico?v=207d79eba8", "/favicon.svg?v=3b2a8a60bb", "/apple-touch-icon.png?v=8f2070778e", "/site.webmanifest?v=638d654df0", "/assets/app.css?v=de7d422545", "/assets/i18n.js?v=ef5f779df9", "/assets/labs.js?v=20998f7cc8", "/assets/labs2.js?v=1e3d821f80", "/assets/labs3.js?v=25097cc3f0", "/assets/labs4.js?v=08596d3504", "/assets/labs5.js?v=60720498d6", "/assets/labs6.js?v=716e5179dc", "/assets/labs7.js?v=4828c786f5", "/assets/status.js", "/assets/news.js?v=5b80be41d3", "/assets/app.js?v=3a77fc85f1", "/qr.svg", "/qr-contact.svg", "/assets/legal.css?v=c3b1ed11b9", "/assets/legal.js?v=910215cffa", "/assets/a11y.js?v=d63478cad2", "/assets/404.css?v=545c5df718", "/assets/404.js?v=645aece7b5", "/icon-192.png", "/assets/fonts/sora.woff"];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.all(PRECACHE.map(u => fetch(u, { cache: 'no-cache' }).then(r => {

@@ -1449,3 +1449,43 @@ html.app-mode .dock .app-share { display: inline-flex; }
 .upd-bar button { font: inherit; font-weight: 600; cursor: pointer; border-radius: 999px; padding: .45rem .9rem; min-height: 40px; border: 1px solid var(--cyan); background: rgba(var(--cyan-rgb), .12); color: var(--ink); }
 .upd-bar .a2hs-x { border-color: var(--line); background: none; padding: .45rem .7rem; }
 @media print { .upd-bar { display: none; } }
+
+/* App web sur iPhone : le site passe sous l'heure et la batterie (affichées en blanc par iOS).
+   En thème clair, un dégradé bleu nuit limité à la barre d'état garde l'heure lisible ; en thème sombre, rien à ajouter. */
+@media (prefers-color-scheme: light) {
+  html.app-mode:not([data-theme="dark"]) body::before { content: ""; position: fixed; z-index: 50; inset: 0 0 auto; height: calc(env(safe-area-inset-top, 0px) + 12px); pointer-events: none;
+    background: linear-gradient(rgba(10, 15, 36, .68), rgba(10, 15, 36, .55) 70%, rgba(10, 15, 36, 0)); }
+}
+html.app-mode[data-theme="light"] body::before { content: ""; position: fixed; z-index: 50; inset: 0 0 auto; height: calc(env(safe-area-inset-top, 0px) + 12px); pointer-events: none;
+  background: linear-gradient(rgba(10, 15, 36, .68), rgba(10, 15, 36, .55) 70%, rgba(10, 15, 36, 0)); }
+@media print { body::before { display: none !important; } }
+
+/* ===== Lot 35 : donner envie d'ouvrir la fiche et de me contacter ===== */
+/* Pastille : l'état (« Disponible immédiatement ») et l'action (« Voir ma fiche ») */
+.avail-go { font-weight: 700; padding-left: .55rem; margin-left: .1rem; border-left: 1px solid rgba(var(--ok-rgb), .45); }
+/* Deux boutons principaux : me contacter (avec le délai de réponse dessous) et la fiche en 30 s */
+.cta { align-items: flex-start; }
+.cta-main { display: flex; flex-direction: column; align-items: center; gap: .3rem; }
+.cta-note { font-size: .75rem; color: var(--dim); line-height: 1.2; text-align: center; }
+@media (min-width: 341px) { .cta-note { white-space: nowrap; } }
+.brief-cta { display: inline-flex; align-items: center; gap: .5rem; }
+.brief-cta svg { width: 1.1rem; height: 1.1rem; flex: none; }
+/* « Jouer » reste, en lien discret sous les deux boutons */
+.play-wrap { margin: .55rem 0 0; text-align: center; }
+.play-link { font: inherit; font-size: .9rem; cursor: pointer; background: none; border: 0; padding: .45rem .6rem; min-height: 44px; color: var(--dim); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(var(--cyan-rgb), .5); }
+.play-link:hover, .play-link:focus-visible { color: var(--ink); outline: none; text-decoration-color: var(--cyan); }
+.play-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: 8px; }
+/* Téléphone : les deux boutons restent côte à côte (marges réduites) */
+@media (min-width: 361px) and (max-width: 440px) {
+  .cta { flex-wrap: nowrap; gap: .4rem; }
+  .cta .btn, .cta .brief-cta { padding: .62rem .75rem; font-size: .84rem; white-space: nowrap; gap: .4rem; }
+}
+/* Halo vert, joué une seule fois (n° 5) */
+@keyframes availGlow { 0% { box-shadow: 0 0 0 0 rgba(var(--ok-rgb), .45); } 60% { box-shadow: 0 0 0 10px rgba(var(--ok-rgb), 0); } 100% { box-shadow: 0 0 0 0 rgba(var(--ok-rgb), 0); } }
+.avail.glow-once { animation: availGlow 1.4s ease-out 2; }
+@media (prefers-reduced-motion: reduce) { .avail.glow-once { animation: none; } }
+/* Très petits écrans (montre, écran partagé) : la pastille passe sur deux lignes au lieu de déborder */
+@media (max-width: 340px) {
+  .avail { flex-wrap: wrap; justify-content: center; row-gap: .15rem; max-width: 100%; }
+  .avail-go { border-left: 0; padding-left: 0; margin-left: 0; }
+}
