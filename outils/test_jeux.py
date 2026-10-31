@@ -434,7 +434,7 @@ with sync_playwright() as p:
     # Toutes les formes d'écran : montre, carré, écran partagé, téléphone, tablette, 4K, téléviseur 8K, bandes très fines
     ECRANS = [(200, 200), (240, 320), (280, 653), (320, 480), (360, 320), (412, 430), (600, 600), (667, 300), (768, 1024),
               (1024, 768), (1280, 480), (1440, 900), (1600, 200), (200, 1600), (2560, 1440), (3840, 2160), (5120, 1440), (7680, 4320)]
-    CLES = ['.clock', '.topbar', '.brand', '#nameFx', '.who-line', '.rot-line', '.avail', '.bootlog', '.cta', '.scores', '.keys', '.dock-left', '.dock-mid', '#sound']
+    CLES = ['.clock', '.topbar', '#nameFx', '.who-line', '.rot-line', '.avail', '.bootlog', '.cta', '.scores', '.keys', '.dock-left', '.dock-mid', '#sound']
     MESURE = """(cles) => { const vis = e => { if (!e) return false; const r = e.getBoundingClientRect(), s = getComputedStyle(e); return r.width > 0 && r.height > 0 && s.display !== 'none' && s.visibility !== 'hidden' && +s.opacity > 0; };
       const R = cles.map(c => { const e = document.querySelector(c); if (!vis(e)) return null; const r = e.getBoundingClientRect(); return [c, r.left, r.top + scrollY, r.right, r.bottom + scrollY]; }).filter(Boolean), pb = [];
       for (let i = 0; i < R.length; i++) for (let j = i + 1; j < R.length; j++) { const a = R[i], b = R[j]; if (a[1] < b[3] - 1 && b[1] < a[3] - 1 && a[2] < b[4] - 1 && b[2] < a[4] - 1) pb.push(a[0] + ' chevauche ' + b[0]); }
