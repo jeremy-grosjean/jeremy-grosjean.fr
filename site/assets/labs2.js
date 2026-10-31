@@ -9,7 +9,7 @@
         lvQuit: 'Quitter le jeu', pzSave: 'Sauvegarder et quitter', rsTitle: 'Partie en cours', rsSub: 'Vous avez une partie sauvegardée. Voulez-vous la reprendre ?', rsResume: 'Reprendre la partie', rsNew: 'Nouvelle partie', tSaved: 'Partie sauvegardée : rouvrez « Protéger le serveur » pour la reprendre.',
         pause: 'Pause', pzTitle: 'Partie en pause', pzSub: 'Le temps est arrêté : reprenez quand vous voulez, là où vous en étiez.', pzResume: 'Reprendre', pzQuit: 'Quitter sans sauvegarder',
         play: 'Jouer : 6 mini-jeux',
-        pickPhishT: 'Repère l’hameçonnage', pickPhishD: '6 e-mails : fiables ou pièges ? Les indices s’affichent après chaque réponse.',
+        pickPhishT: 'Repérez l’hameçonnage', pickPhishD: '6 e-mails : fiables ou pièges ? Les indices s’affichent après chaque réponse.',
         pickSubnetT: 'Sous-réseaux express', pickSubnetD: '10 questions chronométrées : adresse du réseau, diffusion, nombre d’appareils.',
         scoresBtn: 'Mes meilleurs scores',
         phTag: (n, t) => `E-mail ${n}/${t}`, phPts: (s) => `${s} pts`, phQ: 'Fiable ou hameçonnage ?', phSafe: 'Fiable', phPhish: 'Hameçonnage',

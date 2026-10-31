@@ -38,3 +38,8 @@ body { background: radial-gradient(1200px 700px at 50% 30%, var(--bg-1), var(--b
 .g-fb.win { color: var(--ink); font-weight: 600; }
 @media (max-width: 460px) { .g-opts { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: no-preference) { .term #hops div { animation: hop .35s ease both; } @keyframes hop { from { opacity: 0; transform: translateX(-6px); } } }
+
+/* Deux actions côte à côte : retour à l'accueil, ou me contacter directement */
+.acts { margin: 1.4rem 0 0; display: flex; flex-wrap: wrap; gap: .6rem; justify-content: center; }
+.acts .btn { margin-top: 0; }
+.btn2 { background: var(--surface, transparent); color: var(--ink); border: 1px solid var(--line); box-shadow: none; }

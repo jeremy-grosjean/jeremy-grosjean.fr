@@ -29,18 +29,18 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="J. Grosjean">
 <link rel="manifest" href="/site.webmanifest?v=9b028ebede">
-<link rel="stylesheet" href="/assets/app.css?v=a310946c1d">
-<script src="/assets/i18n.js?v=ead1d74824" defer></script>
-<script src="/assets/labs.js?v=28d66e0db4" defer></script>
-<script src="/assets/labs2.js?v=194508f5f9" defer></script>
-<script src="/assets/labs3.js?v=39b0f770b7" defer></script>
-<script src="/assets/labs4.js?v=1f113c584a" defer></script>
+<link rel="stylesheet" href="/assets/app.css?v=af0c0040cb">
+<script src="/assets/i18n.js?v=cab5bb31ce" defer></script>
+<script src="/assets/labs.js?v=20998f7cc8" defer></script>
+<script src="/assets/labs2.js?v=1e3d821f80" defer></script>
+<script src="/assets/labs3.js?v=a55aa0576a" defer></script>
+<script src="/assets/labs4.js?v=08596d3504" defer></script>
 <script src="/assets/labs5.js?v=60720498d6" defer></script>
 <script src="/assets/labs6.js?v=716e5179dc" defer></script>
-<script src="/assets/labs7.js?v=9c9556d442" defer></script>
+<script src="/assets/labs7.js?v=7eda9925f4" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=c3977c3940" defer></script>
+<script src="/assets/app.js?v=a643bb299d" defer></script>
 </head>
 <body>
 <a class="skip" id="skipLink" href="#contactBtn" data-i="skipLink">Aller au contenu</a>
@@ -161,7 +161,7 @@
     </button>
     <button class="pill" id="sizeBtn" type="button">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 19 7.5 6l5 13M4.4 14.5h6.2"/><path d="M14 19l3.5-8 3.5 8M15.2 16.2h4.6"/></svg>
-      <span class="size-w" aria-hidden="true">Taille du texte :</span><span class="lbl">A</span><span class="lbl-s" aria-hidden="true" data-i="sizeShort">Texte</span>
+      <span class="size-w" aria-hidden="true">Taille du texte&nbsp;:</span><span class="lbl">A</span><span class="lbl-s" aria-hidden="true" data-i="sizeShort">Texte</span>
     </button>
     <button class="pill disp-btn" id="dispBtn" type="button" aria-haspopup="dialog">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
@@ -281,7 +281,7 @@
     <div class="c-col c-keep">
     <p class="wm-lbl" data-i="keepLbl">Garder mon contact :</p>
     <div class="contact-extra">
-      <img class="qr" src="/qr-contact.svg" width="140" height="140" alt="QR code : fiche contact de Jérémy Grosjean" id="qrImg">
+      <img class="qr" data-src="/qr-contact.svg" width="140" height="140" alt="QR code : fiche contact de Jérémy Grosjean" id="qrImg">
       <div class="contact-side">
         <p class="qr-cap" data-i="qrCap">Scannez pour enregistrer ma fiche dans votre téléphone</p>
         <a class="btn-ghost vcf" href="/contact.vcf" id="vcfLink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="3.2"/><path d="M3.5 19c.8-3 3-4.6 5.5-4.6s4.7 1.6 5.5 4.6M17 8v6M14 11h6"/></svg><span data-i="saveContact">Ajouter à mes contacts</span></a>
@@ -298,18 +298,18 @@
       <button class="pick" id="pickServer" type="button"><b data-i="pickServerT">Protéger le serveur</b><span data-i="pickServerD">Bloquez les attaques : logiciel malveillant, DDoS, hameçonnage.</span></button>
       <button class="pick" id="pickSupport" type="button"><b data-i="pickSupportT">Support informatique N1</b><span data-i="pickSupportD">Résolvez 5 tickets d’utilisateurs en choisissant le bon diagnostic.</span></button>
       <button class="pick" id="pickSupport2" type="button"><b data-i="pickSupport2T">Support informatique N2</b><span data-i="pickSupport2D">Niveau avancé : réseau, DHCP, Active Directory, DNS, droits d’accès.</span></button>
-      <button class="pick" id="pickPanne" type="button"><b data-i="pickPanneT">Trouve la panne</b><span data-i="pickPanneD">Un PC n’accède plus au réseau : lancez les bonnes commandes et trouvez la cause.</span></button>
+      <button class="pick" id="pickPanne" type="button"><b data-i="pickPanneT">Trouvez la panne</b><span data-i="pickPanneD">Un PC n’accède plus au réseau : lancez les bonnes commandes et trouvez la cause.</span></button>
       <button class="pick" id="pickNoNet" type="button"><b data-i="pickNoNetT">Plus d’Internet</b><span data-i="pickNoNetD">Un utilisateur n’a plus Internet : vérifiez dans le bon ordre, du câble au navigateur.</span></button>
       <button class="pick" id="pickQuiz" type="button"><b data-i="pickQuizT">Quiz Active Directory et GPO</b><span data-i="pickQuizD">10 questions sur AD, les GPO et le DNS, avec l’explication de chaque réponse.</span></button>
-      <button class="pick" id="pickPhish" type="button"><b data-i="pickPhishT">Repère l’hameçonnage</b><span data-i="pickPhishD">6 e-mails : fiables ou pièges ? Les indices s’affichent après chaque réponse.</span></button>
-      <button class="pick" id="pickItil" type="button"><b data-i="pickItilT">Priorise les tickets</b><span data-i="pickItilD"></span></button>
+      <button class="pick" id="pickPhish" type="button"><b data-i="pickPhishT">Repérez l’hameçonnage</b><span data-i="pickPhishD">6 e-mails : fiables ou pièges ? Les indices s’affichent après chaque réponse.</span></button>
+      <button class="pick" id="pickItil" type="button"><b data-i="pickItilT">Priorisez les tickets</b><span data-i="pickItilD"></span></button>
       <button class="pick" id="pickPs" type="button"><b data-i="pickPsT">Défi PowerShell</b><span data-i="pickPsD"></span></button>
-      <button class="pick" id="pickRj" type="button"><b data-i="pickRjT">Sertis le câble RJ45</b><span data-i="pickRjD"></span></button>
+      <button class="pick" id="pickRj" type="button"><b data-i="pickRjT">Sertissez le câble RJ45</b><span data-i="pickRjD"></span></button>
       <button class="pick" id="pickCall" type="button"><b data-i="pickCallT">Simulateur d’appel</b><span data-i="pickCallD"></span></button>
       <button class="pick pick-daily" id="pickDaily" type="button"><b data-i="pickDailyT">Défi du jour</b><span data-i="pickDailyD"></span></button>
-      <button class="pick" id="pickPrep" type="button"><b data-i="pickPrepT">Prépare un poste</b><span data-i="pickPrepD"></span></button>
+      <button class="pick" id="pickPrep" type="button"><b data-i="pickPrepT">Préparez un poste</b><span data-i="pickPrepD"></span></button>
       <button class="pick" id="pickRansom" type="button"><b data-i="pickRansomT">Attaque par rançongiciel</b><span data-i="pickRansomD"></span></button>
-      <button class="pick" id="pickReply" type="button"><b data-i="pickReplyT">Réponds au ticket</b><span data-i="pickReplyD"></span></button>
+      <button class="pick" id="pickReply" type="button"><b data-i="pickReplyT">Répondez au ticket</b><span data-i="pickReplyD"></span></button>
       <button class="pick" id="pickSubnet" type="button"><b data-i="pickSubnetT">Sous-réseaux express</b><span data-i="pickSubnetD">10 questions chronométrées : adresse du réseau, diffusion, nombre d’appareils.</span></button>
     </div>
     <div class="actions"><button class="btn-ghost" id="badgesBtn" type="button" data-i="badgesBtn">Badges</button><button class="btn-ghost" id="scoresBtn" type="button" data-i="scoresBtn">Mes meilleurs scores</button><button class="btn-ghost" id="gamesClose" type="button" data-i="close">Fermer</button></div>
@@ -687,6 +687,6 @@
 <canvas class="matrix" id="matrix" hidden aria-hidden="true"></canvas>
 <aside class="htop" id="htop" hidden aria-label="htop"><div class="htop-head"><span>htop · jeremy-grosjean.fr</span><button type="button" id="htopClose" aria-label="Fermer">✕</button></div><dl id="htopList"></dl></aside>
 <p class="hint" aria-hidden="true"><span class="mouse" data-i="hintMouse">Bougez la souris, cliquez pour envoyer une onde</span><span class="touch" data-i="hintTouch">Glissez le doigt, touchez pour envoyer une onde</span></p>
-<noscript><p class="note">Cette page est plus complète avec JavaScript. Pour me joindre : contact [at] jeremy-grosjean.fr · This page works best with JavaScript. Contact: contact [at] jeremy-grosjean.fr</p></noscript>
+<noscript><p class="note">Cette page est plus complète avec JavaScript. Pour me joindre&nbsp;: contact [at] jeremy-grosjean.fr · This page works best with JavaScript. Contact: contact [at] jeremy-grosjean.fr</p></noscript>
 </body>
 </html>

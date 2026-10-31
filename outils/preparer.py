@@ -53,7 +53,7 @@ try:
         if sujet.lower().startswith(('initial commit', 'merge')):
             continue
         genre, texte = (TYPES.get(m.group(1).lower(), 'misc'), m.group(3)) if m else ('misc', sujet)
-        news.append({'d': date, 'k': genre, 't': texte[:1].upper() + texte[1:]})
+        news.append({'d': date, 'k': genre, 't': (texte[:1].upper() + texte[1:]).replace("'", '’')})
         if len(news) == 8:
             break
     (DIST / 'assets' / 'news.js').write_text('/* Journal des nouveautés, généré le ' + news[0]['d'] + ' */\nwindow.JG_NEWS = '

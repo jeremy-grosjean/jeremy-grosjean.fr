@@ -26,7 +26,7 @@ window.JG_I18N = {
     secTitle: 'Ce site est sécurisé', secIntro: 'Les protections réellement en place sur jeremy-grosjean.fr :',
     sec: [
       ['HTTPS', "Connexion chiffrée par TLS, certificat Let’s Encrypt."],
-      ['HSTS', 'Le navigateur refuse toute connexion non chiffrée pendant un an.'],
+      ['HSTS', 'Le navigateur refuse toute connexion non chiffrée pendant deux ans.'],
       ['CSP', "Seuls les fichiers de ce site peuvent s’exécuter : aucun script externe."],
       ['Anti-clickjacking', 'Le site ne peut pas être intégré dans une autre page.'],
       ['DNSSEC', 'Les réponses DNS du domaine sont signées et vérifiables.'],
@@ -76,7 +76,7 @@ window.JG_I18N = {
     secTitle: 'This site is secure', secIntro: 'The protections actually in place on jeremy-grosjean.fr:',
     sec: [
       ['HTTPS', "TLS-encrypted connection with a Let’s Encrypt certificate."],
-      ['HSTS', 'Browsers refuse any unencrypted connection for one year.'],
+      ['HSTS', 'Browsers refuse any unencrypted connection for two years.'],
       ['CSP', 'Only files from this site can run: no third-party scripts.'],
       ['Anti-clickjacking', 'The site cannot be embedded in another page.'],
       ['DNSSEC', "The domain’s DNS answers are signed and verifiable."],
@@ -126,7 +126,7 @@ window.JG_I18N = {
     secTitle: '本网站安全可靠', secIntro: 'jeremy-grosjean.fr 实际启用的防护措施：',
     sec: [
       ['HTTPS', '采用 TLS 加密连接，证书由 Let’s Encrypt 签发。'],
-      ['HSTS', '一年内浏览器会拒绝任何未加密的连接。'],
+      ['HSTS', '两年内浏览器会拒绝任何未加密的连接。'],
       ['CSP', '只有本站的文件可以执行：没有任何外部脚本。'],
       ['防点击劫持', '本站无法被嵌入其他网页。'],
       ['DNSSEC', '域名的 DNS 应答经过签名，可以验证。'],
@@ -176,7 +176,7 @@ window.JG_I18N = {
     secTitle: '本網站安全可靠', secIntro: 'jeremy-grosjean.fr 實際啟用的防護措施：',
     sec: [
       ['HTTPS', '採用 TLS 加密連線，憑證由 Let’s Encrypt 簽發。'],
-      ['HSTS', '一年內瀏覽器會拒絕任何未加密的連線。'],
+      ['HSTS', '兩年內瀏覽器會拒絕任何未加密的連線。'],
       ['CSP', '只有本站的檔案可以執行：沒有任何外部指令碼。'],
       ['防點擊劫持', '本站無法被嵌入其他網頁。'],
       ['DNSSEC', '網域的 DNS 回應經過簽章，可以驗證。'],
@@ -226,7 +226,7 @@ window.JG_I18N = {
     secTitle: '呢個網站好安全', secIntro: 'jeremy-grosjean.fr 真正用緊嘅防護：',
     sec: [
       ['HTTPS', '用 TLS 加密連線，證書由 Let’s Encrypt 簽發。'],
-      ['HSTS', '一年之內瀏覽器會拒絕任何冇加密嘅連線。'],
+      ['HSTS', '兩年之內瀏覽器會拒絕任何冇加密嘅連線。'],
       ['CSP', '淨係本站嘅檔案先可以執行：冇任何外部程式碼。'],
       ['防點擊劫持', '本站唔可以俾人嵌入其他網頁。'],
       ['DNSSEC', '網域嘅 DNS 回應有簽署，可以核實。'],
@@ -276,7 +276,7 @@ window.JG_I18N = {
     secTitle: '이 사이트는 안전합니다', secIntro: 'jeremy-grosjean.fr에 실제로 적용된 보호 조치:',
     sec: [
       ['HTTPS', 'TLS로 암호화된 연결, Let’s Encrypt 인증서.'],
-      ['HSTS', '1년 동안 브라우저가 암호화되지 않은 연결을 모두 거부합니다.'],
+      ['HSTS', '2년 동안 브라우저가 암호화되지 않은 연결을 모두 거부합니다.'],
       ['CSP', '이 사이트의 파일만 실행됩니다: 외부 스크립트 없음.'],
       ['클릭재킹 방지', '이 사이트는 다른 페이지에 삽입될 수 없습니다.'],
       ['DNSSEC', '도메인의 DNS 응답은 서명되어 검증할 수 있습니다.'],
@@ -516,7 +516,7 @@ window.JG_I18N = {
     mailSubject: 'Alternance Technicien informatique : prise de contact',
     mailBody: "Bonjour Jérémy,\n\nJe vous contacte au sujet d’une alternance Technicien informatique.\n\nEntreprise :\nVille :\nDate de début souhaitée :\nTéléphone :\n\nCordialement,\n",
     briefTitle: 'En 30 secondes',
-    brief: [["Titre", "Technicien d’assistance en informatique (TAI), niveau 4, obtenu en 2023"], ["Recherche", "Contrat de professionnalisation de 12 mois (CDD ou CDI) : Technicien informatique en installation, maintenance et support, bac+2 (niveau 5), avec OpenClassrooms"], ["Rythme", "4 jours en entreprise, 1 jour de formation à distance"], ["Durée", "12 mois"], ["Disponibilité", "De suite ou à convenir"], ["Domaines de la formation", "Support, réseaux, Active Directory, PowerShell, parc informatique, cybersécurité"]],
+    brief: [["Titre", "Titre professionnel Technicien d’assistance en informatique (TAI), niveau 4, obtenu en 2023"], ["Recherche", "Contrat de professionnalisation de 12 mois (CDD ou CDI) : Technicien informatique en installation, maintenance et support, bac+2 (niveau 5), avec OpenClassrooms"], ["Rythme", "4 jours en entreprise, 1 jour de formation à distance"], ["Durée", "12 mois"], ["Disponibilité", "Dès maintenant ou à convenir"], ["Domaines de la formation", "Support, réseaux, Active Directory, PowerShell, parc informatique, cybersécurité"]],
     gamesTitle: 'Choisissez un jeu', pickServerT: 'Protéger le serveur', pickServerD: 'Bloquez les attaques : logiciel malveillant, DDoS, hameçonnage.', pickSupportT: 'Support informatique N1', pickSupportD: "Résolvez 5 tickets d’utilisateurs en choisissant le bon diagnostic.",
     tkTag: (n, tot, p) => `Ticket ${n}/${tot} · Incident · Priorité ${p}`, tkPts: s => `${s} pts`, tkTitle: n => `Ticket n° ${n}`, tkFromL: 'De :',
     tkGood: '✓ Bonne réponse.', tkBad: '✗ Pas la meilleure piste.', tkRetry: "Essayez une autre option : en support, on cherche d’abord la cause la plus simple.",

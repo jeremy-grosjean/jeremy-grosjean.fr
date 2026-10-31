@@ -28,7 +28,7 @@
       faqExtra: ["Oui : permis A et permis B, avec mon propre véhicule.", "Près de 4 ans en support informatique, dont près de 3 ans comme technicien chez Bosch, et 7 ans en centre de télésurveillance 24 h/24. Le détail est dans « Mon parcours ».", "À Paris et en Île-de-France, à Pontarlier et dans le Haut-Doubs, à Besançon et ses environs.", "Devenir administrateur systèmes et réseaux, idéalement en évoluant dans l’entreprise qui m’accueille.", "Français : langue maternelle. Anglais : technique, je lis la documentation sans difficulté."],
       faqContact: 'Par e-mail, ou en proposant directement un créneau d’entretien depuis ce site.',
       fmTouch: 'Touchez l’écran pour découvrir mon profil', fmScan: 'Scannez pour garder mon profil', fmExit: 'Quitter le mode forum', fmRole: 'Technicien informatique · recherche une alternance',
-      pickItilT: 'Priorise les tickets', pickItilD: 'Impact et urgence : classez 8 demandes comme dans un vrai centre de services.',
+      pickItilT: 'Priorisez les tickets', pickItilD: 'Impact et urgence : classez 8 demandes comme dans un vrai centre de services.',
       itTag: (n, t) => `Ticket ${n}/${t}`, itImpact: 'Impact', itHigh: 'Fort', itLow: 'Faible', itUrg: 'Urgence', itUrgent: 'Urgent', itNot: 'Pas urgent', itCheck: 'Valider',
       itPrio: ['P1 · critique', 'P2 · moyenne', 'P3 · basse'], itGood: '✓ Bien priorisé.', itHalf: '½ Presque.', itBad: '✗ À revoir.', itIs: (p) => `Priorité attendue : ${p}.`,
       itRule: 'Priorité = impact × urgence : fort et urgent → P1, un seul des deux → P2, aucun → P3.', itNext: 'Ticket suivant', itEnd: 'Voir le résultat',
@@ -60,7 +60,7 @@
         ['Voir les 20 dernières erreurs du journal Système', 'Lit le journal Système et ne garde que les 20 erreurs les plus récentes.'],
         ['Trouver les PC sans connexion depuis 90 jours', 'Liste les ordinateurs inactifs depuis 90 jours, à nettoyer dans l’annuaire.']
       ],
-      pickRjT: 'Sertis le câble RJ45', pickRjD: 'Remettez les 8 fils dans l’ordre des normes T568B et T568A, puis testez le câble.',
+      pickRjT: 'Sertissez le câble RJ45', pickRjD: 'Remettez les 8 fils dans l’ordre des normes T568B et T568A, puis testez le câble.',
       rjTagB: 'Étape 1/3 · Norme T568B', rjTagA: 'Étape 2/3 · Norme T568A', rjTagQ: 'Étape 3/3 · Testeur de câble', rjSub: 'Touchez les fils dans l’ordre, de la broche 1 à la broche 8.',
       rjPin: (n) => `Broche ${n}`, rjBad: (n, c) => `✗ La broche ${n} reçoit le fil ${c}.`, rjOk: '✓ Câble serti : les 8 broches sont correctes.',
       rjColors: ['blanc-orange', 'orange', 'blanc-vert', 'bleu', 'blanc-bleu', 'vert', 'blanc-marron', 'marron'],

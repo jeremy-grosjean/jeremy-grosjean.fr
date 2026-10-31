@@ -1427,3 +1427,21 @@ body.deja-vu .hint, body.deja-vu .keys { display: none; }
 
 /* 10 · « Disponible immédiatement » : vert plus foncé dans le thème clair, contraste AA sur sa pastille */
 .avail { color: var(--ok-strong, var(--ok)); }
+
+/* ===== Lot 30 ===== */
+/* 1 · Téléphone : les 5 boutons du bas tiennent sur une ligne dès 360 px (écarts et marges intérieures réduits) */
+@media (hover: none) and (min-width: 340px) and (max-width: 430px) {
+  .dock, .dock-left { gap: .25rem; }
+  .dock .pill { padding-left: .22rem; padding-right: .22rem; }
+}
+/* 9 · Créneaux : le mois une seule fois, les 8 jours sur 2 lignes de 4, sans défilement de côté ; pas de pastille ↓ sur les créneaux */
+.slot-month { margin: 0 0 .35rem; font-size: .82rem; color: var(--dim); text-align: center; text-transform: capitalize; }
+.slot-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; padding: 2px; }
+.slot-tab { padding: .5rem .25rem; text-align: center; min-width: 0; }
+#slotPanel .card.more::after { display: none; }
+/* 11 · Écran tactile : onglets des jeux et liens « ▸ » de « Mes compétences » à 44 px */
+@media (pointer: coarse) {
+  .g-tabs button, .chip-btn { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+}
+/* 12 · « Quoi de neuf » dans une autre langue : petite étiquette FR devant les entrées écrites en français */
+.news-fr { font: 600 .62rem ui-monospace, "SF Mono", Menlo, Consolas, monospace; text-decoration: none; border: 1px solid var(--cyan); color: var(--cyan); border-radius: 4px; padding: 0 .25rem; vertical-align: .1em; }

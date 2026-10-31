@@ -26,7 +26,7 @@
       ui: {
         play: 'Jouer : 4 mini-jeux',
         tourPlay: 'Quatre mini-jeux : protéger un serveur, résoudre des tickets de support, trouver une panne réseau ou répondre au quiz Active Directory.',
-        pickPanneT: 'Trouve la panne', pickPanneD: "Un PC n’accède plus au réseau : lancez les bonnes commandes et trouvez la cause.",
+        pickPanneT: 'Trouvez la panne', pickPanneD: "Un PC n’accède plus au réseau : lancez les bonnes commandes et trouvez la cause.",
         pickQuizT: 'Quiz Active Directory et GPO', pickQuizD: "10 questions sur AD, les GPO et le DNS, avec l’explication de chaque réponse.",
         pnTag: (n, t) => `Panne ${n}/${t} · Réseau`, pnPts: (s) => `${s} pts`, pnTitle: (n) => `Incident n° ${n}`, pnFrom: 'De :',
         pnCmdsL: 'Lancez des commandes sur le poste :', pnAskL: 'Votre diagnostic :', pnNeed: 'Lancez au moins une commande avant de répondre.',
@@ -37,7 +37,7 @@
         qzTag: (n, t) => `Question ${n}/${t} · Active Directory`, qzPts: (s) => `${s} pts`, qzGood: '✓ Bonne réponse.', qzBad: '✗ Pas tout à fait.', qzRetry: 'Essayez une autre réponse.',
         qzNext: 'Question suivante', qzEnd: 'Voir le résultat', qzDoneTag: 'Résultat', qzDoneTitle: (p, t) => p === t ? 'Sans faute ✔' : `${p}/${t} bonnes réponses du premier coup`,
         qzDoneMsg: (s, m) => `Score : ${s}/${m} points. Ces notions reviennent tous les jours en support N2.`,
-        tPanne: 'Lancement de « Trouve la panne »…', tQuiz: 'Lancement du quiz Active Directory…'
+        tPanne: 'Lancement de « Trouvez la panne »…', tQuiz: 'Lancement du quiz Active Directory…'
       },
       help: [['panne', 'jeu : trouver une panne réseau'], ['quiz', 'quiz Active Directory et GPO']],
       causes: {

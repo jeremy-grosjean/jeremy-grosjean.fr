@@ -5,9 +5,9 @@
   const D = {
     fr: {
       play: 'Jouer : 13 mini-jeux',
-      pickPrepT: 'Prépare un poste', pickPrepD: 'Un nouvel arrivant lundi : remettez les étapes de préparation de son PC dans l’ordre.',
+      pickPrepT: 'Préparez un poste', pickPrepD: 'Un nouvel arrivant lundi : remettez les étapes de préparation de son PC dans l’ordre.',
       pickRansomT: 'Attaque par rançongiciel', pickRansomD: 'Des fichiers sont chiffrés : choisissez les bons réflexes, dans le bon ordre.',
-      pickReplyT: 'Réponds au ticket', pickReplyD: 'Composez une réponse claire et polie à un utilisateur, phrase par phrase.',
+      pickReplyT: 'Répondez au ticket', pickReplyD: 'Composez une réponse claire et polie à un utilisateur, phrase par phrase.',
       badgesBtn: 'Badges',
       prTag: (n, t) => `Étape ${n}/${t}`, prTitle: 'Préparez le PC d’un nouvel arrivant',
       prSub: 'Touchez les étapes dans l’ordre, de la première à la dernière.',
@@ -40,7 +40,7 @@
         ['Les fichiers sont restaurés. Pour finir ?', ['Changer les mots de passe, faire les mises à jour, documenter et déclarer l’incident', 'Remettre le PC en service tel quel', 'Désactiver l’antivirus qui a ralenti la restauration'],
           'On corrige la faille, on garde une trace, et on déclare : la CNIL sous 72 h si des données personnelles sont concernées.']
       ],
-      rpTag: (n, t) => `Ticket ${n}/${t}`, rpTitle: 'Réponds au ticket',
+      rpTag: (n, t) => `Ticket ${n}/${t}`, rpTitle: 'Répondez au ticket',
       rpSlots: ['Salutation', 'Accusé de réception', 'Solution', 'Conclusion'], rpPick: (s) => `Choisissez : ${s.toLowerCase()}`,
       rpPreview: 'Votre réponse', rpSign: 'Jérémy, support informatique', rpNext: 'Ticket suivant', rpEnd: 'Voir le résultat',
       rpDoneTitle: 'Réponses envoyées', rpDoneMsg: (s, m) => `Qualité de l’écrit : ${s}/${m}.`,
@@ -65,7 +65,7 @@
       badges: [
         ['Premier pas', 'Terminer un premier jeu.'], ['Gardien du serveur', 'Terminer une partie de « Protéger le serveur ».'],
         ['Support N1 parfait', 'Score maximal au support N1.'], ['Support N2 parfait', 'Score maximal au support N2.'],
-        ['Diagnostic sans faute', 'Score maximal à « Trouve la panne ».'], ['As de l’Active Directory', 'Score maximal au quiz AD.'],
+        ['Diagnostic sans faute', 'Score maximal à « Trouvez la panne ».'], ['As de l’Active Directory', 'Score maximal au quiz AD.'],
         ['Œil de lynx', 'Repérer tous les e-mails d’hameçonnage.'], ['Calcul mental', 'Marquer des points aux sous-réseaux.'],
         ['Priorités maîtrisées', 'Tous les tickets bien priorisés.'], ['PowerShell sans faute', 'Toutes les commandes du premier coup.'],
         ['Câble parfait', 'Score maximal au câble RJ45.'], ['Voix rassurante', 'Appel parfait, relation et technique.'],

@@ -6,6 +6,19 @@
   const ghost = {};
   const $ = id => document.getElementById(id) || ghost[id] || (ghost[id] = document.createElement(id === 'net' ? 'canvas' : 'div'));
   const T = window.JG_I18N;
+  /* Typographie française : espace insécable avant « : » et « ; ? ! », et à l'intérieur des guillemets,
+     pour qu'aucun de ces signes ne commence une ligne. Appliqué une fois à tous les textes français, fonctions comprises. */
+  (function espacesFr(o) {
+    const fix = s => s.replace(/ ([:;?!»])/g, (m, c) => (c === ':' || c === '»' ? '\u00a0' : '\u202f') + c).replace(/« /g, '«\u00a0');
+    const walk = v => {
+      if (typeof v === 'string') return fix(v);
+      if (Array.isArray(v)) { for (let i = 0; i < v.length; i++) v[i] = walk(v[i]); return v; }
+      if (typeof v === 'function') return (...a) => { const r = v(...a); return typeof r === 'string' ? fix(r) : r; };
+      if (v && typeof v === 'object') { for (const k of Object.keys(v)) v[k] = walk(v[k]); return v; }
+      return v;
+    };
+    if (o && o.fr) walk(o.fr);
+  })(T);
   if (!T) return; /* textes indisponibles : la page reste en français, sans animation */
   const LANGS = Object.keys(T);
   const NATIVE = { fr: 'Français', en: 'English', 'zh-Hans': '简体中文', 'zh-Hant': '繁體中文', yue: '粵語', ko: '한국어' };
@@ -420,9 +433,10 @@
     if (e.shiftKey && (a === first || !pn.contains(a))) { e.preventDefault(); last.focus(); }
     else if (!e.shiftKey && (a === last || !pn.contains(a))) { e.preventDefault(); first.focus(); }
   });
+  function qrLoad() { const q = $('qrImg'); if (q && !q.getAttribute('src') && q.dataset.src && getComputedStyle(q).display !== 'none') q.src = q.dataset.src; }
   function openPanel(id, focusId) {
     { const a = document.activeElement; if (a && a !== document.body && !a.closest('.panel')) panelOpener = a; }
-    const x = document.querySelector('#' + id + ' .panel-x'); if (x) { x.setAttribute('aria-label', t('close')); x.title = t('close'); } closePanels(); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (focusId) $(focusId).focus({ preventScroll: true }); const c = $(id).querySelector('.card'); if (c) c.scrollTop = 0; try { onPanelOpen(id); } catch (e) {} if (c) { suiteEnDessous(c); setTimeout(() => suiteEnDessous(c), 350); } backdropInert();
+    const x = document.querySelector('#' + id + ' .panel-x'); if (x) { x.setAttribute('aria-label', t('close')); x.title = t('close'); } closePanels(); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (id === 'contactPanel') qrLoad(); if (focusId) $(focusId).focus({ preventScroll: true }); const c = $(id).querySelector('.card'); if (c) c.scrollTop = 0; try { onPanelOpen(id); } catch (e) {} if (c) { suiteEnDessous(c); setTimeout(() => suiteEnDessous(c), 350); } backdropInert();
     if (!focusId && c) setTimeout(() => { if (!$(id).classList.contains('open') || c.contains(document.activeElement)) return; const b = c.querySelector('.tk-opt:not([disabled]), button:not(.panel-x):not([disabled]):not([hidden]), a[href]'); if (b) b.focus({ preventScroll: true }); }, 80); }
   /* Fenêtre plus haute que l'écran : un fondu et une flèche ↓ montrent qu'il y a une suite, ils disparaissent une fois en bas */
   function suiteEnDessous(c) { c.classList.toggle('more', c.scrollHeight - c.scrollTop - c.clientHeight > 12); }
@@ -1257,7 +1271,10 @@
   function fillRec() {
     $('recRole').textContent = t('title').split(' · ')[1] || t('whoRole'); showPhoto('recPhoto');
     const dl = $('recBrief'); dl.textContent = '';
-    for (const [k, v] of t('brief')) { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; dl.append(dt, dd); }
+    const recRows = t('brief').slice(), lieu = (t('briefTiles') || [])[5];
+    if (lieu) recRows.push([lieu[0], lieu[1] + ' · ' + lieu[2]]);
+    if (t('recReplyL')) recRows.push([t('recReplyL'), t('recReply')]);
+    for (const [k, v] of recRows) { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; dl.append(dt, dd); }
     const ul = $('recTags'); ul.textContent = '';
     for (const d of t('domains')) { const li = document.createElement('li'); li.textContent = d; ul.append(li); }
     const a = $('recMail'); a.href = mailHref(); a.textContent = MAIL;
@@ -1482,8 +1499,10 @@
     for (const n of N) {
       const li = document.createElement('li'), d = document.createElement('time'), k = document.createElement('span'), x = document.createElement('span');
       d.dateTime = n.d; d.textContent = f ? f.format(new Date(n.d + 'T12:00:00Z')) : n.d;
-      k.className = 'news-tag ' + (tags[n.k] ? n.k : 'misc'); k.textContent = tags[n.k] || tags.misc; x.textContent = n.t;
-      li.append(d, k, x); ul.append(li);
+      k.className = 'news-tag ' + (tags[n.k] ? n.k : 'misc'); k.textContent = tags[n.k] || tags.misc; x.textContent = String(n.t).replace(/'/g, '’');
+      if (lang !== 'fr') { x.lang = 'fr'; const f2 = document.createElement('abbr'); f2.className = 'news-fr'; f2.textContent = 'FR'; f2.title = t('newsFrL') || ''; f2.lang = document.documentElement.lang; x.prepend(f2, ' '); }
+      li.append(d, k, x);
+      ul.append(li);
     }
     closeTerm(); openPanel('newsPanel', 'newsClose');
   }
@@ -1888,8 +1907,10 @@
     const el = $('helloLine'), co = coName(); if (!co) { el.hidden = true; return; }
     $('helloTxt').textContent = t('hello')(co); el.hidden = false;
   }
-  function coSubject(s) { const co = coName(); return co ? s + ' · ' + co : s; }
-  function coBody(b) { const co = coName(); return co ? b.replace(/\n\n([^\n]{1,24}?[:：])[ \t]*\n/, (m, a) => `\n\n${a} ${co}\n`) : b; }
+  /* E-mails et agenda : espaces ordinaires (les espaces insécables du site s'affichent mal dans certaines messageries) */
+  function plainSp(s) { return String(s).replace(/[\u00a0\u202f]/g, ' '); }
+  function coSubject(s) { s = plainSp(s); const co = coName(); return co ? s + ' · ' + co : s; }
+  function coBody(b) { b = plainSp(b); const co = coName(); return co ? b.replace(/\n\n([^\n]{1,24}?[:：])[ \t]*\n/, (m, a) => `\n\n${a} ${co}\n`) : b; }
   function personalLink(name) {
     const n = String(name || '').trim().slice(0, 60);
     return n ? SITE_URL + '/?pour=' + encodeURIComponent(n).replace(/%20/g, '+') : '';
@@ -1898,7 +1919,7 @@
 
   /* Liens d'écriture (application d'e-mail, Gmail, Outlook) avec un objet et un texte donnés */
   function mailLinks(subject, body) {
-    const q = encodeURIComponent, to = q(MAIL), su = q(subject), bo = q(body);
+    const q = encodeURIComponent, to = q(MAIL), su = q(plainSp(subject)), bo = q(plainSp(body));
     return { mailto: `mailto:${MAIL}?subject=${su}&body=${bo}`, gmail: `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${su}&body=${bo}`,
       outlook: `https://outlook.live.com/mail/0/deeplink/compose?to=${to}&subject=${su}&body=${bo}` };
   }
@@ -1949,7 +1970,7 @@
   /* Un onglet par jour, puis une seule grille de créneaux : plus de liste qui défile dans une fenêtre qui défile */
   function slotDaysBuild() {
     const box = $('slotDays'); box.textContent = '';
-    let fDay, fLong; try { fDay = new Intl.DateTimeFormat(regionLocale(lang), { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }); fLong = new Intl.DateTimeFormat(regionLocale(lang), { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }); } catch (e) { fDay = fLong = null; }
+    let fDay, fLong; try { fDay = new Intl.DateTimeFormat(regionLocale(lang), { weekday: 'short', day: 'numeric', timeZone: 'UTC' }); fLong = new Intl.DateTimeFormat(regionLocale(lang), { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }); } catch (e) { fDay = fLong = null; }
     const days = slotDays(8); if (!(SL.day >= 0 && SL.day < days.length)) SL.day = 0;
     const tabs = document.createElement('div'); tabs.className = 'slot-tabs'; tabs.setAttribute('role', 'tablist'); tabs.setAttribute('aria-label', t('slotDaysL') || '');
     const wrap = document.createElement('div'), row = document.createElement('div'); wrap.className = 'slot-day'; wrap.setAttribute('role', 'tabpanel'); row.className = 'slot-row';
@@ -1967,7 +1988,13 @@
       b.addEventListener('click', () => { box.querySelectorAll('.slot').forEach(x => x.setAttribute('aria-pressed', 'false')); b.setAttribute('aria-pressed', 'true'); SL.pick = ts; slotUpdate(); });
       row.append(b);
     }
-    wrap.append(row); box.append(tabs, wrap);
+    const mo = document.createElement('p'); mo.className = 'slot-month';
+    try {
+      const fM = new Intl.DateTimeFormat(regionLocale(lang), { month: 'long', year: 'numeric', timeZone: 'UTC' }), fm = new Intl.DateTimeFormat(regionLocale(lang), { month: 'long', timeZone: 'UTC' });
+      const a = days[0], z = days[days.length - 1], da = new Date(Date.UTC(a.y, a.m - 1, a.d, 12)), dz = new Date(Date.UTC(z.y, z.m - 1, z.d, 12));
+      mo.textContent = a.m === z.m ? fM.format(da) : (a.y === z.y ? fm.format(da) : fM.format(da)) + ' – ' + fM.format(dz);
+    } catch (e) { mo.hidden = true; }
+    wrap.append(row); box.append(mo, tabs, wrap);
   }
   function slotUpdate() {
     if (SL.pick === null) return;
@@ -1977,7 +2004,7 @@
     $('slotSend').hidden = false; $('slotMsg').hidden = true;
   }
   function icsDate(ts) { return new Date(ts).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); }
-  const icsEsc = s => String(s).replace(/\\/g, '\\\\').replace(/[,;]/g, m => '\\' + m).replace(/\n/g, '\\n');
+  const icsEsc = s => plainSp(s).replace(/\\/g, '\\\\').replace(/[,;]/g, m => '\\' + m).replace(/\n/g, '\\n');
   function slotIcs() {
     if (SL.pick === null) { const m = $('slotMsg'); m.hidden = false; m.className = 'tk-expl ko'; m.textContent = t('slotPick'); return; }
     const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//jeremy-grosjean.fr//entretien//FR', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT',
@@ -2047,7 +2074,7 @@
     const box = $('faqList'), qs = t('faqQ'), br = t('brief'); box.textContent = '';
     qs.forEach((q, i) => {
       const ex = t('faqExtra') || [], a = i < br.length ? br[i][1] : i - br.length < ex.length ? ex[i - br.length] : t('faqContact');
-      const d = document.createElement('details'), s = document.createElement('summary'), p = document.createElement('p'); s.textContent = q; p.textContent = a; d.append(s, p); box.append(d);
+      const d = document.createElement('details'), s = document.createElement('summary'), p = document.createElement('p'); s.textContent = q; p.textContent = /[.!?。！？…]$/.test(a.trim()) ? a : a + (/^(zh|yue)/.test(lang) ? '。' : '.'); d.append(s, p); box.append(d);
     });
     const first = box.querySelector('details'); if (first) first.open = true;
     closeTerm(); openPanel('faqPanel', 'faqClose');

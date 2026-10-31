@@ -476,7 +476,7 @@ with sync_playwright() as p:
             if panneau == 'contactPanel':
                 # Fenêtre contact : messageries de même hauteur, plus de bouton « Fermer » (la croix suffit), QR code = fiche contact
                 ct = pg.evaluate("""(() => { const c = document.querySelector('#contactPanel .card'), h = [...c.querySelectorAll('.webmail .wm:not(.wm-wide)')].map(b => Math.round(b.getBoundingClientRect().height));
-                  return { ecart: Math.max(...h) - Math.min(...h), fermer: !!document.getElementById('contactClose'), qr: document.getElementById('qrImg').getAttribute('src'), app: !!c.querySelector('.webmail #openMail') }; })()""")
+                  return { ecart: Math.max(...h) - Math.min(...h), fermer: !!document.getElementById('contactClose'), qr: document.getElementById('qrImg').getAttribute('src') || document.getElementById('qrImg').dataset.src, app: !!c.querySelector('.webmail #openMail') }; })()""")
                 if ct['ecart'] > 1 or ct['fermer'] or 'qr-contact.svg' not in ct['qr'] or not ct['app']:
                     erreurs.append(f'{w}×{h} : fenêtre contact {ct}')
             pg.evaluate("document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open'))")

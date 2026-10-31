@@ -6,9 +6,9 @@
     fr: ['Page introuvable', "Cette page n’existe pas, ou plus.", "← Retour à l’accueil", 'paquet perdu', 'fr',
       { title: 'Aidez le paquet à retrouver sa route', step: (n, t) => `Saut ${n}/${t} · `, retry: '✗ Mauvaise route, le paquet se perd. Réessayez.',
         win: n => `✓ Route retrouvée en ${n} essai${n > 1 ? 's' : ''}. La page d’accueil vous attend.`, lostHop: 'mauvaise route',
-        q: [['Votre PC a l’adresse 192.168.1.42/24. Quelle est sa passerelle ?', ['192.168.1.1', '192.168.2.1', '10.0.0.1'], 'passerelle'],
-            ['Quel service traduit jeremy-grosjean.fr en adresse IP ?', ['DNS', 'DHCP', 'ARP'], 'DNS'],
-            ['Sur quel port arrive une page web sécurisée (HTTPS) ?', ['443', '80', '22'], 'HTTPS']] }],
+        q: [['Votre PC a l’adresse 192.168.1.42/24. Quelle est sa passerelle ?', ['192.168.1.1', '192.168.2.1', '10.0.0.1'], 'passerelle'],
+            ['Quel service traduit jeremy-grosjean.fr en adresse IP ?', ['DNS', 'DHCP', 'ARP'], 'DNS'],
+            ['Sur quel port arrive une page web sécurisée (HTTPS) ?', ['443', '80', '22'], 'HTTPS']] }],
     en: ['Page not found', "This page doesn’t exist, or no longer does.", '← Back to home', 'packet lost', 'en',
       { title: 'Help the packet find its way', step: (n, t) => `Hop ${n}/${t} · `, retry: '✗ Wrong route, the packet gets lost. Try again.',
         win: n => `✓ Route found in ${n} attempt${n > 1 ? 's' : ''}. The home page is waiting for you.`, lostHop: 'wrong route',
@@ -61,6 +61,7 @@
   const $ = id => document.getElementById(id);
   const set = (id, v) => { const e = $(id); if (e) e.textContent = v; };
   set('msg', T[1]); set('back', T[2]); set('lost', T[3]);
+  set('contact', { fr: 'Me contacter', en: 'Contact me', 'zh-Hans': '联系我', 'zh-Hant': '聯絡我', yue: '搵我', ko: '연락하기' }[Object.keys(L).find(k => L[k] === T)] || 'Me contacter');
   let p = location.pathname; try { p = decodeURIComponent(p); } catch (e) {}
   set('path', p.length > 42 ? p.slice(0, 41) + '…' : p);
 
