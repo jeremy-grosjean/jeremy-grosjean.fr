@@ -99,6 +99,7 @@
     $('langLabel').textContent = t('langLabel');
     $('termClose').setAttribute('aria-label', t('close'));
     /* Textes d'assistance traduits (QR codes, champ du terminal, fermeture de htop) */
+    $('heroPhoto').alt = t('photoAlt') || '';
     $('qrImg').alt = t('qrAlt'); document.querySelectorAll('.forum-qr').forEach(i => { i.alt = t('qrSiteAlt'); });
     $('termInput').setAttribute('aria-label', t('termCmd')); $('htopClose').setAttribute('aria-label', t('close'));
     /* Liens qui ouvrent un nouvel onglet : les lecteurs d'écran l'annoncent */

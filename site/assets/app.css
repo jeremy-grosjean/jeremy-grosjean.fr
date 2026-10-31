@@ -1489,3 +1489,16 @@ html.app-mode[data-theme="light"] body::before { content: ""; position: fixed; z
 .g-tabs button, .chip-btn { gap: .3em; }
 /* Fond arrêté : plus d'invitation à bouger la souris ou toucher l'écran */
 html.bg-still .hint { display: none; }
+/* Photo ronde au-dessus du nom (accueil) : liseré bleu, même place sur ordinateur et téléphone */
+.hero-photo { display: block; width: 64px; height: 64px; margin: 0 auto .75rem; border-radius: 50%; object-fit: cover; background: var(--surface);
+  box-shadow: 0 0 0 2px var(--surface-strong), 0 0 0 4px rgba(var(--cyan-rgb), .45); }
+/* Téléphone : la photo passe à gauche du nom, sur la même ligne, pour que l'accueil tienne toujours dans l'écran */
+@media (max-width: 560px) {
+  .hero-id { display: flex; align-items: center; justify-content: center; gap: .55rem; }
+  .hero-id .hero-photo { width: 42px; height: 42px; margin: 0; flex: none; }
+  .hero-id .domain { min-width: 0; }
+}
+@media (max-width: 340px) { .hero-id .hero-photo { display: none; } } /* très petits écrans : la photo reste dans la fiche */
+body.playing .hero-photo, body.term-open .hero-photo { visibility: hidden; }
+@media (min-width: 561px) and (max-height: 820px) { .hero-photo { width: 52px; height: 52px; margin-bottom: .4rem; } } /* écran d’ordinateur peu haut : tout reste visible sans défiler */
+@media (max-height: 500px) { .hero-photo { display: none; } } /* téléphone à l’horizontale : pas la place, la photo reste dans la fiche */
