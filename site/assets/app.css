@@ -1451,18 +1451,17 @@ html.app-mode .dock .app-share { display: inline-flex; }
 @media print { .upd-bar { display: none; } }
 
 /* App web sur iPhone : le site passe sous l'heure et la batterie (affichées en blanc par iOS).
-   En thème clair, un dégradé bleu nuit limité à la barre d'état garde l'heure lisible ; en thème sombre, rien à ajouter. */
+   En thème clair, un voile bleu nuit exactement de la hauteur de la barre d'état garde l'heure lisible ; en thème sombre, rien à ajouter.
+   Si iOS garde sa barre blanche (hauteur de la zone = 0), rien n'est dessiné : plus de trait gris en haut de la page. */
 @media (prefers-color-scheme: light) {
-  html.app-mode:not([data-theme="dark"]) body::before { content: ""; position: fixed; z-index: 50; inset: 0 0 auto; height: calc(env(safe-area-inset-top, 0px) + 12px); pointer-events: none;
-    background: linear-gradient(rgba(10, 15, 36, .68), rgba(10, 15, 36, .55) 70%, rgba(10, 15, 36, 0)); }
+  html.app-mode:not([data-theme="dark"]) body::before { content: ""; position: fixed; z-index: 50; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); pointer-events: none;
+    background: linear-gradient(rgba(10, 15, 36, .7), rgba(10, 15, 36, .45)); }
 }
-html.app-mode[data-theme="light"] body::before { content: ""; position: fixed; z-index: 50; inset: 0 0 auto; height: calc(env(safe-area-inset-top, 0px) + 12px); pointer-events: none;
-  background: linear-gradient(rgba(10, 15, 36, .68), rgba(10, 15, 36, .55) 70%, rgba(10, 15, 36, 0)); }
+html.app-mode[data-theme="light"] body::before { content: ""; position: fixed; z-index: 50; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); pointer-events: none;
+  background: linear-gradient(rgba(10, 15, 36, .7), rgba(10, 15, 36, .45)); }
 @media print { body::before { display: none !important; } }
 
 /* ===== Lot 35 : donner envie d'ouvrir la fiche et de me contacter ===== */
-/* Pastille : l'état (« Disponible immédiatement ») et l'action (« Voir ma fiche ») */
-.avail-go { font-weight: 700; padding-left: .55rem; margin-left: .1rem; border-left: 1px solid rgba(var(--ok-rgb), .45); }
 /* Deux boutons principaux : me contacter (avec le délai de réponse dessous) et la fiche en 30 s */
 .cta { align-items: flex-start; }
 .cta-main { display: flex; flex-direction: column; align-items: center; gap: .3rem; }
@@ -1484,8 +1483,3 @@ html.app-mode[data-theme="light"] body::before { content: ""; position: fixed; z
 @keyframes availGlow { 0% { box-shadow: 0 0 0 0 rgba(var(--ok-rgb), .45); } 60% { box-shadow: 0 0 0 10px rgba(var(--ok-rgb), 0); } 100% { box-shadow: 0 0 0 0 rgba(var(--ok-rgb), 0); } }
 .avail.glow-once { animation: availGlow 1.4s ease-out 2; }
 @media (prefers-reduced-motion: reduce) { .avail.glow-once { animation: none; } }
-/* Très petits écrans (montre, écran partagé) : la pastille passe sur deux lignes au lieu de déborder */
-@media (max-width: 340px) {
-  .avail { flex-wrap: wrap; justify-content: center; row-gap: .15rem; max-width: 100%; }
-  .avail-go { border-left: 0; padding-left: 0; margin-left: 0; }
-}

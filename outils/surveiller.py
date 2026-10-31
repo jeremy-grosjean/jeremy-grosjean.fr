@@ -81,7 +81,7 @@ if URL == 'https://jeremy-grosjean.fr':
 # 4. Dans un vrai navigateur, sur ordinateur et sur téléphone : aucune erreur, fenêtres et jeu « Plus d'Internet » jouable
 JEU = """async () => {
   const $ = id => document.getElementById(id), w = ms => new Promise(r => setTimeout(r, ms)), T = window.JG_I18N.fr, out = {};
-  $('contactBtn').click(); await w(300); out.contact = $('contactPanel').classList.contains('open') && !!document.querySelector('#qrImg').naturalWidth;
+  $('contactBtn').click(); await w(300); const q = document.querySelector('#qrImg'); for (let i = 0; i < 20 && getComputedStyle(q).display !== 'none' && !q.naturalWidth; i++) await w(100); out.contact = $('contactPanel').classList.contains('open') && (getComputedStyle(q).display === 'none' || !!q.naturalWidth); /* QR chargé à l'ouverture, masqué sur téléphone */
   document.querySelector('#contactPanel .panel-x').click(); await w(150);
   $('secBtn').click(); await w(300); out.securite = $('secPanel').classList.contains('open'); document.querySelector('#secPanel .panel-x').click(); await w(150);
   $('openGame').click(); await w(200); out.jeux = document.querySelectorAll('#gamesPanel .pick').length;
