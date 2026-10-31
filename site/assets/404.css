@@ -2,9 +2,9 @@
 :root { --bg-1: #141C40; --bg-2: #0A0F24; --ink: #E8ECFF; --dim: #8790C2; --cyan: #5EE7FF; --violet: #8B7CFF; --threat: #FF5C7A;
   --surface: rgba(10, 15, 36, .6); --line: rgba(232, 236, 255, .16); --on-accent: #0A0F24; color-scheme: dark; }
 @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --bg-1: #F7F9FF; --bg-2: #E2E8F8; --ink: #121A3A; --dim: #4F5986;
-  --cyan: #0089B8; --violet: #5B4BDB; --threat: #D6244F; --surface: rgba(255, 255, 255, .72); --line: rgba(18, 26, 58, .14); --on-accent: #FFFFFF; color-scheme: light; } }
+  --cyan: #00759E; --violet: #5B4BDB; --threat: #D6244F; --surface: rgba(255, 255, 255, .72); --line: rgba(18, 26, 58, .14); --on-accent: #FFFFFF; color-scheme: light; } }
 :root[data-theme="light"] { --bg-1: #F7F9FF; --bg-2: #E2E8F8; --ink: #121A3A; --dim: #4F5986;
-  --cyan: #0089B8; --violet: #5B4BDB; --threat: #D6244F; --surface: rgba(255, 255, 255, .72); --line: rgba(18, 26, 58, .14); --on-accent: #FFFFFF; color-scheme: light; }
+  --cyan: #00759E; --violet: #5B4BDB; --threat: #D6244F; --surface: rgba(255, 255, 255, .72); --line: rgba(18, 26, 58, .14); --on-accent: #FFFFFF; color-scheme: light; }
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
 body { background: radial-gradient(1200px 700px at 50% 30%, var(--bg-1), var(--bg-2)); background-color: var(--bg-2); color: var(--ink);

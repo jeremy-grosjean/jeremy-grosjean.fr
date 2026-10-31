@@ -387,8 +387,8 @@ with sync_playwright() as p:
         res = pg.evaluate("""async () => {
           const $ = id => document.getElementById(id), w = ms => new Promise(r => setTimeout(r, ms)), out = {};
           $('briefSlot').click(); await w(80);
-          out.slotOpen = $('slotPanel').classList.contains('open'); out.days = $('slotDays').children.length; out.slots = $('slotDays').querySelectorAll('.slot').length;
-          out.wkend = [...$('slotDays').querySelectorAll('.slot')].some(b => /samedi|dimanche/i.test(b.getAttribute('aria-label')));
+          out.slotOpen = $('slotPanel').classList.contains('open'); out.days = $('slotDays').querySelectorAll('.slot-tab').length; out.slots = $('slotDays').querySelectorAll('.slot').length;
+          out.wkend = [...$('slotDays').querySelectorAll('.slot, .slot-tab')].some(b => /samedi|dimanche/i.test(b.getAttribute('aria-label')));
           $('slotMail').click(); out.needPick = !$('slotMsg').hidden;
           $('slotMode').querySelectorAll('button')[1].click(); $('slotDays').querySelector('.slot').click();
           out.mail = decodeURIComponent($('slotMail').href); out.gmail = $('slGmail').href.startsWith('https://mail.google.com/');
@@ -404,7 +404,7 @@ with sync_playwright() as p:
           $('faqClose').click();
           return out;
         }""")
-        if not (res['slotOpen'] and res['days'] == 8 and res['slots'] == 128 and not res['wkend'] and res['needPick'] and 'par téléphone' in res['mail'] and res['gmail'] and res['slotClosed'] and res['skills'] == 4 and res['chips'] == 14 and res['chipGame'] and res['share'] and res['faq'] == 12 and res['faqTxt']):
+        if not (res['slotOpen'] and res['days'] == 8 and res['slots'] == 16 and not res['wkend'] and res['needPick'] and 'par téléphone' in res['mail'] and res['gmail'] and res['slotClosed'] and res['skills'] == 4 and res['chips'] == 14 and res['chipGame'] and res['share'] and res['faq'] == 12 and res['faqTxt']):
             erreurs.append(f'{nom} : créneaux / compétences / partage / FAQ {res}')
         ok(f'{nom} : créneaux (8 jours ouvrés, de 8 h à 18 h hors pause de midi, durée au choix, e-mail prérempli), compétences reliées aux jeux et outils, partage, FAQ de 12 questions')
         pg.goto(BASE + '/?pour=Société%20Générale%20<b>'); pg.wait_for_timeout(1200)
@@ -451,7 +451,7 @@ with sync_playwright() as p:
             erreurs.append(f'{w}×{h} : la page déborde sur le côté ({large} px)')
         # Régressions : le texte d'aide ne passe jamais derrière les boutons ou le contenu ; le nombre de jeux du bouton est exact
         pg.wait_for_timeout(400)
-        aide = pg.evaluate("""(() => { const h = document.querySelector('.hint'), n = document.querySelectorAll('#gamesPanel .pick:not(#pickDaily):not(#pickSupport2)').length, out = [];
+        aide = pg.evaluate("""(() => { const h = document.querySelector('.hint'), n = document.querySelectorAll('#gamesPanel .pick').length, out = [];
           if (!document.getElementById('openGame').textContent.includes(String(n))) out.push('le bouton Jouer annonce un mauvais nombre de jeux : ' + document.getElementById('openGame').textContent + ' (' + n + ' jeux)');
           if (getComputedStyle(h).display !== 'none' && !h.classList.contains('hint-cache')) {
             const s = [...h.querySelectorAll('span')].map(x => x.getBoundingClientRect()).find(x => x.width > 0);

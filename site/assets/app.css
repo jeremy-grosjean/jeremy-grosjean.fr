@@ -2,7 +2,7 @@
 :root {
   --bg-1: #141C40; --bg-2: #0A0F24;
   --ink: #E8ECFF; --dim: #8790C2;
-  --cyan: #5EE7FF; --violet: #8B7CFF; --threat: #FF5C7A; --ok: #4BE3A0; --ok-rgb: 75,227,160;
+  --cyan: #5EE7FF; --violet: #8B7CFF; --threat: #FF5C7A; --ok: #4BE3A0; --ok-rgb: 75,227,160; --ok-strong: #4BE3A0;
   --cyan-rgb: 94,231,255; --violet-rgb: 139,124,255; --threat-rgb: 255,92,122; --node-rgb: 232,236,255; --warn-rgb: 255,170,80;
   --surface: rgba(10, 15, 36, .6); --surface-strong: rgba(14, 20, 48, .96);
   --line: rgba(232, 236, 255, .16); --line-accent: rgba(94, 231, 255, .3);
@@ -14,10 +14,10 @@
   :root:not([data-theme="dark"]) {
     --bg-1: #F7F9FF; --bg-2: #E2E8F8;
     --ink: #121A3A; --dim: #4F5986;
-    --cyan: #0089B8; --violet: #5B4BDB; --threat: #D6244F; --ok: #0E8A5A; --ok-rgb: 14,138,90;
-    --cyan-rgb: 0,137,184; --violet-rgb: 91,75,219; --threat-rgb: 214,36,79; --node-rgb: 30,40,90; --warn-rgb: 214,110,0;
+    --cyan: #00759E; --violet: #5B4BDB; --threat: #D6244F; --ok: #0A7A4F; --ok-rgb: 10,122,79; --ok-strong: #08603D;
+    --cyan-rgb: 0,117,158; --violet-rgb: 91,75,219; --threat-rgb: 214,36,79; --node-rgb: 30,40,90; --warn-rgb: 168,84,0;
     --surface: rgba(255, 255, 255, .72); --surface-strong: rgba(255, 255, 255, .97);
-    --line: rgba(18, 26, 58, .14); --line-accent: rgba(0, 137, 184, .35);
+    --line: rgba(18, 26, 58, .14); --line-accent: rgba(0, 117, 158, .35);
     --on-accent: #FFFFFF; --shadow: 0 20px 50px rgba(30, 40, 90, .18);
     --term-bg: rgba(12, 18, 42, .95);
     color-scheme: light;
@@ -26,10 +26,10 @@
 :root[data-theme="light"] {
   --bg-1: #F7F9FF; --bg-2: #E2E8F8;
   --ink: #121A3A; --dim: #4F5986;
-  --cyan: #0089B8; --violet: #5B4BDB; --threat: #D6244F; --ok: #0E8A5A; --ok-rgb: 14,138,90;
-  --cyan-rgb: 0,137,184; --violet-rgb: 91,75,219; --threat-rgb: 214,36,79; --node-rgb: 30,40,90; --warn-rgb: 214,110,0;
+  --cyan: #00759E; --violet: #5B4BDB; --threat: #D6244F; --ok: #0A7A4F; --ok-rgb: 10,122,79; --ok-strong: #08603D;
+  --cyan-rgb: 0,117,158; --violet-rgb: 91,75,219; --threat-rgb: 214,36,79; --node-rgb: 30,40,90; --warn-rgb: 168,84,0;
   --surface: rgba(255, 255, 255, .72); --surface-strong: rgba(255, 255, 255, .97);
-  --line: rgba(18, 26, 58, .14); --line-accent: rgba(0, 137, 184, .35);
+  --line: rgba(18, 26, 58, .14); --line-accent: rgba(0, 117, 158, .35);
   --on-accent: #FFFFFF; --shadow: 0 20px 50px rgba(30, 40, 90, .18);
   --term-bg: rgba(12, 18, 42, .95);
   color-scheme: light;
@@ -121,10 +121,10 @@ body.playing main, body.playing .clock, body.playing .scores, body.term-open .st
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: clamp(.74rem, 2.2vw, .86rem); line-height: 1.65;
 }
 .bootlog li { display: grid; grid-template-columns: auto 1fr; column-gap: .7ch; animation: bootIn .35s ease both; }
-.bootlog li:nth-child(1) { animation-delay: 3.3s; }
-.bootlog li:nth-child(2) { animation-delay: 3.85s; }
-.bootlog li:nth-child(3) { animation-delay: 4.4s; }
-.bootlog li:nth-child(4) { animation-delay: 4.95s; }
+.bootlog li:nth-child(1) { animation-delay: 0.9s; }
+.bootlog li:nth-child(2) { animation-delay: 1.2s; }
+.bootlog li:nth-child(3) { animation-delay: 1.5s; }
+.bootlog li:nth-child(4) { animation-delay: 1.8s; }
 .bootlog.static li { animation: none; }
 @keyframes bootFade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes bootIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
@@ -1375,3 +1375,55 @@ body.deja-vu .hint, body.deja-vu .keys { display: none; }
 .slot-dur { flex-wrap: wrap; justify-content: center; }
 .slot-dur button { font-size: .82rem; padding: .3rem .55rem; min-width: 0; }
 .card .slot-range { margin: -.5rem 0 .8rem; font-size: .78rem; color: var(--dim); text-align: center; }
+
+
+/* ================= Lot 29 : audit du 31 octobre (Démo 5) ================= */
+/* 10 · Pastille « Disponible » : fond plus clair pour que le texte vert reste lisible */
+:root:not([data-theme="dark"]) .avail { background: rgba(var(--ok-rgb), .08); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .avail { background: rgba(var(--ok-rgb), .12); } }
+/* 12 · Plus aucun texte important sous 12 px sur téléphone */
+@media (max-width: 560px) {
+  .bootlog { font-size: clamp(.78rem, 2.3vw, .86rem); }
+  .dock .pill .lbl-s { font-size: .72rem; }
+  .privacy, .dock-mid .privacy { font-size: .75rem; }
+  .pick > .g-state { font-size: .75rem; }
+  .pick .g-meta .g-diff { font-size: .75rem; }
+  .wm small { font-size: .75rem; }
+}
+/* 13 · 27 · Écran tactile : boutons de 44 px au moins (thème, langue, disponibilité, notes, durées, créneaux) */
+@media (pointer: coarse) {
+  .icon-btn, .lang-btn { min-height: 44px; min-width: 44px; }
+  .avail { min-height: 44px; padding-top: .55rem; padding-bottom: .55rem; }
+  .score { min-height: 44px; align-items: center; padding: .5rem .7rem; }
+  .seg button, .slot, .slot-tab { min-height: 44px; }
+  /* 14 · Pastilles de domaines : zone de toucher agrandie sans changer leur dessin */
+  .brief-doms .gl-t, .rec-tags .gl-t { padding: .55rem 0; margin: -.55rem 0; }
+}
+/* 7 · Pastille « Affichage » : sur écran tactile seulement (au clavier, la touche ? suffit) */
+.disp-btn { display: none; }
+/* Sur écran tactile, « Affichage » remplace « Taille du texte » : la fenêtre contient aussi la taille (A, A+, A++) */
+@media (hover: none) { .dock .disp-btn { display: inline-flex; } .dock #sizeBtn { display: none; } }
+/* 15 · Créneaux : un onglet par jour, une seule grille, plus de liste qui défile dans la fenêtre */
+.slot-days { display: block; max-height: none; overflow: visible; }
+.slot-tabs { display: flex; gap: .35rem; overflow-x: auto; padding: 2px 2px .5rem; margin: 0 0 .5rem; scrollbar-width: thin; }
+.slot-tab { flex: none; font-family: inherit; font-size: .82rem; font-weight: 600; line-height: 1; cursor: pointer; padding: .5rem .7rem; border-radius: 10px; border: 1px solid var(--line); background: none; color: var(--ink); text-transform: capitalize; white-space: nowrap; }
+.slot-tab[aria-selected="true"] { border-color: var(--cyan); background: rgba(var(--cyan-rgb), .14); }
+.slot-tab:focus-visible, .slot:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.slot-days .slot-day { border: 0; padding: 0; }
+.slot-days .slot-row { grid-template-columns: repeat(auto-fill, minmax(5.2rem, 1fr)); }
+/* 16 · Téléphone tenu droit : pas de QR code à scanner avec le téléphone lui-même */
+@media (hover: none) and (pointer: coarse) { #contactPanel .qr, #contactPanel .qr-cap { display: none; } #contactPanel .contact-extra { justify-content: center; } }
+/* 18 · Taille A++ sur petit téléphone : le nom n'est plus coupé */
+@media (max-width: 560px) { html[data-size="xl"] .domain { font-size: clamp(1rem, 9vw, 2.4rem); } }
+/* 19 · Mouvement réduit : les faits clés s'affichent tout de suite */
+@media (prefers-reduced-motion: reduce) { .bootlog li { animation-delay: 0s !important; } }
+/* 20 · La fiche recruteur tient sur une page A4 */
+@media print {
+  @page { margin: 11mm 14mm; }
+  html { font-size: 13px !important; }
+  .rec h3 { margin-top: 1rem; }
+}
+@media (hover: none) { #keysPanel h3[data-i="a11yTitle"] { display: none; } }
+
+/* 10 · « Disponible immédiatement » : vert plus foncé dans le thème clair, contraste AA sur sa pastille */
+.avail { color: var(--ok-strong, var(--ok)); }

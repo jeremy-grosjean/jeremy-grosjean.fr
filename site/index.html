@@ -29,7 +29,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="J. Grosjean">
 <link rel="manifest" href="/site.webmanifest?v=9b028ebede">
-<link rel="stylesheet" href="/assets/app.css?v=901344cd90">
+<link rel="stylesheet" href="/assets/app.css?v=a310946c1d">
 <script src="/assets/i18n.js?v=ead1d74824" defer></script>
 <script src="/assets/labs.js?v=28d66e0db4" defer></script>
 <script src="/assets/labs2.js?v=194508f5f9" defer></script>
@@ -37,10 +37,10 @@
 <script src="/assets/labs4.js?v=1f113c584a" defer></script>
 <script src="/assets/labs5.js?v=60720498d6" defer></script>
 <script src="/assets/labs6.js?v=716e5179dc" defer></script>
-<script src="/assets/labs7.js?v=a42c64e143" defer></script>
+<script src="/assets/labs7.js?v=9c9556d442" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=3d363751ef" defer></script>
+<script src="/assets/app.js?v=c3977c3940" defer></script>
 </head>
 <body>
 <a class="skip" id="skipLink" href="#contactBtn" data-i="skipLink">Aller au contenu</a>
@@ -50,9 +50,10 @@
   <div class="stack" id="stack">
     <p class="hello" id="helloLine" hidden><b id="helloTxt"></b><span id="helloSub" data-i="helloSub">Merci de prendre le temps de découvrir mon profil.</span></p>
     <p class="brand"><span class="brand-mark" aria-hidden="true">JG</span><span>jeremy-grosjean.fr</span></p>
-    <h1 class="domain" id="domain"><span class="sr">Jérémy Grosjean</span><span id="nameFx" aria-hidden="true">Jérémy Grosjean</span></h1>
+    <h1 class="domain" id="domain"><span class="sr" id="srName">Jérémy Grosjean, technicien informatique</span><span id="nameFx" aria-hidden="true">Jérémy Grosjean</span></h1>
     <p class="typeline who-line" aria-hidden="true"><span class="pr">$</span> <span id="who">whoami → technicien informatique</span><span class="cur" id="whoCur"></span></p>
     <p class="typeline rot-line" id="rotLine" aria-hidden="true"><span class="pr">$</span> <span data-i="domainsLbl">domaines :</span> <span class="rot" id="rot">support utilisateurs</span><span class="cur"></span></p>
+    <p class="sr" id="srDomains"></p>
     <p class="avail-wrap"><button class="avail" id="availBtn" type="button" aria-haspopup="dialog"><span class="avail-dot" aria-hidden="true"></span><span data-i="availLine">Disponible immédiatement pour une alternance</span><span class="avail-more" aria-hidden="true">›</span></button></p>
     <ul class="bootlog" id="bootlog">
       <li><span class="st ok">[  OK  ]</span> <span>Titre professionnel TAI (niveau 4) obtenu</span></li>
@@ -161,6 +162,10 @@
     <button class="pill" id="sizeBtn" type="button">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 19 7.5 6l5 13M4.4 14.5h6.2"/><path d="M14 19l3.5-8 3.5 8M15.2 16.2h4.6"/></svg>
       <span class="size-w" aria-hidden="true">Taille du texte :</span><span class="lbl">A</span><span class="lbl-s" aria-hidden="true" data-i="sizeShort">Texte</span>
+    </button>
+    <button class="pill disp-btn" id="dispBtn" type="button" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+      <span class="lbl" data-i="dispBtn">Affichage</span><span class="lbl-s" aria-hidden="true" data-i="dispBtn">Affichage</span>
     </button>
     <button class="pill size-reset-dock" id="sizeResetDock" type="button" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>
@@ -682,6 +687,6 @@
 <canvas class="matrix" id="matrix" hidden aria-hidden="true"></canvas>
 <aside class="htop" id="htop" hidden aria-label="htop"><div class="htop-head"><span>htop · jeremy-grosjean.fr</span><button type="button" id="htopClose" aria-label="Fermer">✕</button></div><dl id="htopList"></dl></aside>
 <p class="hint" aria-hidden="true"><span class="mouse" data-i="hintMouse">Bougez la souris, cliquez pour envoyer une onde</span><span class="touch" data-i="hintTouch">Glissez le doigt, touchez pour envoyer une onde</span></p>
-<noscript><p class="note">jeremy-grosjean.fr · Site en construction</p></noscript>
+<noscript><p class="note">Cette page est plus complète avec JavaScript. Pour me joindre : contact [at] jeremy-grosjean.fr · This page works best with JavaScript. Contact: contact [at] jeremy-grosjean.fr</p></noscript>
 </body>
 </html>

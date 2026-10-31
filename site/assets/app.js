@@ -76,12 +76,19 @@
     document.documentElement.lang = t('htmlLang');
     document.title = t('title');
     document.querySelectorAll('[data-i]').forEach(el => { const v = t(el.dataset.i); if (typeof v === 'string') setText(el, v); });
-    /* Nombre de mini-jeux compté dans la liste (le défi du jour et le niveau N2 du support ne comptent pas) : toujours à jour */
-    { const n = document.querySelectorAll('#gamesPanel .pick:not(#pickDaily):not(#pickSupport2)').length;
+    /* Nombre de mini-jeux : le même compte que l'onglet « Tous » de la liste, toujours à jour */
+    { const n = document.querySelectorAll('#gamesPanel .pick').length;
       if (n && typeof t('playN') === 'function') { $('openGame').textContent = t('playN')(n); NB_JEUX = n; } }
     langUI();
     $('langLabel').textContent = t('langLabel');
     $('termClose').setAttribute('aria-label', t('close'));
+    /* Textes d'assistance traduits (QR codes, champ du terminal, fermeture de htop) */
+    $('qrImg').alt = t('qrAlt'); document.querySelectorAll('.forum-qr').forEach(i => { i.alt = t('qrSiteAlt'); });
+    $('termInput').setAttribute('aria-label', t('termCmd')); $('htopClose').setAttribute('aria-label', t('close'));
+    /* Liens qui ouvrent un nouvel onglet : les lecteurs d'écran l'annoncent */
+    document.querySelectorAll('a[target="_blank"]').forEach(a => { let n = a.querySelector(':scope > .nt'); if (!n) { n = document.createElement('span'); n.className = 'sr nt'; a.append(n); } n.textContent = ' ' + t('newTab'); });
+    /* Sur téléphone, « Ma messagerie » ouvre l'application du téléphone, pas celle de l'ordinateur */
+    if (matchMedia('(hover: none)').matches) document.querySelectorAll('[data-i="wmAppSub"]').forEach(el => { el.textContent = t('wmAppSubTouch'); });
     tick(); setSoundUI(); setThemeUI(); buildSecSoon(); heroLang(); netUI();
     /* Badges de notes : une bulle dit qu'ils ouvrent le site de test dans un nouvel onglet */
     if (typeof t('extTip') === 'function') document.querySelectorAll('#scores a.score').forEach(a => { const n = a.querySelector('span'); if (n) a.title = t('extTip')(n.textContent); });
@@ -369,7 +376,23 @@
   }
   const server = () => ({ x: W / 2, y: H / 2, s: Math.min(64, Math.max(46, W / 22)) });
   const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel', 'phPanel', 'snPanel', 'scPanel', 'glossPanel', 'pausePanel', 'resumePanel', 'slotPanel', 'skillsPanel', 'sharePanel', 'faqPanel', 'parcoursPanel', 'hirePanel', 'itPanel', 'psPanel', 'rjPanel', 'clPanel', 'dyPanel', 'prPanel', 'rwPanel', 'rpPanel', 'niPanel', 'bdPanel'];
-  function closePanels() { panels.forEach(p => $(p).classList.remove('open')); }
+  /* Fenêtre ouverte : la page derrière est mise hors d'atteinte (clavier, lecteurs d'écran), comme pendant la partie.
+     À la fermeture, le focus revient sur le bouton qui l'avait ouverte. */
+  let panelOpener = null;
+  function backdropInert() {
+    const open = !!document.querySelector('.panel.open'), playing = document.body.classList.contains('playing'), termOn = document.body.classList.contains('term-open');
+    for (const el of document.querySelectorAll('main, .clock, .topbar, .dock, #recView')) { if (open || playing) el.setAttribute('inert', ''); else el.removeAttribute('inert'); }
+    const tm = document.getElementById('term'); if (tm) { if (open || playing || !termOn) tm.setAttribute('inert', ''); else tm.removeAttribute('inert'); }
+  }
+  function closePanels() {
+    const was = panels.some(p => $(p).classList.contains('open'));
+    panels.forEach(p => $(p).classList.remove('open')); backdropInert();
+    if (was) setTimeout(() => {
+      if (document.querySelector('.panel.open') || document.body.classList.contains('term-open')) return;
+      const a = document.activeElement; if (a && a !== document.body && !a.closest('.panel')) return;
+      if (panelOpener && panelOpener.isConnected && !panelOpener.closest('.panel') && !panelOpener.closest('[inert]')) panelOpener.focus({ preventScroll: true });
+    }, 0);
+  }
   /* La fenêtre s'ouvre toujours en haut de son contenu (sur un écran bas, le focus sur un bouton du bas la faisait défiler) */
   /* Fermer une fenêtre : clic sur le fond flou autour (même action que son bouton Fermer / Quitter), ou sur le ✕ en haut à droite.
      Un clic dans la fenêtre ne la ferme pas ; un glisser qui commence dans la fenêtre et finit dehors non plus. */
@@ -389,8 +412,18 @@
     x.addEventListener('click', () => { const b = document.getElementById(bid); if (b) b.click(); else closePanels(); });
     const wrap = document.createElement('div'); wrap.className = 'panel-x-wrap'; wrap.append(x); card.prepend(wrap);
   }
+  /* Tab et Maj+Tab tournent à l'intérieur de la fenêtre ouverte (du dernier bouton au premier et inversement) */
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Tab') return; const pn = document.querySelector('.panel.open'); if (!pn) return;
+    const f = [...pn.querySelectorAll('button, a[href], input, select, textarea, summary, [tabindex]:not([tabindex="-1"])')].filter(x => !x.disabled && !x.closest('[hidden]') && x.getClientRects().length && getComputedStyle(x).visibility !== 'hidden');
+    if (!f.length) return; const first = f[0], last = f[f.length - 1], a = document.activeElement;
+    if (e.shiftKey && (a === first || !pn.contains(a))) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && (a === last || !pn.contains(a))) { e.preventDefault(); first.focus(); }
+  });
   function openPanel(id, focusId) {
-    const x = document.querySelector('#' + id + ' .panel-x'); if (x) { x.setAttribute('aria-label', t('close')); x.title = t('close'); } closePanels(); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (focusId) $(focusId).focus({ preventScroll: true }); const c = $(id).querySelector('.card'); if (c) c.scrollTop = 0; try { onPanelOpen(id); } catch (e) {} if (c) { suiteEnDessous(c); setTimeout(() => suiteEnDessous(c), 350); } }
+    { const a = document.activeElement; if (a && a !== document.body && !a.closest('.panel')) panelOpener = a; }
+    const x = document.querySelector('#' + id + ' .panel-x'); if (x) { x.setAttribute('aria-label', t('close')); x.title = t('close'); } closePanels(); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (focusId) $(focusId).focus({ preventScroll: true }); const c = $(id).querySelector('.card'); if (c) c.scrollTop = 0; try { onPanelOpen(id); } catch (e) {} if (c) { suiteEnDessous(c); setTimeout(() => suiteEnDessous(c), 350); } backdropInert();
+    if (!focusId && c) setTimeout(() => { if (!$(id).classList.contains('open') || c.contains(document.activeElement)) return; const b = c.querySelector('.tk-opt:not([disabled]), button:not(.panel-x):not([disabled]):not([hidden]), a[href]'); if (b) b.focus({ preventScroll: true }); }, 80); }
   /* Fenêtre plus haute que l'écran : un fondu et une flèche ↓ montrent qu'il y a une suite, ils disparaissent une fois en bas */
   function suiteEnDessous(c) { c.classList.toggle('more', c.scrollHeight - c.scrollTop - c.clientHeight > 12); }
   document.querySelectorAll('.panel .card').forEach(c => c.addEventListener('scroll', () => suiteEnDessous(c), { passive: true }));
@@ -439,7 +472,7 @@
   /* Pendant la partie, seul « Quitter » reste cliquable : l'accueil, la barre du haut et le pied de page sont mis hors d'atteinte (souris, doigt et clavier) */
   function setPlaying(on) {
     document.body.classList.toggle('playing', on);
-    for (const el of document.querySelectorAll('main, .clock, .topbar, .dock, #term')) { if (on) el.setAttribute('inert', ''); else el.removeAttribute('inert'); }
+    backdropInert();
   }
   function startGame() {
     dropSave();
@@ -733,6 +766,7 @@
     if (!heroStarted || whoDone) whoEl.textContent = whoText();
     if (heroStarted) startRotate(0);
     fitLines();
+    { const sn = $('srName'); if (sn) sn.textContent = 'Jérémy Grosjean, ' + (t('whoRole') || ''); const sd = $('srDomains'); if (sd) sd.textContent = (t('domainsLbl') || '') + ' ' + (t('domains') || []).join(', ') + '.'; }
   }
   /* Les deux lignes « $ whoami » et « $ domaines » gardent la largeur du domaine le plus long :
      pendant la frappe, le début de ligne ne bouge plus (avant : jusqu'à 91 px de décalage) */
@@ -964,12 +998,13 @@
   const ALIAS = { aide: 'help', top: 'htop', fps: 'htop', ticket: 'support', tickets: 'support', supervision: 'status', nslookup: 'dig', host: 'dig', installer: 'install', visite: 'tour', appareil: 'device', sysinfo: 'device', fastfetch: 'neofetch', secret: 'secrets', mentions: 'legal', legales: 'legal', 'légales': 'legal', privacy: 'legal', demarrage: 'boot', 'démarrage': 'boot', journal: 'boot', dmesg: 'boot', apropos: 'about', 'à-propos': 'about', securite: 'security', 'sécurité': 'security', jouer: 'play', effacer: 'clear', cls: 'clear', quitter: 'exit', quit: 'exit', langue: 'lang', theme: 'theme', 'thème': 'theme', ls: 'help', man: 'help', recruteur: 'cv', recruiter: 'cv', resume: 'cv', imprimer: 'print', pdf: 'print', accessibilite: 'a11y', 'accessibilité': 'a11y', accessibility: 'a11y', mail: 'contact', email: 'contact', 'rétro': 'retro', crt: 'retro', phosphore: 'retro', vt100: 'retro', diagnostic: 'panne', depannage: 'panne', 'dépannage': 'panne', fault: 'panne', ad: 'quiz', gpo: 'quiz', news: 'changelog', nouveautes: 'changelog', 'nouveautés': 'changelog', quoideneuf: 'changelog', tracert: 'traceroute', phishing: 'phish', hameconnage: 'phish', 'hameçonnage': 'phish', 'sous-reseaux': 'subnet', 'sous-réseaux': 'subnet', subnets: 'subnet', sousreseau: 'subnet', score: 'scores', records: 'scores', glossary: 'glossaire', lexique: 'glossaire', jargon: 'glossaire', def: 'define', definition: 'define', 'définition': 'define', rapport: 'report', link: 'lien', meeting: 'rdv', rendezvous: 'rdv', 'rendez-vous': 'rdv', entretien: 'rdv', interview: 'rdv', creneau: 'rdv', 'créneau': 'rdv', 'compétences': 'competences', skills: 'competences', titre: 'competences', tai: 'competences', share: 'partager', partage: 'partager', priority: 'priorite', 'priorité': 'priorite', itil: 'priorite', ps: 'powershell', pwsh: 'powershell', cable: 'rj45', 'câble': 'rj45', sertir: 'rj45', call: 'appel', telephone: 'appel', 'téléphone': 'appel', daily: 'defi', 'défi': 'defi', challenge: 'defi', questions: 'faq', setup: 'poste', deploiement: 'poste', 'déploiement': 'poste', ransom: 'rancon', 'rançon': 'rancon', ransomware: 'rancon', rancongiciel: 'rancon', 'rançongiciel': 'rancon', reply: 'reponse', 'réponse': 'reponse', repondre: 'reponse', 'répondre': 'reponse', succes: 'badges', 'succès': 'badges', badge: 'badges', achievements: 'badges' };
   function line(text, cls) { const d = document.createElement('div'); if (cls) d.className = cls; d.textContent = text; out.append(d); out.scrollTop = out.scrollHeight; return d; }
   function openTerm() {
-    closePanels(); document.body.classList.add('term-open');
+    closePanels(); document.body.classList.add('term-open'); term.removeAttribute('inert');
     if (!greeted) { greeted = true; line(t('tWelcome'), 'c'); }
     found('term');
     setTimeout(() => input.focus(), 30);
   }
-  function closeTerm() { document.body.classList.remove('term-open'); if (document.activeElement === input) input.blur(); }
+  function closeTerm() { document.body.classList.remove('term-open'); if (document.activeElement === input) input.blur(); term.setAttribute('inert', ''); }
+  term.setAttribute('inert', ''); /* terminal fermé : hors de l'ordre Tab */
   const termOpen = () => document.body.classList.contains('term-open');
   function ping(host) {
     const h = host || 'jeremy-grosjean.fr';
@@ -1873,7 +1908,7 @@
   const SLOT_DURS = [15, 30, 45, 60, 90, 120, 180], SLOT_DEF = 2, FR_OFF = ['01-01', '05-01', '05-08', '07-14', '08-15', '11-01', '11-11', '12-25'];
   const slotStarts = dur => { const out = []; for (let m = 8 * 60; m + dur <= 18 * 60; m += 30) { const fin = m + dur; if (fin <= 12 * 60 || m >= 13 * 60) out.push(m); } return out; };
   const hhmm = m => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
-  const SL = { mode: 0, pick: null, dur: SLOT_DURS[SLOT_DEF] };
+  const SL = { mode: 0, pick: null, dur: SLOT_DURS[SLOT_DEF], day: 0 };
   function parisYMD(ts) {
     const p = {}; for (const x of new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date(ts))) p[x.type] = x.value;
     return { y: +p.year, m: +p.month, d: +p.day, h: +p.hour, mi: +p.minute };
@@ -1901,7 +1936,7 @@
     } catch (e) { return new Date(ts).toISOString(); }
   }
   function openSlots() {
-    SL.pick = null;
+    SL.pick = null; SL.day = 0;
     const seg = $('slotMode'); seg.querySelectorAll('button').forEach(b => b.remove());
     t('slotModes').forEach((m, i) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = m; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', String(i === SL.mode)); b.addEventListener('click', () => { SL.mode = i; seg.querySelectorAll('button').forEach((x, j) => x.setAttribute('aria-checked', String(j === i))); slotUpdate(); }); seg.append(b); });
     const dg = $('slotDur'); dg.textContent = '';
@@ -1911,20 +1946,28 @@
     $('slotSend').hidden = true; $('slotMsg').hidden = true;
     closeTerm(); openPanel('slotPanel', 'slotClose');
   }
+  /* Un onglet par jour, puis une seule grille de créneaux : plus de liste qui défile dans une fenêtre qui défile */
   function slotDaysBuild() {
     const box = $('slotDays'); box.textContent = '';
-    let fDay; try { fDay = new Intl.DateTimeFormat(regionLocale(lang), { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }); } catch (e) { fDay = null; }
-    for (const d of slotDays(8)) {
-      const wrap = document.createElement('div'), h = document.createElement('p'), row = document.createElement('div');
-      wrap.className = 'slot-day'; h.className = 'slot-dlabel'; h.textContent = fDay ? fDay.format(new Date(Date.UTC(d.y, d.m - 1, d.d, 12))) : `${d.d}/${d.m}`; row.className = 'slot-row';
-      for (const m0 of slotStarts(SL.dur)) {
-        const hm = hhmm(m0), ts = parisToUtc(d.y, d.m, d.d, Math.floor(m0 / 60), m0 % 60), b = document.createElement('button');
-        b.type = 'button'; b.className = 'slot'; b.textContent = hm; b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', slotLabel(ts));
-        b.addEventListener('click', () => { box.querySelectorAll('.slot').forEach(x => x.setAttribute('aria-pressed', 'false')); b.setAttribute('aria-pressed', 'true'); SL.pick = ts; slotUpdate(); });
-        row.append(b);
-      }
-      wrap.append(h, row); box.append(wrap);
+    let fDay, fLong; try { fDay = new Intl.DateTimeFormat(regionLocale(lang), { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }); fLong = new Intl.DateTimeFormat(regionLocale(lang), { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }); } catch (e) { fDay = fLong = null; }
+    const days = slotDays(8); if (!(SL.day >= 0 && SL.day < days.length)) SL.day = 0;
+    const tabs = document.createElement('div'); tabs.className = 'slot-tabs'; tabs.setAttribute('role', 'tablist'); tabs.setAttribute('aria-label', t('slotDaysL') || '');
+    const wrap = document.createElement('div'), row = document.createElement('div'); wrap.className = 'slot-day'; wrap.setAttribute('role', 'tabpanel'); row.className = 'slot-row';
+    days.forEach((d, i) => {
+      const dt = new Date(Date.UTC(d.y, d.m - 1, d.d, 12)), tb = document.createElement('button');
+      tb.type = 'button'; tb.className = 'slot-tab'; tb.setAttribute('role', 'tab'); tb.setAttribute('aria-selected', String(i === SL.day));
+      tb.textContent = fDay ? fDay.format(dt) : `${d.d}/${d.m}`; if (fLong) tb.setAttribute('aria-label', fLong.format(dt));
+      tb.addEventListener('click', () => { SL.day = i; SL.pick = null; $('slotSend').hidden = true; slotDaysBuild(); const f = $('slotDays').querySelectorAll('.slot-tab')[i]; if (f) f.focus({ preventScroll: true }); });
+      tabs.append(tb);
+    });
+    const d = days[SL.day];
+    if (d) for (const m0 of slotStarts(SL.dur)) {
+      const hm = hhmm(m0), ts = parisToUtc(d.y, d.m, d.d, Math.floor(m0 / 60), m0 % 60), b = document.createElement('button');
+      b.type = 'button'; b.className = 'slot'; b.textContent = hm; b.setAttribute('aria-pressed', String(SL.pick === ts)); b.setAttribute('aria-label', slotLabel(ts));
+      b.addEventListener('click', () => { box.querySelectorAll('.slot').forEach(x => x.setAttribute('aria-pressed', 'false')); b.setAttribute('aria-pressed', 'true'); SL.pick = ts; slotUpdate(); });
+      row.append(b);
     }
+    wrap.append(row); box.append(tabs, wrap);
   }
   function slotUpdate() {
     if (SL.pick === null) return;
@@ -2992,7 +3035,7 @@
       if (stop) return; if (now - t0 > dur) { end(); return; }
       const mf = Math.min(7.2, Math.max(.05, (now - mLast) / 16.667)); mLast = now; const fade = (1 - Math.pow(.84, mf)).toFixed(3);
       g.fillStyle = light ? `rgba(247,249,255,${fade})` : `rgba(10,15,36,${fade})`; g.fillRect(0, 0, innerWidth, innerHeight);
-      g.fillStyle = light ? '#0E8A5A' : '#4BE3A0'; g.font = fs + 'px ui-monospace, Menlo, monospace';
+      g.fillStyle = light ? '#0A7A4F' : '#4BE3A0'; g.font = fs + 'px ui-monospace, Menlo, monospace';
       for (let i = 0; i < cols; i++) { g.fillText(chars[(Math.random() * chars.length) | 0], i * fs, drops[i] * fs); drops[i] = drops[i] * fs > innerHeight && Math.random() > Math.pow(.975, mf) ? 0 : drops[i] + (reduce ? .5 : 1) * mf; }
       requestAnimationFrame(f);
     })(t0);
@@ -3041,9 +3084,12 @@
       combo.replace('MOD', mod).split(' ').forEach((part, i) => { if (i) k.append(' '); if (part === '/' || part === '+') { k.append(part); return; } const kb = document.createElement('kbd'); kb.textContent = part; k.append(kb); });
       const d = document.createElement('span'); d.textContent = label; li.append(k, d); ul.append(li);
     }
+    /* Sur écran tactile, la fenêtre s'appelle « Affichage » et la liste des raccourcis clavier est masquée */
+    { const touch = matchMedia('(hover: none)').matches; $('keysTitle').textContent = touch ? t('dispBtn') : t('keysTitle'); $('keysList').hidden = touch; }
     closeTerm(); openPanel('keysPanel', 'keysClose'); found('keys');
   }
   $('keysBtn').addEventListener('click', openKeys);
+  $('dispBtn').addEventListener('click', openKeys);
   $('keysClose').addEventListener('click', closePanels);
   const anyPanelOpen = () => panels.some(p => $(p).classList.contains('open'));
   window.addEventListener('keydown', e => {
