@@ -240,28 +240,40 @@
   };
   for (const k in D) if (L[k]) Object.assign(L[k], D[k]);
 })(window.JG_I18N || {});
-/* Lot 42 : mode salon (bouton dans Affichage, commande « salon » du terminal, photo et « Disponible » sur l'écran salon). Textes en 6 langues. */
+/* Lot 42 : carte de visite à montrer (bouton dans Affichage, commande « carte » du terminal, photo et « Disponible » à l'écran). Textes en 6 langues. */
 (function (L) {
   'use strict';
   const D = {
-    fr: { salonBtn: 'Mode salon (forum, conférence)', fmAvail: 'Disponible immédiatement · alternance 12\u00a0mois',
-      tSalon: 'Mode salon activé : écran d’accueil en boucle, retour automatique après 60 s sans activité.', tSalonHow: 'Touchez l’écran pour revenir au site ; bouton « Quitter le mode salon » en bas à droite.',
-      help: ['salon', 'mode salon (forum, conférence)'] },
-    en: { salonBtn: 'Fair mode (job fair, conference)', fmAvail: 'Available now · 12-month work-study',
-      tSalon: 'Fair mode on: welcome screen on a loop, back automatically after 60 s without activity.', tSalonHow: 'Touch the screen to return to the site; “Exit fair mode” button at the bottom right.',
-      help: ['salon', 'fair mode (job fair, conference)'] },
-    'zh-Hans': { salonBtn: '展会模式（招聘会、会议）', fmAvail: '可立即开始 · 12 个月工学交替',
-      tSalon: '展会模式已开启：欢迎屏幕循环播放，无操作 60 秒后自动返回。', tSalonHow: '触摸屏幕即可返回网站；右下角有“退出展会模式”按钮。',
-      help: ['salon', '展会模式（招聘会、会议）'] },
-    'zh-Hant': { salonBtn: '展覽模式（徵才博覽會、研討會）', fmAvail: '可立即開始 · 12 個月建教合作',
-      tSalon: '展覽模式已開啟：歡迎畫面循環播放，無操作 60 秒後自動返回。', tSalonHow: '觸碰螢幕即可返回網站；右下角有「離開展覽模式」按鈕。',
-      help: ['salon', '展覽模式（徵才博覽會、研討會）'] },
-    yue: { salonBtn: '展覽模式（招聘會、研討會）', fmAvail: '即刻可以開始 · 12 個月工讀交替',
-      tSalon: '展覽模式開咗：歡迎畫面循環播放，冇操作 60 秒之後自動返回。', tSalonHow: '掂一下螢幕就返去網站；右下角有「離開展覽模式」掣。',
-      help: ['salon', '展覽模式（招聘會、研討會）'] },
-    ko: { salonBtn: '박람회 모드 (채용 박람회, 컨퍼런스)', fmAvail: '즉시 가능 · 12개월 일·학습 병행',
-      tSalon: '박람회 모드 켜짐: 환영 화면이 반복되며, 60초 동안 조작이 없으면 자동으로 돌아옵니다.', tSalonHow: '화면을 터치하면 사이트로 돌아갑니다. 오른쪽 아래에 “박람회 모드 종료” 버튼이 있습니다.',
-      help: ['salon', '박람회 모드 (채용 박람회, 컨퍼런스)'] }
+    fr: { salonBtn: 'Carte de visite à montrer (forum, entretien)', fmAvail: 'Disponible immédiatement · alternance 12\u00a0mois',
+      tSalon: 'Carte de visite affichée : elle reste à l’écran et revient seule après 60 s sans activité.', tSalonHow: 'Bouton « Découvrir mon profil » pour voir le site ; « Quitter la carte de visite » pour revenir au site normal.',
+      fmOpen: 'Découvrir mon profil', fmQrSite: 'Mon site', fmQrVcf: 'Mon contact', fmScanVcf: 'Scannez pour enregistrer mon contact', fmShare: 'Partager', fmFlip: 'Retourner (tour de cou)',
+      fmQrZoom: 'Agrandir le QR code', fmQrWhich: 'QR code à afficher', fmBigClose: 'Touchez pour fermer', fmCopied: 'Lien copié',
+      help: ['carte', 'carte de visite à montrer (forum, entretien)'] },
+    en: { salonBtn: 'Business card to show (job fair, interview)', fmAvail: 'Available now · 12-month work-study',
+      tSalon: 'Business card shown: it stays on screen and comes back by itself after 60 s without activity.', tSalonHow: '“Explore my profile” button to see the site; “Close business card” to return to the normal site.',
+      fmOpen: 'Explore my profile', fmQrSite: 'My site', fmQrVcf: 'My contact', fmScanVcf: 'Scan to save my contact', fmShare: 'Share', fmFlip: 'Flip (lanyard)',
+      fmQrZoom: 'Enlarge the QR code', fmQrWhich: 'QR code to show', fmBigClose: 'Touch to close', fmCopied: 'Link copied',
+      help: ['carte', 'business card to show (job fair, interview)'] },
+    'zh-Hans': { salonBtn: '展示名片（招聘会、面试）', fmAvail: '可立即开始 · 12 个月工学交替',
+      tSalon: '名片已显示：它会停留在屏幕上，无操作 60 秒后自动重新出现。', tSalonHow: '点“了解我的简介”查看网站；点“关闭名片”返回普通网站。',
+      fmOpen: '了解我的简介', fmQrSite: '我的网站', fmQrVcf: '我的联系方式', fmScanVcf: '扫码保存我的联系方式', fmShare: '分享', fmFlip: '翻转（挂绳）',
+      fmQrZoom: '放大二维码', fmQrWhich: '要显示的二维码', fmBigClose: '轻触关闭', fmCopied: '链接已复制',
+      help: ['carte', '展示名片（招聘会、面试）'] },
+    'zh-Hant': { salonBtn: '展示名片（徵才博覽會、面試）', fmAvail: '可立即開始 · 12 個月建教合作',
+      tSalon: '名片已顯示：會停留在螢幕上，無操作 60 秒後自動重新出現。', tSalonHow: '點「了解我的簡介」查看網站；點「關閉名片」返回一般網站。',
+      fmOpen: '了解我的簡介', fmQrSite: '我的網站', fmQrVcf: '我的聯絡方式', fmScanVcf: '掃描以儲存我的聯絡方式', fmShare: '分享', fmFlip: '翻轉（掛繩）',
+      fmQrZoom: '放大 QR 碼', fmQrWhich: '要顯示的 QR 碼', fmBigClose: '輕觸關閉', fmCopied: '連結已複製',
+      help: ['carte', '展示名片（徵才博覽會、面試）'] },
+    yue: { salonBtn: '展示名片（招聘會、面試）', fmAvail: '即刻可以開始 · 12 個月工讀交替',
+      tSalon: '名片已經顯示：會留喺螢幕上，冇操作 60 秒之後自動再出現。', tSalonHow: '撳「睇我嘅簡介」睇網站；撳「關閉名片」返去普通網站。',
+      fmOpen: '睇我嘅簡介', fmQrSite: '我嘅網站', fmQrVcf: '我嘅聯絡方法', fmScanVcf: '掃描儲存我嘅聯絡方法', fmShare: '分享', fmFlip: '反轉（頸繩）',
+      fmQrZoom: '放大 QR 碼', fmQrWhich: '要顯示嘅 QR 碼', fmBigClose: '掂一下就閂', fmCopied: '連結已複製',
+      help: ['carte', '展示名片（招聘會、面試）'] },
+    ko: { salonBtn: '보여 줄 명함 (채용 박람회, 면접)', fmAvail: '즉시 가능 · 12개월 일·학습 병행',
+      tSalon: '명함 표시 중: 화면에 계속 남아 있고, 60초 동안 조작이 없으면 자동으로 다시 나타납니다.', tSalonHow: '“프로필 살펴보기” 버튼으로 사이트를 보고, “명함 닫기”로 일반 사이트로 돌아갑니다.',
+      fmOpen: '프로필 살펴보기', fmQrSite: '내 사이트', fmQrVcf: '내 연락처', fmScanVcf: '스캔해서 내 연락처 저장', fmShare: '공유', fmFlip: '뒤집기 (목걸이)',
+      fmQrZoom: 'QR 코드 크게 보기', fmQrWhich: '표시할 QR 코드', fmBigClose: '터치하면 닫힙니다', fmCopied: '링크 복사됨',
+      help: ['carte', '보여 줄 명함 (채용 박람회, 면접)'] }
   };
   for (const k in D) {
     if (!L[k]) continue;

@@ -427,24 +427,32 @@ with sync_playwright() as p:
         pg.goto(BASE + '/?mode=forum'); pg.wait_for_timeout(1200)
         f1 = pg.evaluate("!document.getElementById('forum').hidden && document.getElementById('fmFact').textContent.length > 3")
         pg.mouse.click(5, 5); pg.wait_for_timeout(150)
-        f2 = pg.evaluate("document.getElementById('forum').hidden")
+        f0 = pg.evaluate("!document.getElementById('forum').hidden")  # un toucher à côté ne fait plus disparaître la carte
+        pg.evaluate("document.getElementById('fmOpen').click()"); pg.wait_for_timeout(150)
+        f2 = f0 and pg.evaluate("document.getElementById('forum').hidden")
         if not (f1 and f2):
             erreurs.append(f'{nom} : mode forum {f1} {f2}')
-        ok(f'{nom} : mode forum (écran d’accueil, retour au site au toucher)')
-        # Mode salon : photo et « Disponible » sur l'écran salon, bouton dans Affichage, commande « salon » du terminal
-        pg.goto(BASE + '/?mode=salon'); pg.wait_for_timeout(1200)
+        ok(f'{nom} : mode forum (écran d’accueil, un toucher à côté ne la ferme pas, bouton « Découvrir mon profil »)')
+        # Carte de visite à montrer : photo et « Disponible » à l'écran, bouton dans Affichage, commande « carte » du terminal
+        pg.goto(BASE + '/?mode=carte'); pg.wait_for_timeout(1200)
         s1 = pg.evaluate("(() => { const f = document.getElementById('forum'), ph = f.querySelector('.forum-photo'), av = f.querySelector('.forum-avail'); return !f.hidden && ph.complete && ph.naturalWidth > 0 && ph.getBoundingClientRect().width > 40 && /Disponible/.test(av.textContent) && /12\\u00a0mois/.test(av.textContent); })()")
         pg.goto(BASE + '/'); pg.wait_for_timeout(900)
-        pg.evaluate("document.getElementById('salonBtn').click()"); pg.wait_for_url('**/?mode=salon', timeout=5000); pg.wait_for_timeout(800)
+        pg.evaluate("document.getElementById('salonBtn').click()"); pg.wait_for_url('**/?mode=carte', timeout=5000); pg.wait_for_timeout(800)
         s2 = pg.evaluate("!document.getElementById('forum').hidden")
         pg.goto(BASE + '/'); pg.wait_for_timeout(900)
         pg.evaluate("document.getElementById('termBtn').click()"); pg.wait_for_timeout(200)
-        pg.evaluate("(() => { const i = document.querySelector('#termForm input'); i.value = 'salon'; document.getElementById('termForm').requestSubmit(); })()")
-        pg.wait_for_url('**/?mode=salon', timeout=5000); pg.wait_for_timeout(800)
+        pg.evaluate("(() => { const i = document.querySelector('#termForm input'); i.value = 'carte'; document.getElementById('termForm').requestSubmit(); })()")
+        pg.wait_for_url('**/?mode=carte', timeout=5000); pg.wait_for_timeout(800)
         s3 = pg.evaluate("!document.getElementById('forum').hidden")
-        if not (s1 and s2 and s3):
-            erreurs.append(f'{nom} : mode salon {s1} {s2} {s3}')
-        ok(f'{nom} : mode salon (photo et « Disponible », bouton dans Affichage, commande salon)')
+        s4 = pg.evaluate("""(() => { const q = document.getElementById('fmQr'); document.getElementById('fmQrVcf').click(); const vcf = /qr-contact\\.svg$/.test(q.src) && /contact/.test(document.getElementById('fmScan').textContent);
+          document.getElementById('fmQrSite').click(); const site = /\\/qr\\.svg$/.test(q.src);
+          document.getElementById('fmQrBtn').click(); const big = !document.getElementById('fmBig').hidden; document.getElementById('fmBig').click(); const ferme = document.getElementById('fmBig').hidden;
+          document.getElementById('fmFlip').click(); const flip = document.getElementById('forum').classList.contains('flip') && localStorage.getItem('jg-card-flip') === '1';
+          document.getElementById('fmFlip').click(); const back = !document.getElementById('forum').classList.contains('flip');
+          return vcf && site && big && ferme && flip && back; })()""")
+        if not (s1 and s2 and s3 and s4):
+            erreurs.append(f'{nom} : carte de visite {s1} {s2} {s3} {s4}')
+        ok(f'{nom} : carte de visite à montrer (photo et « Disponible », QR site ou contact, QR agrandi, retournement, bouton dans Affichage, commande carte)')
         # Photo de l'accueil, écran par écran : à gauche des lignes « $ whoami » (ordinateur, tablettes), à gauche du nom (téléphone droit ou à l'horizontale)
         pg.goto(BASE + '/'); pg.wait_for_timeout(900)
         place = {}
@@ -567,14 +575,14 @@ with sync_playwright() as p:
     m = man['m']
     if not (m.get('display') == 'standalone' and m.get('orientation') == 'any' and m.get('start_url') == '/' and m.get('lang') == 'fr'
             and any(i.get('purpose') == 'maskable' for i in m['icons']) and all(man['ic']) and man['ios'] and 0 < len(m.get('short_name', '')) <= 12
-            and [x['url'] for x in m.get('shortcuts', [])] == ['/#contact', '/#jeux', '/#recruteur', '/#fiche']):
+            and [x['url'] for x in m.get('shortcuts', [])] == ['/#contact', '/#jeux', '/#recruteur', '/#fiche', '/?mode=carte']):
         erreurs.append(f'application installable : manifeste incomplet {man}')
     for ancre, panneau in (('#contact', 'contactPanel'), ('#jeux', 'gamesPanel'), ('#fiche', 'briefPanel')):
         pg.goto(BASE + '/' + ancre); pg.wait_for_timeout(700)
         if not pg.evaluate(f"document.getElementById('{panneau}').classList.contains('open')"):
             erreurs.append(f'raccourci {ancre} : la fenêtre {panneau} ne s’ouvre pas')
     ctx.close()
-    ok('application installable : manifeste complet (portrait et paysage), icônes, 4 raccourcis (#contact, #jeux, #recruteur, #fiche)')
+    ok('application installable : manifeste complet (portrait et paysage), icônes, 5 raccourcis (#contact, #jeux, #recruteur, #fiche, carte de visite)')
     # Fenêtre « En 30 secondes » en tuiles : 8 tuiles, 6 domaines en pastilles, 2 boutons principaux, plus de « Fermer »
     # (la croix suffit) ; rien ne déborde, dans les 6 langues, du téléphone (320 px) à l'ordinateur
     for w, h in [(320, 568), (402, 874), (874, 402), (1280, 800)]:

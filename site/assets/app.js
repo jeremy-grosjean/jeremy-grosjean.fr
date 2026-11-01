@@ -100,7 +100,7 @@
     $('termClose').setAttribute('aria-label', t('close'));
     /* Textes d'assistance traduits (QR codes, champ du terminal, fermeture de htop) */
     $('heroPhoto').alt = t('photoAlt') || '';
-    $('qrImg').alt = t('qrAlt'); document.querySelectorAll('.forum-qr').forEach(i => { i.alt = t('qrSiteAlt'); });
+    $('qrImg').alt = t('qrAlt');
     $('termInput').setAttribute('aria-label', t('termCmd')); $('htopClose').setAttribute('aria-label', t('close'));
     /* Liens qui ouvrent un nouvel onglet : les lecteurs d'écran l'annoncent */
     document.querySelectorAll('a[target="_blank"]').forEach(a => { let n = a.querySelector(':scope > .nt'); if (!n) { n = document.createElement('span'); n.className = 'sr nt'; a.append(n); } n.textContent = ' ' + t('newTab'); });
@@ -114,6 +114,7 @@
     if (typeof htopOn !== 'undefined' && htopOn) htopDraw();
     updLine();
     try { lot14Lang(); } catch (e) {}
+    try { fmLang(); } catch (e) {}
     try { lot16Lang(); } catch (e) {}
     try { fxUI(); } catch (e) {}
   }
@@ -1029,8 +1030,8 @@
   /* ================= Terminal ================= */
   const term = $('term'), out = $('termOut'), input = $('termInput');
   const hist = []; let hIdx = 0, greeted = false;
-  const COMMANDS = ['help', 'boot', 'legal', 'device', 'neofetch', 'secrets', 'htop', 'support', 'status', 'dig', 'ipcalc', 'install', 'tour', 'matrix', 'whoami', 'about', 'security', 'ping', 'date', 'lang', 'theme', 'play', 'konami', 'contact', 'cv', 'projets', 'panne', 'quiz', 'changelog', 'print', 'a11y', 'curl', 'whois', 'traceroute', 'phish', 'subnet', 'scores', 'glossaire', 'define', 'report', 'lien', 'rdv', 'competences', 'faq', 'partager', 'priorite', 'powershell', 'rj45', 'appel', 'defi', 'poste', 'rancon', 'reponse', 'badges', 'salon', 'clear', 'exit'];
-  const ALIAS = { forum: 'salon', kiosk: 'salon', conference: 'salon', 'conférence': 'salon', aide: 'help', top: 'htop', fps: 'htop', ticket: 'support', tickets: 'support', supervision: 'status', nslookup: 'dig', host: 'dig', installer: 'install', visite: 'tour', appareil: 'device', sysinfo: 'device', fastfetch: 'neofetch', secret: 'secrets', mentions: 'legal', legales: 'legal', 'légales': 'legal', privacy: 'legal', demarrage: 'boot', 'démarrage': 'boot', journal: 'boot', dmesg: 'boot', apropos: 'about', 'à-propos': 'about', securite: 'security', 'sécurité': 'security', jouer: 'play', effacer: 'clear', cls: 'clear', quitter: 'exit', quit: 'exit', langue: 'lang', theme: 'theme', 'thème': 'theme', ls: 'help', man: 'help', recruteur: 'cv', recruiter: 'cv', resume: 'cv', imprimer: 'print', pdf: 'print', accessibilite: 'a11y', 'accessibilité': 'a11y', accessibility: 'a11y', mail: 'contact', email: 'contact', 'rétro': 'retro', crt: 'retro', phosphore: 'retro', vt100: 'retro', diagnostic: 'panne', depannage: 'panne', 'dépannage': 'panne', fault: 'panne', ad: 'quiz', gpo: 'quiz', news: 'changelog', nouveautes: 'changelog', 'nouveautés': 'changelog', quoideneuf: 'changelog', tracert: 'traceroute', phishing: 'phish', hameconnage: 'phish', 'hameçonnage': 'phish', 'sous-reseaux': 'subnet', 'sous-réseaux': 'subnet', subnets: 'subnet', sousreseau: 'subnet', score: 'scores', records: 'scores', glossary: 'glossaire', lexique: 'glossaire', jargon: 'glossaire', def: 'define', definition: 'define', 'définition': 'define', rapport: 'report', link: 'lien', meeting: 'rdv', rendezvous: 'rdv', 'rendez-vous': 'rdv', entretien: 'rdv', interview: 'rdv', creneau: 'rdv', 'créneau': 'rdv', 'compétences': 'competences', skills: 'competences', titre: 'competences', tai: 'competences', share: 'partager', partage: 'partager', priority: 'priorite', 'priorité': 'priorite', itil: 'priorite', ps: 'powershell', pwsh: 'powershell', cable: 'rj45', 'câble': 'rj45', sertir: 'rj45', call: 'appel', telephone: 'appel', 'téléphone': 'appel', daily: 'defi', 'défi': 'defi', challenge: 'defi', questions: 'faq', setup: 'poste', deploiement: 'poste', 'déploiement': 'poste', ransom: 'rancon', 'rançon': 'rancon', ransomware: 'rancon', rancongiciel: 'rancon', 'rançongiciel': 'rancon', reply: 'reponse', 'réponse': 'reponse', repondre: 'reponse', 'répondre': 'reponse', succes: 'badges', 'succès': 'badges', badge: 'badges', achievements: 'badges' };
+  const COMMANDS = ['help', 'boot', 'legal', 'device', 'neofetch', 'secrets', 'htop', 'support', 'status', 'dig', 'ipcalc', 'install', 'tour', 'matrix', 'whoami', 'about', 'security', 'ping', 'date', 'lang', 'theme', 'play', 'konami', 'contact', 'cv', 'projets', 'panne', 'quiz', 'changelog', 'print', 'a11y', 'curl', 'whois', 'traceroute', 'phish', 'subnet', 'scores', 'glossaire', 'define', 'report', 'lien', 'rdv', 'competences', 'faq', 'partager', 'priorite', 'powershell', 'rj45', 'appel', 'defi', 'poste', 'rancon', 'reponse', 'badges', 'carte', 'clear', 'exit'];
+  const ALIAS = { salon: 'carte', forum: 'carte', kiosk: 'carte', card: 'carte', vcard: 'carte', conference: 'carte', 'conférence': 'carte', aide: 'help', top: 'htop', fps: 'htop', ticket: 'support', tickets: 'support', supervision: 'status', nslookup: 'dig', host: 'dig', installer: 'install', visite: 'tour', appareil: 'device', sysinfo: 'device', fastfetch: 'neofetch', secret: 'secrets', mentions: 'legal', legales: 'legal', 'légales': 'legal', privacy: 'legal', demarrage: 'boot', 'démarrage': 'boot', journal: 'boot', dmesg: 'boot', apropos: 'about', 'à-propos': 'about', securite: 'security', 'sécurité': 'security', jouer: 'play', effacer: 'clear', cls: 'clear', quitter: 'exit', quit: 'exit', langue: 'lang', theme: 'theme', 'thème': 'theme', ls: 'help', man: 'help', recruteur: 'cv', recruiter: 'cv', resume: 'cv', imprimer: 'print', pdf: 'print', accessibilite: 'a11y', 'accessibilité': 'a11y', accessibility: 'a11y', mail: 'contact', email: 'contact', 'rétro': 'retro', crt: 'retro', phosphore: 'retro', vt100: 'retro', diagnostic: 'panne', depannage: 'panne', 'dépannage': 'panne', fault: 'panne', ad: 'quiz', gpo: 'quiz', news: 'changelog', nouveautes: 'changelog', 'nouveautés': 'changelog', quoideneuf: 'changelog', tracert: 'traceroute', phishing: 'phish', hameconnage: 'phish', 'hameçonnage': 'phish', 'sous-reseaux': 'subnet', 'sous-réseaux': 'subnet', subnets: 'subnet', sousreseau: 'subnet', score: 'scores', records: 'scores', glossary: 'glossaire', lexique: 'glossaire', jargon: 'glossaire', def: 'define', definition: 'define', 'définition': 'define', rapport: 'report', link: 'lien', meeting: 'rdv', rendezvous: 'rdv', 'rendez-vous': 'rdv', entretien: 'rdv', interview: 'rdv', creneau: 'rdv', 'créneau': 'rdv', 'compétences': 'competences', skills: 'competences', titre: 'competences', tai: 'competences', share: 'partager', partage: 'partager', priority: 'priorite', 'priorité': 'priorite', itil: 'priorite', ps: 'powershell', pwsh: 'powershell', cable: 'rj45', 'câble': 'rj45', sertir: 'rj45', call: 'appel', telephone: 'appel', 'téléphone': 'appel', daily: 'defi', 'défi': 'defi', challenge: 'defi', questions: 'faq', setup: 'poste', deploiement: 'poste', 'déploiement': 'poste', ransom: 'rancon', 'rançon': 'rancon', ransomware: 'rancon', rancongiciel: 'rancon', 'rançongiciel': 'rancon', reply: 'reponse', 'réponse': 'reponse', repondre: 'reponse', 'répondre': 'reponse', succes: 'badges', 'succès': 'badges', badge: 'badges', achievements: 'badges' };
   function line(text, cls) { const d = document.createElement('div'); if (cls) d.className = cls; d.textContent = text; out.append(d); out.scrollTop = out.scrollHeight; return d; }
   function openTerm() {
     closePanels(); document.body.classList.add('term-open'); term.removeAttribute('inert');
@@ -1210,7 +1211,7 @@
       case 'rancon': line(t('tGame'), 'g'); setTimeout(openRansom, 350); break;
       case 'reponse': line(t('tGame'), 'g'); setTimeout(openReply, 350); break;
       case 'badges': closeTerm(); setTimeout(openBadges, 150); break;
-      case 'salon': line(t('tSalon'), 'g'); line(t('tSalonHow'), 'd'); setTimeout(goSalon, 1200); break;
+      case 'carte': line(t('tSalon'), 'g'); line(t('tSalonHow'), 'd'); setTimeout(goSalon, 1200); break;
       case 'lien': {
         const u = personalLink(args.join(' ').replace(/[^\p{L}\p{N} &'’.,()\-]/gu, ''));
         if (!u) { line(t('tLinkUsage'), 'd'); break; }
@@ -2351,24 +2352,47 @@
     const place = () => { if (!ph || !who) return; if (wide.matches) { if (ph.parentElement !== who) who.prepend(ph); } else if (ph.parentElement !== idBox) idBox.prepend(ph); };
     place(); try { wide.addEventListener('change', place); } catch (e) { wide.addListener(place); }
   }
-  /* Mode salon (forum, conférence) : bouton dans Affichage et commande « salon » du terminal */
-  function goSalon() { try { const u = new URL(location.href); u.searchParams.set('mode', 'salon'); u.hash = ''; location.assign(u.pathname + u.search); } catch (e) { location.assign('/?mode=salon'); } }
+  /* Carte de visite à montrer (forum, entretien) : bouton dans Affichage, commande « carte » du terminal, raccourci de l'icône */
+  function goSalon() { try { const u = new URL(location.href); u.searchParams.set('mode', 'carte'); u.hash = ''; location.assign(u.pathname + u.search); } catch (e) { location.assign('/?mode=carte'); } }
   $('salonBtn').addEventListener('click', () => { SND.key(); goSalon(); });
 
   /* 10. Mode « forum de l'alternance » (?mode=forum) : écran d'accueil en boucle, retour automatique après 60 s sans activité */
-  const FORUM = (() => { try { return /^(forum|kiosk|salon)$/i.test(new URLSearchParams(location.search).get('mode') || ''); } catch (e) { return false; } })();
+  const FORUM = (() => { try { return /^(carte|card|forum|kiosk|salon)$/i.test(new URLSearchParams(location.search).get('mode') || ''); } catch (e) { return false; } })();
   let fmIdle = 0, fmCycle = 0, fmK = 0, fmLock = null;
   function fmFact() { const b = t('brief'); if (!b.length) return; const [k, v] = b[fmK++ % b.length]; $('fmFact').textContent = `${k} · ${v}`; }
   function fmShow() {
     try { if (G.on) quitGame(); } catch (e) {}
     closePanels(); closeTerm(); if (recOn()) closeRec(); window.scrollTo(0, 0);
-    document.body.classList.add('forum-on'); $('forum').hidden = false; fmFact(); clearInterval(fmCycle); fmCycle = setInterval(fmFact, 5000);
+    document.body.classList.add('forum-on'); $('forum').hidden = false; fmBig(false); fmFact(); clearInterval(fmCycle); fmCycle = setInterval(fmFact, 5000);
   }
   function fmHide() { $('forum').hidden = true; document.body.classList.remove('forum-on'); clearInterval(fmCycle); fmPoke(); fmWake(); }
   function fmPoke() { clearTimeout(fmIdle); if (FORUM && $('forum').hidden) fmIdle = setTimeout(fmShow, 60000); }
   async function fmWake() { try { if (navigator.wakeLock && !fmLock) { fmLock = await navigator.wakeLock.request('screen'); fmLock.addEventListener('release', () => { fmLock = null; }); } } catch (e) {} }
+  /* Carte de visite : QR du site ou de la fiche contact, QR agrandi, partage, retournement (tour de cou) */
+  var fmVcf = false; /* var : lu par applyLang avant cette ligne */
+  function fmLang() {
+    $('fmQr').src = fmVcf ? '/qr-contact.svg' : '/qr.svg'; $('fmBigQr').src = $('fmQr').src;
+    $('fmQr').alt = fmVcf ? t('qrAlt') : t('qrSiteAlt'); $('fmBigQr').alt = $('fmQr').alt;
+    $('fmScan').dataset.i = fmVcf ? 'fmScanVcf' : 'fmScan'; $('fmScan').textContent = t($('fmScan').dataset.i);
+    $('fmQrSite').setAttribute('aria-pressed', String(!fmVcf)); $('fmQrVcf').setAttribute('aria-pressed', String(fmVcf));
+    $('fmQrBtn').setAttribute('aria-label', t('fmQrZoom')); $('fmQrSw').setAttribute('aria-label', t('fmQrWhich'));
+  }
+  function fmFlip(on) { $('forum').classList.toggle('flip', on); $('fmFlip').setAttribute('aria-pressed', String(on)); }
+  function fmBig(on) { $('fmBig').hidden = !on; }
+  fmLang();
   if (FORUM) {
-    $('forum').addEventListener('click', e => { if (e.target.closest('#fmExit')) return; fmHide(); });
+    $('fmOpen').addEventListener('click', () => fmHide());
+    $('fmQrSite').addEventListener('click', () => { fmVcf = false; fmLang(); });
+    $('fmQrVcf').addEventListener('click', () => { fmVcf = true; fmLang(); });
+    $('fmQrBtn').addEventListener('click', () => fmBig(true));
+    $('fmBig').addEventListener('click', () => fmBig(false));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('fmBig').hidden) fmBig(false); });
+    $('fmShare').addEventListener('click', () => {
+      if (navigator.share) { navigator.share({ title: 'Jérémy Grosjean', text: t('shText'), url: SITE_URL }).catch(() => {}); return; }
+      try { navigator.clipboard.writeText(SITE_URL).then(() => toast(t('fmCopied')), () => toast(SITE_URL)); } catch (e) { toast(SITE_URL); }
+    });
+    { let on = false; try { on = store.get('jg-card-flip') === '1'; } catch (e) {} fmFlip(on); }
+    $('fmFlip').addEventListener('click', () => { const on = !$('forum').classList.contains('flip'); fmFlip(on); storeSet('jg-card-flip', on ? '1' : '0'); });
     $('fmExit').addEventListener('click', e => { e.stopPropagation(); clearTimeout(fmIdle); clearInterval(fmCycle); $('forum').hidden = true; document.body.classList.remove('forum-on');
       try { const u = new URL(location.href); u.searchParams.delete('mode'); history.replaceState(null, '', u.pathname + u.search + u.hash); } catch (e2) {} window.location.reload(); });
     for (const ev of ['pointerdown', 'keydown', 'wheel', 'touchstart']) window.addEventListener(ev, fmPoke, { passive: true, capture: true });
