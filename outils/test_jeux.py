@@ -431,6 +431,29 @@ with sync_playwright() as p:
         if not (f1 and f2):
             erreurs.append(f'{nom} : mode forum {f1} {f2}')
         ok(f'{nom} : mode forum (écran d’accueil, retour au site au toucher)')
+        # Mode salon : photo et « Disponible » sur l'écran salon, bouton dans Affichage, commande « salon » du terminal
+        pg.goto(BASE + '/?mode=salon'); pg.wait_for_timeout(1200)
+        s1 = pg.evaluate("(() => { const f = document.getElementById('forum'), ph = f.querySelector('.forum-photo'), av = f.querySelector('.forum-avail'); return !f.hidden && ph.complete && ph.naturalWidth > 0 && ph.getBoundingClientRect().width > 40 && /Disponible/.test(av.textContent) && /12\\u00a0mois/.test(av.textContent); })()")
+        pg.goto(BASE + '/'); pg.wait_for_timeout(900)
+        pg.evaluate("document.getElementById('salonBtn').click()"); pg.wait_for_url('**/?mode=salon', timeout=5000); pg.wait_for_timeout(800)
+        s2 = pg.evaluate("!document.getElementById('forum').hidden")
+        pg.goto(BASE + '/'); pg.wait_for_timeout(900)
+        pg.evaluate("document.getElementById('termBtn').click()"); pg.wait_for_timeout(200)
+        pg.evaluate("(() => { const i = document.querySelector('#termForm input'); i.value = 'salon'; document.getElementById('termForm').requestSubmit(); })()")
+        pg.wait_for_url('**/?mode=salon', timeout=5000); pg.wait_for_timeout(800)
+        s3 = pg.evaluate("!document.getElementById('forum').hidden")
+        if not (s1 and s2 and s3):
+            erreurs.append(f'{nom} : mode salon {s1} {s2} {s3}')
+        ok(f'{nom} : mode salon (photo et « Disponible », bouton dans Affichage, commande salon)')
+        # Photo de l'accueil, écran par écran : à gauche des lignes « $ whoami » (ordinateur, tablettes), à gauche du nom (téléphone droit ou à l'horizontale)
+        pg.goto(BASE + '/'); pg.wait_for_timeout(900)
+        place = {}
+        for (w, h) in [(1440, 900), (1180, 820), (820, 1180), (390, 844), (844, 390)]:
+            pg.set_viewport_size({'width': w, 'height': h}); pg.wait_for_timeout(250)
+            place[f'{w}x{h}'] = pg.evaluate("(() => { const p = document.getElementById('heroPhoto'), r = p.getBoundingClientRect(); return (p.parentElement.classList.contains('who-line') ? 'who' : 'nom') + (r.width > 30 && r.left >= 0 ? '' : '!'); })()")
+        if place != {'1440x900': 'who', '1180x820': 'who', '820x1180': 'who', '390x844': 'nom', '844x390': 'nom'}:
+            erreurs.append(f'{nom} : place de la photo {place}')
+        ok(f'{nom} : photo à gauche des lignes « $ whoami » sur ordinateur et tablette, à gauche du nom sur téléphone (droit ou à l’horizontale)')
         ctx.close()
     # Toutes les formes d'écran : montre, carré, écran partagé, téléphone, tablette, 4K, téléviseur 8K, bandes très fines
     ECRANS = [(200, 200), (240, 320), (280, 653), (320, 480), (360, 320), (412, 430), (600, 600), (667, 300), (768, 1024),

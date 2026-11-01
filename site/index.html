@@ -30,18 +30,18 @@
 <meta name="apple-mobile-web-app-title" content="J. Grosjean">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="/site.webmanifest?v=638d654df0">
-<link rel="stylesheet" href="/assets/app.css?v=7cfc0b3440">
+<link rel="stylesheet" href="/assets/app.css?v=9281ec6cca">
 <script src="/assets/i18n.js?v=0d9cedb462" defer></script>
 <script src="/assets/labs.js?v=20998f7cc8" defer></script>
 <script src="/assets/labs2.js?v=1e3d821f80" defer></script>
-<script src="/assets/labs3.js?v=25097cc3f0" defer></script>
+<script src="/assets/labs3.js?v=c5c73d2b3c" defer></script>
 <script src="/assets/labs4.js?v=08596d3504" defer></script>
 <script src="/assets/labs5.js?v=60720498d6" defer></script>
 <script src="/assets/labs6.js?v=716e5179dc" defer></script>
-<script src="/assets/labs7.js?v=aaf66b176d" defer></script>
+<script src="/assets/labs7.js?v=6febae2574" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=d0786bb8e6" defer></script>
+<script src="/assets/app.js?v=5ff9b5707d" defer></script>
 </head>
 <body>
 <a class="skip" id="skipLink" href="#contactBtn" data-i="skipLink">Aller au contenu</a>
@@ -615,14 +615,16 @@
 
 <div class="forum" id="forum" hidden>
   <div class="forum-card">
+    <img class="forum-photo" src="/assets/jg.webp" width="160" height="160" alt="" decoding="async">
     <p class="forum-name">Jérémy Grosjean</p>
     <p class="forum-role" id="fmRole" data-i="fmRole"></p>
+    <p class="forum-avail"><span class="avail-dot" aria-hidden="true"></span><span data-i="fmAvail">Disponible immédiatement · alternance 12 mois</span></p>
     <img class="forum-qr" src="/qr.svg" width="220" height="220" alt="QR code : https://jeremy-grosjean.fr">
     <p class="forum-scan" data-i="fmScan"></p>
     <p class="forum-fact" id="fmFact" aria-live="polite"></p>
     <p class="forum-touch" data-i="fmTouch"></p>
   </div>
-  <button class="forum-exit" id="fmExit" type="button" data-i="fmExit">Quitter le mode forum</button>
+  <button class="forum-exit" id="fmExit" type="button" data-i="fmExit">Quitter le mode salon</button>
 </div>
 
 <div class="panel" id="newsPanel" role="dialog" aria-modal="true" aria-labelledby="newsTitle">
@@ -669,6 +671,7 @@
       <label class="tog"><input type="checkbox" id="a11yContrast"> <span data-i="a11yContrast">Contraste renforcé</span></label>
       <label class="tog"><input type="checkbox" id="a11yFont"> <span data-i="a11yFont">Texte plus espacé</span></label>
       <label class="tog"><input type="checkbox" id="a11yStill"> <span data-i="a11yStill">Arrêter l’animation du fond</span></label>
+      <button class="chip-btn" id="salonBtn" type="button" data-i="salonBtn">Mode salon (forum, conférence)</button>
     </div>
     <h3 class="eco-title" data-i="a11yExtra">Effets visuels (désactivés par défaut)</h3>
     <div class="a11y">

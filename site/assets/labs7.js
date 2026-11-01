@@ -240,3 +240,34 @@
   };
   for (const k in D) if (L[k]) Object.assign(L[k], D[k]);
 })(window.JG_I18N || {});
+/* Lot 42 : mode salon (bouton dans Affichage, commande « salon » du terminal, photo et « Disponible » sur l'écran salon). Textes en 6 langues. */
+(function (L) {
+  'use strict';
+  const D = {
+    fr: { salonBtn: 'Mode salon (forum, conférence)', fmAvail: 'Disponible immédiatement · alternance 12\u00a0mois',
+      tSalon: 'Mode salon activé : écran d’accueil en boucle, retour automatique après 60 s sans activité.', tSalonHow: 'Touchez l’écran pour revenir au site ; bouton « Quitter le mode salon » en bas à droite.',
+      help: ['salon', 'mode salon (forum, conférence)'] },
+    en: { salonBtn: 'Fair mode (job fair, conference)', fmAvail: 'Available now · 12-month work-study',
+      tSalon: 'Fair mode on: welcome screen on a loop, back automatically after 60 s without activity.', tSalonHow: 'Touch the screen to return to the site; “Exit fair mode” button at the bottom right.',
+      help: ['salon', 'fair mode (job fair, conference)'] },
+    'zh-Hans': { salonBtn: '展会模式（招聘会、会议）', fmAvail: '可立即开始 · 12 个月工学交替',
+      tSalon: '展会模式已开启：欢迎屏幕循环播放，无操作 60 秒后自动返回。', tSalonHow: '触摸屏幕即可返回网站；右下角有“退出展会模式”按钮。',
+      help: ['salon', '展会模式（招聘会、会议）'] },
+    'zh-Hant': { salonBtn: '展覽模式（徵才博覽會、研討會）', fmAvail: '可立即開始 · 12 個月建教合作',
+      tSalon: '展覽模式已開啟：歡迎畫面循環播放，無操作 60 秒後自動返回。', tSalonHow: '觸碰螢幕即可返回網站；右下角有「離開展覽模式」按鈕。',
+      help: ['salon', '展覽模式（徵才博覽會、研討會）'] },
+    yue: { salonBtn: '展覽模式（招聘會、研討會）', fmAvail: '即刻可以開始 · 12 個月工讀交替',
+      tSalon: '展覽模式開咗：歡迎畫面循環播放，冇操作 60 秒之後自動返回。', tSalonHow: '掂一下螢幕就返去網站；右下角有「離開展覽模式」掣。',
+      help: ['salon', '展覽模式（招聘會、研討會）'] },
+    ko: { salonBtn: '박람회 모드 (채용 박람회, 컨퍼런스)', fmAvail: '즉시 가능 · 12개월 일·학습 병행',
+      tSalon: '박람회 모드 켜짐: 환영 화면이 반복되며, 60초 동안 조작이 없으면 자동으로 돌아옵니다.', tSalonHow: '화면을 터치하면 사이트로 돌아갑니다. 오른쪽 아래에 “박람회 모드 종료” 버튼이 있습니다.',
+      help: ['salon', '박람회 모드 (채용 박람회, 컨퍼런스)'] }
+  };
+  for (const k in D) {
+    if (!L[k]) continue;
+    const d = Object.assign({}, D[k]); const help = d.help; delete d.help;
+    Object.assign(L[k], d);
+    const H = L[k].tHelp;
+    if (H && !H.some(h => h[0] === help[0])) { const at = H.findIndex(x => x[0] === 'clear'); H.splice(at < 0 ? H.length : at, 0, help); }
+  }
+})(window.JG_I18N || {});
