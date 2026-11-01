@@ -458,8 +458,9 @@ with sync_playwright() as p:
           $('fmHc').click(); const hc = $('forum').classList.contains('hc') && getComputedStyle($('forum')).backgroundColor === 'rgb(255, 255, 255)'; $('fmHc').click();
           let txt = ''; navigator.canShare = () => true; navigator.share = async d => { txt = await d.files[0].text(); };
           $('fmVcard').click(); await new Promise(r => setTimeout(r, 300));
-          const vcf = txt.startsWith('BEGIN:VCARD') && /PHOTO;ENCODING=b;TYPE=JPEG:/.test(txt) && txt.includes('FN:Jérémy Grosjean') && !/^(TEL|ADR)/m.test(txt);
-          return { where, en, hc, vcf, fr: document.documentElement.lang === 'fr' }; }""")
+          const vcf = txt.startsWith('BEGIN:VCARD') && /PHOTO;ENCODING=b;TYPE=JPEG:/.test(txt) && txt.includes('FN:Jérémy Grosjean') && txt.includes('URL:https://www.linkedin.com/in/jeremy-grosjean') && !/^(TEL|ADR)/m.test(txt);
+          const li = document.querySelector('.forum-li a') && document.querySelector('.forum-li a').href === 'https://www.linkedin.com/in/jeremy-grosjean' && document.getElementById('liLink').href === 'https://www.linkedin.com/in/jeremy-grosjean' && document.getElementById('liLink').rel.includes('noopener');
+          return { where, en, hc, vcf, li, fr: document.documentElement.lang === 'fr' }; }""")
         # rotation automatique (tour de cou) : tête en bas → carte retournée, reprise à l'endroit → remise à l'endroit, à plat → inchangée
         s5['auto'] = pg.evaluate("""async () => { const $ = id => document.getElementById(id), f = $('forum'), w = ms => new Promise(r => setTimeout(r, ms));
           const tilt = (beta, gamma) => { const e = new Event('deviceorientation'); Object.defineProperties(e, { beta: { value: beta }, gamma: { value: gamma } }); window.dispatchEvent(e); };
@@ -473,7 +474,7 @@ with sync_playwright() as p:
         s4 = s4 and all(s5.values())
         if not (s1 and s2 and s3 and s4):
             erreurs.append(f'{nom} : carte de visite {s1} {s2} {s3} {s4} {s5}')
-        ok(f'{nom} : carte de visite à montrer (photo et « Disponible », QR site ou contact, QR agrandi (focus clavier), retournement manuel et automatique, lieux de travail, langue, contraste fort, fiche contact avec photo, bouton dans Affichage, commande carte)')
+        ok(f'{nom} : carte de visite à montrer (photo et « Disponible », QR site ou contact, QR agrandi (focus clavier), retournement manuel et automatique, lieux de travail, langue, contraste fort, fiche contact avec photo et LinkedIn, bouton dans Affichage, commande carte)')
         # Photo de l'accueil, écran par écran : à gauche des lignes « $ whoami » (ordinateur, tablettes), à gauche du nom (téléphone droit ou à l'horizontale)
         pg.goto(BASE + '/'); pg.wait_for_timeout(900)
         place = {}

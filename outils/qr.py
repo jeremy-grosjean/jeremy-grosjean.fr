@@ -1,12 +1,12 @@
-# Encodeur QR minimal (mode octet, niveau de correction M, versions 1 à 10), d'après la norme ISO/IEC 18004.
+# Encodeur QR minimal (mode octet, niveau de correction M, versions 1 à 13), d'après la norme ISO/IEC 18004.
 # Inspiré de l'implémentation de référence de Project Nayuki (MIT).
 import sys
 
 ECC_CODEWORDS_PER_BLOCK = {  # niveau M, index = version
-    'M': [None, 10, 16, 26, 18, 24, 16, 18, 22, 22, 26],
+    'M': [None, 10, 16, 26, 18, 24, 16, 18, 22, 22, 26, 30, 22, 22],
 }
 NUM_EC_BLOCKS = {
-    'M': [None, 1, 1, 1, 2, 2, 4, 4, 4, 5, 5],
+    'M': [None, 1, 1, 1, 2, 2, 4, 4, 4, 5, 5, 5, 8, 9],
 }
 FORMAT_BITS_ECL = {'L': 1, 'M': 0, 'Q': 3, 'H': 2}
 
@@ -59,7 +59,7 @@ def alignment_positions(ver):
 
 def encode(text, ecl='M'):
     data = text.encode('utf-8')
-    for ver in range(1, 11):
+    for ver in range(1, 14):
         cap_bits = num_data_codewords(ver, ecl) * 8
         cc = 8 if ver <= 9 else 16
         need = 4 + cc + len(data) * 8

@@ -1030,7 +1030,7 @@
   /* ================= Terminal ================= */
   const term = $('term'), out = $('termOut'), input = $('termInput');
   const hist = []; let hIdx = 0, greeted = false;
-  const COMMANDS = ['help', 'boot', 'legal', 'device', 'neofetch', 'secrets', 'htop', 'support', 'status', 'dig', 'ipcalc', 'install', 'tour', 'matrix', 'whoami', 'about', 'security', 'ping', 'date', 'lang', 'theme', 'play', 'konami', 'contact', 'cv', 'projets', 'panne', 'quiz', 'changelog', 'print', 'a11y', 'curl', 'whois', 'traceroute', 'phish', 'subnet', 'scores', 'glossaire', 'define', 'report', 'lien', 'rdv', 'competences', 'faq', 'partager', 'priorite', 'powershell', 'rj45', 'appel', 'defi', 'poste', 'rancon', 'reponse', 'badges', 'carte', 'clear', 'exit'];
+  const COMMANDS = ['help', 'boot', 'legal', 'device', 'neofetch', 'secrets', 'htop', 'support', 'status', 'dig', 'ipcalc', 'install', 'tour', 'matrix', 'whoami', 'about', 'security', 'ping', 'date', 'lang', 'theme', 'play', 'konami', 'contact', 'cv', 'projets', 'panne', 'quiz', 'changelog', 'print', 'a11y', 'curl', 'whois', 'traceroute', 'phish', 'subnet', 'scores', 'glossaire', 'define', 'report', 'lien', 'rdv', 'competences', 'faq', 'partager', 'priorite', 'powershell', 'rj45', 'appel', 'defi', 'poste', 'rancon', 'reponse', 'badges', 'carte', 'linkedin', 'clear', 'exit'];
   const ALIAS = { salon: 'carte', forum: 'carte', kiosk: 'carte', card: 'carte', vcard: 'carte', conference: 'carte', 'conférence': 'carte', aide: 'help', top: 'htop', fps: 'htop', ticket: 'support', tickets: 'support', supervision: 'status', nslookup: 'dig', host: 'dig', installer: 'install', visite: 'tour', appareil: 'device', sysinfo: 'device', fastfetch: 'neofetch', secret: 'secrets', mentions: 'legal', legales: 'legal', 'légales': 'legal', privacy: 'legal', demarrage: 'boot', 'démarrage': 'boot', journal: 'boot', dmesg: 'boot', apropos: 'about', 'à-propos': 'about', securite: 'security', 'sécurité': 'security', jouer: 'play', effacer: 'clear', cls: 'clear', quitter: 'exit', quit: 'exit', langue: 'lang', theme: 'theme', 'thème': 'theme', ls: 'help', man: 'help', recruteur: 'cv', recruiter: 'cv', resume: 'cv', imprimer: 'print', pdf: 'print', accessibilite: 'a11y', 'accessibilité': 'a11y', accessibility: 'a11y', mail: 'contact', email: 'contact', 'rétro': 'retro', crt: 'retro', phosphore: 'retro', vt100: 'retro', diagnostic: 'panne', depannage: 'panne', 'dépannage': 'panne', fault: 'panne', ad: 'quiz', gpo: 'quiz', news: 'changelog', nouveautes: 'changelog', 'nouveautés': 'changelog', quoideneuf: 'changelog', tracert: 'traceroute', phishing: 'phish', hameconnage: 'phish', 'hameçonnage': 'phish', 'sous-reseaux': 'subnet', 'sous-réseaux': 'subnet', subnets: 'subnet', sousreseau: 'subnet', score: 'scores', records: 'scores', glossary: 'glossaire', lexique: 'glossaire', jargon: 'glossaire', def: 'define', definition: 'define', 'définition': 'define', rapport: 'report', link: 'lien', meeting: 'rdv', rendezvous: 'rdv', 'rendez-vous': 'rdv', entretien: 'rdv', interview: 'rdv', creneau: 'rdv', 'créneau': 'rdv', 'compétences': 'competences', skills: 'competences', titre: 'competences', tai: 'competences', share: 'partager', partage: 'partager', priority: 'priorite', 'priorité': 'priorite', itil: 'priorite', ps: 'powershell', pwsh: 'powershell', cable: 'rj45', 'câble': 'rj45', sertir: 'rj45', call: 'appel', telephone: 'appel', 'téléphone': 'appel', daily: 'defi', 'défi': 'defi', challenge: 'defi', questions: 'faq', setup: 'poste', deploiement: 'poste', 'déploiement': 'poste', ransom: 'rancon', 'rançon': 'rancon', ransomware: 'rancon', rancongiciel: 'rancon', 'rançongiciel': 'rancon', reply: 'reponse', 'réponse': 'reponse', repondre: 'reponse', 'répondre': 'reponse', succes: 'badges', 'succès': 'badges', badge: 'badges', achievements: 'badges' };
   function line(text, cls) { const d = document.createElement('div'); if (cls) d.className = cls; d.textContent = text; out.append(d); out.scrollTop = out.scrollHeight; return d; }
   function openTerm() {
@@ -1218,6 +1218,7 @@
         const d = line(t('tLinkDone') + ' '), link = document.createElement('a'); link.href = u; link.textContent = u; d.append(link);
         copyText(u); break;
       }
+      case 'linkedin': { const d = line(t('liLink') + ' : '), a = document.createElement('a'); a.href = 'https://www.linkedin.com/in/jeremy-grosjean'; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'linkedin.com/in/jeremy-grosjean'; d.append(a); break; }
       case 'projets': case 'projects': line(t('tSoon'), 'd'); break;
       default: line(t('tUnknown')(c0), 'r');
     }
@@ -1310,6 +1311,7 @@
     { const tl = t('briefTiles') || [];
       if (tl[6]) recRows.push([tl[6][0], tl[6][1] + ' · ' + tl[6][2]]); /* mobilité */
       if (tl[7] && t('rncpOk')) recRows.push([tl[7][0], `RNCP225 (${t('rncpOk')}) · RNCP40357 (${t('rncpGoal')})`]); /* codes officiels */ }
+    recRows.push(['LinkedIn', 'linkedin.com/in/jeremy-grosjean']);
     if (t('recReplyL')) recRows.push([t('recReplyL'), t('recReply')]);
     for (const [k, v] of recRows) { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; dl.append(dt, dd); }
     const ul = $('recTags'); ul.textContent = '';
@@ -2396,7 +2398,7 @@
     const fold = l => { const out = []; while (l.length > 74) { out.push(l.slice(0, 74)); l = ' ' + l.slice(74); } out.push(l); return out.join('\r\n'); };
     const ph = fmPhoto();
     return ['BEGIN:VCARD', 'VERSION:3.0', 'N:Grosjean;Jérémy;;;', 'FN:Jérémy Grosjean', 'TITLE:Technicien informatique',
-      'NOTE:Disponible immédiatement pour une alternance Technicien informatique (Bac+2).', 'EMAIL;TYPE=INTERNET,PREF:contact@jeremy-grosjean.fr', 'URL:https://jeremy-grosjean.fr',
+      'NOTE:Disponible immédiatement pour une alternance Technicien informatique (Bac+2).', 'EMAIL;TYPE=INTERNET,PREF:contact@jeremy-grosjean.fr', 'URL:https://jeremy-grosjean.fr', 'URL:https://www.linkedin.com/in/jeremy-grosjean',
       ...(ph ? [fold('PHOTO;ENCODING=b;TYPE=JPEG:' + ph)] : []), 'END:VCARD', ''].join('\r\n');
   }
   async function fmSendCard() {
