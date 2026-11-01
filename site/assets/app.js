@@ -660,7 +660,7 @@
     if (dt < 1000) avgMs += (dt - avgMs) * .05;
     if (avgMs > 34 && !G.on && !morph.on && !document.hidden) { slowMs += dt; if (slowMs > 3000 && nodes.length > 28) { nodes.splice(Math.round(nodes.length * .8)); baseCount = nodes.length; slowMs = 0; avgMs = 22; } } else slowMs = 0;
     /* Vue recruteur ouverte (elle couvre tout l'écran) : rien à dessiner, on économise le processeur et la batterie */
-    if (document.body.classList.contains('rec-on')) { requestAnimationFrame(frame); return; }
+    if (document.body.classList.contains('rec-on') || document.body.classList.contains('forum-on')) { requestAnimationFrame(frame); return; } /* carte de visite affichée : idem */
     /* Option « Arrêter l'animation du fond » : une image fixe, redessinée seulement si la taille ou le thème change (le jeu reste animé) */
     if (A11Y.still && !G.on && !morph.on && stillDone) { requestAnimationFrame(frame); return; }
     stillDone = !!A11Y.still && !G.on && !morph.on;
@@ -2359,7 +2359,9 @@
   /* 10. Mode « forum de l'alternance » (?mode=forum) : écran d'accueil en boucle, retour automatique après 60 s sans activité */
   const FORUM = (() => { try { return /^(carte|card|forum|kiosk|salon)$/i.test(new URLSearchParams(location.search).get('mode') || ''); } catch (e) { return false; } })();
   let fmIdle = 0, fmCycle = 0, fmK = 0, fmLock = null;
-  function fmFact() { const b = t('brief'); if (!b.length) return; const [k, v] = b[fmK++ % b.length]; $('fmFact').textContent = `${k} · ${v}`; }
+  /* Infos qui défilent sur la carte : d'abord ce qui fait décider (rythme, formation visée, titre obtenu, domaines) ; durée et disponibilité sont déjà sur la carte */
+  const FM_ORDER = [2, 1, 0, 5];
+  function fmFact() { const b = t('brief'); if (!b.length) return; const o = FM_ORDER.filter(i => b[i]); const [k, v] = b[o[fmK++ % o.length]]; $('fmFact').textContent = `${k} · ${v}`; }
   function fmShow() {
     try { if (G.on) quitGame(); } catch (e) {}
     closePanels(); closeTerm(); if (recOn()) closeRec(); window.scrollTo(0, 0);
@@ -2376,6 +2378,29 @@
     $('fmScan').dataset.i = fmVcf ? 'fmScanVcf' : 'fmScan'; $('fmScan').textContent = t($('fmScan').dataset.i);
     $('fmQrSite').setAttribute('aria-pressed', String(!fmVcf)); $('fmQrVcf').setAttribute('aria-pressed', String(fmVcf));
     $('fmQrBtn').setAttribute('aria-label', t('fmQrZoom')); $('fmQrSw').setAttribute('aria-label', t('fmQrWhich'));
+    const sel = $('fmLangSel'); sel.setAttribute('aria-label', t('langLabel'));
+    if (!sel.options.length) for (const l of LANGS) { const o = document.createElement('option'); o.value = l; o.textContent = NATIVE[l] || l; o.lang = l; sel.append(o); }
+    sel.value = lang;
+    if (!$('forum').hidden) fmFact();
+  }
+  /* « Envoyer mon contact » : la fiche contact avec ma photo, envoyée par AirDrop ou une autre app (sinon, la fiche sans photo du site) */
+  function fmPhoto() {
+    try { const im = document.querySelector('.forum-photo'); if (!im.complete || !im.naturalWidth) return ''; const n = Math.min(240, im.naturalWidth), c = document.createElement('canvas'); c.width = n; c.height = n;
+      c.getContext('2d').drawImage(im, 0, 0, n, n); return c.toDataURL('image/jpeg', .85).split(',')[1] || ''; } catch (e) { return ''; }
+  }
+  function fmVcardText() {
+    const fold = l => { const out = []; while (l.length > 74) { out.push(l.slice(0, 74)); l = ' ' + l.slice(74); } out.push(l); return out.join('\r\n'); };
+    const ph = fmPhoto();
+    return ['BEGIN:VCARD', 'VERSION:3.0', 'N:Grosjean;Jérémy;;;', 'FN:Jérémy Grosjean', 'TITLE:Technicien informatique',
+      'NOTE:Disponible immédiatement pour une alternance Technicien informatique (Bac+2).', 'EMAIL;TYPE=INTERNET,PREF:contact@jeremy-grosjean.fr', 'URL:https://jeremy-grosjean.fr',
+      ...(ph ? [fold('PHOTO;ENCODING=b;TYPE=JPEG:' + ph)] : []), 'END:VCARD', ''].join('\r\n');
+  }
+  async function fmSendCard() {
+    try {
+      const f = new File([fmVcardText()], 'Jeremy-Grosjean.vcf', { type: 'text/vcard' });
+      if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f] }); return; }
+    } catch (e) { if (e && e.name === 'AbortError') return; }
+    location.href = '/contact.vcf';
   }
   function fmFlip(on) { $('forum').classList.toggle('flip', on); $('fmFlip').setAttribute('aria-pressed', String(on)); }
   function fmBig(on) { $('fmBig').hidden = !on; }
@@ -2387,12 +2412,17 @@
     $('fmQrBtn').addEventListener('click', () => fmBig(true));
     $('fmBig').addEventListener('click', () => fmBig(false));
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('fmBig').hidden) fmBig(false); });
+    $('fmVcard').addEventListener('click', fmSendCard);
+    $('fmMore').addEventListener('click', () => { const o = $('fmOpts').hidden; $('fmOpts').hidden = !o; $('fmMore').setAttribute('aria-expanded', String(o)); });
+    $('fmLangSel').addEventListener('change', e => { setLang(e.target.value); });
+    { let hc = false; try { hc = store.get('jg-card-hc') === '1'; } catch (e) {} $('forum').classList.toggle('hc', hc); $('fmHc').setAttribute('aria-pressed', String(hc)); }
+    $('fmHc').addEventListener('click', () => { const on = !$('forum').classList.contains('hc'); $('forum').classList.toggle('hc', on); $('fmHc').setAttribute('aria-pressed', String(on)); storeSet('jg-card-hc', on ? '1' : '0'); });
     $('fmShare').addEventListener('click', () => {
       if (navigator.share) { navigator.share({ title: 'Jérémy Grosjean', text: t('shText'), url: SITE_URL }).catch(() => {}); return; }
       try { navigator.clipboard.writeText(SITE_URL).then(() => toast(t('fmCopied')), () => toast(SITE_URL)); } catch (e) { toast(SITE_URL); }
     });
     { let on = false; try { on = store.get('jg-card-flip') === '1'; } catch (e) {} fmFlip(on); }
-    $('fmFlip').addEventListener('click', () => { const on = !$('forum').classList.contains('flip'); fmFlip(on); storeSet('jg-card-flip', on ? '1' : '0'); });
+    $('fmFlip').addEventListener('click', () => { const on = !$('forum').classList.contains('flip'); fmFlip(on); storeSet('jg-card-flip', on ? '1' : '0'); $('fmOpts').hidden = true; $('fmMore').setAttribute('aria-expanded', 'false'); $('forum').scrollTop = 0; });
     $('fmExit').addEventListener('click', e => { e.stopPropagation(); clearTimeout(fmIdle); clearInterval(fmCycle); $('forum').hidden = true; document.body.classList.remove('forum-on');
       try { const u = new URL(location.href); u.searchParams.delete('mode'); history.replaceState(null, '', u.pathname + u.search + u.hash); } catch (e2) {} window.location.reload(); });
     for (const ev of ['pointerdown', 'keydown', 'wheel', 'touchstart']) window.addEventListener(ev, fmPoke, { passive: true, capture: true });

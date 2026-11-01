@@ -447,12 +447,23 @@ with sync_playwright() as p:
         s4 = pg.evaluate("""(() => { const q = document.getElementById('fmQr'); document.getElementById('fmQrVcf').click(); const vcf = /qr-contact\\.svg$/.test(q.src) && /contact/.test(document.getElementById('fmScan').textContent);
           document.getElementById('fmQrSite').click(); const site = /\\/qr\\.svg$/.test(q.src);
           document.getElementById('fmQrBtn').click(); const big = !document.getElementById('fmBig').hidden; document.getElementById('fmBig').click(); const ferme = document.getElementById('fmBig').hidden;
-          document.getElementById('fmFlip').click(); const flip = document.getElementById('forum').classList.contains('flip') && localStorage.getItem('jg-card-flip') === '1';
+          document.getElementById('fmMore').click(); document.getElementById('fmFlip').click(); const flip = document.getElementById('forum').classList.contains('flip') && localStorage.getItem('jg-card-flip') === '1';
           document.getElementById('fmFlip').click(); const back = !document.getElementById('forum').classList.contains('flip');
           return vcf && site && big && ferme && flip && back; })()""")
+        # lieux de travail, langue, contraste fort, fiche contact envoyée avec la photo
+        s5 = pg.evaluate("""async () => { const $ = id => document.getElementById(id);
+          const where = /Pontarlier/.test(document.querySelector('.forum-where').textContent);
+          const sel = $('fmLangSel'); sel.value = 'en'; sel.dispatchEvent(new Event('change')); const en = /workplaces/.test(document.querySelector('.forum-where').textContent) && document.documentElement.lang === 'en';
+          sel.value = 'fr'; sel.dispatchEvent(new Event('change'));
+          $('fmHc').click(); const hc = $('forum').classList.contains('hc') && getComputedStyle($('forum')).backgroundColor === 'rgb(255, 255, 255)'; $('fmHc').click();
+          let txt = ''; navigator.canShare = () => true; navigator.share = async d => { txt = await d.files[0].text(); };
+          $('fmVcard').click(); await new Promise(r => setTimeout(r, 300));
+          const vcf = txt.startsWith('BEGIN:VCARD') && /PHOTO;ENCODING=b;TYPE=JPEG:/.test(txt) && txt.includes('FN:Jérémy Grosjean') && !/^(TEL|ADR)/m.test(txt);
+          return { where, en, hc, vcf, fr: document.documentElement.lang === 'fr' }; }""")
+        s4 = s4 and all(s5.values())
         if not (s1 and s2 and s3 and s4):
-            erreurs.append(f'{nom} : carte de visite {s1} {s2} {s3} {s4}')
-        ok(f'{nom} : carte de visite à montrer (photo et « Disponible », QR site ou contact, QR agrandi, retournement, bouton dans Affichage, commande carte)')
+            erreurs.append(f'{nom} : carte de visite {s1} {s2} {s3} {s4} {s5}')
+        ok(f'{nom} : carte de visite à montrer (photo et « Disponible », QR site ou contact, QR agrandi, retournement, lieux de travail, langue, contraste fort, fiche contact avec photo, bouton dans Affichage, commande carte)')
         # Photo de l'accueil, écran par écran : à gauche des lignes « $ whoami » (ordinateur, tablettes), à gauche du nom (téléphone droit ou à l'horizontale)
         pg.goto(BASE + '/'); pg.wait_for_timeout(900)
         place = {}

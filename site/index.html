@@ -30,7 +30,7 @@
 <meta name="apple-mobile-web-app-title" content="J. Grosjean">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="/site.webmanifest?v=6e4480d974">
-<link rel="stylesheet" href="/assets/app.css?v=ee1a547195">
+<link rel="stylesheet" href="/assets/app.css?v=979d55ea20">
 <script src="/assets/i18n.js?v=0d9cedb462" defer></script>
 <script src="/assets/labs.js?v=20998f7cc8" defer></script>
 <script src="/assets/labs2.js?v=1e3d821f80" defer></script>
@@ -38,10 +38,10 @@
 <script src="/assets/labs4.js?v=08596d3504" defer></script>
 <script src="/assets/labs5.js?v=60720498d6" defer></script>
 <script src="/assets/labs6.js?v=716e5179dc" defer></script>
-<script src="/assets/labs7.js?v=ee54330528" defer></script>
+<script src="/assets/labs7.js?v=51f8aea8a1" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=62acaa10d6" defer></script>
+<script src="/assets/app.js?v=b968bac4e0" defer></script>
 </head>
 <body>
 <a class="skip" id="skipLink" href="#contactBtn" data-i="skipLink">Aller au contenu</a>
@@ -619,6 +619,7 @@
     <p class="forum-name">Jérémy Grosjean</p>
     <p class="forum-role" id="fmRole" data-i="fmRole"></p>
     <p class="forum-avail"><span class="avail-dot" aria-hidden="true"></span><span data-i="fmAvail">Disponible immédiatement · alternance 12 mois</span></p>
+    <p class="forum-where" data-i="fmWhere">Lieux de travail possibles : Paris et Île-de-France · Pontarlier · Besançon</p>
     <div class="forum-scanbox">
       <div class="forum-qrsw" role="group" id="fmQrSw"><button type="button" id="fmQrSite" aria-pressed="true" data-i="fmQrSite">Mon site</button><button type="button" id="fmQrVcf" aria-pressed="false" data-i="fmQrVcf">Mon contact</button></div>
       <button class="forum-qr-btn" id="fmQrBtn" type="button"><img class="forum-qr" id="fmQr" src="/qr.svg" width="220" height="220" alt="QR code : https://jeremy-grosjean.fr"></button>
@@ -628,8 +629,14 @@
     <div class="forum-tools">
       <button class="btn forum-open" id="fmOpen" type="button" data-i="fmOpen">Découvrir mon profil</button>
       <div class="forum-mini">
-        <button type="button" id="fmShare" data-i="fmShare">Partager</button>
+        <button type="button" id="fmVcard" data-i="fmVcard">Envoyer mon contact</button>
+        <button type="button" id="fmShare" data-i="fmShare">Partager le lien</button>
+        <button type="button" id="fmMore" aria-expanded="false" aria-controls="fmOpts" data-i="fmMore">Options</button>
+      </div>
+      <div class="forum-mini forum-opts" id="fmOpts" hidden>
         <button type="button" id="fmFlip" aria-pressed="false" data-i="fmFlip">Retourner (tour de cou)</button>
+        <button type="button" id="fmHc" aria-pressed="false" data-i="fmHc">Contraste fort</button>
+        <select id="fmLangSel" class="forum-lang"></select>
         <button type="button" id="fmExit" data-i="fmExit">Quitter la carte de visite</button>
       </div>
     </div>
