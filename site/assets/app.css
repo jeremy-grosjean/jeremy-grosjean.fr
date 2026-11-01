@@ -1151,8 +1151,10 @@ body:not(.playing) #net {
 }
 @media (max-width: 560px) {
   body:not(.playing) #net {
-    -webkit-mask-image: radial-gradient(ellipse 64vw 32vh at 50% 46%, rgba(0, 0, 0, .14) 55%, #000 100%);
-    mask-image: radial-gradient(ellipse 64vw 32vh at 50% 46%, rgba(0, 0, 0, .14) 55%, #000 100%);
+    /* Téléphone : ellipse plus étroite que l'écran, comme sur ordinateur, pour que le réseau reste net sur les bords
+       (avant : 64vw, plus large que l'écran, donc tout le fond était voilé et paraissait délavé) */
+    -webkit-mask-image: radial-gradient(ellipse 38vw 30vh at 50% 46%, rgba(0, 0, 0, .2) 50%, #000 100%);
+    mask-image: radial-gradient(ellipse 38vw 30vh at 50% 46%, rgba(0, 0, 0, .2) 50%, #000 100%);
   }
 }
 /* 02 · Lignes « $ whoami » et « $ domaines » à largeur fixe : le début de ligne ne bouge plus pendant la frappe */

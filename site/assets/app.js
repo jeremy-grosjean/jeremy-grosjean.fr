@@ -307,7 +307,9 @@
   const decay = a => Math.pow(a, FR), ease = k => 1 - Math.pow(1 - k, FR);
   let W = 0, H = 0, dpr = 1, UIS = 1, nodes = [], packets = [], rings = [], trail = [], sparks = [], baseCount = 0;
   let pointer = null; const glow = { x: 0, y: 0, a: 0 };
-  const LINK = () => Math.min(170, Math.max(120, W / 8));
+  /* Distance des liens : même rapport à l'écart moyen entre les points sur tous les écrans, pour que le réseau ait le même aspect
+     sur téléphone que sur ordinateur (avant : 2 fois plus serré sur téléphone) */
+  const LINK = () => Math.min(170, 1.4 * Math.sqrt((W * H) / Math.max(1, baseCount)));
   const FIELD = () => Math.min(220, Math.max(140, W / 6));
   const makeNode = (px, py) => {
     const a = Math.random() * Math.PI * 2, s = (.12 + Math.random() * .18) * DRIFT;
@@ -320,7 +322,7 @@
     const pw = w || window.innerWidth, ph = h || window.innerHeight;
     W = pw / UIS; H = ph / UIS;
     c.width = Math.round(pw * dpr); c.height = Math.round(ph * dpr);
-    baseCount = Math.round(Math.min(95, Math.max(44, (W * H) / 14500)));
+    baseCount = Math.round(Math.min(95, Math.max(18, (W * H) / 14500))); /* même densité de points partout (un point pour 14 500 px²) */
     nodes = Array.from({ length: baseCount }, () => makeNode(Math.random() * W, Math.random() * H));
     packets = []; rings = []; morph.on = false;
     glow.x = W / 2; glow.y = H / 2;
@@ -708,6 +710,8 @@
       for (let j = i + 1; j < nodes.length; j++) {
         const b = nodes[j], d = Math.hypot(a.x - b.x, a.y - b.y);
         if (d < linkL) {
+          /* Écartement doux des points trop proches : le réseau reste régulier, sans amas, sur tous les écrans */
+          if (!morph.on && !G.on && d > 0 && d < L * .3) { const f = (1 - d / (L * .3)) * .012 * FR, ux = (a.x - b.x) / d, uy = (a.y - b.y) / d; a.vx += ux * f; a.vy += uy * f; b.vx -= ux * f; b.vy -= uy * f; }
           const k = (1 - d / linkL) * dim * K, h = Math.max(a.heat, b.heat);
           x.strokeStyle = h > .15 ? `rgba(${P.cyan},${k * (.25 + h * .6)})` : `rgba(${P.violet},${k * .32})`;
           x.beginPath(); x.moveTo(a.x, a.y); x.lineTo(b.x, b.y); x.stroke();
@@ -1245,14 +1249,25 @@
   }
   function onLeave() { pointer = null; if (!G.on) stack.style.transform = ''; }
   const isUI = el => el.closest && el.closest('button, a, input, select, label, .panel, .term, .topbar, .dock');
-  window.addEventListener('pointermove', onMove, { passive: true });
+  /* Doigt (téléphone, tablette) : faire défiler la page ne pousse plus les points (avant : chaque défilement les repoussait
+     et les tassait en amas, d'où un fond différent de l'ordinateur) ; seule une vraie touche brève lance l'onde, comme un clic */
+  let tapStart = null;
+  window.addEventListener('pointermove', e => {
+    if (e.pointerType === 'mouse' || G.on) onMove(e);
+    else if (tapStart && Math.hypot(e.clientX - tapStart.x, e.clientY - tapStart.y) > 10) tapStart = null;
+  }, { passive: true });
   window.addEventListener('pointerdown', e => {
     if (isUI(e.target)) return;
-    onMove(e);
-    if (G.on) gameTap(px(e), py(e), e.pointerType !== 'mouse'); else burst(px(e), py(e));
+    if (G.on) { onMove(e); gameTap(px(e), py(e), e.pointerType !== 'mouse'); }
+    else if (e.pointerType === 'mouse') { onMove(e); burst(px(e), py(e)); }
+    else tapStart = { x: e.clientX, y: e.clientY, t: performance.now() };
   }, { passive: true });
-  window.addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') onLeave(); }, { passive: true });
-  window.addEventListener('pointercancel', onLeave, { passive: true });
+  window.addEventListener('pointerup', e => {
+    if (e.pointerType === 'mouse') return;
+    if (tapStart && !G.on && performance.now() - tapStart.t < 400) burst(px(e), py(e));
+    tapStart = null; onLeave();
+  }, { passive: true });
+  window.addEventListener('pointercancel', () => { tapStart = null; onLeave(); }, { passive: true });
   document.addEventListener('mouseleave', onLeave);
 
   const KONAMI = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
