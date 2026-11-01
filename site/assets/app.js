@@ -2413,6 +2413,33 @@
     $('fmBig').addEventListener('click', () => fmBig(false));
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('fmBig').hidden) fmBig(false); });
     $('fmVcard').addEventListener('click', fmSendCard);
+    /* Rotation automatique (tour de cou) : téléphone qui pend la tête en bas → carte retournée pour le recruteur ;
+       repris en main, à l'endroit → carte remise à l'endroit. À plat ou à l'horizontale : rien ne change (l'iPhone gère déjà l'horizontale) */
+    let fmAutoOn = false, fmWant = null, fmWantT = 0;
+    const fmTilt = e => {
+      if (!fmAutoOn || e.beta == null || Math.abs(e.gamma || 0) > 55) return;
+      const want = e.beta < -50 ? true : e.beta > 40 ? false : null;
+      if (want === null || want === $('forum').classList.contains('flip')) { fmWant = null; return; }
+      if (fmWant !== want) { fmWant = want; clearTimeout(fmWantT); fmWantT = setTimeout(() => { if (fmAutoOn && fmWant === want) fmFlip(want); }, 450); }
+    };
+    function fmAutoUI() { $('fmAuto').setAttribute('aria-pressed', String(fmAutoOn)); }
+    async function fmAutoStart(fromTap) {
+      try {
+        const D = window.DeviceOrientationEvent;
+        if (!D) throw new Error('none');
+        if (typeof D.requestPermission === 'function') { if (!fromTap) return false; if (await D.requestPermission() !== 'granted') throw new Error('denied'); }
+        window.addEventListener('deviceorientation', fmTilt, { passive: true }); fmAutoOn = true; fmAutoUI(); return true;
+      } catch (e) { fmAutoOn = false; fmAutoUI(); if (fromTap) toast(t('fmMotionNo')); return false; }
+    }
+    function fmAutoStop() { fmAutoOn = false; clearTimeout(fmWantT); window.removeEventListener('deviceorientation', fmTilt); fmAutoUI(); }
+    $('fmAuto').addEventListener('click', async () => {
+      if (fmAutoOn) { fmAutoStop(); storeSet('jg-card-auto', '0'); return; }
+      if (await fmAutoStart(true)) storeSet('jg-card-auto', '1');
+    });
+    /* Choix gardé : sur iPhone, l'accès au mouvement se redemande au premier toucher sur la carte */
+    if ((() => { try { return store.get('jg-card-auto') === '1'; } catch (e) { return false; } })()) {
+      fmAutoStart(false).then(ok => { if (!ok) $('forum').addEventListener('pointerup', () => { fmAutoStart(true); }, { once: true }); });
+    }
     $('fmMore').addEventListener('click', () => { const o = $('fmOpts').hidden; $('fmOpts').hidden = !o; $('fmMore').setAttribute('aria-expanded', String(o)); });
     $('fmLangSel').addEventListener('change', e => { setLang(e.target.value); });
     { let hc = false; try { hc = store.get('jg-card-hc') === '1'; } catch (e) {} $('forum').classList.toggle('hc', hc); $('fmHc').setAttribute('aria-pressed', String(hc)); }

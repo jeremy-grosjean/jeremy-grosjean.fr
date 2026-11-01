@@ -460,10 +460,20 @@ with sync_playwright() as p:
           $('fmVcard').click(); await new Promise(r => setTimeout(r, 300));
           const vcf = txt.startsWith('BEGIN:VCARD') && /PHOTO;ENCODING=b;TYPE=JPEG:/.test(txt) && txt.includes('FN:Jérémy Grosjean') && !/^(TEL|ADR)/m.test(txt);
           return { where, en, hc, vcf, fr: document.documentElement.lang === 'fr' }; }""")
+        # rotation automatique (tour de cou) : tête en bas → carte retournée, reprise à l'endroit → remise à l'endroit, à plat → inchangée
+        s5['auto'] = pg.evaluate("""async () => { const $ = id => document.getElementById(id), f = $('forum'), w = ms => new Promise(r => setTimeout(r, ms));
+          const tilt = (beta, gamma) => { const e = new Event('deviceorientation'); Object.defineProperties(e, { beta: { value: beta }, gamma: { value: gamma } }); window.dispatchEvent(e); };
+          if (window.DeviceOrientationEvent) DeviceOrientationEvent.requestPermission = async () => 'granted';  /* l'autorisation que l'iPhone demande, acceptée */
+          $('fmAuto').click(); await w(50); const on = $('fmAuto').getAttribute('aria-pressed') === 'true';
+          tilt(-85, 2); await w(700); const bas = f.classList.contains('flip');
+          tilt(5, 0); await w(700); const plat = f.classList.contains('flip');
+          tilt(80, -3); await w(700); const haut = !f.classList.contains('flip');
+          tilt(-85, 80); await w(700); const paysage = !f.classList.contains('flip');
+          $('fmAuto').click(); return on && bas && plat && haut && paysage && $('fmAuto').getAttribute('aria-pressed') === 'false'; }""")
         s4 = s4 and all(s5.values())
         if not (s1 and s2 and s3 and s4):
             erreurs.append(f'{nom} : carte de visite {s1} {s2} {s3} {s4} {s5}')
-        ok(f'{nom} : carte de visite à montrer (photo et « Disponible », QR site ou contact, QR agrandi, retournement, lieux de travail, langue, contraste fort, fiche contact avec photo, bouton dans Affichage, commande carte)')
+        ok(f'{nom} : carte de visite à montrer (photo et « Disponible », QR site ou contact, QR agrandi, retournement manuel et automatique, lieux de travail, langue, contraste fort, fiche contact avec photo, bouton dans Affichage, commande carte)')
         # Photo de l'accueil, écran par écran : à gauche des lignes « $ whoami » (ordinateur, tablettes), à gauche du nom (téléphone droit ou à l'horizontale)
         pg.goto(BASE + '/'); pg.wait_for_timeout(900)
         place = {}
