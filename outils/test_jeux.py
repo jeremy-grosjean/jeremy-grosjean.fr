@@ -446,7 +446,7 @@ with sync_playwright() as p:
         s3 = pg.evaluate("!document.getElementById('forum').hidden")
         s4 = pg.evaluate("""(() => { const q = document.getElementById('fmQr'); document.getElementById('fmQrVcf').click(); const vcf = /qr-contact\\.svg$/.test(q.src) && /contact/.test(document.getElementById('fmScan').textContent);
           document.getElementById('fmQrSite').click(); const site = /\\/qr\\.svg$/.test(q.src);
-          document.getElementById('fmQrBtn').click(); const big = !document.getElementById('fmBig').hidden; document.getElementById('fmBig').click(); const ferme = document.getElementById('fmBig').hidden;
+          document.getElementById('fmQrBtn').click(); const big = !document.getElementById('fmBig').hidden && document.activeElement === document.getElementById('fmBig'); document.getElementById('fmBig').click(); const ferme = document.getElementById('fmBig').hidden && document.activeElement === document.getElementById('fmQrBtn');
           document.getElementById('fmMore').click(); document.getElementById('fmFlip').click(); const flip = document.getElementById('forum').classList.contains('flip') && localStorage.getItem('jg-card-flip') === '1';
           document.getElementById('fmFlip').click(); const back = !document.getElementById('forum').classList.contains('flip');
           return vcf && site && big && ferme && flip && back; })()""")
@@ -473,7 +473,7 @@ with sync_playwright() as p:
         s4 = s4 and all(s5.values())
         if not (s1 and s2 and s3 and s4):
             erreurs.append(f'{nom} : carte de visite {s1} {s2} {s3} {s4} {s5}')
-        ok(f'{nom} : carte de visite à montrer (photo et « Disponible », QR site ou contact, QR agrandi, retournement manuel et automatique, lieux de travail, langue, contraste fort, fiche contact avec photo, bouton dans Affichage, commande carte)')
+        ok(f'{nom} : carte de visite à montrer (photo et « Disponible », QR site ou contact, QR agrandi (focus clavier), retournement manuel et automatique, lieux de travail, langue, contraste fort, fiche contact avec photo, bouton dans Affichage, commande carte)')
         # Photo de l'accueil, écran par écran : à gauche des lignes « $ whoami » (ordinateur, tablettes), à gauche du nom (téléphone droit ou à l'horizontale)
         pg.goto(BASE + '/'); pg.wait_for_timeout(900)
         place = {}

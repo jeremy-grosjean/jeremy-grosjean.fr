@@ -2378,6 +2378,7 @@
     $('fmScan').dataset.i = fmVcf ? 'fmScanVcf' : 'fmScan'; $('fmScan').textContent = t($('fmScan').dataset.i);
     $('fmQrSite').setAttribute('aria-pressed', String(!fmVcf)); $('fmQrVcf').setAttribute('aria-pressed', String(fmVcf));
     $('fmQrBtn').setAttribute('aria-label', t('fmQrZoom')); $('fmQrSw').setAttribute('aria-label', t('fmQrWhich'));
+    $('fmBig').setAttribute('aria-label', t('fmQrZoom')); if (matchMedia('(hover: hover)').matches && t('fmBigCloseKey')) $('fmBigClose').textContent = t('fmBigCloseKey');
     const sel = $('fmLangSel'); sel.setAttribute('aria-label', t('langLabel'));
     if (!sel.options.length) for (const l of LANGS) { const o = document.createElement('option'); o.value = l; o.textContent = NATIVE[l] || l; o.lang = l; sel.append(o); }
     sel.value = lang;
@@ -2403,7 +2404,12 @@
     location.href = '/contact.vcf';
   }
   function fmFlip(on) { $('forum').classList.toggle('flip', on); $('fmFlip').setAttribute('aria-pressed', String(on)); }
-  function fmBig(on) { $('fmBig').hidden = !on; }
+  /* QR agrandi : le focus du clavier va sur lui (lecteur d'écran compris), Échap ou un toucher le ferme, puis le focus revient au QR */
+  function fmBig(on) {
+    const g = $('fmBig'), was = !g.hidden; g.hidden = !on;
+    if (on) { try { g.focus({ preventScroll: true }); } catch (e) { g.focus(); } }
+    else if (was) { try { $('fmQrBtn').focus({ preventScroll: true }); } catch (e) {} }
+  }
   fmLang();
   if (FORUM) {
     $('fmOpen').addEventListener('click', () => fmHide());

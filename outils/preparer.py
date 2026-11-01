@@ -45,6 +45,11 @@ try:
     sortie = subprocess.run(['git', '-C', str(ICI.parent), 'log', '--no-merges', '-n', '40', '--format=%cs%x09%s'],
                             capture_output=True, text=True, check=True).stdout
     news = []
+    # Textes écrits pour les recruteurs (outils/nouveautes.json) à la place des messages de commit, plus techniques
+    try:
+        PUBLIC = json.loads((ICI / 'nouveautes.json').read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        PUBLIC = {}
     for ligne in sortie.splitlines():
         date, _, sujet = ligne.partition('\t')
         m = re.match(r'^(\w+)(\([^)]*\))?!?:\s*(.+)$', sujet)
@@ -53,7 +58,14 @@ try:
         if sujet.lower().startswith(('initial commit', 'merge')):
             continue
         genre, texte = (TYPES.get(m.group(1).lower(), 'misc'), m.group(3)) if m else ('misc', sujet)
-        news.append({'d': date, 'k': genre, 't': (texte[:1].upper() + texte[1:]).replace("'", '’')})
+        if texte in PUBLIC:
+            if PUBLIC[texte] is None:
+                continue
+            texte = PUBLIC[texte]
+        texte = (texte[:1].upper() + texte[1:]).replace("'", '’')
+        if any(n['t'] == texte for n in news):
+            continue
+        news.append({'d': date, 'k': genre, 't': texte})
         if len(news) == 8:
             break
     (DIST / 'assets' / 'news.js').write_text('/* Journal des nouveautés, généré le ' + news[0]['d'] + ' */\nwindow.JG_NEWS = '

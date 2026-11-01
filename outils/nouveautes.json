@@ -1,0 +1,15 @@
+{
+  "_lisez-moi": "Texte affiché dans « Quoi de neuf » à la place du message de commit (clé = message sans le préfixe feat:/fix:). Valeur null : entrée masquée. Deux entrées au même texte : seule la plus récente reste.",
+  "carte de visite : rotation automatique pour le tour de cou (tête en bas → retournée, reprise en main → à l'endroit), capteurs de mouvement autorisés pour le site seul": "Carte de visite : rotation automatique pour la porter au tour de cou",
+  "carte de visite : envoi de la fiche contact avec photo, lieux de travail, langue, contraste fort, infos utiles en premier, options regroupées, animation du fond en pause (batterie)": "Carte de visite à montrer en forum ou en entretien : ma fiche contact avec photo, mes lieux de travail, 6 langues",
+  "carte de visite à montrer (ex-mode salon) : QR site ou contact, QR agrandi, partage, retournement pour tour de cou, bouton « Découvrir mon profil », deux colonnes à l'horizontale, ouverture immédiate hors réseau, raccourci de l'icône": "Carte de visite : QR de mon site ou de ma fiche contact, à scanner même de loin",
+  "photo à gauche des lignes « $ whoami » sur ordinateur et tablette, à gauche du nom sur téléphone ; mode salon (bouton dans Affichage, commande salon, photo et « Disponible »)": "Ma photo à l’accueil, sur ordinateur, tablette et téléphone",
+  "fond animé du téléphone identique à l'ordinateur (défilement au doigt sans effet sur les points, voile réduit)": "Fond animé plus net et plus régulier sur téléphone",
+  "photo à l'accueil (au-dessus du nom sur ordinateur, à sa gauche sur téléphone)": "Ma photo à l’accueil, sur ordinateur, tablette et téléphone",
+  "option « Arrêter l'animation du fond » dans Affichage (désactivée par défaut)": "Option pour arrêter l’animation du fond (Affichage)",
+  "espace entre le nom et le nombre dans les onglets des jeux (« Tous 16 »)": "Onglets des mini-jeux plus lisibles",
+  "mobilité et codes RNCP dans la fiche ; « Jouer » de nouveau cliquable": "Mobilité et codes officiels RNCP dans ma fiche",
+  "pastille sans doublon, trait gris de l'app, surveillance du matin, formation sans « à distance »": "Corrections d’affichage dans l’application et dans ma fiche",
+  "fiche en 30 s plus visible, plein écran dans l'app, créneaux par téléphone d'abord": "Fiche « en 30 s » plus visible, rendez-vous par téléphone en premier",
+  "QR code agrandi utilisable au clavier et au lecteur d'écran, journal « Quoi de neuf » écrit pour les recruteurs": "QR code agrandi plus simple à utiliser au clavier"
+}
