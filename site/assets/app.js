@@ -2080,12 +2080,15 @@
     for (const x of (t('skTools') || [])) { const li = document.createElement('li'); li.textContent = x; tools.append(li); }
     const lg = document.createElement('p'), b1 = document.createElement('b'); b1.textContent = t('skLangT'); lg.append(b1, document.createElement('br'), t('skLang'));
     const vw = document.createElement('p'), b2 = document.createElement('b'); b2.textContent = t('skVeilleT'); vw.append(b2, document.createElement('br'), t('skVeille'));
-    card.append(h, tools, lg, vw); box.append(card);
+    const extra = [];
+    for (const [kt, kv] of [['skSoftT', 'skSoft'], ['skProjT', 'skProj']]) { if (!t(kt)) continue; const p = document.createElement('p'), b = document.createElement('b'); b.textContent = t(kt); p.append(b, document.createElement('br'), t(kv)); extra.push(p); }
+    card.append(h, tools, lg, vw, ...extra); box.append(card);
   }
   function fillRecSkills() {
     const box = $('recSkills'); if (!box) return; box.textContent = '';
     t('skBlocks').forEach(([title, items], i) => { const p = document.createElement('p'), b = document.createElement('b'); b.textContent = `${i + 1} · ${title}`; p.append(b, document.createElement('br'), items.join(' · ')); box.append(p); });
     const p = document.createElement('p'), b = document.createElement('b'); b.textContent = t('skToolsT'); p.append(b, document.createElement('br'), (t('skTools') || []).join(' · '), document.createElement('br'), t('skLang')); box.append(p);
+    if (t('skSoftT')) { const q = document.createElement('p'), c = document.createElement('b'); c.textContent = t('skSoftT'); q.append(c, document.createElement('br'), t('skSoft')); box.append(q); }
   }
   $('briefSkills').addEventListener('click', openSkills);
   $('skClose').addEventListener('click', closePanels);

@@ -1580,3 +1580,6 @@ body.forum-on .toast { z-index: 95; }
 @media (orientation: landscape) and (min-aspect-ratio: 5/4) { .forum-tools { flex-direction: row; flex-wrap: wrap; justify-content: center; } }
 @media (orientation: portrait) and (max-width: 560px) and (max-height: 700px) { .forum-qr { width: min(40vw, 11rem); } .forum-where { font-size: .74rem; margin-bottom: .5rem; } .forum-avail { margin-bottom: .8rem; } }
 .forum-big:focus { outline: none; } .forum-big:focus-visible { outline: 4px solid #0A66C2; outline-offset: -10px; }
+/* Parcours : formations à venir (maintenant, puis ensuite), en pointillés violets */
+.pc-item.pc-next::before { border: 2px dashed var(--violet); background: var(--surface-strong); }
+.pc-item.pc-next .pc-date { color: var(--violet); font-weight: 700; }
