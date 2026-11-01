@@ -30,7 +30,7 @@
 <meta name="apple-mobile-web-app-title" content="J. Grosjean">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="/site.webmanifest?v=6e4480d974">
-<link rel="stylesheet" href="/assets/app.css?v=f48a9cd5ff">
+<link rel="stylesheet" href="/assets/app.css?v=2a67414b6d">
 <script src="/assets/i18n.js?v=0d9cedb462" defer></script>
 <script src="/assets/labs.js?v=20998f7cc8" defer></script>
 <script src="/assets/labs2.js?v=1e3d821f80" defer></script>
@@ -38,10 +38,10 @@
 <script src="/assets/labs4.js?v=08596d3504" defer></script>
 <script src="/assets/labs5.js?v=60720498d6" defer></script>
 <script src="/assets/labs6.js?v=716e5179dc" defer></script>
-<script src="/assets/labs7.js?v=52e16d2a45" defer></script>
+<script src="/assets/labs7.js?v=7b206a7c73" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=7865c5f7eb" defer></script>
+<script src="/assets/app.js?v=7708646c9b" defer></script>
 </head>
 <body>
 <a class="skip" id="skipLink" href="#contactBtn" data-i="skipLink">Aller au contenu</a>
@@ -75,6 +75,7 @@
       <a class="score" href="https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fjeremy-grosjean.fr" target="_blank" rel="noopener noreferrer"><b>100</b><span>PageSpeed</span><span class="ext" aria-hidden="true">↗</span></a>
       <span class="score score-priv"><span data-i="privacyLine">0 cookie · 0 traceur</span></span>
     </p>
+    <p class="scores-m"><button class="score score-m" id="scoresM" type="button"><span aria-hidden="true">🔒</span> <b>A+</b> SSL Labs · <b>A+</b> Mozilla · <b>100</b> PageSpeed</button></p>
     <p class="keys"><span data-i="keysHint">Terminal :</span> <kbd id="kbdMod" title="Ctrl">Ctrl</kbd> + <kbd>K</kbd><span class="keys-sep" aria-hidden="true"> · </span><button class="keys-help" id="keysBtn" type="button"><kbd>?</kbd> <span data-i="keysHelp">raccourcis</span></button></p>
   </div>
 </main>
@@ -132,7 +133,7 @@
     <span class="sr" id="langLabel">Langue</span>
     <button class="lang-btn" id="langBtn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="langLabel langCur">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>
-      <span id="langCur">Français</span>
+      <span id="langCur">Français</span><span class="lang-short" id="langShort" aria-hidden="true">FR</span>
       <svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5"/></svg>
     </button>
     <div class="lang-pop" id="langPop" hidden>

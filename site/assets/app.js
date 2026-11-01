@@ -100,6 +100,7 @@
     $('termClose').setAttribute('aria-label', t('close'));
     /* Textes d'assistance traduits (QR codes, champ du terminal, fermeture de htop) */
     $('heroPhoto').alt = t('photoAlt') || '';
+    if (t('scoresMAria')) $('scoresM').setAttribute('aria-label', t('scoresMAria'));
     $('qrImg').alt = t('qrAlt');
     $('termInput').setAttribute('aria-label', t('termCmd')); $('htopClose').setAttribute('aria-label', t('close'));
     /* Liens qui ouvrent un nouvel onglet : les lecteurs d'écran l'annoncent */
@@ -127,6 +128,7 @@
   opts.forEach((o, i) => { o.id = 'lang-opt-' + i; });
   function langUI() {
     $('langCur').textContent = NATIVE[lang];
+    { const o = opts.find(x => x.dataset.v === lang), i = o && o.querySelector('i'); $('langShort').textContent = i ? i.textContent : lang.toUpperCase(); }
     opts.forEach(o => o.setAttribute('aria-selected', String(o.dataset.v === lang)));
   }
   function moveHl(i, withSound) {
@@ -2092,6 +2094,8 @@
     const p = document.createElement('p'), b = document.createElement('b'); b.textContent = t('skToolsT'); p.append(b, document.createElement('br'), (t('skTools') || []).join(' · '), document.createElement('br'), t('skLang')); box.append(p);
     if (t('skSoftT')) { const q = document.createElement('p'), c = document.createElement('b'); c.textContent = t('skSoftT'); q.append(c, document.createElement('br'), t('skSoft')); box.append(q); }
   }
+  /* Téléphone : les 3 notes sur une ligne ; un toucher ouvre Sécurité, qui garde le détail et les liens vers les tests */
+  $('scoresM').addEventListener('click', () => $('secBtn').click());
   $('briefSkills').addEventListener('click', openSkills);
   $('skClose').addEventListener('click', closePanels);
   $('skContact').addEventListener('click', () => $('contactBtn').click());
