@@ -1746,8 +1746,10 @@ html[data-theme="dark"] .forum-li a { color: #70B5F9; }
 .sec-why, .sup-why { color: var(--dim); font-size: .88rem; margin: -.3rem 0 .8rem; border-left: 3px solid rgba(var(--cyan-rgb), .5); padding-left: .6rem; }
 .brief-upd, .sup-pub, .rec-printed { color: var(--dim); font-size: .78rem; margin: .6rem 0 0; }
 .sup-pub a { color: var(--dim); }
-.src-link, .src-sep { display: none; }
-@media (min-width: 1200px) and (min-height: 501px) { .src-link, .src-sep { display: inline; } }
+.dock .legal-row .src-link, .dock .legal-row .src-sep, .src-link, .src-sep { display: none; }
+@media (min-width: 1200px) and (min-height: 501px) { .src-sep { display: inline; } .dock .legal-row .src-link { display: inline-flex; } }
+/* « En ligne » : visible seulement quand la connexion est coupée (partout) */
+.net-pill:not(.off) { display: none; }
 .term-max { display: none; }
 @media (hover: hover) and (min-width: 900px) and (min-height: 600px) {
   .term-max { display: inline-block; }

@@ -2,9 +2,9 @@
    Pages : réseau d'abord (toujours la dernière version en ligne), copie locale seulement sans connexion.
    Fichiers versionnés (?v=…) : copie locale d'abord. Aucune donnée personnelle n'est stockée. */
 'use strict';
-const VERSION = '3bcb4f4973ce';
+const VERSION = 'f6d0f6b2ff68';
 const CACHE = 'jg-' + VERSION;
-const PRECACHE = ["/", "/mentions-legales.html", "/accessibilite.html", "/404.html", "/favicon.ico?v=207d79eba8", "/favicon.svg?v=3b2a8a60bb", "/apple-touch-icon.png?v=8f2070778e", "/site.webmanifest?v=6e4480d974", "/assets/fonts/sora.woff", "/assets/app.css?v=496854a0d2", "/assets/i18n.js?v=211df977ee", "/assets/labs.js?v=20998f7cc8", "/assets/labs2.js?v=1e3d821f80", "/assets/labs3.js?v=86512663bb", "/assets/labs4.js?v=08596d3504", "/assets/labs5.js?v=60720498d6", "/assets/labs6.js?v=716e5179dc", "/assets/labs7.js?v=0ab2026654", "/assets/status.js", "/assets/news.js?v=5b80be41d3", "/assets/app.js?v=3b47de3af0", "/assets/jg.webp", "/qr.svg", "/qr-contact.svg", "/assets/legal.css?v=c3b1ed11b9", "/assets/legal.js?v=910215cffa", "/assets/a11y.js?v=6f677b335f", "/assets/404.css?v=545c5df718", "/assets/404.js?v=314ec3e13b", "/icon-192.png"];
+const PRECACHE = ["/", "/mentions-legales.html", "/accessibilite.html", "/404.html", "/favicon.ico?v=207d79eba8", "/favicon.svg?v=3b2a8a60bb", "/apple-touch-icon.png?v=8f2070778e", "/site.webmanifest?v=6e4480d974", "/assets/fonts/sora.woff", "/assets/app.css?v=84623cd135", "/assets/i18n.js?v=211df977ee", "/assets/labs.js?v=20998f7cc8", "/assets/labs2.js?v=1e3d821f80", "/assets/labs3.js?v=86512663bb", "/assets/labs4.js?v=08596d3504", "/assets/labs5.js?v=60720498d6", "/assets/labs6.js?v=716e5179dc", "/assets/labs7.js?v=0ab2026654", "/assets/status.js", "/assets/news.js?v=5b80be41d3", "/assets/app.js?v=3b47de3af0", "/assets/jg.webp", "/qr.svg", "/qr-contact.svg", "/assets/legal.css?v=c3b1ed11b9", "/assets/legal.js?v=910215cffa", "/assets/a11y.js?v=6f677b335f", "/assets/404.css?v=545c5df718", "/assets/404.js?v=314ec3e13b", "/icon-192.png"];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.all(PRECACHE.map(u => fetch(u, { cache: 'no-cache' }).then(r => {
