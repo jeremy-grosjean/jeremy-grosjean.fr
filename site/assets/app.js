@@ -86,11 +86,14 @@
   /* L'aide « Bougez la souris » et « Terminal : Ctrl + K » s'affiche à la première visite, puis plus : l'accueil reste épuré */
   try { if (localStorage.getItem('jg-vu')) document.body.classList.add('deja-vu'); else localStorage.setItem('jg-vu', '1'); } catch (e) {}
   /* Lien d'évitement (clavier) : la première touche Tab propose d'aller directement à « Me contacter » */
-  { const sk = document.getElementById('skipLink'); if (sk) sk.addEventListener('click', e => { e.preventDefault(); const c = document.getElementById('contactBtn'); if (c) c.focus(); }); }
-  let NB_JEUX = 0;
+  { const sk = document.getElementById('skipLink'); if (sk) sk.addEventListener('click', e => { e.preventDefault(); const c = document.getElementById('domain'); if (c) c.focus({ preventScroll: true }); }); }
+  let NB_JEUX = 0, BASE_TITLE = '';
+  function verDate() { const V = window.JG_VERSION, m = V && /^v(\d{4})\.(\d{2})\.(\d{2})/.exec(V.v || ''); if (!m) return ''; try { return new Intl.DateTimeFormat(regionLocale(lang), { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], 12))); } catch (e) { return m[3] + '/' + m[2] + '/' + m[1]; } }
+  /* Liens qui ouvrent un nouvel onglet, y compris ceux créés par le code : annonce « (nouvel onglet) » aux lecteurs d'écran */
+  function markNT(root) { (root || document).querySelectorAll('a[target="_blank"]').forEach(a => { let n = a.querySelector(':scope > .nt'); if (!n) { n = document.createElement('span'); n.className = 'sr nt'; a.append(n); } n.textContent = ' ' + t('newTab'); }); }
   function applyLang() {
     document.documentElement.lang = t('htmlLang');
-    document.title = t('title');
+    document.title = t('titleTab') || t('title'); BASE_TITLE = document.title;
     document.querySelectorAll('[data-i]').forEach(el => { const v = t(el.dataset.i); if (typeof v === 'string') setText(el, v); });
     /* Nombre de mini-jeux : le même compte que l'onglet « Tous » de la liste, toujours à jour */
     { const n = document.querySelectorAll('#gamesPanel .pick').length;
@@ -104,12 +107,20 @@
     $('qrImg').alt = t('qrAlt');
     $('termInput').setAttribute('aria-label', t('termCmd')); $('htopClose').setAttribute('aria-label', t('close'));
     /* Liens qui ouvrent un nouvel onglet : les lecteurs d'écran l'annoncent */
-    document.querySelectorAll('a[target="_blank"]').forEach(a => { let n = a.querySelector(':scope > .nt'); if (!n) { n = document.createElement('span'); n.className = 'sr nt'; a.append(n); } n.textContent = ' ' + t('newTab'); });
+    markNT(document);
     /* Sur téléphone, « Ma messagerie » ouvre l'application du téléphone, pas celle de l'ordinateur */
     if (matchMedia('(hover: none)').matches) document.querySelectorAll('[data-i="wmAppSub"]').forEach(el => { el.textContent = t('wmAppSubTouch'); });
     tick(); setSoundUI(); setThemeUI(); buildSecSoon(); heroLang(); netUI();
     /* Badges de notes : une bulle dit qu'ils ouvrent le site de test dans un nouvel onglet */
-    if (typeof t('extTip') === 'function') document.querySelectorAll('#scores a.score').forEach(a => { const n = a.querySelector('span'); if (n) a.title = t('extTip')(n.textContent); });
+    if (typeof t('extTip') === 'function') document.querySelectorAll('#scores a.score').forEach(a => { const n = a.querySelector('span'), g = a.querySelector('b'); if (!n) return;
+      a.title = typeof t('extTipLong') === 'function' && g ? t('extTipLong')(n.textContent, g.textContent) + (verDate() && t('verifiedOn') ? ' ' + t('verifiedOn')(verDate()) + '.' : '') : t('extTip')(n.textContent); });
+    /* Infobulles des boutons du bas et du haut (ordinateur) */
+    for (const [id, k] of [['secBtn', 'secTip'], ['supBtn', 'supTip'], ['termBtn', 'termTip'], ['keysBtn', 'keysTip'], ['langBtn', 'langsTip'], ['dispBtn', 'keysTip']]) { const el = $(id); if (el && t(k)) el.title = t(k); }
+    { const tw = $('themeWord'); if (tw && t('themeWord')) tw.textContent = t('themeWord'); }
+    { const sl = $('srcLink'); if (sl && t('srcLink')) sl.textContent = t('srcLink'); }
+    { const vn = $('vcfNote'); if (vn && t('vcfNote')) vn.textContent = t('vcfNote'); }
+    { const sw = $('secWhy'); if (sw && t('secWhy')) sw.textContent = t('secWhy'); const si = $('supWhy'); if (si && t('supWhy')) si.textContent = t('supWhy'); }
+    { const bs = $('briefSub'); if (bs && t('briefSub')) bs.textContent = t('briefSub'); }
     if (typeof MAIL !== 'undefined') { $('openMail').href = mailHref(); webmailHrefs(); if (document.body.classList.contains('rec-on')) fillRec(); }
     { const el = $('loadT'); if (el.dataset && el.dataset.v) el.textContent = ' · ' + t('loadedIn')(el.dataset.v); }
     if (typeof htopOn !== 'undefined' && htopOn) htopDraw();
@@ -182,6 +193,7 @@
     fmt();
     const d = new Date();
     $('cTime').textContent = fTime.format(d);
+    { const fc = document.getElementById('fmClock'); if (fc && !$('forum').hidden) fc.textContent = fTime.format(d) + ' · Paris'; }
     $('cDate').textContent = t('city') + t('sep') + fDate.format(d);
     localClock(d);
   }
@@ -414,7 +426,8 @@
   window.addEventListener('popstate', () => { if (popSkip) { popSkip = false; return; } if (document.querySelector('.panel.open')) closePanels(true); });
   function closePanels(fromPop) {
     const was = panels.some(p => $(p).classList.contains('open'));
-    panels.forEach(p => $(p).classList.remove('open')); backdropInert();
+    try { if (was && $('briefPanel').classList.contains('open') && window.briefT0 && t('readTimer')) { const s = Math.round((Date.now() - window.briefT0) / 1000); if (s >= 3 && s <= 180) toast(t('readTimer')(s)); } window.briefT0 = 0; } catch (e) {}
+    panels.forEach(p => $(p).classList.remove('open')); backdropInert(); if (BASE_TITLE) document.title = BASE_TITLE;
     if (was && fromPop !== true && histOn()) Promise.resolve().then(() => { if (!document.querySelector('.panel.open') && histOn()) { popSkip = true; history.back(); } });
     if (was) setTimeout(() => {
       if (document.querySelector('.panel.open') || document.body.classList.contains('term-open')) return;
@@ -452,7 +465,10 @@
   function qrLoad() { const q = $('qrImg'); if (q && !q.getAttribute('src') && q.dataset.src && getComputedStyle(q).display !== 'none') q.src = q.dataset.src; }
   function openPanel(id, focusId) {
     { const a = document.activeElement; if (a && a !== document.body && !a.closest('.panel')) panelOpener = a; }
-    const x = document.querySelector('#' + id + ' .panel-x'); if (x) { x.setAttribute('aria-label', t('close')); x.title = t('close'); } closePanels(true); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (HIST.has(id) && !histOn()) { try { history.pushState({ jgp: 1 }, '', location.href); } catch (e) {} } if (id === 'contactPanel') qrLoad(); if (focusId) $(focusId).focus({ preventScroll: true }); const c = $(id).querySelector('.card'); if (c) c.scrollTop = 0; try { onPanelOpen(id); } catch (e) {} if (c) { suiteEnDessous(c); setTimeout(() => suiteEnDessous(c), 350); } backdropInert();
+    const x = document.querySelector('#' + id + ' .panel-x'); if (x) { x.setAttribute('aria-label', t('close')); x.title = t('closeEsc') || t('close'); } closePanels(true); if (!$('tourTip').hidden) endTour(); $(id).classList.add('open'); if (HIST.has(id) && !histOn()) { try { history.pushState({ jgp: 1 }, '', location.href); } catch (e) {} } if (id === 'contactPanel') qrLoad(); { const h = $(id).querySelector('.card > h2, .card > .g-band h2, .card > .tk-head h2'); if (h && matchMedia('(hover: hover)').matches) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); focusId = null; } }
+    if (focusId) $(focusId).focus({ preventScroll: true }); const c = $(id).querySelector('.card');
+    try { const h2 = $(id).querySelector('h2'); if (h2 && BASE_TITLE) document.title = h2.textContent.trim() + ' · ' + BASE_TITLE.split(' · ')[0]; } catch (e) {}
+    try { store.set('jg-last', id + '|' + Date.now()); } catch (e) {} if (c) c.scrollTop = 0; try { onPanelOpen(id); } catch (e) {} if (c) { suiteEnDessous(c); setTimeout(() => suiteEnDessous(c), 350); } backdropInert();
     if (!focusId && c) setTimeout(() => { if (!$(id).classList.contains('open') || c.contains(document.activeElement)) return; const b = c.querySelector('.tk-opt:not([disabled]), button:not(.panel-x):not([disabled]):not([hidden]), a[href]'); if (b) b.focus({ preventScroll: true }); }, 80); }
   /* Fenêtre plus haute que l'écran : un fondu et une flèche ↓ montrent qu'il y a une suite, ils disparaissent une fois en bas */
   function suiteEnDessous(c) { c.classList.toggle('more', c.scrollHeight - c.scrollTop - c.clientHeight > 12); }
@@ -662,7 +678,7 @@
     if (dt < 1000) avgMs += (dt - avgMs) * .05;
     if (avgMs > 34 && !G.on && !morph.on && !document.hidden) { slowMs += dt; if (slowMs > 3000 && nodes.length > 28) { nodes.splice(Math.round(nodes.length * .8)); baseCount = nodes.length; slowMs = 0; avgMs = 22; } } else slowMs = 0;
     /* Vue recruteur ouverte (elle couvre tout l'écran) : rien à dessiner, on économise le processeur et la batterie */
-    if (document.body.classList.contains('rec-on') || document.body.classList.contains('forum-on')) { requestAnimationFrame(frame); return; } /* carte de visite affichée : idem */
+    if (document.body.classList.contains('rec-on') || document.body.classList.contains('forum-on') || (!G.on && !morph.on && document.querySelector('.panel.open'))) { requestAnimationFrame(frame); return; } /* carte de visite ou fenêtre ouverte : idem (batterie des portables) */
     /* Option « Arrêter l'animation du fond » : une image fixe, redessinée seulement si la taille ou le thème change (le jeu reste animé) */
     if (A11Y.still && !G.on && !morph.on && stillDone) { requestAnimationFrame(frame); return; }
     stillDone = !!A11Y.still && !G.on && !morph.on;
@@ -788,14 +804,19 @@
   let heroStarted = false, rotGen = 0;
   /* Sur téléphone, le journal est raccourci : une ligne par information, sans retour à la ligne */
   const bootCourt = () => innerWidth < 600 && Array.isArray(t('bootShort'));
+  bootUl.addEventListener('click', () => { if (typeof openBrief === 'function') openBrief(); });
   function buildBoot() {
     const court = bootCourt(), list = court ? t('bootShort') : t('boot'); if (!Array.isArray(list)) return;
     bootUl.textContent = ''; bootUl.dataset.court = court ? '1' : '';
-    for (const [k, txt] of list) {
+    const rows = list.slice();
+    if (!court && innerWidth >= 1100 && t('bootExp') && !rows.some(r => r[1] === t('bootExp'))) rows.splice(1, 0, ['ok', t('bootExp')]); /* ordinateur : l'expérience en 2e ligne */
+    const tips = t('bootTip') || {};
+    for (const [k, txt] of rows) {
       const li = document.createElement('li'), st = document.createElement('span'), tx = document.createElement('span');
-      st.className = 'st ' + k; st.textContent = BOOT_TAG[k] || BOOT_TAG.info; tx.textContent = txt;
+      st.className = 'st ' + k; st.textContent = BOOT_TAG[k] || BOOT_TAG.info; tx.textContent = txt; if (tips[k]) st.title = tips[k];
       li.append(st, ' ', tx); bootUl.append(li);
     }
+    if (t('whoamiTip')) { const w = document.querySelector('.who-line'); if (w) w.title = t('whoamiTip'); const r = $('rotLine'); if (r && t('domTip')) r.title = t('domTip'); }
   }
   function heroLang() {
     if (heroStarted) bootUl.classList.add('static'); /* changement de langue : pas de nouvelle animation */
@@ -1032,7 +1053,9 @@
   /* ================= Terminal ================= */
   const term = $('term'), out = $('termOut'), input = $('termInput');
   const hist = []; let hIdx = 0, greeted = false;
-  const COMMANDS = ['help', 'boot', 'legal', 'device', 'neofetch', 'secrets', 'htop', 'support', 'status', 'dig', 'ipcalc', 'install', 'tour', 'matrix', 'whoami', 'about', 'security', 'ping', 'date', 'lang', 'theme', 'play', 'konami', 'contact', 'cv', 'projets', 'panne', 'quiz', 'changelog', 'print', 'a11y', 'curl', 'whois', 'traceroute', 'phish', 'subnet', 'scores', 'glossaire', 'define', 'report', 'lien', 'rdv', 'competences', 'faq', 'partager', 'priorite', 'powershell', 'rj45', 'appel', 'defi', 'poste', 'rancon', 'reponse', 'badges', 'carte', 'linkedin', 'clear', 'exit'];
+  const COMMANDS = ['help', 'boot', 'legal', 'device', 'neofetch', 'secrets', 'htop', 'support', 'status', 'dig', 'ipcalc', 'install', 'tour', 'matrix', 'whoami', 'about', 'security', 'ping', 'date', 'lang', 'theme', 'play', 'konami', 'contact', 'cv', 'projets', 'panne', 'quiz', 'changelog', 'print', 'a11y', 'curl', 'whois', 'traceroute', 'phish', 'subnet', 'scores', 'glossaire', 'define', 'report', 'lien', 'rdv', 'competences', 'faq', 'partager', 'priorite', 'powershell', 'rj45', 'appel', 'defi', 'poste', 'rancon', 'reponse', 'badges', 'carte', 'linkedin', 'profil', 'clear', 'exit'];
+  /* « help » groupé par thème sur ordinateur (lot 50) */
+  const HELP_GROUP = { profil: ['whoami', 'about', 'cv', 'contact', 'competences', 'projets', 'poste', 'faq', 'priorite', 'linkedin', 'lien', 'rdv', 'partager', 'carte', 'profil', 'badges'], site: ['boot', 'legal', 'status', 'security', 'changelog', 'print', 'a11y', 'lang', 'theme', 'support', 'report'], jeux: ['play', 'panne', 'quiz', 'phish', 'subnet', 'defi', 'rancon', 'reponse', 'appel', 'rj45', 'scores', 'konami', 'matrix', 'tour'], outils: ['dig', 'ipcalc', 'ping', 'curl', 'whois', 'traceroute', 'neofetch', 'htop', 'device', 'date', 'install', 'glossaire', 'define', 'powershell'] };
   const ALIAS = { salon: 'carte', forum: 'carte', kiosk: 'carte', card: 'carte', vcard: 'carte', conference: 'carte', 'conférence': 'carte', aide: 'help', top: 'htop', fps: 'htop', ticket: 'support', tickets: 'support', supervision: 'status', nslookup: 'dig', host: 'dig', installer: 'install', visite: 'tour', appareil: 'device', sysinfo: 'device', fastfetch: 'neofetch', secret: 'secrets', mentions: 'legal', legales: 'legal', 'légales': 'legal', privacy: 'legal', demarrage: 'boot', 'démarrage': 'boot', journal: 'boot', dmesg: 'boot', apropos: 'about', 'à-propos': 'about', securite: 'security', 'sécurité': 'security', jouer: 'play', effacer: 'clear', cls: 'clear', quitter: 'exit', quit: 'exit', langue: 'lang', theme: 'theme', 'thème': 'theme', ls: 'help', man: 'help', recruteur: 'cv', recruiter: 'cv', resume: 'cv', imprimer: 'print', pdf: 'print', accessibilite: 'a11y', 'accessibilité': 'a11y', accessibility: 'a11y', mail: 'contact', email: 'contact', 'rétro': 'retro', crt: 'retro', phosphore: 'retro', vt100: 'retro', diagnostic: 'panne', depannage: 'panne', 'dépannage': 'panne', fault: 'panne', ad: 'quiz', gpo: 'quiz', news: 'changelog', nouveautes: 'changelog', 'nouveautés': 'changelog', quoideneuf: 'changelog', tracert: 'traceroute', phishing: 'phish', hameconnage: 'phish', 'hameçonnage': 'phish', 'sous-reseaux': 'subnet', 'sous-réseaux': 'subnet', subnets: 'subnet', sousreseau: 'subnet', score: 'scores', records: 'scores', glossary: 'glossaire', lexique: 'glossaire', jargon: 'glossaire', def: 'define', definition: 'define', 'définition': 'define', rapport: 'report', link: 'lien', meeting: 'rdv', rendezvous: 'rdv', 'rendez-vous': 'rdv', entretien: 'rdv', interview: 'rdv', creneau: 'rdv', 'créneau': 'rdv', 'compétences': 'competences', skills: 'competences', titre: 'competences', tai: 'competences', share: 'partager', partage: 'partager', priority: 'priorite', 'priorité': 'priorite', itil: 'priorite', ps: 'powershell', pwsh: 'powershell', cable: 'rj45', 'câble': 'rj45', sertir: 'rj45', call: 'appel', telephone: 'appel', 'téléphone': 'appel', daily: 'defi', 'défi': 'defi', challenge: 'defi', questions: 'faq', setup: 'poste', deploiement: 'poste', 'déploiement': 'poste', ransom: 'rancon', 'rançon': 'rancon', ransomware: 'rancon', rancongiciel: 'rancon', 'rançongiciel': 'rancon', reply: 'reponse', 'réponse': 'reponse', repondre: 'reponse', 'répondre': 'reponse', succes: 'badges', 'succès': 'badges', badge: 'badges', achievements: 'badges' };
   function line(text, cls) { const d = document.createElement('div'); if (cls) d.className = cls; d.textContent = text; out.append(d); out.scrollTop = out.scrollHeight; return d; }
   function openTerm() {
@@ -1041,6 +1064,7 @@
     found('term');
     setTimeout(() => input.focus(), 30);
   }
+  { const mx = document.getElementById('termMax'); if (mx) { const lbl = () => { const on = term.classList.contains('max'); mx.textContent = on ? '⤡' : '⤢'; mx.title = mx.ariaLabel = t(on ? 'termMin' : 'termMax') || mx.title; }; mx.addEventListener('click', () => { term.classList.toggle('max'); lbl(); input.focus(); }); lbl(); window.jgTermMaxLbl = lbl; } }
   function closeTerm() { document.body.classList.remove('term-open'); if (document.activeElement === input) input.blur(); term.setAttribute('inert', ''); }
   term.setAttribute('inert', ''); /* terminal fermé : hors de l'ordre Tab */
   const termOpen = () => document.body.classList.contains('term-open');
@@ -1134,7 +1158,12 @@
     let cmd = c0.toLowerCase(); cmd = ALIAS[cmd] || cmd;
     const a = (args[0] || '').toLowerCase();
     switch (cmd) {
-      case 'help': for (const [k, d] of t('tHelp')) line(`  ${k.padEnd(18)} ${d}`); break;
+      case 'help': {
+        const rows = [...t('tHelp')]; if (t('cvHelp') && !rows.some(r => r[0] === 'profil')) rows.push(['profil', t('cvHelp')]);
+        const G = t('helpGroups');
+        if (G && innerWidth >= 900) { const used = new Set(); for (const g of ['profil', 'site', 'jeux', 'outils', 'autres']) { const list = rows.filter(([k]) => g === 'autres' ? !used.has(k) : (HELP_GROUP[g] || []).includes(k.split(' ')[0])); if (!list.length) continue; line(''); line(G[g], 'g'); for (const [k, d] of list) { used.add(k); line(`  ${k.padEnd(18)} ${d}`); } } }
+        else for (const [k, d] of rows) line(`  ${k.padEnd(18)} ${d}`);
+        break; }
       case 'whoami':
         line(t('tWhoami'));
         if (a === '--long' || a === '-l') for (const [k, v] of t('brief')) line(`  ${k} : ${v}`, 'c');
@@ -1184,6 +1213,7 @@
       case 'retro': retro(); break;
       case 'changelog': closeTerm(); setTimeout(openNews, 150); break;
       case 'cv': line(t('tRecOpen'), 'g'); setTimeout(openRec, 250); break;
+      case 'profil': copyText(profileText()).then(ok => { if (ok) { line(t('cvCopied'), 'g'); toast(t('cvCopied')); } }); break;
       case 'panne': line(t('tPanne'), 'g'); setTimeout(openPanne, 350); break;
       case 'quiz': line(t('tQuiz'), 'g'); setTimeout(openQuiz, 350); break;
       case 'print': line(t('tPrint'), 'g'); setTimeout(() => window.print(), 250); break;
@@ -1280,6 +1310,7 @@
   window.addEventListener('keydown', e => {
     const typing = e.target === input || menuOpen();
     if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); if (!G.on) termOpen() ? closeTerm() : openTerm(); return; }
+    if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && (e.key === 'e' || e.key === 'E') && !G.on) { e.preventDefault(); recOn() ? closeRec() : openRec(); return; }
     if (!typing && !G.on && (e.code === 'Backquote' || e.key === '²' || e.key === '`')) { e.preventDefault(); termOpen() ? closeTerm() : openTerm(); return; }
     if (G.on && !typing && (e.key === 'p' || e.key === 'P')) { e.preventDefault(); togglePause(); return; }
     if (e.key === 'Escape') { if (termOpen()) closeTerm(); else if (G.on) togglePause(); else if (recOn() && !document.querySelector('.panel.open')) closeRec(); else closePanels(); return; }
@@ -1300,6 +1331,8 @@
     const b = t('brief'); $('briefDomLbl').textContent = (b[b.length - 1] || [''])[0];
     for (const x of t('domains')) { const li = document.createElement('li'); li.textContent = x.charAt(0).toLocaleUpperCase(lang) + x.slice(1); ul.append(li); }
     showPhoto('briefPhoto'); glossify(dl); glossify(ul); closeTerm(); openPanel('briefPanel', 'briefContact');
+    try { if (t('briefUpd') && verDate()) { let f = document.getElementById('briefUpd'); if (!f) { f = document.createElement('p'); f.id = 'briefUpd'; f.className = 'brief-upd'; $('briefPanel').querySelector('.brief-links').after(f); } f.textContent = t('briefUpd')(verDate()); } } catch (e) {}
+    window.briefT0 = Date.now();
   }
   $('availBtn').addEventListener('click', openBrief);
 
@@ -1312,22 +1345,33 @@
     if (lieu) recRows.push([lieu[0], lieu[1] + ' · ' + lieu[2]]);
     { const tl = t('briefTiles') || [];
       if (tl[6]) recRows.push([tl[6][0], tl[6][1] + ' · ' + tl[6][2]]); /* mobilité */
-      if (tl[7] && t('rncpOk')) recRows.push([tl[7][0], `RNCP225 (${t('rncpOk')}) · RNCP40357 (${t('rncpGoal')})`]); /* codes officiels */ }
-    recRows.push(['LinkedIn', 'linkedin.com/in/jeremy-grosjean']);
+      if (tl[7] && t('rncpOk')) recRows.push([tl[7][0], [['RNCP225', 'https://www.francecompetences.fr/recherche/rncp/225/'], ` (${t('rncpOk')}) · `, ['RNCP40357', 'https://www.francecompetences.fr/recherche/rncp/40357/'], ` (${t('rncpGoal')})`]]); /* codes officiels, liens vers France compétences */ }
+    recRows.push(['LinkedIn', [['linkedin.com/in/jeremy-grosjean', 'https://www.linkedin.com/in/jeremy-grosjean']]]);
     if (t('recReplyL')) recRows.push([t('recReplyL'), t('recReply')]);
-    for (const [k, v] of recRows) { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; dl.append(dt, dd); }
+    for (const [k, v] of recRows) {
+      const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k;
+      if (Array.isArray(v)) for (const part of v) { if (Array.isArray(part)) { const a = document.createElement('a'); a.href = part[1]; a.target = '_blank'; a.rel = 'noopener'; a.textContent = part[0]; dd.append(a); } else dd.append(part); }
+      else dd.textContent = v;
+      dl.append(dt, dd);
+    }
     const ul = $('recTags'); ul.textContent = '';
     for (const d of t('domains')) { const li = document.createElement('li'); li.textContent = d; ul.append(li); }
     const a = $('recMail'); a.href = mailHref(); a.textContent = MAIL;
     { const pc = $('recPc'); pc.textContent = ''; const ol = document.createElement('ol'); ol.className = 'pc-list pc-short'; pcItems(ol, true); pc.append(ol); }
     glossify(dl); glossify(ul); try { fillRecSkills(); } catch (e) {}
+    markNT($('recView'));
+    /* Lien de langue en haut de la vue : un recruteur anglophone qui reçoit /#recruteur passe en anglais en un clic (et inversement) */
+    try { let lk = document.getElementById('recLang'); if (!lk) { lk = document.createElement('button'); lk.type = 'button'; lk.id = 'recLang'; lk.className = 'link-btn rec-lang'; $('recView').querySelector('.rec-actions').append(lk); lk.addEventListener('click', () => { setLang(lang === 'en' ? 'fr' : 'en'); fillRec(); }); } lk.textContent = lang === 'en' ? 'Voir en français' : 'Switch to English'; lk.lang = lang === 'en' ? 'fr' : 'en'; } catch (e) {}
   }
+  /* Ctrl + P depuis l'accueil : la feuille d'impression n'affiche que la vue sur une page, qui doit donc être remplie */
+  window.addEventListener('beforeprint', () => { try { if (!$('recName').textContent.trim() || !$('recPc').children.length) fillRec(); } catch (e) {} });
   function recOn() { return document.body.classList.contains('rec-on'); }
   function openRec() {
     closeTerm(); closePanels(); fillRec();
     $('recView').hidden = false; document.body.classList.add('rec-on');
     if (!REC_HASH.includes(location.hash)) history.replaceState(null, '', '#recruteur');
     $('recView').scrollTop = 0; $('recName').setAttribute('tabindex', '-1'); $('recName').focus({ preventScroll: true });
+    try { if (t('recPrinted')) { let p = document.getElementById('recPrinted'); if (!p) { p = document.createElement('p'); p.id = 'recPrinted'; p.className = 'rec-printed'; $('recView').querySelector('.rec-print').append(p); } p.textContent = t('recPrinted')(new Intl.DateTimeFormat(regionLocale(lang), { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date())); } } catch (e) {}
   }
   function closeRec() {
     $('recView').hidden = true; document.body.classList.remove('rec-on');
@@ -1606,6 +1650,7 @@
       d.className = 'sdot ' + c; d.setAttribute('aria-hidden', 'true'); a.textContent = k; b.textContent = v; b.className = c; li.append(d, a, b); ul.append(li);
     }
     upBars(st);
+    try { const V = window.JG_VERSION; if (t('supPub') && V && V.v && verDate()) { let p = document.getElementById('supPub'); if (!p) { p = document.createElement('p'); p.id = 'supPub'; p.className = 'sup-pub'; $('supList').after(p); } p.textContent = ''; p.append(t('supPub')(V.v, verDate()) + ' · '); const a = document.createElement('a'); a.href = 'https://github.com/jeremy-grosjean/jeremy-grosjean.fr/actions'; a.target = '_blank'; a.rel = 'noopener'; a.textContent = t('supChecks') + ' ↗'; p.append(a); markNT(p); } } catch (e) {}
     closeTerm(); openPanel('supPanel', 'supClose');
   }
   $('supBtn').addEventListener('click', openSup);
@@ -1843,7 +1888,7 @@
     const dl = $('glossList'); dl.textContent = '';
     for (const [term, def] of glossEntries()) { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = term; dd.textContent = def; dt.dataset.t = term; dd.dataset.t = def; dl.append(dt, dd); }
     const q = $('glossQ'); q.value = ''; q.placeholder = t('glQ'); q.setAttribute('aria-label', t('glQLbl')); glossFilter();
-    closeTerm(); openPanel('glossPanel', null); $('glossClose').focus({ preventScroll: true }); $('glossPanel').querySelector('.card').scrollTop = 0;
+    closeTerm(); openPanel('glossPanel', null); (matchMedia('(hover: hover)').matches ? q : $('glossClose')).focus({ preventScroll: true }); $('glossPanel').querySelector('.card').scrollTop = 0;
   }
   /* Recherche dans le glossaire : filtre les mots et les définitions (sans tenir compte des accents) et surligne ce qui est trouvé */
   const sansAccent = ch => ch.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().charAt(0) || ch;
@@ -1967,7 +2012,7 @@
 
   /* 2. Proposer un créneau : jours ouvrés à venir (hors week-ends et jours fériés fixes), heure de Paris, e-mail prérempli + fichier agenda */
   /* Créneaux de 8 h à 18 h, début toutes les 30 min ; pause de 12 h à 13 h jamais proposée ; durée au choix de 15 min à 3 h */
-  const SLOT_DURS = [15, 30, 45, 60, 90, 120, 180], SLOT_DEF = 2, FR_OFF = ['01-01', '05-01', '05-08', '07-14', '08-15', '11-01', '11-11', '12-25'];
+  const SLOT_DURS = [15, 30, 45, 60, 90, 120, 180], SLOT_DEF = 1, FR_OFF = ['01-01', '05-01', '05-08', '07-14', '08-15', '11-01', '11-11', '12-25'];
   const slotStarts = dur => { const out = []; for (let m = 8 * 60; m + dur <= 18 * 60; m += 30) { const fin = m + dur; if (fin <= 12 * 60 || m >= 13 * 60) out.push(m); } return out; };
   const hhmm = m => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
   const SL = { mode: 0, pick: null, dur: SLOT_DURS[SLOT_DEF], day: 0 };
@@ -2026,6 +2071,7 @@
     if (d) for (const m0 of slotStarts(SL.dur)) {
       const hm = hhmm(m0), ts = parisToUtc(d.y, d.m, d.d, Math.floor(m0 / 60), m0 % 60), b = document.createElement('button');
       b.type = 'button'; b.className = 'slot'; b.textContent = hm; b.setAttribute('aria-pressed', String(SL.pick === ts)); b.setAttribute('aria-label', slotLabel(ts));
+      if (document.body.classList.contains('has-local') && getTz()) { try { const lt = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: getTz() }).format(new Date(ts)); if (lt !== hm) { const s = document.createElement('small'); s.className = 'slot-loc'; s.textContent = lt; b.append(s); b.title = slotLabel(ts) + ' (Paris) · ' + lt + ' (' + getTz().split('/').pop().replace(/_/g, ' ') + ')'; } } catch (e) {} }
       b.addEventListener('click', () => { box.querySelectorAll('.slot').forEach(x => x.setAttribute('aria-pressed', 'false')); b.setAttribute('aria-pressed', 'true'); SL.pick = ts; slotUpdate(); });
       row.append(b);
     }
@@ -2066,6 +2112,7 @@
   const SK_GAMES = [['pickSupport', 'pickSupport2', 'pickCall', 'pickItil', 'pickReply'], ['pickPrep', 'pickRj', 'pickPanne', 'pickPhish', 'pickRansom'], ['pickSubnet', 'pickNoNet', 'pickQuiz', 'pickPs']];
   function openSkills() {
     const box = $('skList'); box.textContent = '';
+    if (t('skBriefTxt')) { const p = document.createElement('p'), b = document.createElement('b'); p.className = 'sk-brief'; b.textContent = t('skBrief') + ' · '; p.append(b, t('skBriefTxt')); box.append(p); }
     t('skBlocks').forEach(([title, items], i) => {
       const card = document.createElement('div'), h = document.createElement('h3'), ul = document.createElement('ul'), chips = document.createElement('p'), lbl = document.createElement('span');
       card.className = 'sk-block'; h.textContent = `${i + 1} · ${title}`;
@@ -2074,8 +2121,32 @@
       for (const g of SK_GAMES[i]) { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip-btn'; b.textContent = t(g + 'T') + ' ▸'; b.addEventListener('click', () => { closePanels(); $(g).click(); }); chips.append(b); }
       card.append(h, ul, chips); box.append(card);
     });
-    skExtra(box);
+    skExtra(box); skOffer(box);
     closeTerm(); openPanel('skillsPanel', 'skClose');
+  }
+  /* Comparer avec une offre d'emploi : repérage, dans le navigateur, des termes de l'offre présents dans mes compétences (rien n'est envoyé) */
+  function skOffer(box) {
+    if (!t('offerT') || matchMedia('(hover: none) and (max-width: 560px)').matches) return;
+    const card = document.createElement('div'); card.className = 'sk-block sk-offer';
+    const h = document.createElement('h3'); h.textContent = t('offerT');
+    const ta = document.createElement('textarea'); ta.rows = 4; ta.placeholder = t('offerPh'); ta.setAttribute('aria-label', t('offerT')); ta.maxLength = 20000;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'btn-ghost'; b.textContent = t('offerBtn');
+    const out = document.createElement('p'); out.className = 'sk-offer-out'; out.setAttribute('aria-live', 'polite');
+    const note = document.createElement('small'); note.textContent = t('offerNote');
+    const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    b.addEventListener('click', () => {
+      const txt = norm(ta.value); out.textContent = '';
+      if (!txt.trim()) return;
+      const terms = new Set(), seen = [];
+      /* 1) les outils et domaines entiers (« Active Directory », « Microsoft 365 »), 2) les mots d'au moins 4 lettres des blocs de compétences */
+      for (const s of [].concat(t('skTools') || [], t('domains') || [])) { const k = String(s).replace(/\s*\(.*\)$/, ''); if (k.length >= 3 && txt.includes(norm(k))) { terms.add(k); seen.push(norm(k)); } }
+      for (const s of [].concat(...(t('skBlocks') || []).map(x => x[1]))) for (const w of String(s).split(/[\s,;:·()\/]+/)) { const k = w.replace(/[.]+$/, ''); if (k.length >= 4 && /\D/.test(k) && !/^(les|des|pour|avec|dans|sur|sous|par|une|et|ou|the|and|for|with|from|selon|comme|tout|tous)$/i.test(k) && txt.includes(norm(k)) && !seen.some(x => x.includes(norm(k)))) terms.add(k); }
+      const list = [...terms].slice(0, 40);
+      if (!list.length) { out.textContent = t('offerNone'); return; }
+      out.textContent = t('offerRes')(list.length) + ' '; const ul = document.createElement('span'); ul.className = 'sk-offer-terms';
+      for (const k of list) { const c = document.createElement('span'); c.className = 'g-chip'; c.textContent = k; ul.append(c, ' '); } out.append(ul);
+    });
+    card.append(h, ta, b, out, note); box.append(card);
   }
   /* Outils, langues et veille, sous les blocs de compétences */
   function skExtra(box) {
@@ -2112,6 +2183,14 @@
     closeTerm(); openPanel('sharePanel', 'shCopy');
   }
   $('shCopy').addEventListener('click', async () => { if (await copyText(SHARE_URL)) toast(t('shCopied')); });
+  /* Résumé en texte (pour un logiciel RH ou un e-mail) : uniquement les informations déjà publiées sur le site */
+  function profileText() {
+    const rows = [t('title') || 'Jérémy Grosjean'];
+    for (const [k, v, sub] of (t('briefTiles') || [])) rows.push(`${k} : ${v}${sub ? ' (' + sub + ')' : ''}`);
+    rows.push(`${t('briefAvail')}`, `${t('mailLbl') || 'E-mail'} : ${MAIL}`, SHARE_URL, 'https://www.linkedin.com/in/jeremy-grosjean');
+    return rows.join('\n');
+  }
+  { const b = document.getElementById('shCopySum'); if (b) { b.textContent = t('shCopySum'); b.addEventListener('click', async () => { if (await copyText(profileText())) toast(t('shSumCopied')); }); } }
   $('shClose').addEventListener('click', closePanels);
   for (const id of ['briefShare', 'recShare', 'appShare']) $(id).addEventListener('click', openShare);
 
@@ -2122,19 +2201,39 @@
       const ex = t('faqExtra') || [], a = i < br.length ? br[i][1] : i - br.length < ex.length ? ex[i - br.length] : t('faqContact');
       const d = document.createElement('details'), s = document.createElement('summary'), p = document.createElement('p'); s.textContent = q; p.textContent = /[.!?。！？…]$/.test(a.trim()) ? a : a + (/^(zh|yue)/.test(lang) ? '。' : '.'); d.append(s, p); box.append(d);
     });
+    for (const [q, a] of (t('faqMore') || [])) { const d = document.createElement('details'), s = document.createElement('summary'), p = document.createElement('p'); s.textContent = q; p.textContent = a; d.append(s, p); box.append(d); }
     const first = box.querySelector('details'); if (first) first.open = true;
     closeTerm(); openPanel('faqPanel', 'faqClose');
   }
   $('briefFaq').addEventListener('click', openFaq);
 
   /* Mon parcours : postes et formation, du plus récent au plus ancien, puis l'objectif */
+  /* Durée calculée à partir des dates affichées (« 2019 – 2022 », « mai 2022 – juin 2022 », « 2023 – aujourd’hui »…) */
+  const MONTH_NAMES = [['jan', 'janv'], ['feb', 'fev', 'févr'], ['mar', 'mars'], ['apr', 'avr'], ['may', 'mai'], ['jun', 'juin'], ['jul', 'juil'], ['aug', 'aout', 'août'], ['sep', 'sept'], ['oct'], ['nov'], ['dec', 'déc']];
+  function pcDur(dates) {
+    if (!t('durY') || typeof dates !== 'string') return '';
+    const parts = dates.split(/\s*[–—-]\s*/); if (parts.length !== 2) return '';
+    const parse = s => {
+      const y = (s.match(/\d{4}/) || [])[0]; if (!y) return null;
+      const w = s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      let m = MONTH_NAMES.findIndex(names => names.some(n => w.startsWith(n.normalize('NFD').replace(/[\u0300-\u036f]/g, ''))));
+      if (m < 0) { const k = s.match(/\d{4}\s*[年년./-]\s*(\d{1,2})/); if (k) m = +k[1] - 1; }
+      return m < 0 ? null : { y: +y, m };
+    };
+    const a = parse(parts[0]), b = parse(parts[1]); if (!a || !b) return '';
+    const months = (b.y - a.y) * 12 + (b.m - a.m) + 1; if (months < 1) return '';
+    const y = Math.floor(months / 12), m = months % 12;
+    return [y ? t('durY')(y) : '', m ? t('durM')(m) : ''].filter(Boolean).join(' ');
+  }
   function pcItems(list, short) {
     const out = [];
     for (const [kind, dates, role, org, pts] of (t('pcItems') || [])) {
       const li = document.createElement('li'); li.className = 'pc-item pc-' + kind;
       const d = document.createElement('p'), h = document.createElement('h3'), o = document.createElement('p');
       d.className = 'pc-date'; d.textContent = kind === 'edu' ? dates + ' · ' + t('pcEdu') : dates;
+      { const du = pcDur(dates); if (du) { const s = document.createElement('span'); s.className = 'pc-dur'; s.textContent = ' · ' + du; d.append(s); } }
       h.textContent = role; o.className = 'pc-org'; o.textContent = org; li.append(d, h, o);
+      if (short && pts.length) li.title = pts.join(' · ');
       if (!short && pts.length) { const ul = document.createElement('ul'); for (const x of pts) { const p = document.createElement('li'); p.textContent = x; ul.append(p); } li.append(ul); }
       list.append(li); out.push(li);
     }
@@ -2353,6 +2452,15 @@
   $('pickCall').addEventListener('click', openCall);
   $('pickDaily').addEventListener('click', openDaily);
 
+  /* Ordinateur : Sécurité et M'embaucher en deux colonnes (les blocs sont regroupés dans deux conteneurs, sans rien changer sur téléphone) */
+  (function () {
+    const wrap = (ids, cls) => { const first = ids[0]; if (!first || !first.parentElement) return null; const d = document.createElement('div'); d.className = cls; first.parentElement.insertBefore(d, first); for (const el of ids) if (el) d.append(el); return d; };
+    const cols = (card, lefts, rights, cls) => { if (!card || !lefts[0]) return; const l = wrap(lefts, 'col-l'), r = wrap(rights, 'col-r'); const c = document.createElement('div'); c.className = cls; l.parentElement.insertBefore(c, l); c.append(l, r); };
+    const sec = document.querySelector('#secPanel .card');
+    if (sec) { const titles = [...sec.querySelectorAll(':scope > .eco-title')]; cols(sec, [sec.querySelector(':scope > .sec-list'), sec.querySelector(':scope > .audit-score')], [titles[0], sec.querySelector(':scope > .ext-list'), titles[1], sec.querySelector(':scope > .eco-list'), sec.querySelector(':scope > .eco-note')], 'sec-cols'); }
+    const hire = document.querySelector('#hirePanel .card');
+    if (hire) { const hs = [...hire.querySelectorAll(':scope > .hire-h')]; cols(hire, [hs[0], hire.querySelector(':scope > .hire-steps')], [hs[1], hire.querySelector(':scope > .hire-cost')], 'hire-cols'); }
+  })();
   /* Photo de l'accueil, écran par écran : téléphone (droit ou à l'horizontale) à gauche du nom ;
      ordinateur et tablettes à gauche des lignes « $ whoami » et « $ domaines » */
   {
@@ -2752,7 +2860,9 @@
     ['pickPrep', 'sys', 2, 1, 'jg-prep-best', 80, 'prPanel'], ['pickRansom', 'sec', 2, 2, 'jg-ransom-best', 100, 'rwPanel'],
     ['pickReply', 'sup', 2, 1, 'jg-reply-best', 80, 'rpPanel'], ['pickSubnet', 'net', 3, 3, 'jg-subnet-best', 200, 'snPanel']
   ];
-  const GNEW = ['pickNoNet'];
+  const GNEW = ['pickNoNet'], GNEW_DATE = Date.UTC(2026, 9, 30); /* badge « Nouveau » retiré 30 jours après la publication du jeu */
+  const GSTART = 'pickPhish', GTECH = 'pickPanne'; /* repères pour un non-technicien et pour un technicien */
+  let gLevel = 'all';
   const CATS = [['all', 'catAll'], ['sup', 'catSup'], ['sys', 'catSys'], ['net', 'catNet'], ['sec', 'catSec']];
   const GAME_PANELS = ['supportPanel', 'panPanel', 'quizPanel', 'phPanel', 'snPanel', 'itPanel', 'psPanel', 'rjPanel', 'clPanel', 'dyPanel', 'prPanel', 'rwPanel', 'rpPanel', 'niPanel'];
   let gTab = (() => { const v = store.get('jg-games-tab'); return CATS.some(c => c[0] === v) ? v : 'all'; })();
@@ -2768,8 +2878,17 @@
       const s = document.createElement('span'); s.textContent = n; b.append(t(key) + ' ', s);
       b.addEventListener('click', () => { gTab = c; store.set('jg-games-tab', c); decoratePicks(); SND.key(); }); tabs.append(b);
     }
+    /* Niveau (ordinateur et téléphone) : Débutant = ● , Avancé = ●●● ; légende des points */
+    let lv = document.getElementById('gLevel');
+    if (!lv) { lv = document.createElement('div'); lv.id = 'gLevel'; lv.className = 'g-level'; tabs.after(lv); }
+    lv.textContent = '';
+    if (t('lvEasy')) {
+      for (const [v, key] of [['easy', 'lvEasy'], ['hard', 'lvHard']]) { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip-btn'; b.textContent = t(key); b.setAttribute('aria-pressed', String(gLevel === v)); b.addEventListener('click', () => { gLevel = gLevel === v ? 'all' : v; decoratePicks(); SND.key(); }); lv.append(b); }
+      const lg = document.createElement('span'); lg.className = 'g-legend'; lg.textContent = t('lvLegend'); lv.append(lg);
+      if (t('gKbd') && matchMedia('(hover: hover)').matches) { const k = document.createElement('span'); k.className = 'g-legend g-kbd'; k.textContent = '⌨ ' + t('gKbd'); lv.append(k); }
+    }
     for (const [id, cat, min, diff, key, max] of GAMES) {
-      const p = $(id); if (!p) continue; p.classList.add('has-ic'); p.dataset.cat = cat; p.hidden = !(gTab === 'all' || cat === gTab);
+      const p = $(id); if (!p) continue; p.classList.add('has-ic'); p.dataset.cat = cat; p.hidden = !((gTab === 'all' || cat === gTab) && (gLevel === 'all' || (gLevel === 'easy' ? diff === 1 : diff === 3)));
       let ic = p.querySelector('.g-ic'); if (!ic) { ic = document.createElement('span'); ic.className = 'g-ic'; ic.setAttribute('aria-hidden', 'true'); const sv = svgEl('svg', { viewBox: '0 0 24 24' }); drawParts(sv, GICON[id] || []); ic.append(sv); p.prepend(ic); }
       let meta = p.querySelector('.g-meta'); if (!meta) { meta = document.createElement('small'); meta.className = 'g-meta'; p.append(meta); }
       const dots = '●'.repeat(diff) + '○'.repeat(3 - diff), dl = t('gDiff')[diff - 1];
@@ -2778,7 +2897,9 @@
       p.classList.remove('has-state');
       const raw = key ? store.get(key) : null, played = raw !== null && raw !== undefined && raw !== '';
       if (played) { st = document.createElement('span'); st.className = 'g-state done'; st.textContent = '✓ ' + nfmt(+raw) + (max ? '/' + nfmt(max) : ''); st.title = t('gPlayed')(raw); p.append(st); p.classList.add('has-state'); }
-      else if (GNEW.includes(id)) { st = document.createElement('span'); st.className = 'g-state new'; st.textContent = t('gNew'); p.append(st); p.classList.add('has-state'); }
+      else if (GNEW.includes(id) && Date.now() - GNEW_DATE < 30 * 86400000) { st = document.createElement('span'); st.className = 'g-state new'; st.textContent = t('gNew'); p.append(st); p.classList.add('has-state'); }
+      else if (id === GSTART && t('gameStart')) { st = document.createElement('span'); st.className = 'g-state start'; st.textContent = t('gameStart'); p.append(st); p.classList.add('has-state'); }
+      else if (id === GTECH && t('gameTech')) { st = document.createElement('span'); st.className = 'g-state tech'; st.textContent = t('gameTech'); p.append(st); p.classList.add('has-state'); }
     }
   }
 
@@ -3270,8 +3391,10 @@
     const tag = (e.target && e.target.tagName) || '';
     if (/^(INPUT|TEXTAREA|SELECT)$/.test(tag)) return;
     if (e.key === '?') { e.preventDefault(); anyPanelOpen() && $('keysPanel').classList.contains('open') ? closePanels() : openKeys(); return; }
+    if (e.key === '/' && $('glossPanel').classList.contains('open')) { e.preventDefault(); $('glossQ').focus(); return; }
     if (anyPanelOpen() || termOpen()) return;
     const k = e.key.toLowerCase();
+    if (t('keyDone') && 'tlsjcf'.includes(k) && k) { const d = (t('keysList') || []).find(r => r[0] === k.toUpperCase()); if (d) toast(t('keyDone')(k.toUpperCase(), d[1])); }
     if (k === 't') { $('themeBtn').click(); }
     else if (k === 'l') { e.preventDefault(); openMenu(); }
     else if (k === 's') { $('sound').click(); }
@@ -3299,8 +3422,27 @@
     else if (h === '#fiche' || h === '#30s') { history.replaceState(null, '', location.pathname + location.search); openBrief(); }
     else if (h === '#parcours' || h === '#career') { history.replaceState(null, '', location.pathname + location.search); openParcours(); }
     else if (h === '#embaucher' || h === '#hire') { history.replaceState(null, '', location.pathname + location.search); openHire(); }
+    else if (h === '#competences' || h === '#skills') { history.replaceState(null, '', location.pathname + location.search); openSkills(); }
+    else if (h === '#faq') { history.replaceState(null, '', location.pathname + location.search); openFaq(); }
+    else if (h === '#securite' || h === '#security') { history.replaceState(null, '', location.pathname + location.search); $('secBtn').click(); }
+    else if (h === '#glossaire' || h === '#glossary') { history.replaceState(null, '', location.pathname + location.search); openGloss(); }
   }
-  if (['#contact', '#jeux', '#games', '#fiche', '#30s', '#parcours', '#career', '#embaucher', '#hire'].includes(location.hash)) setTimeout(ouvrirDepuisAdresse, 0);
+  const ROUTES = ['#contact', '#jeux', '#games', '#fiche', '#30s', '#parcours', '#career', '#embaucher', '#hire', '#competences', '#skills', '#faq', '#securite', '#security', '#glossaire', '#glossary'];
+  if (ROUTES.includes(location.hash)) setTimeout(ouvrirDepuisAdresse, 0);
+  /* Reprendre là où le visiteur s'était arrêté (fenêtre consultée il y a moins de 24 h) : une pastille cliquable, 6 s, une fois */
+  (() => { try {
+    if (FORUM || location.hash || REC_HASH.includes(location.hash) || !t('lastPanel')) return;
+    const raw = store.get('jg-last') || '', [id, ts] = raw.split('|'); if (!id || !ts || Date.now() - +ts > 86400000) return;
+    const OPEN = { briefPanel: openBrief, parcoursPanel: openParcours, hirePanel: openHire, skillsPanel: openSkills, faqPanel: openFaq, glossPanel: openGloss, contactPanel: () => $('contactBtn').click(), secPanel: () => $('secBtn').click() };
+    if (!OPEN[id] || !$(id)) return;
+    const h = $(id).querySelector('h2'); if (!h) return;
+    setTimeout(() => {
+      if (document.querySelector('.panel.open') || G.on || termOpen() || recOn()) return;
+      const el = $('toast'); el.textContent = ''; const b = document.createElement('button'); b.type = 'button'; b.className = 'toast-btn'; b.textContent = t('lastPanel')(h.textContent) + ' ›';
+      b.addEventListener('click', () => { el.classList.remove('show'); OPEN[id](); });
+      el.append(b); el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 6000);
+    }, 2500);
+  } catch (e) {} })();
   window.addEventListener('hashchange', ouvrirDepuisAdresse);
   $('start').addEventListener('click', startGame);
   $('lvGo').addEventListener('click', beginLevel);

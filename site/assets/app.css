@@ -762,7 +762,7 @@ body.has-local main { padding-top: calc(max(1rem, env(safe-area-inset-top)) + 5.
   .seg { flex-wrap: wrap; }
 }
 /* Très grands écrans (27 pouces, 4K, téléviseurs) : tout est agrandi proportionnellement */
-@media (min-width: 1800px) and (min-height: 1000px) { :root { --ui-scale: 1.125; } html { font-size: 112.5%; } html[data-size="s"] { font-size: 105%; } html[data-size="l"] { font-size: 126%; } }
+@media (min-width: 1800px) and (min-height: 880px) { :root { --ui-scale: 1.125; } html { font-size: 112.5%; } html[data-size="s"] { font-size: 105%; } html[data-size="l"] { font-size: 126%; } }
 @media (min-width: 2400px) and (min-height: 1300px) { :root { --ui-scale: 1.375; } html { font-size: 137.5%; } html[data-size="s"] { font-size: 129%; } html[data-size="l"] { font-size: 155%; } }
 @media (min-width: 3200px) and (min-height: 1750px) { :root { --ui-scale: 1.875; } html { font-size: 187.5%; } html[data-size="s"] { font-size: 176%; } html[data-size="l"] { font-size: 211%; } }
 @media (min-width: 4800px) and (min-height: 2600px) { :root { --ui-scale: 2.75; } html { font-size: 275%; } html[data-size="s"] { font-size: 258%; } html[data-size="l"] { font-size: 309%; } }
@@ -980,7 +980,7 @@ button.wm { font: inherit; cursor: pointer; color: inherit; }
 /* Bouton rapide de taille du texte */
 #sizeBtn svg { width: 1.15rem; height: 1.15rem; }
 html[data-size="xl"] { font-size: 125%; }
-@media (min-width: 1800px) and (min-height: 1000px) { html[data-size="xl"] { font-size: 140.6%; } }
+@media (min-width: 1800px) and (min-height: 880px) { html[data-size="xl"] { font-size: 140.6%; } }
 @media (min-width: 2400px) and (min-height: 1300px) { html[data-size="xl"] { font-size: 171.9%; } }
 @media (min-width: 3200px) and (min-height: 1750px) { html[data-size="xl"] { font-size: 234.4%; } }
 @media (min-width: 4800px) and (min-height: 2600px) { html[data-size="xl"] { font-size: 343.75%; } }
@@ -1626,3 +1626,166 @@ html[data-theme="dark"] .forum-li a { color: #70B5F9; }
   #langCur { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
   .lang-short { display: inline; font-weight: 700; }
 }
+
+/* ================= Lot 50 : ordinateur et portable (audit du 2 novembre 2026) ================= */
+/* 01 · Portables avec la barre du navigateur (1366 × 657, 1280 × 600) : mode compact entre 501 et 720 px de haut, tout tient sans défiler */
+@media (min-width: 561px) and (min-height: 501px) and (max-height: 720px) {
+  main { padding-top: calc(max(1rem, env(safe-area-inset-top)) + 3.2rem); padding-bottom: .5rem; }
+  body.has-local main { padding-top: calc(max(1rem, env(safe-area-inset-top)) + 3.6rem); }
+  .domain { font-size: clamp(2.4rem, 5.2vw, 3.6rem); }
+  .hero-photo, .who-line .hero-photo { width: 2.3em; height: 2.3em; }
+  .typeline { margin-top: .45rem; } .who-line + .rot-line { margin-top: .15rem; }
+  .avail-wrap { margin-top: .6rem; } .avail-wrap + .bootlog { margin-top: .6rem; }
+  .bootlog { padding: .5rem .8rem; line-height: 1.45; }
+  .cta { margin-top: .8rem; } .scores { margin-top: .55rem; } .keys { margin-top: .5rem; }
+  .hint { display: none; }
+  .clock #cDate { display: none; }
+}
+/* 02 · À partir de 1 200 px de large et 821 px de haut : colonne plus large, photo et textes un peu plus grands (39 % de l'écran utilisé avant) */
+@media (min-width: 1200px) and (min-height: 821px) {
+  .stack { max-width: 48rem; margin-left: auto; margin-right: auto; }
+  .who-line .hero-photo { width: 3.4em; height: 3.4em; left: -4.1em; }
+  .typeline { font-size: 1.12rem; }
+  .avail { font-size: 1rem; padding: .45rem 1.1rem; }
+  .bootlog { font-size: .93rem; padding: .75rem 1.1rem; }
+  .cta .btn, .cta .btn-ghost { font-size: 1rem; padding: .7rem 1.35rem; }
+  .cta-note { font-size: .82rem; }
+  .play-link { font-size: .98rem; }
+}
+/* 05 · « Réponse sous 24 h » : plus lisible sur ordinateur */
+@media (min-width: 561px) { .cta-note { font-size: .8rem; color: var(--ink); opacity: .85; } }
+/* 17 · 18 · Texte sélectionnable et curseur normal sur le texte ; la croix reste sur le fond animé */
+.stack h1, .stack .typeline, .stack .bootlog, .stack .cta-note, .stack .keys, .clock { -webkit-user-select: text; user-select: text; cursor: text; }
+.stack h1, .stack .typeline, .stack .bootlog, .stack .cta-note, .stack .keys { pointer-events: auto; }
+.stack .bootlog li { cursor: pointer; }
+.stack button, .stack a, .stack .avail { cursor: pointer; }
+/* 07 · Le cadre [ OK ] / [ INFO ] s'ouvre sur la fiche : léger relief au survol */
+@media (hover: hover) { .bootlog { transition: border-color .2s ease, box-shadow .2s ease; } .bootlog:hover { border-color: var(--line-accent); box-shadow: 0 6px 20px rgba(10, 15, 36, .08); } }
+/* 19 · Fenêtre Contact en 3 colonnes dès 1 100 px de large, quelle que soit la hauteur (avant : seulement sur les écrans peu hauts) */
+@media (min-width: 1100px) and (min-height: 501px) {
+  #contactPanel .card { width: min(52rem, 100%); display: grid; grid-template-columns: 1fr 1fr; grid-template-areas: "x x" "b b" "m w" "k w"; column-gap: 1.6rem; align-items: start; }
+  #contactPanel .card > .panel-x-wrap { grid-area: x; }
+  #contactPanel .card > .g-band, #contactPanel .card > h2 { grid-area: b; }
+  #contactPanel .card > .c-main { grid-area: m; } #contactPanel .card > .c-mail { grid-area: w; } #contactPanel .card > .c-keep { grid-area: k; }
+  #contactPanel .card.more::after { grid-column: 1 / -1; }
+}
+/* 20 · Fiche en 30 s : 4 tuiles par ligne sur ordinateur, tout tient sans défiler */
+@media (min-width: 1100px) and (min-height: 501px) {
+  #briefPanel .card { width: min(46rem, 100%); }
+  #briefPanel .brief-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  #briefPanel .brief-links { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  #briefPanel .brief-links .pc-link { grid-column: auto; }
+  #briefPanel .brief-links .li-wide { grid-column: auto; }
+}
+/* 21 · Sécurité : protections à gauche, notes des outils et empreinte à droite (colonnes créées par app.js) */
+@media (min-width: 1100px) and (min-height: 501px) {
+  #secPanel .card { width: min(56rem, 100%); }
+  #secPanel .sec-cols { display: grid; grid-template-columns: 1.1fr 1fr; column-gap: 1.6rem; align-items: start; text-align: left; }
+  #secPanel .sec-cols > div { min-width: 0; }
+}
+/* 22 · Jeux : 3 colonnes à partir de 1 200 px, les 16 jeux tiennent sur un écran de 900 px */
+@media (min-width: 1200px) and (min-height: 501px) { #gamesPanel .card { width: min(64rem, 100%); } #gamesPanel .game-pick { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1360px) and (min-height: 501px) { #gamesPanel .card { width: min(80rem, 100%); } #gamesPanel .game-pick { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+/* 23 · Glossaire : deux colonnes */
+@media (min-width: 1100px) and (min-height: 501px) {
+  #glossPanel .card { width: min(60rem, 100%); }
+  #glossPanel .gl-list { grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr); column-gap: 1rem 2rem; }
+  #glossPanel .gl-list dt:nth-of-type(odd) ~ dd:nth-of-type(odd) { padding-right: 1rem; }
+}
+/* 24 · Mon parcours : plus large, objectif à droite de la frise */
+@media (min-width: 1100px) and (min-height: 501px) {
+  #parcoursPanel .card { width: min(52rem, 100%); display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); column-gap: 1.6rem; align-items: start; }
+  #parcoursPanel .card > .panel-x-wrap, #parcoursPanel .card > h2, #parcoursPanel .card > .card-sub, #parcoursPanel .card > h2 + p, #parcoursPanel .card > .actions { grid-column: 1 / -1; }
+  #parcoursPanel .card > .pc-list { grid-column: 1; }
+  #parcoursPanel .card > .pc-goal { grid-column: 2; position: sticky; top: 3.2rem; }
+}
+/* 25 · Compétences : les 3 blocs côte à côte, outils et langues en bandeau dessous */
+@media (min-width: 1200px) and (min-height: 501px) {
+  #skillsPanel .card { width: min(66rem, 100%); }
+  #skillsPanel .sk-list { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+  #skillsPanel .sk-list > .sk-extra { grid-column: 1 / -1; }
+}
+/* 26 · FAQ : deux colonnes de questions */
+@media (min-width: 1100px) and (min-height: 501px) { #faqPanel .card { width: min(54rem, 100%); } #faqPanel .faq-list { grid-template-columns: 1fr 1fr; align-items: start; } }
+/* 27 · M'embaucher : démarches à gauche, coût à droite (colonnes créées par app.js) */
+@media (min-width: 1100px) and (min-height: 501px) {
+  #hirePanel .card { width: min(56rem, 100%); }
+  #hirePanel .hire-cols { display: grid; grid-template-columns: 1.15fr 1fr; column-gap: 1.8rem; align-items: start; }
+  #hirePanel .hire-cols > div { min-width: 0; }
+}
+/* 28 · Largeur des fenêtres sur grand écran (28 rem partout avant) */
+@media (min-width: 1440px) and (min-height: 821px) { .card { width: min(32rem, 100%); } }
+/* 31 · Titre de la fenêtre qui reste visible pendant le défilement (longues fenêtres) */
+@media (min-width: 561px) and (min-height: 501px) {
+  .card > .panel-x-wrap + h2, .card > .panel-x-wrap + .g-band { position: sticky; top: -1.6rem; z-index: 1; background: var(--surface-strong); margin-top: -.4rem; padding-top: .4rem; }
+  .card > .panel-x-wrap + h2 { padding-bottom: .3rem; }
+}
+/* 46 · Vue recruteur : deux colonnes sur ordinateur (profil et contact à gauche, parcours et compétences à droite) ; l'impression reste sur une colonne */
+@media (min-width: 1100px) and (min-height: 501px) {
+  .rec-page { width: min(72rem, 100%); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); column-gap: 2.2rem; align-items: start; }
+  .rec-page > .rec-head, .rec-page > .rec-actions, .rec-page > .rec-print { grid-column: 1 / -1; }
+  .rec-page > .rec-col-a { grid-column: 1; } .rec-page > .rec-col-b { grid-column: 2; }
+}
+@media print { .rec-page { display: block !important; width: 100% !important; } .pc-item, .sk-block, .brief-tiles > div { break-inside: avoid; } }
+/* 52 · « Affichage » dans la barre du bas sur ordinateur aussi (contraste, texte espacé, fond arrêté, carte de visite) */
+@media (hover: hover) and (min-width: 561px) { .dock .disp-btn { display: inline-flex; } }
+/* 55 · Liens du pied de page : soulignement pointillé, plein au survol */
+.legal-link { text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px; text-decoration-color: rgba(var(--node-rgb), .45); }
+.legal-link:hover, .legal-link:focus-visible { text-decoration-style: solid; text-decoration-color: currentColor; }
+/* 60 · Contour de focus plus visible, dans les deux thèmes */
+:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
+.btn:focus-visible, .btn-ghost:focus-visible, .pill:focus-visible, .score:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+/* 15 · « En ligne » : sur ordinateur, la pastille n'apparaît que hors ligne */
+@media (hover: hover) and (min-width: 561px) { .net-pill:not(.off) { display: none; } }
+
+/* Lot 50 (suite) : petits éléments nouveaux */
+.theme-word { display: none; }
+@media (hover: hover) and (min-width: 561px) { .theme-word { display: inline; color: var(--dim); font-size: .8rem; margin-right: .3rem; } }
+.vcf-note { display: block; color: var(--dim); font-size: .76rem; margin-top: .2rem; }
+.brief-sub { color: var(--dim); font-size: .9rem; margin: -.2rem 0 .8rem; }
+.sec-why, .sup-why { color: var(--dim); font-size: .88rem; margin: -.3rem 0 .8rem; border-left: 3px solid rgba(var(--cyan-rgb), .5); padding-left: .6rem; }
+.brief-upd, .sup-pub, .rec-printed { color: var(--dim); font-size: .78rem; margin: .6rem 0 0; }
+.sup-pub a { color: var(--dim); }
+.src-link, .src-sep { display: none; }
+@media (min-width: 1200px) and (min-height: 501px) { .src-link, .src-sep { display: inline; } }
+.term-max { display: none; }
+@media (hover: hover) and (min-width: 900px) and (min-height: 600px) {
+  .term-max { display: inline-block; }
+  .term.max { width: min(80rem, calc(100% - 32px)); height: calc(100vh - 32px); height: calc(100dvh - 32px); bottom: 16px; }
+}
+body:has(.panel.open) .toast, body.term-open .toast { bottom: auto; top: calc(max(12px, env(safe-area-inset-top)) + 8px); }
+.toast-btn { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
+.toast:has(.toast-btn) { pointer-events: auto; }
+.toast:has(.toast-btn):hover { border-color: var(--cyan); }
+.news-list li:only-child { min-width: 18rem; }
+.pc-dur { color: var(--dim); font-weight: 400; }
+.slot-loc { display: block; color: var(--dim); font-size: .62rem; font-weight: 400; margin-top: .1rem; }
+.g-level { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; margin: -.3rem 0 .7rem; }
+.g-level .chip-btn[aria-pressed="true"] { border-color: var(--cyan); background: rgba(var(--cyan-rgb), .14); }
+.g-legend { color: var(--dim); font-size: .76rem; margin-left: .3rem; }
+.pick > .g-state.start { color: var(--on-accent); background: rgb(var(--ok-rgb)); padding: .05rem .4rem; border-radius: 4px; font-size: .64rem; letter-spacing: .04em; text-transform: uppercase; }
+.pick > .g-state.tech { color: var(--ink); background: rgba(var(--violet-rgb), .22); padding: .05rem .4rem; border-radius: 4px; font-size: .64rem; letter-spacing: .04em; text-transform: uppercase; }
+.g-kbd { display: none; }
+@media (hover: hover) and (min-width: 900px) { .g-kbd { display: inline; opacity: .8; } }
+.sk-brief { font-size: .95rem; margin: -.2rem 0 1rem; padding: .6rem .8rem; border-radius: 10px; background: rgba(var(--cyan-rgb), .08); border: 1px solid rgba(var(--cyan-rgb), .25); }
+.sk-offer textarea { width: 100%; box-sizing: border-box; font: inherit; font-size: .88rem; padding: .5rem .6rem; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); resize: vertical; margin: .3rem 0 .5rem; }
+.sk-offer textarea:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }
+.sk-offer .btn-ghost { min-height: 38px; }
+.sk-offer-out { margin: .6rem 0 .2rem; font-size: .88rem; }
+.sk-offer-terms .g-chip { display: inline-block; margin: .15rem .1rem .15rem 0; padding: .1rem .5rem; border-radius: 999px; font-size: .8rem; border: 1px solid rgba(var(--cyan-rgb), .4); background: rgba(var(--cyan-rgb), .1); }
+.sk-offer small { color: var(--dim); font-size: .74rem; display: block; }
+.forum-clock { display: none; }
+@media (hover: hover) and (min-width: 900px) { .forum-clock { display: block; position: absolute; top: .7rem; right: .9rem; margin: 0; font: 600 .8rem ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: var(--dim); } .forum-card { position: relative; } #fmFlip, #fmAuto { display: none; } }
+@media (hover: hover) and (min-width: 1100px) and (min-height: 501px) {
+  .keys-list { grid-template-columns: 1fr 1fr; column-gap: 1.6rem; }
+  .webmail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .webmail #openMail { order: -2; } .webmail #wmPro { order: -1; }
+  .play-link { border: 1px solid var(--line); border-radius: 999px; text-decoration: none; padding: .45rem .9rem; }
+  .play-link::before { content: "🎮 "; }
+  .play-link:hover, .play-link:focus-visible { border-color: var(--cyan); }
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --dim: #3F4870; } }
+:root[data-theme="light"] { --dim: #3F4870; }
+.rec-lang { margin-left: auto; font-size: .85rem; }
+.sk-offer { grid-column: 1 / -1; }
+@media (min-width: 1100px) and (min-height: 501px) { #briefPanel .brief-doms { grid-template-columns: repeat(3, minmax(0, 1fr)); } }

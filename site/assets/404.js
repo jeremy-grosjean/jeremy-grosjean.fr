@@ -62,6 +62,7 @@
   const set = (id, v) => { const e = $(id); if (e) e.textContent = v; };
   set('msg', T[1]); set('back', T[2]); set('lost', T[3]);
   set('contact', { fr: 'Me contacter', en: 'Contact me', 'zh-Hans': '联系我', 'zh-Hant': '聯絡我', yue: '搵我', ko: '연락하기' }[Object.keys(L).find(k => L[k] === T)] || 'Me contacter');
+  set('fiche', { fr: 'Ma fiche en 30 s', en: 'My profile in 30 s', 'zh-Hans': '30 秒了解我', 'zh-Hant': '30 秒了解我', yue: '30 秒認識我', ko: '30초 프로필' }[Object.keys(L).find(k => L[k] === T)] || 'Ma fiche en 30 s');
   let p = location.pathname; try { p = decodeURIComponent(p); } catch (e) {}
   set('path', p.length > 42 ? p.slice(0, 41) + '…' : p);
 

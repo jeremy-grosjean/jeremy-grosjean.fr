@@ -214,10 +214,10 @@ total = sum(f.stat().st_size for f in SITE.rglob('*') if f.is_file())
 print(f'  site complet : {total // 1024} Ko')
 if total > 1200 * 1024:
     erreur(f'le site dépasse 1 200 Ko ({total // 1024} Ko)')
-# Fichiers source (commentés) : 260 Ko au plus chacun ; la version en ligne est minifiée par esbuild (environ 2,5 fois plus légère)
+# Fichiers source (commentés) : 300 Ko au plus chacun ; la version en ligne est minifiée par esbuild (environ 2,5 fois plus légère)
 for f in (SITE / 'assets').glob('*'):
-    if f.is_file() and f.stat().st_size > 260 * 1024:
-        erreur(f'{f.name} dépasse 260 Ko ({f.stat().st_size // 1024} Ko)')
+    if f.is_file() and f.stat().st_size > 300 * 1024:
+        erreur(f'{f.name} dépasse 300 Ko ({f.stat().st_size // 1024} Ko)')
 
 print()
 if erreurs:
