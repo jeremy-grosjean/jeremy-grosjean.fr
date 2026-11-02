@@ -19,5 +19,6 @@
   "pastille « En ligne » masquée tant que la connexion est bonne ; lien Code source réservé aux grands écrans": "Accueil plus net : la pastille « En ligne » n’apparaît plus que si la connexion est coupée",
   "téléphone : page d'accueil sans défilement, heure sur la ligne des boutons du haut": "Sur téléphone, toute la page d’accueil tient maintenant dans l’écran, sans avoir à faire défiler",
   "iPad et portable : date affichée aussi en mode paysage": "La date s’affiche aussi sur iPad en mode paysage",
-  "terminal : même apparence sur iPad que sur ordinateur, remonte au-dessus du clavier ; séparateur manquant avant Code source": "Le terminal est identique sur iPad et sur ordinateur, et remonte au-dessus du clavier"
+  "terminal : même apparence sur iPad que sur ordinateur, remonte au-dessus du clavier ; séparateur manquant avant Code source": "Le terminal est identique sur iPad et sur ordinateur, et remonte au-dessus du clavier",
+  "iPad : ligne d'expérience dans le cadre d'accueil comme sur ordinateur": "Sur iPad, le cadre d’accueil indique aussi près de 4 ans d’expérience en support"
 }

@@ -809,7 +809,7 @@
     const court = bootCourt(), list = court ? t('bootShort') : t('boot'); if (!Array.isArray(list)) return;
     bootUl.textContent = ''; bootUl.dataset.court = court ? '1' : '';
     const rows = list.slice();
-    if (!court && innerWidth >= 1100 && t('bootExp') && !rows.some(r => r[1] === t('bootExp'))) rows.splice(1, 0, ['ok', t('bootExp')]); /* ordinateur : l'expérience en 2e ligne */
+    if (!court && innerWidth >= 700 && t('bootExp') && !rows.some(r => r[1] === t('bootExp'))) rows.splice(1, 0, ['ok', t('bootExp')]); /* ordinateur : l'expérience en 2e ligne */
     const tips = t('bootTip') || {};
     for (const [k, txt] of rows) {
       const li = document.createElement('li'), st = document.createElement('span'), tx = document.createElement('span');
