@@ -1746,13 +1746,13 @@ html[data-theme="dark"] .forum-li a { color: #70B5F9; }
 .brief-upd, .sup-pub, .rec-printed { color: var(--dim); font-size: .78rem; margin: .6rem 0 0; }
 .sup-pub a { color: var(--dim); }
 .dock .legal-row .src-link, .dock .legal-row .src-sep, .src-link, .src-sep { display: none; }
-@media (min-width: 1200px) and (min-height: 501px) { .src-sep { display: inline; } .dock .legal-row .src-link { display: inline-flex; } }
+@media (min-width: 1200px) and (min-height: 501px) { .dock .legal-row .src-sep { display: inline; } .dock .legal-row .src-link { display: inline-flex; } }
 /* « En ligne » : visible seulement quand la connexion est coupée (partout) */
 .net-pill:not(.off) { display: none; }
 .term-max { display: none; }
-@media (hover: hover) and (min-width: 900px) and (min-height: 600px) {
+@media (min-width: 700px) and (min-height: 500px) {
   .term-max { display: inline-block; }
-  .term.max { width: min(80rem, calc(100% - 32px)); height: calc(100vh - 32px); height: calc(100dvh - 32px); bottom: 16px; }
+  .term.max { width: min(80rem, calc(100% - 32px)); height: calc(var(--vvh, 100dvh) - 32px); }
 }
 body:has(.panel.open) .toast, body.term-open .toast { bottom: auto; top: calc(max(12px, env(safe-area-inset-top)) + 8px); }
 .toast-btn { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
@@ -1805,3 +1805,7 @@ body:has(.panel.open) .toast, body.term-open .toast { bottom: auto; top: calc(ma
   .stack .cta-note { margin-top: .15rem; }
   .dock { margin-top: .25rem; margin-bottom: max(.45rem, env(safe-area-inset-bottom)); row-gap: .15rem; }
 }
+
+/* iPad et tablettes : le terminal garde la même apparence que sur ordinateur et remonte au-dessus du clavier à l'écran (--kb et --vvh sont mis à jour par le script) */
+.term { bottom: calc(max(16px, env(safe-area-inset-bottom)) + var(--kb, 0px)); max-height: calc(var(--vvh, 100dvh) - 32px); }
+@media (min-width: 700px) and (min-height: 500px) { .term { font-size: .88rem; height: min(26rem, 62vh); } .term.max { height: calc(var(--vvh, 100dvh) - 32px); } }
