@@ -1639,7 +1639,6 @@ html[data-theme="dark"] .forum-li a { color: #70B5F9; }
   .bootlog { padding: .5rem .8rem; line-height: 1.45; }
   .cta { margin-top: .8rem; } .scores { margin-top: .55rem; } .keys { margin-top: .5rem; }
   .hint { display: none; }
-  .clock #cDate { display: none; }
 }
 /* 02 · À partir de 1 200 px de large et 821 px de haut : colonne plus large, photo et textes un peu plus grands (39 % de l'écran utilisé avant) */
 @media (min-width: 1200px) and (min-height: 821px) {
