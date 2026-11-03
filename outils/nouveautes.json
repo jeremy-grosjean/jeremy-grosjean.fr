@@ -20,5 +20,6 @@
   "téléphone : page d'accueil sans défilement, heure sur la ligne des boutons du haut": "Sur téléphone, toute la page d’accueil tient maintenant dans l’écran, sans avoir à faire défiler",
   "iPad et portable : date affichée aussi en mode paysage": "La date s’affiche aussi sur iPad en mode paysage",
   "terminal : même apparence sur iPad que sur ordinateur, remonte au-dessus du clavier ; séparateur manquant avant Code source": "Le terminal est identique sur iPad et sur ordinateur, et remonte au-dessus du clavier",
-  "iPad : ligne d'expérience dans le cadre d'accueil comme sur ordinateur": "Sur iPad, le cadre d’accueil indique aussi près de 4 ans d’expérience en support"
+  "iPad : ligne d'expérience dans le cadre d'accueil comme sur ordinateur": "Sur iPad, le cadre d’accueil indique aussi près de 4 ans d’expérience en support",
+  "fenêtre Me contacter : disposition iPad, QR code sur tablette, titre sans cadre, texte « cet appareil »": "Fenêtre « Me contacter » plus claire sur iPad, avec le QR code à scanner pour enregistrer mon contact"
 }

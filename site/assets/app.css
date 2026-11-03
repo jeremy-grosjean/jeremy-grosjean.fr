@@ -1809,3 +1809,25 @@ body:has(.panel.open) .toast, body.term-open .toast { bottom: auto; top: calc(ma
 /* iPad et tablettes : le terminal garde la même apparence que sur ordinateur et remonte au-dessus du clavier à l'écran (--kb et --vvh sont mis à jour par le script) */
 .term { bottom: calc(max(16px, env(safe-area-inset-bottom)) + var(--kb, 0px)); max-height: calc(var(--vvh, 100dvh) - 32px); }
 @media (min-width: 700px) and (min-height: 500px) { .term { font-size: .88rem; height: min(26rem, 62vh); } .term.max { height: calc(var(--vvh, 100dvh) - 32px); } }
+
+/* Lot 56 : fenêtre « Me contacter »
+   Titre sans cadre (il ressemblait à un champ à remplir), partout */
+#contactPanel .card > .g-band { border: 0; background: none; padding-left: 0; padding-right: 2.6rem; }
+/* Tablettes (iPad en portrait et en paysage) : à gauche écrire, à droite les messageries, en dessous sur toute la largeur « Garder mon contact » avec le QR code
+   (sur un iPad posé sur la table, un recruteur peut le scanner avec son téléphone) */
+@media (hover: none) and (min-width: 700px) and (min-height: 600px) {
+  #contactPanel .card { width: min(52rem, 100%); display: grid; grid-template-columns: 1fr 1fr; grid-template-areas: "x x" "b b" "m w" "k k"; column-gap: 1.6rem; align-items: start; }
+  #contactPanel .card > .panel-x-wrap { grid-area: x; }
+  #contactPanel .card > .g-band, #contactPanel .card > h2 { grid-area: b; }
+  #contactPanel .card > .c-main { grid-area: m; } #contactPanel .card > .c-mail { grid-area: w; }
+  #contactPanel .card > .c-keep { grid-area: k; display: grid; justify-items: center; gap: .4rem; margin-top: .4rem; padding-top: .9rem; border-top: 1px solid var(--line); }
+  #contactPanel .card.more::after { grid-column: 1 / -1; }
+  #contactPanel .contact-main { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+  #contactPanel .contact-main .btn, #contactPanel .contact-main .btn-ghost { white-space: nowrap; padding-left: .7rem; padding-right: .7rem; font-size: .92rem; margin: 0; width: 100%; }
+  #contactPanel .qr, #contactPanel .qr-cap { display: block; }
+  #contactPanel .qr { width: 112px; height: 112px; flex: none; }
+  #contactPanel .contact-extra { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 1.2rem; margin: 0; text-align: left; }
+  #contactPanel .contact-side { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; align-items: center; min-width: min(27rem, 100%); }
+  #contactPanel .contact-side .qr-cap, #contactPanel .contact-side .vcf-note { grid-column: 1 / -1; margin: 0; max-width: none; width: auto; }
+  #contactPanel .contact-side .btn-ghost { width: 100%; margin: 0; justify-content: center; white-space: nowrap; }
+}
