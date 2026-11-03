@@ -1831,3 +1831,15 @@ body:has(.panel.open) .toast, body.term-open .toast { bottom: auto; top: calc(ma
   #contactPanel .contact-side .qr-cap, #contactPanel .contact-side .vcf-note { grid-column: 1 / -1; margin: 0; max-width: none; width: auto; }
   #contactPanel .contact-side .btn-ghost { width: 100%; margin: 0; justify-content: center; white-space: nowrap; }
 }
+/* iPad en portrait : une seule colonne centrée, plus aérée (écrire, puis les messageries, puis garder mon contact) */
+@media (hover: none) and (min-width: 700px) and (min-height: 900px) and (orientation: portrait) {
+  #contactPanel .card { width: min(40rem, 100%); grid-template-columns: minmax(0, 1fr); grid-template-areas: "x" "b" "m" "w" "k"; row-gap: .2rem; padding: 1.3rem 1.6rem 1.2rem; }
+  #contactPanel .card > .c-main, #contactPanel .card > .c-mail { width: 100%; }
+  #contactPanel .card > .c-mail { margin-top: .6rem; padding-top: .9rem; border-top: 1px solid var(--line); }
+  #contactPanel .c-main > p:first-child { font-size: 1rem; }
+  #contactPanel .mail-box { font-size: 1.05rem; }
+  #contactPanel .contact-main .btn, #contactPanel .contact-main .btn-ghost { font-size: 1rem; padding-top: .75rem; padding-bottom: .75rem; }
+  #contactPanel .webmail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #contactPanel .wm { min-height: 3.6rem; }
+  #contactPanel .qr { width: 132px; height: 132px; }
+}
