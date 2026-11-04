@@ -115,7 +115,7 @@
     if (typeof t('extTip') === 'function') document.querySelectorAll('#scores a.score').forEach(a => { const n = a.querySelector('span'), g = a.querySelector('b'); if (!n) return;
       a.title = typeof t('extTipLong') === 'function' && g ? t('extTipLong')(n.textContent, g.textContent) + (verDate() && t('verifiedOn') ? ' ' + t('verifiedOn')(verDate()) + '.' : '') : t('extTip')(n.textContent); });
     /* Infobulles des boutons du bas et du haut (ordinateur) */
-    for (const [id, k] of [['secBtn', 'secTip'], ['supBtn', 'supTip'], ['termBtn', 'termTip'], ['keysBtn', 'keysTip'], ['langBtn', 'langsTip'], ['dispBtn', 'keysTip']]) { const el = $(id); if (el && t(k)) el.title = t(k); }
+    for (const [id, k] of [['secBtn', 'secTip'], ['supBtn', 'supTip'], ['termBtn', 'termTip'], ['keysBtn', 'keysTip'], ['langBtn', 'langsTip'], ['dispBtn', 'keysTip'], ['availBtn', 'availTip']]) { const el = $(id); if (el && t(k)) el.title = t(k); }
     { const tw = $('themeWord'); if (tw && t('themeWord')) tw.textContent = t('themeWord'); }
     { const sl = $('srcLink'); if (sl && t('srcLink')) sl.textContent = t('srcLink'); }
     { const vn = $('vcfNote'); if (vn && t('vcfNote')) vn.textContent = t('vcfNote'); }

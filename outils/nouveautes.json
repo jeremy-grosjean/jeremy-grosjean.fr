@@ -26,5 +26,6 @@
   "bouton Fermer et flèche vers le bas sur les pages Mentions légales et Accessibilité ; textes des nouveautés corrigés": "Pages « Mentions légales » et « Accessibilité » : bouton pour fermer en haut et flèche pour descendre, comme dans les fenêtres du site",
   "police système en premier sur Mac (Chrome, Brave) pour éviter les carrés à la place du texte": "Correction de l’affichage du texte sur Mac avec Chrome et Brave",
   "police du Mac pour Chrome et Brave sans changer celle des autres systèmes": null,
-  "portables très bas et petits téléphones sans défilement, police en WOFF2 (20 % plus légère)": "Accueil sans défilement aussi sur les petits téléphones et les portables à écran bas ; site un peu plus léger"
+  "portables très bas et petits téléphones sans défilement, police en WOFF2 (20 % plus légère)": "Accueil sans défilement aussi sur les petits téléphones et les portables à écran bas ; site un peu plus léger",
+  "disponibilité sans préavis : fiche, vue sur une page, FAQ et infobulle de la pastille Disponible": "Précision : disponible immédiatement, sans préavis"
 }

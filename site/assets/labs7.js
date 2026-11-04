@@ -399,3 +399,10 @@
     if (Array.isArray(L[k].keysList) && km && !L[k].keysList.some(q => q[0] === km[0][0])) L[k].keysList.push(...km);
   }
 })(window.JG_I18N || {});
+/* Lot 62 : infobulle de la pastille « Disponible » (pas de préavis) */
+(function (L) {
+  const D = { fr: 'Sans préavis : je peux commencer tout de suite. Cliquez pour ma fiche en 30 s.', en: 'No notice period: I can start right away. Click for my 30-second profile.',
+    'zh-Hans': '无需预告期：可以马上开始。点击查看 30 秒简介。', 'zh-Hant': '無需預告期：可以馬上開始。點擊查看 30 秒簡介。', yue: '唔使預告期：即刻可以開始。㩒一下睇 30 秒簡介。', ko: '예고 기간 없음: 바로 시작할 수 있습니다. 클릭하면 30초 프로필을 볼 수 있습니다.' };
+  for (const k of Object.keys(D)) if (L[k]) L[k].availTip = D[k];
+})(window.JG_I18N || {});
+
