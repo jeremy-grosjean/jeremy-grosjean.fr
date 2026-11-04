@@ -26,3 +26,14 @@ a { color: var(--cyan); text-underline-offset: 2px; word-break: break-word; }
 .btn { margin-top: 1rem; display: inline-block; text-decoration: none; font-weight: 600; color: var(--on-accent);
   background: linear-gradient(135deg, var(--cyan), var(--violet)); border-radius: 999px; padding: .75rem 1.3rem; }
 a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 4px; }
+
+/* Bouton Fermer (en haut à droite) et flèche « aller en bas » (en bas à droite), comme dans les fenêtres du site */
+.doc-x, .doc-down { position: fixed; z-index: 2; width: 48px; height: 48px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+  color: var(--ink); background: var(--surface); border: 1px solid var(--line); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); text-decoration: none; }
+.doc-x { top: max(16px, env(safe-area-inset-top)); right: max(16px, env(safe-area-inset-right)); }
+.doc-down { bottom: max(16px, env(safe-area-inset-bottom)); right: max(16px, env(safe-area-inset-right)); color: var(--cyan); transition: opacity .25s ease; }
+.doc-down.off { opacity: 0; pointer-events: none; }
+.doc-x:hover, .doc-down:hover { border-color: var(--cyan); }
+.doc-x:focus-visible, .doc-down:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+.brand { margin-right: 60px; }
+@media print { .doc-x, .doc-down { display: none; } }

@@ -43,3 +43,13 @@
     box.append(s);
   }
 })();
+
+/* Fermer (retour à l'accueil) et flèche « aller en bas », masquée une fois en bas de la page ; libellés dans la langue de la page */
+(() => {
+  const L = { fr: ['Fermer et revenir à l’accueil', 'Aller en bas de la page'], en: ['Close and go back home', 'Go to the bottom of the page'], 'zh-Hans': ['关闭并返回首页', '跳到页面底部'], 'zh-Hant': ['關閉並返回首頁', '跳到頁面底部'], 'yue-Hant-HK': ['閂咗返去主頁', '去頁尾'], ko: ['닫고 홈으로 돌아가기', '페이지 맨 아래로'] };
+  const x = document.getElementById('docX'), d = document.getElementById('docDown'); if (!x || !d) return;
+  const lb = L[document.documentElement.lang] || L.fr; x.setAttribute('aria-label', lb[0]); x.title = lb[0]; d.setAttribute('aria-label', lb[1]); d.title = lb[1];
+  const upd = () => d.classList.toggle('off', innerHeight + scrollY >= document.documentElement.scrollHeight - 24);
+  d.addEventListener('click', e => { e.preventDefault(); const r = matchMedia('(prefers-reduced-motion: reduce)').matches; scrollTo({ top: document.documentElement.scrollHeight, behavior: r ? 'auto' : 'smooth' }); setTimeout(() => { const b = document.getElementById('back'); if (b) b.focus({ preventScroll: true }); }, r ? 0 : 500); });
+  addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd, { passive: true }); setTimeout(upd, 0); upd();
+})();
