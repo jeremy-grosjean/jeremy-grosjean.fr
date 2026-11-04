@@ -41,7 +41,7 @@ html, body { height: 100%; margin: 0; }
 body {
   background: radial-gradient(120% 90% at 50% 40%, var(--bg-1) 0%, var(--bg-2) 62%);
   color: var(--ink);
-  font-family: ui-sans-serif, -apple-system, "SF Pro Display", "Segoe UI Variable", "Segoe UI", Roboto,
+  font-family: ui-sans-serif, -apple-system, system-ui, BlinkMacSystemFont, "SF Pro Display", "Segoe UI Variable", "Segoe UI", Roboto, "Helvetica Neue", Arial,
     "PingFang SC", "PingFang TC", "PingFang HK", "Apple SD Gothic Neo", "Hiragino Sans", "Microsoft YaHei",
     "Microsoft JhengHei", "Malgun Gothic", "Noto Sans CJK SC", "Noto Sans CJK TC", "Noto Sans CJK KR", sans-serif;
   overflow: hidden;
@@ -773,7 +773,7 @@ body.has-local main { padding-top: calc(max(1rem, env(safe-area-inset-top)) + 5.
 .panel .card { cursor: auto; }
 .panel-x-wrap { position: sticky; top: .9rem; z-index: 2; height: 0; }
 .panel-x { position: absolute; top: -1rem; right: -.95rem; display: grid; place-items: center; width: 2.4rem; height: 2.4rem;
-  border-radius: 50%; border: 1px solid var(--line); background: var(--surface-strong); color: var(--dim); font: 400 1.35rem/1 ui-sans-serif, -apple-system, "Segoe UI", Roboto, sans-serif; cursor: pointer; }
+  border-radius: 50%; border: 1px solid var(--line); background: var(--surface-strong); color: var(--dim); font: 400 1.35rem/1 ui-sans-serif, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; cursor: pointer; }
 .panel-x:hover, .panel-x:focus-visible { color: var(--ink); border-color: var(--line-accent); outline: none; }
 .panel-x:focus-visible { box-shadow: 0 0 0 2px var(--cyan); }
 .card > .panel-x-wrap + h2 { padding-right: 2.1rem; padding-left: 2.1rem; }
@@ -1003,7 +1003,7 @@ html[data-contrast] .btn { background: #FFE600; color: #000; }
 /* ===== Lot 17 : graphisme ===== */
 /* Police de titre (Sora, licence SIL OFL, hébergée sur ce serveur) */
 @font-face { font-family: "JG Sora"; src: url("/assets/fonts/sora.woff") format("woff"); font-weight: 600 800; font-style: normal; font-display: swap; }
-:root { --font-disp: "JG Sora", ui-sans-serif, -apple-system, "Segoe UI Variable", "Segoe UI", Roboto, "PingFang SC", "PingFang TC", "Apple SD Gothic Neo", "Microsoft YaHei", "Malgun Gothic", sans-serif; }
+:root { --font-disp: "JG Sora", ui-sans-serif, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "PingFang TC", "Apple SD Gothic Neo", "Microsoft YaHei", "Malgun Gothic", sans-serif; }
 .domain, .card > h2:not(.qz-q), .score-big, .end-ring b, .forum-name, .bd-count, .rec-name, #recName { font-family: var(--font-disp); }
 .domain { font-weight: 800; letter-spacing: -0.04em; }
 /* Une couleur par catégorie de jeux (lisible dans les trois thèmes) */
