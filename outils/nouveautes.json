@@ -24,5 +24,6 @@
   "fenêtre Me contacter sur iPad, QR code sur tablette, titre sans cadre, « installée sur cet appareil »": "Fenêtre « Me contacter » plus claire sur iPad, avec le QR code à scanner pour enregistrer mon contact",
   "fenêtre Me contacter en une colonne sur iPad en portrait, sans contour de focus à l'ouverture": "Fenêtre « Me contacter » réorganisée sur iPad en portrait, plus lisible",
   "bouton Fermer et flèche vers le bas sur les pages Mentions légales et Accessibilité ; textes des nouveautés corrigés": "Pages « Mentions légales » et « Accessibilité » : bouton pour fermer en haut et flèche pour descendre, comme dans les fenêtres du site",
-  "police système en premier sur Mac (Chrome, Brave) pour éviter les carrés à la place du texte": "Correction de l’affichage du texte sur Mac avec Chrome et Brave"
+  "police système en premier sur Mac (Chrome, Brave) pour éviter les carrés à la place du texte": "Correction de l’affichage du texte sur Mac avec Chrome et Brave",
+  "police du Mac pour Chrome et Brave sans changer celle des autres systèmes": null
 }
