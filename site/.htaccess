@@ -9,6 +9,7 @@ AddType image/x-icon .ico
 AddType application/manifest+json .webmanifest
 AddType "text/vcard; charset=utf-8" .vcf
 AddType font/woff .woff
+AddType font/woff2 .woff2
 AddType image/webp .webp
 DirectoryIndex index.html
 ErrorDocument 404 /404.html

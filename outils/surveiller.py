@@ -38,7 +38,7 @@ print(f'Surveillance de {URL} · {datetime.datetime.now(datetime.timezone.utc):%
 code, ent, corps = lire('/')
 if code == 200 and b'/assets/app.js' in corps: ok('page d’accueil (HTTP 200)')
 else: ko(f'page d’accueil : code {code}')
-for f in ['/assets/app.js', '/assets/app.css', '/assets/i18n.js', '/assets/labs7.js', '/assets/fonts/sora.woff', '/qr-contact.svg', '/contact.vcf', '/sw.js']:
+for f in ['/assets/app.js', '/assets/app.css', '/assets/i18n.js', '/assets/labs7.js', '/assets/fonts/sora.woff2', '/qr-contact.svg', '/contact.vcf', '/sw.js']:
     c, _, _ = lire(f)
     if c != 200: ko(f'{f} : code {c}')
 ok('fichiers principaux disponibles') if not any(p.startswith('/') for p in problemes) else None

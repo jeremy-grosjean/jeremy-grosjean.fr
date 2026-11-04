@@ -1002,7 +1002,7 @@ html[data-contrast] .btn { background: #FFE600; color: #000; }
 @media print { .confetti, .kbd-hint, .end-viz { display: none !important; } }
 /* ===== Lot 17 : graphisme ===== */
 /* Police de titre (Sora, licence SIL OFL, hébergée sur ce serveur) */
-@font-face { font-family: "JG Sora"; src: url("/assets/fonts/sora.woff") format("woff"); font-weight: 600 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "JG Sora"; src: url("/assets/fonts/sora.woff2") format("woff2"); font-weight: 600 800; font-style: normal; font-display: swap; }
 :root { --font-disp: "JG Sora", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI", Roboto, "PingFang SC", "PingFang TC", "Apple SD Gothic Neo", "Microsoft YaHei", "Malgun Gothic", sans-serif; }
 .domain, .card > h2:not(.qz-q), .score-big, .end-ring b, .forum-name, .bd-count, .rec-name, #recName { font-family: var(--font-disp); }
 .domain { font-weight: 800; letter-spacing: -0.04em; }
@@ -1842,4 +1842,22 @@ body:has(.panel.open) .toast, body.term-open .toast { bottom: auto; top: calc(ma
   #contactPanel .webmail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   #contactPanel .wm { min-height: 3.6rem; }
   #contactPanel .qr { width: 132px; height: 132px; }
+}
+
+/* Lot 61 : portables très bas (1280 × 600 et moins, barre du navigateur comprise) : la ligne des raccourcis clavier passe dans l'infobulle du terminal, cadre resserré */
+@media (min-width: 561px) and (min-height: 501px) and (max-height: 640px) {
+  .stack .keys { display: none; }
+  .bootlog { padding-top: .35rem; padding-bottom: .35rem; line-height: 1.35; }
+  .cta { margin-top: .6rem; } .avail-wrap { margin-top: .45rem; } .avail-wrap + .bootlog { margin-top: .45rem; }
+}
+@media (min-width: 561px) and (min-height: 501px) and (max-height: 590px) {
+  .domain { font-size: clamp(2.1rem, 4.6vw, 3.1rem); }
+  .typeline { margin-top: .3rem; }
+  .play-wrap, .scores { margin-top: .3rem; }
+}
+/* Petits téléphones (360 px de large et moins) : les deux boutons restent sur une seule ligne */
+@media (max-width: 380px) {
+  .cta { gap: .35rem; }
+  .cta .btn, .cta .btn-ghost { font-size: .84rem; padding-left: .6rem; padding-right: .6rem; white-space: nowrap; gap: .35rem; }
+  .cta .btn svg, .cta .btn-ghost svg { display: none; }
 }
