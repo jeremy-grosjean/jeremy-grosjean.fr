@@ -359,6 +359,8 @@
   }
   function flashTitle() { domain.classList.remove('flash'); void domain.offsetWidth; domain.classList.add('flash'); }
   function burst(px, py, strong = true) {
+    /* Téléphone : pas d'onde « goutte d'eau » quand on touche le fond (hors jeux) */
+    if (!(G.on || !matchMedia('(max-width: 560px), (hover: none) and (max-height: 500px)').matches)) return;
     rings.push({ x: px, y: py, r: 0, life: strong ? 1 : .6 });
     if (!strong) return;
     SND.wave(px);
