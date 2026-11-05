@@ -669,12 +669,14 @@
 
   /* ================= Rendu ================= */
   /* Qualité adaptative : si l'appareil n'arrive pas à suivre (moins de 30 images/s pendant 3 s), le réseau de fond est allégé */
+  const PHONE_CALM = matchMedia('(max-width: 560px), (hover: none) and (max-height: 500px)');
   let slowMs = 0, avgMs = 16.7, stillDone = false;
   const stillRedraw = () => { stillDone = false; };
   window.addEventListener('resize', stillRedraw, { passive: true });
   function frame(now) {
     const dt = lastFrame ? now - lastFrame : 16.7; lastFrame = now;
     FR = Math.min(7.2, Math.max(.05, dt / 16.667));
+    if (PHONE_CALM.matches && !G.on && !morph.on) FR *= .45; /* téléphone : fond animé 2 fois plus calme (jeux et transitions inchangés) */
     if (dt < 1000) avgMs += (dt - avgMs) * .05;
     if (avgMs > 34 && !G.on && !morph.on && !document.hidden) { slowMs += dt; if (slowMs > 3000 && nodes.length > 28) { nodes.splice(Math.round(nodes.length * .8)); baseCount = nodes.length; slowMs = 0; avgMs = 22; } } else slowMs = 0;
     /* Vue recruteur ouverte (elle couvre tout l'écran) : rien à dessiner, on économise le processeur et la batterie */
