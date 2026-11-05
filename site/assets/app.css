@@ -1814,8 +1814,8 @@ body:has(.panel.open) .toast, body.term-open .toast { bottom: auto; top: calc(ma
    Titre sans cadre (il ressemblait à un champ à remplir), partout */
 #contactPanel .card > .g-band { border: 0; background: none; padding-left: 0; padding-right: 2.6rem; }
 /* Tablettes (iPad en portrait et en paysage) : à gauche écrire, à droite les messageries, en dessous sur toute la largeur « Garder mon contact » avec le QR code
-   (sur un iPad posé sur la table, un recruteur peut le scanner avec son téléphone) */
-@media (hover: none) and (min-width: 700px) and (min-height: 600px) {
+   (sur un iPad posé sur la table, un recruteur peut le scanner avec son téléphone). Même disposition sur ordinateur (lot 63). */
+@media (hover: none) and (min-width: 700px) and (min-height: 600px), (hover: hover) and (min-width: 1100px) and (min-height: 501px) {
   #contactPanel .card { width: min(52rem, 100%); display: grid; grid-template-columns: 1fr 1fr; grid-template-areas: "x x" "b b" "m w" "k k"; column-gap: 1.6rem; align-items: start; }
   #contactPanel .card > .panel-x-wrap { grid-area: x; }
   #contactPanel .card > .g-band, #contactPanel .card > h2 { grid-area: b; }
@@ -1861,3 +1861,28 @@ body:has(.panel.open) .toast, body.term-open .toast { bottom: auto; top: calc(ma
   .cta .btn, .cta .btn-ghost { font-size: .84rem; padding-left: .6rem; padding-right: .6rem; white-space: nowrap; gap: .35rem; }
   .cta .btn svg, .cta .btn-ghost svg { display: none; }
 }
+
+/* Lot 63 : ordinateur, « En 30 secondes » et « Me contacter » sans défilement (mesuré de 1280 × 600 à 1920 × 1080).
+   Fenêtres plus larges (moins de lignes coupées), titre et pastille « Disponible » sur la même ligne, domaines sur une ligne. */
+@media (hover: hover) and (min-width: 1100px) and (min-height: 501px) {
+  #briefPanel .card { width: min(64rem, calc(100vw - 48px)); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; column-gap: 1rem; padding-top: 1.2rem; padding-bottom: 1.1rem; }
+  #briefPanel .card > * { flex: 1 1 100%; min-width: 0; }
+  #briefPanel .card > .panel-x-wrap + h2 { flex: 0 0 auto; margin: 0; padding-left: 0; min-height: 0; }
+  #briefPanel .card > .brief-id { flex: 0 0 auto; margin: 0; }
+  #briefPanel .brief-sub { text-align: center; margin: .55rem 0 .7rem; }
+  #briefPanel .brief-tiles { margin-bottom: .7rem; }
+  #briefPanel .brief-doms { grid-template-columns: repeat(6, minmax(0, 1fr)); margin-bottom: .7rem; }
+  #briefPanel .brief-dom-lbl { margin: 0 0 .35rem; }
+  #briefPanel .actions { margin-top: 0; }
+  #briefPanel .brief-links { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: .45rem; }
+  #briefPanel .brief-upd { text-align: center; margin-top: .5rem; }
+  #contactPanel .card { width: min(64rem, calc(100vw - 48px)); padding-top: 1.1rem; padding-bottom: 1rem; }
+}
+@media (hover: hover) and (min-width: 1100px) and (min-height: 501px) and (max-height: 760px) {
+  #briefPanel .brief-tiles { gap: .4rem; }
+  #briefPanel .brief-tiles > div { padding-top: .5rem; padding-bottom: .5rem; }
+  #briefPanel .brief-sub { margin: .35rem 0 .5rem; }
+  #contactPanel .card { row-gap: .2rem; }
+  #contactPanel .c-main > p:first-child { margin-bottom: .4rem; }
+}
+#contactPanel .c-main > p:first-child, #briefPanel .brief-sub { text-wrap: balance; }
