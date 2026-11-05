@@ -677,8 +677,8 @@
   function frame(now) {
     const dt = lastFrame ? now - lastFrame : 16.7; lastFrame = now;
     FR = Math.min(7.2, Math.max(.05, dt / 16.667));
-    if (PHONE_CALM.matches && !G.on && !morph.on) FR *= .25; /* téléphone : fond animé 4 fois plus calme (jeux et transitions inchangés) */
-    TH = PHONE_CALM.matches ? .4 : 1; /* téléphone : points, lignes et halos plus fins */
+    if (PHONE_CALM.matches && !G.on && !morph.on) FR *= .15; /* téléphone : fond animé 6 à 7 fois plus calme (jeux et transitions inchangés) */
+    TH = PHONE_CALM.matches ? .28 : 1; /* téléphone : points, lignes et halos plus fins */
     if (dt < 1000) avgMs += (dt - avgMs) * .05;
     if (avgMs > 34 && !G.on && !morph.on && !document.hidden) { slowMs += dt; if (slowMs > 3000 && nodes.length > 28) { nodes.splice(Math.round(nodes.length * .8)); baseCount = nodes.length; slowMs = 0; avgMs = 22; } } else slowMs = 0;
     /* Vue recruteur ouverte (elle couvre tout l'écran) : rien à dessiner, on économise le processeur et la batterie */
