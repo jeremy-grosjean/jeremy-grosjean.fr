@@ -669,6 +669,7 @@
 
   /* ================= Rendu ================= */
   /* Qualité adaptative : si l'appareil n'arrive pas à suivre (moins de 30 images/s pendant 3 s), le réseau de fond est allégé */
+  let TH = 1;
   const PHONE_CALM = matchMedia('(max-width: 560px), (hover: none) and (max-height: 500px)');
   let slowMs = 0, avgMs = 16.7, stillDone = false;
   const stillRedraw = () => { stillDone = false; };
@@ -677,6 +678,7 @@
     const dt = lastFrame ? now - lastFrame : 16.7; lastFrame = now;
     FR = Math.min(7.2, Math.max(.05, dt / 16.667));
     if (PHONE_CALM.matches && !G.on && !morph.on) FR *= .45; /* téléphone : fond animé 2 fois plus calme (jeux et transitions inchangés) */
+    TH = PHONE_CALM.matches ? .6 : 1; /* téléphone : points, lignes et halos plus fins */
     if (dt < 1000) avgMs += (dt - avgMs) * .05;
     if (avgMs > 34 && !G.on && !morph.on && !document.hidden) { slowMs += dt; if (slowMs > 3000 && nodes.length > 28) { nodes.splice(Math.round(nodes.length * .8)); baseCount = nodes.length; slowMs = 0; avgMs = 22; } } else slowMs = 0;
     /* Vue recruteur ouverte (elle couvre tout l'écran) : rien à dessiner, on économise le processeur et la batterie */
@@ -724,7 +726,7 @@
       g.addColorStop(0, `rgba(${P.cyan},${.16 * glow.a * K})`); g.addColorStop(.5, `rgba(${P.violet},${.07 * glow.a * K})`); g.addColorStop(1, `rgba(${P.violet},0)`);
       x.fillStyle = g; x.beginPath(); x.arc(glow.x, glow.y, F * 1.1, 0, Math.PI * 2); x.fill();
     }
-    x.lineWidth = 1;
+    x.lineWidth = TH;
     const linkL = morph.on ? Math.max(18, Math.min(W, H) / 22) : L;
     for (let i = 0; i < nodes.length; i++) {
       const a = nodes[i];
@@ -748,15 +750,15 @@
     for (let i = 1; i < trail.length; i++) {
       const p0 = trail[i - 1], p1 = trail[i], k = i / trail.length;
       x.strokeStyle = `rgba(${k > .5 ? P.cyan : P.violet},${k * .55 * p1.life * K})`;
-      x.lineWidth = 1 + k * 3; x.lineCap = 'round';
+      x.lineWidth = (1 + k * 3) * TH; x.lineCap = 'round';
       x.beginPath(); x.moveTo(p0.x, p0.y); x.lineTo(p1.x, p1.y); x.stroke();
     }
     const dT = decay(.92); for (const tr of trail) tr.life *= dT;
     while (trail.length && trail[0].life < .05) trail.shift();
-    x.lineWidth = 1;
+    x.lineWidth = TH;
 
     for (const p of nodes) {
-      const rr = p.r + p.heat * 2.2;
+      const rr = (p.r + p.heat * 2.2) * TH;
       if (p.heat > .1) {
         const g = x.createRadialGradient(p.x, p.y, 0, p.x, p.y, rr * 5);
         g.addColorStop(0, `rgba(${P.cyan},${.5 * p.heat})`); g.addColorStop(1, `rgba(${P.cyan},0)`);
@@ -768,7 +770,7 @@
     for (let k = rings.length - 1; k >= 0; k--) {
       const r = rings[k], col = r.col || P.cyan;
       r.r += (7 + r.r * .02) * FR; r.life *= decay(.955);
-      x.strokeStyle = `rgba(${col},${r.life * .8})`; x.lineWidth = 2 * r.life + .5;
+      x.strokeStyle = `rgba(${col},${r.life * .8})`; x.lineWidth = (2 * r.life + .5) * TH;
       x.beginPath(); x.arc(r.x, r.y, r.r, 0, Math.PI * 2); x.stroke();
       if (!r.col) { x.strokeStyle = `rgba(${P.violet},${r.life * .45})`; x.lineWidth = 1; x.beginPath(); x.arc(r.x, r.y, r.r * .72, 0, Math.PI * 2); x.stroke(); }
       if (r.life < .03) rings.splice(k, 1);
@@ -784,14 +786,14 @@
         q.a = q.b; q.b = nb[(Math.random() * nb.length) | 0]; q.t = 0;
       }
       const px = q.a.x + (q.b.x - q.a.x) * q.t, py = q.a.y + (q.b.y - q.a.y) * q.t, col = q.hue === 'v' ? P.violet : P.cyan;
-      const g = x.createRadialGradient(px, py, 0, px, py, 8);
+      const g = x.createRadialGradient(px, py, 0, px, py, 8 * TH);
       g.addColorStop(0, `rgba(${col},${dim})`); g.addColorStop(1, `rgba(${col},0)`);
-      x.fillStyle = g; x.beginPath(); x.arc(px, py, 8, 0, Math.PI * 2); x.fill();
+      x.fillStyle = g; x.beginPath(); x.arc(px, py, 8 * TH, 0, Math.PI * 2); x.fill();
     }
     for (let k = sparks.length - 1; k >= 0; k--) {
       const s = sparks[k];
       s.x += s.vx * FR; s.y += s.vy * FR; s.vx *= decay(.93); s.vy *= decay(.93); s.life *= decay(.9);
-      x.fillStyle = `rgba(${s.col},${s.life})`; x.beginPath(); x.arc(s.x, s.y, 2.2 * s.life + .4, 0, Math.PI * 2); x.fill();
+      x.fillStyle = `rgba(${s.col},${s.life})`; x.beginPath(); x.arc(s.x, s.y, (2.2 * s.life + .4) * TH, 0, Math.PI * 2); x.fill();
       if (s.life < .04) sparks.splice(k, 1);
     }
     x.globalCompositeOperation = 'source-over';

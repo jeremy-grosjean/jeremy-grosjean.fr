@@ -30,5 +30,6 @@
   "disponibilité sans préavis : fiche, vue sur une page, FAQ et infobulle de la pastille Disponible": "Précision : disponible immédiatement, sans préavis",
   "ordinateur : En 30 secondes et Me contacter tiennent sans défiler": "Sur ordinateur, « En 30 secondes » et « Me contacter » tiennent à l’écran sans défiler",
   "fiche : « ouvert à la mobilité géographique » au lieu de « prêt à déménager »": null,
-  "téléphone : fond animé plus calme": "Sur téléphone, l’animation du fond est plus douce"
+  "téléphone : fond animé plus calme": "Sur téléphone, l’animation du fond est plus douce",
+  "téléphone : points et lignes du fond plus fins": "Sur téléphone, le fond animé est plus fin et plus discret"
 }
