@@ -406,3 +406,20 @@
   for (const k of Object.keys(D)) if (L[k]) L[k].availTip = D[k];
 })(window.JG_I18N || {});
 
+/* Lot 71 : infobulle du bouton « Affichage », libellé « E-mail » du résumé copié, raccourci de la vue sur une page (⌘ sur Mac, même nom que le bouton) */
+(function (L) {
+  const D = {
+    fr: { dispTip: 'Taille du texte, contraste, animation du fond', mailLbl: 'E-mail', recKey: 'vue sur une page (sans animation)' },
+    en: { dispTip: 'Text size, contrast, background animation', mailLbl: 'Email', recKey: 'one-page view (no animation)' },
+    'zh-Hans': { dispTip: '文字大小、对比度、背景动画', mailLbl: '邮箱', recKey: '单页视图（无动画）' },
+    'zh-Hant': { dispTip: '文字大小、對比、背景動畫', mailLbl: '電子郵件', recKey: '單頁檢視（無動畫）' },
+    yue: { dispTip: '字體大細、對比、背景動畫', mailLbl: '電郵', recKey: '單頁版（冇動畫）' },
+    ko: { dispTip: '글자 크기, 대비, 배경 애니메이션', mailLbl: '이메일', recKey: '한 페이지 보기 (애니메이션 없음)' }
+  };
+  for (const k of Object.keys(D)) {
+    if (!L[k]) continue;
+    L[k].dispTip = D[k].dispTip; L[k].mailLbl = D[k].mailLbl;
+    const r = Array.isArray(L[k].keysList) && L[k].keysList.find(q => q[0] === 'Ctrl + E' || q[0] === 'MOD + E');
+    if (r) { r[0] = 'MOD + E'; r[1] = D[k].recKey; }
+  }
+})(window.JG_I18N || {});

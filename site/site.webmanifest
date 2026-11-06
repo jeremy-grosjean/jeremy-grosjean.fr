@@ -64,8 +64,8 @@
       ]
     },
     {
-      "name": "Vue recruteur",
-      "short_name": "Recruteur",
+      "name": "Vue sur une page",
+      "short_name": "Une page",
       "url": "/#recruteur",
       "icons": [
         {

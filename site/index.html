@@ -29,9 +29,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="J. Grosjean">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="/site.webmanifest?v=6e4480d974">
+<link rel="manifest" href="/site.webmanifest?v=ef4a63980f">
 <link rel="preload" href="/assets/fonts/sora.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/app.css?v=5faf474bfd">
+<link rel="stylesheet" href="/assets/app.css?v=47d4fb20b5">
 <script src="/assets/i18n.js?v=a51a4e32c5" defer></script>
 <script src="/assets/labs.js?v=20998f7cc8" defer></script>
 <script src="/assets/labs2.js?v=1e3d821f80" defer></script>
@@ -39,10 +39,10 @@
 <script src="/assets/labs4.js?v=08596d3504" defer></script>
 <script src="/assets/labs5.js?v=60720498d6" defer></script>
 <script src="/assets/labs6.js?v=716e5179dc" defer></script>
-<script src="/assets/labs7.js?v=8f4093fda0" defer></script>
+<script src="/assets/labs7.js?v=bb522f92b1" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=1dd32171f7" defer></script>
+<script src="/assets/app.js?v=40604c9181" defer></script>
 </head>
 <body>
 <a class="skip" id="skipLink" href="#domain" data-i="skipLink">Aller à l’essentiel</a>
@@ -390,7 +390,7 @@
 <div class="panel" id="snPanel" role="dialog" aria-modal="true" aria-labelledby="snQ">
   <div class="card ticket">
     <div class="tk-head"><span class="tag" id="snTag">Question 1/10</span><span class="tk-score" id="snScore">0</span></div>
-    <div class="sn-timer" id="snTimer" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><i id="snBar"></i></div>
+    <div class="sn-timer" id="snTimer" role="progressbar" aria-label="Temps restant" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><i id="snBar"></i></div>
     <p class="sn-ip" id="snIp">192.168.1.10/24</p>
     <h2 class="qz-q sn-q" id="snQ">Question</h2>
     <p class="tk-from" id="snSub" hidden></p>
@@ -605,7 +605,7 @@
     <p class="tk-from" id="niFrom"></p>
     <p class="pn-lbl" id="niStepsL" data-i="niMethodL">La méthode</p>
     <ol class="ni-steps" id="niSteps"></ol>
-    <div class="rp-mail ni-log" id="niLog" aria-live="polite"></div>
+    <div class="rp-mail ni-log" id="niLog" role="log" aria-live="polite" aria-label="Vos vérifications"></div>
     <p class="pn-lbl" id="niAsk"></p>
     <div class="tk-opts" id="niOpts"></div>
     <p class="tk-expl" id="niExpl" hidden></p>
