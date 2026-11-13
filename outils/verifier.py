@@ -131,7 +131,9 @@ else:
     print(f'  {len(ref)} textes comparés dans {len(T)} langues')
 # Un fichier de textes chargé plus tard ne doit pas écraser par erreur un texte existant
 # (déjà arrivé : « tickets » et « rsTitle »). Seules les clés de VOULUS sont redéfinies exprès.
-VOULUS = {'play', 'tourPlay', 'supLabels'}
+VOULUS = {'play', 'tourPlay', 'supLabels',
+          # lot 72 : recherche d'un CDI ou d'un CDD (l'alternance devient une option), textes redéfinis exprès dans labs7.js
+          'title', 'tWhoami', 'availLine', 'contactIntro', 'fmRole', 'mailBody', 'mailSubject', 'neo', 'shMailSubject', 'shText', 'slotIcsTitle', 'tourBrief', 'whoRole'}
 CODE2 = r"""
 const fs = require('fs'), vm = require('vm'), base = process.argv[1];
 const w = {}; const ctx = { window: w }; vm.createContext(ctx);
@@ -212,8 +214,8 @@ print(f'  {nb} commits vérifiés : un seul auteur autorisé, {AUTEUR[0]}')
 etape('Poids')
 total = sum(f.stat().st_size for f in SITE.rglob('*') if f.is_file())
 print(f'  site complet : {total // 1024} Ko')
-if total > 1200 * 1024:
-    erreur(f'le site dépasse 1 200 Ko ({total // 1024} Ko)')
+if total > 1250 * 1024:  # 1 250 Ko depuis le lot 72 (textes de la recherche en CDI/CDD dans les 6 langues)
+    erreur(f'le site dépasse 1 250 Ko ({total // 1024} Ko)')
 # Fichiers source (commentés) : 300 Ko au plus chacun ; la version en ligne est minifiée par esbuild (environ 2,5 fois plus légère)
 for f in (SITE / 'assets').glob('*'):
     if f.is_file() and f.stat().st_size > 300 * 1024:

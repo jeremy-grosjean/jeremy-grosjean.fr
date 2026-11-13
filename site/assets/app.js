@@ -824,7 +824,8 @@
   /* ================= Accueil : nom déchiffré, domaines tapés, journal de démarrage ================= */
   const BOOT_TAG = { ok: '[  OK  ]', wait: '[  ..  ]', info: '[ INFO ]' };
   const bootUl = $('bootlog'), rotEl = $('rot'), nameFx = $('nameFx'), whoEl = $('who'), whoCur = $('whoCur'), rotLine = $('rotLine');
-  const whoText = () => 'whoami → ' + (t('whoRole') || '');
+  /* Téléphone étroit : intitulé court sur la ligne « whoami », pour qu'elle tienne sur une ligne */
+  const whoText = () => 'whoami → ' + ((innerWidth <= 440 && t('whoRoleShort')) || t('whoRole') || '');
   let whoDone = false;
   let heroStarted = false, rotGen = 0;
   /* Sur téléphone, le journal est raccourci : une ligne par information, sans retour à la ligne */
@@ -2563,8 +2564,8 @@
   function fmVcardText() {
     const fold = l => { const out = []; while (l.length > 74) { out.push(l.slice(0, 74)); l = ' ' + l.slice(74); } out.push(l); return out.join('\r\n'); };
     const ph = fmPhoto();
-    return ['BEGIN:VCARD', 'VERSION:3.0', 'N:Grosjean;Jérémy;;;', 'FN:Jérémy Grosjean', 'TITLE:Technicien informatique',
-      'NOTE:Disponible immédiatement pour une alternance Technicien informatique (Bac+2).', 'EMAIL;TYPE=INTERNET,PREF:contact@jeremy-grosjean.fr', 'URL:https://jeremy-grosjean.fr', 'URL:https://www.linkedin.com/in/jeremy-grosjean',
+    return ['BEGIN:VCARD', 'VERSION:3.0', 'N:Grosjean;Jérémy;;;', 'FN:Jérémy Grosjean', 'TITLE:Technicien support informatique',
+      'NOTE:Technicien support informatique · disponible immédiatement en CDI ou CDD.', 'EMAIL;TYPE=INTERNET,PREF:contact@jeremy-grosjean.fr', 'URL:https://jeremy-grosjean.fr', 'URL:https://www.linkedin.com/in/jeremy-grosjean',
       ...(ph ? [fold('PHOTO;ENCODING=b;TYPE=JPEG:' + ph)] : []), 'END:VCARD', ''].join('\r\n');
   }
   async function fmSendCard() {
@@ -3483,7 +3484,7 @@
     else if (h === '#jeux' || h === '#games') { history.replaceState(null, '', location.pathname + location.search); openGames(); }
     else if (h === '#fiche' || h === '#30s') { history.replaceState(null, '', location.pathname + location.search); openBrief(); }
     else if (h === '#parcours' || h === '#career') { history.replaceState(null, '', location.pathname + location.search); openParcours(); }
-    else if (h === '#embaucher' || h === '#hire') { history.replaceState(null, '', location.pathname + location.search); openHire(); }
+    else if (h === '#embaucher' || h === '#hire') { history.replaceState(null, '', location.pathname + location.search); openBrief(); } /* l'ancienne fenêtre « M'embaucher en contrat pro » ouvre maintenant la fiche */
     else if (h === '#competences' || h === '#skills') { history.replaceState(null, '', location.pathname + location.search); openSkills(); }
     else if (h === '#faq') { history.replaceState(null, '', location.pathname + location.search); openFaq(); }
     else if (h === '#securite' || h === '#security') { history.replaceState(null, '', location.pathname + location.search); $('secBtn').click(); }
@@ -3495,7 +3496,7 @@
   (() => { try {
     if (FORUM || location.hash || REC_HASH.includes(location.hash) || !t('lastPanel')) return;
     const raw = store.get('jg-last') || '', [id, ts] = raw.split('|'); if (!id || !ts || Date.now() - +ts > 86400000) return;
-    const OPEN = { briefPanel: openBrief, parcoursPanel: openParcours, hirePanel: openHire, skillsPanel: openSkills, faqPanel: openFaq, glossPanel: openGloss, contactPanel: () => $('contactBtn').click(), secPanel: () => $('secBtn').click() };
+    const OPEN = { briefPanel: openBrief, parcoursPanel: openParcours, hirePanel: openBrief, skillsPanel: openSkills, faqPanel: openFaq, glossPanel: openGloss, contactPanel: () => $('contactBtn').click(), secPanel: () => $('secBtn').click() };
     if (!OPEN[id] || !$(id)) return;
     const h = $(id).querySelector('h2'); if (!h) return;
     setTimeout(() => {

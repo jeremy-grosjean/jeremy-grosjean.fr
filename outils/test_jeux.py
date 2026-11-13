@@ -404,9 +404,9 @@ with sync_playwright() as p:
           $('faqClose').click();
           return out;
         }""")
-        if not (res['slotOpen'] and res['days'] == 8 and res['slots'] == 18 and not res['wkend'] and res['needPick'] and 'par téléphone' in res['mail'] and res['gmail'] and res['slotClosed'] and res['skills'] in (4, 5) and res['chips'] == 14 and res['chipGame'] and res['share'] and res['faq'] == 14 and res['faqTxt']):
+        if not (res['slotOpen'] and res['days'] == 8 and res['slots'] == 18 and not res['wkend'] and res['needPick'] and 'par téléphone' in res['mail'] and res['gmail'] and res['slotClosed'] and res['skills'] in (4, 5) and res['chips'] == 14 and res['chipGame'] and res['share'] and res['faq'] == 12 and res['faqTxt']):
             erreurs.append(f'{nom} : créneaux / compétences / partage / FAQ {res}')
-        ok(f'{nom} : créneaux (8 jours ouvrés, de 8 h à 18 h hors pause de midi, durée au choix, e-mail prérempli), compétences reliées aux jeux et outils, partage, FAQ de 14 questions')
+        ok(f'{nom} : créneaux (8 jours ouvrés, de 8 h à 18 h hors pause de midi, durée au choix, e-mail prérempli), compétences reliées aux jeux et outils, partage, FAQ de 12 questions')
         pg.wait_for_timeout(300)  # la fermeture de la FAQ revient d'un cran dans l'historique (geste retour) : on la laisse finir
         pg.goto(BASE + '/?pour=Société%20Générale%20<b>'); pg.wait_for_timeout(1200)
         res = pg.evaluate("""() => ({ hello: document.getElementById('helloLine').hidden ? '' : document.getElementById('helloTxt').textContent,
@@ -435,7 +435,7 @@ with sync_playwright() as p:
         ok(f'{nom} : mode forum (écran d’accueil, un toucher à côté ne la ferme pas, bouton « Découvrir mon profil »)')
         # Carte de visite à montrer : photo et « Disponible » à l'écran, bouton dans Affichage, commande « carte » du terminal
         pg.goto(BASE + '/?mode=carte'); pg.wait_for_timeout(1200)
-        s1 = pg.evaluate("(() => { const f = document.getElementById('forum'), ph = f.querySelector('.forum-photo'), av = f.querySelector('.forum-avail'); return !f.hidden && ph.complete && ph.naturalWidth > 0 && ph.getBoundingClientRect().width > 40 && /Disponible/.test(av.textContent) && /12\\u00a0mois/.test(av.textContent); })()")
+        s1 = pg.evaluate("(() => { const f = document.getElementById('forum'), ph = f.querySelector('.forum-photo'), av = f.querySelector('.forum-avail'); return !f.hidden && ph.complete && ph.naturalWidth > 0 && ph.getBoundingClientRect().width > 40 && /Disponible/.test(av.textContent) && /CDI ou CDD/.test(av.textContent); })()")
         pg.goto(BASE + '/'); pg.wait_for_timeout(900)
         pg.evaluate("document.getElementById('salonBtn').click()"); pg.wait_for_url('**/?mode=carte', timeout=5000); pg.wait_for_timeout(800)
         s2 = pg.evaluate("!document.getElementById('forum').hidden")
