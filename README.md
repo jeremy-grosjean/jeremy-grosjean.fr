@@ -2,7 +2,7 @@
 
 [![Vérifier le site](https://github.com/jeremy-grosjean/jeremy-grosjean.fr/actions/workflows/verifier.yml/badge.svg)](https://github.com/jeremy-grosjean/jeremy-grosjean.fr/actions/workflows/verifier.yml) [![Site en ligne surveillé chaque matin](https://github.com/jeremy-grosjean/jeremy-grosjean.fr/actions/workflows/surveiller.yml/badge.svg)](https://github.com/jeremy-grosjean/jeremy-grosjean.fr/actions/workflows/surveiller.yml)
 
-Site personnel de **Jérémy Grosjean**, technicien informatique, disponible pour une alternance Technicien informatique (Bac+2).
+Site personnel de **Jérémy Grosjean**, technicien informatique, à la recherche d’un CDI ou d’un CDD (Paris, Île-de-France, Pontarlier, Besançon).
 
 **➜ [jeremy-grosjean.fr](https://jeremy-grosjean.fr)**
 
