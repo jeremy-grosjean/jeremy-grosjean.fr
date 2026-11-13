@@ -1383,7 +1383,7 @@
     if (lieu) recRows.push([lieu[0], lieu[1] + ' · ' + lieu[2]]);
     { const tl = t('briefTiles') || [];
       if (tl[6]) recRows.push([tl[6][0], tl[6][1] + ' · ' + tl[6][2]]); /* mobilité */
-      if (tl[7] && t('rncpOk')) recRows.push([tl[7][0], [['RNCP225', 'https://www.francecompetences.fr/recherche/rncp/225/'], ` (${t('rncpOk')}) · `, ['RNCP40357', 'https://www.francecompetences.fr/recherche/rncp/40357/'], ` (${t('rncpGoal')})`]]); /* codes officiels, liens vers France compétences */ }
+      if (tl[7] && t('rncpOk')) recRows.push([tl[7][0], [['RNCP225', 'https://www.francecompetences.fr/recherche/rncp/225/'], ` (${t('rncpOk')})`]]); /* code officiel du titre obtenu, liens vers France compétences */ }
     recRows.push(['LinkedIn', [['linkedin.com/in/jeremy-grosjean', 'https://www.linkedin.com/in/jeremy-grosjean']]]);
     if (t('recReplyL')) recRows.push([t('recReplyL'), t('recReply')]);
     for (const [k, v] of recRows) {
