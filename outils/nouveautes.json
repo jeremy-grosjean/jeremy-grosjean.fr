@@ -37,5 +37,6 @@
   "téléphone : fond animé plus fin et plus lent": null,
   "téléphone : plus d'onde quand on touche le fond": null,
   "corrections : bas de page, bouton Affichage, raccourcis, jeux, terminal, carte de visite et traductions": "Petites corrections : bas de page plus net, bouton « Affichage » plus direct, terminal et carte de visite plus simples au clavier, textes mieux adaptés à chaque langue",
-  "recherche d'un poste de technicien support en CDI ou CDD, alternance en option": "Je recherche maintenant un poste de technicien support informatique en CDI ou CDD, disponible immédiatement ; l’alternance reste possible"
+  "recherche d'un poste de technicien support en CDI ou CDD, alternance en option": "Je recherche maintenant un poste de technicien support informatique en CDI ou CDD, disponible immédiatement ; l’alternance reste possible",
+  "CDI en priorité, sinon CDD ; alternance seulement si l'offre la prévoit": "Précision : je recherche en priorité un CDI, sinon un CDD ; l’alternance seulement si l’offre la propose"
 }

@@ -435,7 +435,7 @@ with sync_playwright() as p:
         ok(f'{nom} : mode forum (écran d’accueil, un toucher à côté ne la ferme pas, bouton « Découvrir mon profil »)')
         # Carte de visite à montrer : photo et « Disponible » à l'écran, bouton dans Affichage, commande « carte » du terminal
         pg.goto(BASE + '/?mode=carte'); pg.wait_for_timeout(1200)
-        s1 = pg.evaluate("(() => { const f = document.getElementById('forum'), ph = f.querySelector('.forum-photo'), av = f.querySelector('.forum-avail'); return !f.hidden && ph.complete && ph.naturalWidth > 0 && ph.getBoundingClientRect().width > 40 && /Disponible/.test(av.textContent) && /CDI ou CDD/.test(av.textContent); })()")
+        s1 = pg.evaluate("(() => { const f = document.getElementById('forum'), ph = f.querySelector('.forum-photo'), av = f.querySelector('.forum-avail'); return !f.hidden && ph.complete && ph.naturalWidth > 0 && ph.getBoundingClientRect().width > 40 && /Disponible/.test(av.textContent) && /CDI/.test(av.textContent); })()")
         pg.goto(BASE + '/'); pg.wait_for_timeout(900)
         pg.evaluate("document.getElementById('salonBtn').click()"); pg.wait_for_url('**/?mode=carte', timeout=5000); pg.wait_for_timeout(800)
         s2 = pg.evaluate("!document.getElementById('forum').hidden")

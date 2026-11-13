@@ -2565,7 +2565,7 @@
     const fold = l => { const out = []; while (l.length > 74) { out.push(l.slice(0, 74)); l = ' ' + l.slice(74); } out.push(l); return out.join('\r\n'); };
     const ph = fmPhoto();
     return ['BEGIN:VCARD', 'VERSION:3.0', 'N:Grosjean;Jérémy;;;', 'FN:Jérémy Grosjean', 'TITLE:Technicien support informatique',
-      'NOTE:Technicien support informatique · disponible immédiatement en CDI ou CDD.', 'EMAIL;TYPE=INTERNET,PREF:contact@jeremy-grosjean.fr', 'URL:https://jeremy-grosjean.fr', 'URL:https://www.linkedin.com/in/jeremy-grosjean',
+      'NOTE:Technicien support informatique · disponible immédiatement en CDI (ou CDD).', 'EMAIL;TYPE=INTERNET,PREF:contact@jeremy-grosjean.fr', 'URL:https://jeremy-grosjean.fr', 'URL:https://www.linkedin.com/in/jeremy-grosjean',
       ...(ph ? [fold('PHOTO;ENCODING=b;TYPE=JPEG:' + ph)] : []), 'END:VCARD', ''].join('\r\n');
   }
   async function fmSendCard() {
