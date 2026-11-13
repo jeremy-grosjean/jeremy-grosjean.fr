@@ -423,7 +423,7 @@
     if (r) { r[0] = 'MOD + E'; r[1] = D[k].recKey; }
   }
 })(window.JG_I18N || {});
-/* Lot 72 : recherche d'un poste de technicien support en CDI (ou CDD) ; l'alternance (bac+2) reste possible, sur une seule ligne discrète */
+/* Lot 72 : recherche d'un poste de technicien support en CDI (ou CDD) ; objectif : administration systèmes et réseaux */
 (function (L) {
   const D = {
     fr: {
@@ -443,12 +443,12 @@
       bootShort: [['ok', 'TAI niveau 4 obtenu'], ['ok', 'Près de 4 ans en support'], ['wait', 'CDI (ou CDD) recherché'], ['info', 'Windows 11, M365, AD, GLPI']],
       rows: [['Recherche', 'Un poste de technicien support informatique (support N1/N2, poste de travail, proximité), en CDI de préférence, sinon en CDD, dans une entreprise ou dans la fonction publique'],
         ['Expérience', 'Près de 4 ans en support informatique, dont près de 3 ans chez Bosch, jusqu’à la fermeture du site en septembre 2026'],
-        ['Alternance', 'Seulement si l’offre le prévoit : contrat de professionnalisation de 12 mois pour préparer le bac+2 Technicien informatique (OpenClassrooms)'],
+        ['Objectif', 'Évoluer vers l’administration systèmes et réseaux, en continuant à me former sur le terrain'],
         ['Compétences', 'Support N1/N2, GLPI et ITIL, Windows 10/11, Microsoft 365, Active Directory, réseau, PowerShell']],
-      tiles: [['Poste recherché', 'Technicien support', 'informatique, en CDI (ou CDD)'], ['Disponibilité', 'Immédiate', 'sans préavis'], ['Alternance', 'Si l’offre le prévoit', 'bac+2 Technicien informatique, OpenClassrooms']],
-      q: ['Êtes-vous ouvert à l’alternance ?', 'Quelles sont vos compétences ?', 'Pourquoi avez-vous quitté Bosch ?'],
+      tiles: [['Poste recherché', 'Technicien support', 'informatique, en CDI (ou CDD)'], ['Disponibilité', 'Immédiate', 'sans préavis'], ['Objectif', 'Administration', 'systèmes et réseaux, à terme']],
+      q: ['Quel est votre objectif professionnel ?', 'Quelles sont vos compétences ?', 'Pourquoi avez-vous quitté Bosch ?'],
       bosch: 'Le site Bosch d’Yzeure a fermé en septembre 2026 : mon poste s’est arrêté avec la fermeture du site.',
-      next: ['Maintenant', 'Technicien support informatique, en CDI (ou CDD)', 'Disponible immédiatement · alternance seulement si l’offre le prévoit (bac+2, OpenClassrooms, RNCP40357)']
+      next: ['Maintenant', 'Technicien support informatique, en CDI (ou CDD)', 'Disponible immédiatement · Paris, Île-de-France, Pontarlier, Besançon']
     },
     en: {
       title: 'Jérémy Grosjean · IT Support Technician', titleTab: 'Jérémy Grosjean · IT Support Technician', whoRole: 'IT support technician',
@@ -467,12 +467,12 @@
       bootShort: [['ok', 'TAI level 4 earned'], ['ok', 'Almost 4 years in support'], ['wait', 'Seeking permanent/fixed-term'], ['info', 'Windows 11, M365, AD, GLPI']],
       rows: [['Looking for', 'An IT support technician job (level 1/2 support, workstations, on-site support), ideally permanent, otherwise fixed-term, in a company or in the public sector'],
         ['Experience', 'Almost 4 years in IT support, including nearly 3 years at Bosch, until the site closed in September 2026'],
-        ['Work-study', 'Only if the job offer includes it: a 12-month professionalisation contract to prepare the 2-year IT Technician degree (OpenClassrooms)'],
+        ['Goal', 'Grow into systems and network administration, learning on the job'],
         ['Skills', 'Level 1/2 support, GLPI and ITIL, Windows 10/11, Microsoft 365, Active Directory, networking, PowerShell']],
-      tiles: [['Job wanted', 'IT support technician', 'permanent (or fixed-term)'], ['Availability', 'Now', 'no notice period'], ['Work-study', 'If the offer includes it', '2-year IT Technician degree, OpenClassrooms']],
-      q: ['Are you open to work-study?', 'What are your skills?', 'Why did you leave Bosch?'],
+      tiles: [['Job wanted', 'IT support technician', 'permanent (or fixed-term)'], ['Availability', 'Now', 'no notice period'], ['Goal', 'Systems and network', 'administration, in time']],
+      q: ['What is your career goal?', 'What are your skills?', 'Why did you leave Bosch?'],
       bosch: 'The Bosch site in Yzeure closed in September 2026: my job ended with the closure of the site.',
-      next: ['Now', 'IT support technician, permanent (or fixed-term)', 'Available now · work-study only if the offer includes it (2-year degree, OpenClassrooms, RNCP40357)']
+      next: ['Now', 'IT support technician, permanent (or fixed-term)', 'Available now · Paris, Île-de-France, Pontarlier, Besançon']
     },
     'zh-Hans': {
       title: 'Jérémy Grosjean · IT 支持技术员', titleTab: 'Jérémy Grosjean · IT 支持技术员', whoRole: 'IT 支持技术员',
@@ -491,12 +491,12 @@
       bootShort: [['ok', '已获 TAI 4 级资格'], ['ok', '近 4 年 IT 支持经验'], ['wait', '寻找正式工作'], ['info', 'Windows 11、M365、AD、GLPI']],
       rows: [['求职意向', 'IT 支持技术员职位（一线/二线支持、工作站、现场支持），最好是无固定期限合同，否则固定期限合同，企业或公共部门均可'],
         ['经验', '近 4 年 IT 支持经验，其中近 3 年在博世（Bosch），直到该厂区于 2026 年 9 月关闭'],
-        ['工学交替', '仅当职位提供时：签订 12 个月职业化合同，攻读 IT 技术员 bac+2 学历（OpenClassrooms）'],
+        ['目标', '逐步发展为系统与网络管理员，在工作中不断学习'],
         ['技能', '一线/二线支持、GLPI 和 ITIL、Windows 10/11、Microsoft 365、Active Directory、网络、PowerShell']],
-      tiles: [['求职意向', 'IT 支持技术员', '无固定期限（或固定期限）合同'], ['入职时间', '立即', '无需预告期'], ['工学交替', '仅当职位提供时', 'IT 技术员 bac+2，OpenClassrooms']],
-      q: ['您接受工学交替吗？', '您有哪些技能？', '您为什么离开博世？'],
+      tiles: [['求职意向', 'IT 支持技术员', '无固定期限（或固定期限）合同'], ['入职时间', '立即', '无需预告期'], ['目标', '系统与网络管理', '长期目标']],
+      q: ['您的职业目标是什么？', '您有哪些技能？', '您为什么离开博世？'],
       bosch: '博世位于伊泽尔（Yzeure）的厂区于 2026 年 9 月关闭，我的岗位随之结束。',
-      next: ['现在', 'IT 支持技术员，无固定期限（或固定期限）合同', '可立即入职 · 仅当职位提供时接受工学交替（bac+2，OpenClassrooms，RNCP40357）']
+      next: ['现在', 'IT 支持技术员，无固定期限（或固定期限）合同', '可立即入职 · 巴黎、法兰西岛、蓬塔尔利耶、贝桑松']
     },
     'zh-Hant': {
       title: 'Jérémy Grosjean · IT 支援技術員', titleTab: 'Jérémy Grosjean · IT 支援技術員', whoRole: 'IT 支援技術員',
@@ -515,12 +515,12 @@
       bootShort: [['ok', '已取得 TAI 第 4 級'], ['ok', '近 4 年 IT 支援經驗'], ['wait', '尋找正式工作'], ['info', 'Windows 11、M365、AD、GLPI']],
       rows: [['應徵職位', 'IT 支援技術員職位（第一線/第二線支援、工作站、現場支援），最好是不定期契約，否則定期契約，企業或公部門皆可'],
         ['經歷', '近 4 年 IT 支援經驗，其中近 3 年在博世（Bosch），直到該廠區於 2026 年 9 月關閉'],
-        ['建教合作', '僅當職缺提供時：簽訂 12 個月職業化契約，攻讀 IT 技術員 bac+2 學歷（OpenClassrooms）'],
+        ['目標', '逐步發展為系統與網路管理員，在工作中持續學習'],
         ['技能', '第一線/第二線支援、GLPI 與 ITIL、Windows 10/11、Microsoft 365、Active Directory、網路、PowerShell']],
-      tiles: [['應徵職位', 'IT 支援技術員', '不定期（或定期）契約'], ['到職時間', '立即', '無需預告期'], ['建教合作', '僅當職缺提供時', 'IT 技術員 bac+2，OpenClassrooms']],
-      q: ['您接受建教合作嗎？', '您有哪些技能？', '您為什麼離開博世？'],
+      tiles: [['應徵職位', 'IT 支援技術員', '不定期（或定期）契約'], ['到職時間', '立即', '無需預告期'], ['目標', '系統與網路管理', '長期目標']],
+      q: ['您的職涯目標是什麼？', '您有哪些技能？', '您為什麼離開博世？'],
       bosch: '博世位於伊澤爾（Yzeure）的廠區於 2026 年 9 月關閉，我的職位隨之結束。',
-      next: ['現在', 'IT 支援技術員，不定期（或定期）契約', '可立即到職 · 僅當職缺提供時接受建教合作（bac+2，OpenClassrooms，RNCP40357）']
+      next: ['現在', 'IT 支援技術員，不定期（或定期）契約', '可立即到職 · 巴黎、法蘭西島、蓬塔利耶、貝桑松']
     },
     yue: {
       title: 'Jérémy Grosjean · IT 支援技術員', titleTab: 'Jérémy Grosjean · IT 支援技術員', whoRole: 'IT 支援技術員',
@@ -539,12 +539,12 @@
       bootShort: [['ok', '已攞 TAI 第 4 級'], ['ok', '差唔多 4 年 IT 支援'], ['wait', '搵緊正式工'], ['info', 'Windows 11、M365、AD、GLPI']],
       rows: [['想搵嘅職位', 'IT 支援技術員（第一線/第二線支援、電腦、現場支援），最好長期合約，唔係就定期合約，私人公司或者公營機構都得'],
         ['經驗', '差唔多 4 年 IT 支援經驗，其中差唔多 3 年喺博世（Bosch），做到廠區喺 2026 年 9 月關閉為止'],
-        ['工讀交替', '淨係職位有提供先考慮：簽 12 個月職業化合約，讀 IT 技術員 bac+2 學歷（OpenClassrooms）'],
+        ['目標', '慢慢發展做系統同網絡管理員，喺工作中繼續學嘢'],
         ['技能', '第一線/第二線支援、GLPI 同 ITIL、Windows 10/11、Microsoft 365、Active Directory、網絡、PowerShell']],
-      tiles: [['想搵嘅職位', 'IT 支援技術員', '長期（或者定期）合約'], ['幾時開工', '即刻', '唔使預告期'], ['工讀交替', '職位有提供先考慮', 'IT 技術員 bac+2，OpenClassrooms']],
-      q: ['你接唔接受工讀交替？', '你有咩技能？', '點解你離開博世？'],
+      tiles: [['想搵嘅職位', 'IT 支援技術員', '長期（或者定期）合約'], ['幾時開工', '即刻', '唔使預告期'], ['目標', '系統同網絡管理', '長遠目標']],
+      q: ['你嘅職業目標係咩？', '你有咩技能？', '點解你離開博世？'],
       bosch: '博世喺伊澤爾（Yzeure）嘅廠區喺 2026 年 9 月關閉，我份工就跟住完咗。',
-      next: ['而家', 'IT 支援技術員，長期（或者定期）合約', '即刻可以開工 · 工讀交替淨係職位有提供先考慮（bac+2，OpenClassrooms，RNCP40357）']
+      next: ['而家', 'IT 支援技術員，長期（或者定期）合約', '即刻可以開工 · 巴黎、法蘭西島、蓬塔利耶、貝桑松']
     },
     ko: {
       title: 'Jérémy Grosjean · IT 지원 기술자', titleTab: 'Jérémy Grosjean · IT 지원 기술자', whoRole: 'IT 지원 기술자',
@@ -563,12 +563,12 @@
       bootShort: [['ok', 'TAI 4단계 취득'], ['ok', 'IT 지원 약 4년'], ['wait', '정규직·계약직 구직 중'], ['info', 'Windows 11, M365, AD, GLPI']],
       rows: [['희망 직무', 'IT 지원 기술자(1·2단계 지원, 업무용 PC, 현장 지원), 정규직 우선, 아니면 계약직, 기업 또는 공공 부문'],
         ['경력', 'IT 지원 약 4년, 그중 보쉬(Bosch)에서 약 3년(2026년 9월 사업장 폐쇄 때까지)'],
-        ['일·학습 병행', '채용 공고에서 제안하는 경우에만: 12개월 직업화 계약으로 IT 기술자 bac+2 학위 준비(OpenClassrooms)'],
+        ['목표', '현장에서 계속 배우며 시스템·네트워크 관리자로 성장'],
         ['기술', '1·2단계 지원, GLPI와 ITIL, Windows 10/11, Microsoft 365, Active Directory, 네트워크, PowerShell']],
-      tiles: [['희망 직무', 'IT 지원 기술자', '정규직(또는 계약직)'], ['근무 가능', '즉시', '예고 기간 없음'], ['일·학습 병행', '공고에서 제안 시', 'IT 기술자 bac+2, OpenClassrooms']],
-      q: ['일·학습 병행도 가능한가요?', '어떤 기술이 있나요?', '왜 보쉬를 떠났나요?'],
+      tiles: [['희망 직무', 'IT 지원 기술자', '정규직(또는 계약직)'], ['근무 가능', '즉시', '예고 기간 없음'], ['목표', '시스템·네트워크 관리', '장기 목표']],
+      q: ['커리어 목표는 무엇인가요?', '어떤 기술이 있나요?', '왜 보쉬를 떠났나요?'],
       bosch: '이죄르(Yzeure)의 보쉬 사업장이 2026년 9월에 문을 닫으면서 제 일자리도 끝났습니다.',
-      next: ['지금', 'IT 지원 기술자, 정규직(또는 계약직)', '즉시 근무 가능 · 일·학습 병행은 공고에서 제안하는 경우에만 (bac+2, OpenClassrooms, RNCP40357)']
+      next: ['지금', 'IT 지원 기술자, 정규직(또는 계약직)', '즉시 근무 가능 · 파리, 일드프랑스, 퐁타를리에, 브장송']
     }
   };
   for (const k of Object.keys(D)) {
@@ -577,10 +577,10 @@
     for (const key of ['title', 'titleTab', 'whoRole', 'availLine', 'fmAvail', 'fmRole', 'briefSub', 'contactIntro', 'tWhoami', 'tourBrief', 'shText', 'shMailSubject', 'mailSubject', 'mailBody', 'slotIcsTitle', 'domTip', 'boot', 'bootShort']) T[key] = d[key];
     if (T.neo) T.neo = Object.assign({}, T.neo, { goalV: d.goalV });
     const ob = T.brief || [], ot = T.briefTiles || [], oq = T.faqQ || [], ox = T.faqExtra || [];
-    /* 6 lignes (la dernière sert d'intitulé aux pastilles de domaines) : titre, recherche, disponibilité, expérience, alternance, compétences */
+    /* 6 lignes (la dernière sert d'intitulé aux pastilles de domaines) : titre, recherche, disponibilité, expérience, objectif, compétences */
     T.brief = [ob[0], d.rows[0], ob[4], d.rows[1], d.rows[2], d.rows[3]];
     /* 8 tuiles ; les places 5 (lieu), 6 (mobilité) et 7 (codes officiels) ne bougent pas */
-    T.briefTiles = [d.tiles[0], d.tiles[1], ot[4], ot[0], d.tiles[2], ot[5], ot[6], ot[7]];
+    T.briefTiles = [d.tiles[0], d.tiles[1], ot[4], ot[0], d.tiles[2], ot[5], ot[6], ot[7] && [ot[7][0], 'RNCP225', String(ot[7][2] || '').split(' · ')[0]]];
     /* Questions 0 à 5 = lignes ci-dessus, 6 à 10 = réponses supplémentaires, 11 = contact */
     T.faqQ = [oq[0], oq[1], oq[4], oq[7], d.q[0], d.q[1], oq[6], d.q[2], oq[8], oq[9], oq[10], oq[11]];
     T.faqExtra = [ox[0], d.bosch, ox[2], ox[3], ox[4]];
