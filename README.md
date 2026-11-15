@@ -2,7 +2,7 @@
 
 [![Vérifier le site](https://github.com/jeremy-grosjean/jeremy-grosjean.fr/actions/workflows/verifier.yml/badge.svg)](https://github.com/jeremy-grosjean/jeremy-grosjean.fr/actions/workflows/verifier.yml) [![Site en ligne surveillé chaque matin](https://github.com/jeremy-grosjean/jeremy-grosjean.fr/actions/workflows/surveiller.yml/badge.svg)](https://github.com/jeremy-grosjean/jeremy-grosjean.fr/actions/workflows/surveiller.yml)
 
-Site personnel de **Jérémy Grosjean**, technicien informatique, à la recherche d’un CDI ou d’un CDD (Paris, Île-de-France, Pontarlier, Besançon).
+Site personnel de **Jérémy Grosjean**, technicien support informatique N1/N2 (près de 4 ans d'expérience : Bosch, Scopus), **disponible immédiatement en CDI (ou CDD)**, dans le privé ou la fonction publique, à Paris et en Île-de-France, Pontarlier ou Besançon.
 
 **➜ [jeremy-grosjean.fr](https://jeremy-grosjean.fr)**
 
@@ -23,7 +23,7 @@ Site personnel de **Jérémy Grosjean**, technicien informatique, à la recherch
 - **Six mini-jeux** : « Protéger le serveur » (malware, DDoS, hameçonnage), un **simulateur de support N1/N2** (tickets réalistes : DHCP, DNS, Active Directory, GPO, droits NTFS…), **« Trouve la panne »** (diagnostic réseau avec `ipconfig`, `ping` et `nslookup` simulés), un **quiz Active Directory et GPO**, **« Repère l'hameçonnage »** (e-mails inventés, indices révélés après chaque réponse) et **« Sous-réseaux express »** (calcul de sous-réseaux contre la montre). Les meilleurs scores restent dans le navigateur du visiteur.
 - **Le jargon expliqué** : les mots techniques (DNS, GPO, DKIM…) sont soulignés et donnent leur définition au toucher ; glossaire complet de 28 termes dans les 6 langues.
 - **Terminal caché** (`Ctrl/⌘ + K`) : `help`, `cv`, `ipcalc`, `dig`, `curl -I`, `whois`, `traceroute`, `define`, `device`, `neofetch`, `htop`, `secrets`…
-- **Vue recruteur** sur une page, sans animation : [jeremy-grosjean.fr/#recruteur](https://jeremy-grosjean.fr/#recruteur). C'est aussi la fiche A4 imprimée avec `Ctrl/⌘ + P`.
+- **Vue sur une page**, sans animation : [jeremy-grosjean.fr/#recruteur](https://jeremy-grosjean.fr/#recruteur). C'est aussi la fiche A4 imprimée avec `Ctrl/⌘ + P`.
 - **Me contacter** : e-mail déjà rempli en un clic dans Gmail, Outlook, Outlook pro (Microsoft 365) ou Yahoo Mail, ou dans la messagerie de l'appareil. Ce sont de simples liens : rien ne passe par le site.
 - **Page 404 jouable** : trois questions réseau pour que le paquet retrouve sa route.
 - **[Déclaration d'accessibilité](https://jeremy-grosjean.fr/accessibilite.html)** (objectif WCAG 2.2 AA).

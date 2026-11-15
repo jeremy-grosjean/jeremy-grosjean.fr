@@ -588,3 +588,66 @@
     if (Array.isArray(T.pcItems)) T.pcItems = [['next', d.next[0], d.next[1], d.next[2], []]].concat(T.pcItems.filter(p => p[0] !== 'next'));
   }
 })(window.JG_I18N || {});
+/* Lot 74 : parcours aligné sur le profil LinkedIn (Bosch : ServiceNow, SCCM/MECM, Intune, Entra ID… ; Scopus : GLPI, Fortinet, Hyper-V… ; Excelium : 4 000 sites) */
+(function (L) {
+  const D = {
+    fr: {
+      boschT: 'Technicien informatique, support de proximité N1/N2',
+      bosch: ['Support N1/N2 sur site et à distance pour environ 270 collaborateurs, en binôme : environ 25 à 40 tickets par semaine sous ServiceNow', 'Migration d’environ 80 postes vers Windows 11 (SCCM/MECM), déploiement d’applications et de correctifs (SCCM, Intune)', 'Active Directory et Entra ID, Microsoft 365, Exchange Online et Teams ; flotte mobile iOS/Android sous Intune', 'Sécurité des postes : BitLocker, Defender for Endpoint, MFA ; serveurs Windows de proximité (impression, partages)', 'Switchs Cisco, téléphonie IP, imprimantes réseau, utilisateurs SAP ; départ en septembre 2026 à la fermeture du site'],
+      scopus: ['Support N1/N2 pour environ 30 à 35 postes et SAV client, dans une équipe de 4 techniciens : environ 40 à 55 tickets par semaine (GLPI, INCOService)', 'Windows Server et Active Directory, Hyper-V, sauvegardes sur NAS Synology', 'Pare-feu Fortinet, VPN FortiClient, correctifs WSUS, BitLocker, MFA Microsoft 365', 'Installation et SAV d’imprimantes à badges et d’encodeurs RFID chez les clients, en Île-de-France et partout en France', 'Sauvegarde et migration de bases SQL Server et Access'],
+      exc: ['Supervision en temps réel d’environ 4 000 sites, 24 h/24, dans un environnement certifié APSAD P3', 'Qualification des alertes selon les délais (SLA), diagnostic N1 à distance (liaisons IP/GPRS, vidéo, contrôle d’accès)'],
+      skills: 'Support N1/N2, ServiceNow et GLPI, ITIL, Windows 10/11, SCCM/MECM et Intune, Microsoft 365, Active Directory et Entra ID, réseau, PowerShell',
+      b3: 'Windows 11, Microsoft 365, Intune, SCCM, Active Directory', b4: 'Support N1/N2 sur site et à distance (ServiceNow, GLPI)', bs4: 'ServiceNow, GLPI, Intune, AD'
+    },
+    en: {
+      boschT: 'IT technician, level 1/2 on-site support',
+      bosch: ['Level 1/2 support on site and remotely for about 270 employees, in a team of two: about 25 to 40 tickets a week in ServiceNow', 'Migration of about 80 workstations to Windows 11 (SCCM/MECM), deployment of applications and patches (SCCM, Intune)', 'Active Directory and Entra ID, Microsoft 365, Exchange Online and Teams; iOS/Android mobile fleet in Intune', 'Endpoint security: BitLocker, Defender for Endpoint, MFA; local Windows servers (printing, file shares)', 'Cisco switches, IP telephony, network printers, SAP users; left in September 2026 when the site closed'],
+      scopus: ['Level 1/2 support for about 30 to 35 workstations and customer after-sales, in a team of 4 technicians: about 40 to 55 tickets a week (GLPI, INCOService)', 'Windows Server and Active Directory, Hyper-V, backups to a Synology NAS', 'Fortinet firewall, FortiClient VPN, WSUS patching, BitLocker, Microsoft 365 MFA', 'Installation and repair of badge printers and RFID encoders at customer sites, in the Paris region and all over France', 'Backup and migration of SQL Server and Access databases'],
+      exc: ['Real-time monitoring of about 4,000 sites, 24/7, in an APSAD P3 certified environment', 'Alert triage within agreed times (SLA), remote level 1 diagnosis (IP/GPRS links, video, access control)'],
+      skills: 'Level 1/2 support, ServiceNow and GLPI, ITIL, Windows 10/11, SCCM/MECM and Intune, Microsoft 365, Active Directory and Entra ID, networking, PowerShell',
+      b3: 'Windows 11, Microsoft 365, Intune, SCCM, Active Directory', b4: 'Level 1/2 support, on-site and remote (ServiceNow, GLPI)', bs4: 'ServiceNow, GLPI, Intune, AD'
+    },
+    'zh-Hans': {
+      boschT: 'IT 技术员，一线/二线现场支持',
+      bosch: ['为约 270 名员工提供现场和远程一线/二线支持，两人小组：每周约 25 到 40 张 ServiceNow 工单', '将约 80 台电脑迁移到 Windows 11（SCCM/MECM），部署应用和补丁（SCCM、Intune）', 'Active Directory 和 Entra ID、Microsoft 365、Exchange Online 和 Teams；用 Intune 管理 iOS/Android 移动设备', '终端安全：BitLocker、Defender for Endpoint、多因素认证；本地 Windows 服务器（打印、共享）', 'Cisco 交换机、IP 电话、网络打印机、SAP 用户；2026 年 9 月厂区关闭时离职'],
+      scopus: ['在 4 人技术团队中，为约 30 到 35 台电脑提供一线/二线支持和客户售后：每周约 40 到 55 张工单（GLPI、INCOService）', 'Windows Server 和 Active Directory、Hyper-V、备份到 Synology NAS', 'Fortinet 防火墙、FortiClient VPN、WSUS 补丁、BitLocker、Microsoft 365 多因素认证', '在法兰西岛和法国各地客户现场安装和维修证卡打印机及 RFID 编码器', 'SQL Server 和 Access 数据库的备份与迁移'],
+      exc: ['在 APSAD P3 认证环境中，全天候实时监控约 4000 个站点', '按约定时限（SLA）判定告警，远程一线诊断（IP/GPRS 链路、视频、门禁）'],
+      skills: '一线/二线支持、ServiceNow 和 GLPI、ITIL、Windows 10/11、SCCM/MECM 和 Intune、Microsoft 365、Active Directory 和 Entra ID、网络、PowerShell',
+      b3: 'Windows 11、Microsoft 365、Intune、SCCM、Active Directory', b4: '一线/二线支持，现场及远程（ServiceNow、GLPI）', bs4: 'ServiceNow、GLPI、Intune、AD'
+    },
+    'zh-Hant': {
+      boschT: 'IT 技術員，第一線/第二線現場支援',
+      bosch: ['為約 270 名員工提供現場與遠端第一線/第二線支援，兩人小組：每週約 25 到 40 張 ServiceNow 工單', '將約 80 台電腦移轉到 Windows 11（SCCM/MECM），部署應用程式與修補程式（SCCM、Intune）', 'Active Directory 與 Entra ID、Microsoft 365、Exchange Online 與 Teams；以 Intune 管理 iOS/Android 行動裝置', '端點安全：BitLocker、Defender for Endpoint、多重要素驗證；在地 Windows 伺服器（列印、共用）', 'Cisco 交換器、IP 電話、網路印表機、SAP 使用者；2026 年 9 月廠區關閉時離職'],
+      scopus: ['在 4 人技術團隊中，為約 30 到 35 台電腦提供第一線/第二線支援與客戶售後：每週約 40 到 55 張工單（GLPI、INCOService）', 'Windows Server 與 Active Directory、Hyper-V、備份到 Synology NAS', 'Fortinet 防火牆、FortiClient VPN、WSUS 修補、BitLocker、Microsoft 365 多重要素驗證', '在法蘭西島與法國各地客戶現場安裝與維修證卡印表機及 RFID 編碼器', 'SQL Server 與 Access 資料庫的備份與移轉'],
+      exc: ['在 APSAD P3 認證環境中，全天候即時監控約 4000 個據點', '依約定時限（SLA）判定警報，遠端第一線診斷（IP/GPRS 連線、影像、門禁）'],
+      skills: '第一線/第二線支援、ServiceNow 與 GLPI、ITIL、Windows 10/11、SCCM/MECM 與 Intune、Microsoft 365、Active Directory 與 Entra ID、網路、PowerShell',
+      b3: 'Windows 11、Microsoft 365、Intune、SCCM、Active Directory', b4: '第一線/第二線支援，現場及遠端（ServiceNow、GLPI）', bs4: 'ServiceNow、GLPI、Intune、AD'
+    },
+    yue: {
+      boschT: 'IT 技術員，第一線/第二線現場支援',
+      bosch: ['兩人一組，幫大約 270 個同事做現場同遙距第一線/第二線支援：每星期大約 25 至 40 張 ServiceNow 工單', '將大約 80 部電腦轉去 Windows 11（SCCM/MECM），部署程式同修補（SCCM、Intune）', 'Active Directory 同 Entra ID、Microsoft 365、Exchange Online 同 Teams；用 Intune 管 iOS/Android 手機', '電腦保安：BitLocker、Defender for Endpoint、多重認證；本地 Windows 伺服器（打印、共享）', 'Cisco 交換機、IP 電話、網絡打印機、SAP 用戶；2026 年 9 月廠區關閉嗰陣離職'],
+      scopus: ['喺 4 個技術員嘅團隊入面，幫大約 30 至 35 部電腦做第一線/第二線支援同客戶售後：每星期大約 40 至 55 張工單（GLPI、INCOService）', 'Windows Server 同 Active Directory、Hyper-V、備份去 Synology NAS', 'Fortinet 防火牆、FortiClient VPN、WSUS 修補、BitLocker、Microsoft 365 多重認證', '喺法蘭西島同全法國客戶度安裝同維修證件打印機同 RFID 編碼器', 'SQL Server 同 Access 資料庫備份同搬遷'],
+      exc: ['喺 APSAD P3 認證環境，24 小時即時監察大約 4000 個地點', '按約定時限（SLA）判斷警報，遙距第一線診斷（IP/GPRS 連線、影像、門禁）'],
+      skills: '第一線/第二線支援、ServiceNow 同 GLPI、ITIL、Windows 10/11、SCCM/MECM 同 Intune、Microsoft 365、Active Directory 同 Entra ID、網絡、PowerShell',
+      b3: 'Windows 11、Microsoft 365、Intune、SCCM、Active Directory', b4: '第一線/第二線支援，現場同遙距（ServiceNow、GLPI）', bs4: 'ServiceNow、GLPI、Intune、AD'
+    },
+    ko: {
+      boschT: 'IT 기술자, 현장 1·2단계 지원',
+      bosch: ['직원 약 270명을 2인 1조로 현장·원격 1·2단계 지원: 주당 약 25~40건의 ServiceNow 티켓', 'PC 약 80대를 Windows 11로 마이그레이션(SCCM/MECM), 애플리케이션·패치 배포(SCCM, Intune)', 'Active Directory와 Entra ID, Microsoft 365, Exchange Online, Teams; Intune으로 iOS/Android 모바일 관리', '엔드포인트 보안: BitLocker, Defender for Endpoint, MFA; 현장 Windows 서버(인쇄, 공유)', 'Cisco 스위치, IP 전화, 네트워크 프린터, SAP 사용자; 2026년 9월 사업장 폐쇄로 퇴사'],
+      scopus: ['기술자 4명 팀에서 PC 약 30~35대 1·2단계 지원과 고객 A/S: 주당 약 40~55건의 티켓(GLPI, INCOService)', 'Windows Server와 Active Directory, Hyper-V, Synology NAS 백업', 'Fortinet 방화벽, FortiClient VPN, WSUS 패치, BitLocker, Microsoft 365 MFA', '일드프랑스와 프랑스 전역 고객사에서 카드 프린터·RFID 인코더 설치 및 수리', 'SQL Server·Access 데이터베이스 백업과 이전'],
+      exc: ['APSAD P3 인증 환경에서 약 4,000개 사이트를 24시간 실시간 감시', '약속된 시간(SLA) 내 경보 판단, 원격 1단계 진단(IP/GPRS 회선, 영상, 출입 통제)'],
+      skills: '1·2단계 지원, ServiceNow와 GLPI, ITIL, Windows 10/11, SCCM/MECM과 Intune, Microsoft 365, Active Directory와 Entra ID, 네트워크, PowerShell',
+      b3: 'Windows 11, Microsoft 365, Intune, SCCM, Active Directory', b4: '1·2단계 지원, 현장 및 원격 (ServiceNow, GLPI)', bs4: 'ServiceNow, GLPI, Intune, AD'
+    }
+  };
+  for (const k of Object.keys(D)) {
+    const T = L[k], d = D[k]; if (!T || !Array.isArray(T.pcItems)) continue;
+    const jobs = T.pcItems.filter(p => p[0] === 'job');
+    if (jobs[0]) { jobs[0][2] = d.boschT; jobs[0][4] = d.bosch; }
+    if (jobs[1]) jobs[1][4] = d.scopus;
+    if (jobs[2]) jobs[2][4] = d.exc;
+    if (Array.isArray(T.brief) && T.brief[5]) T.brief[5] = [T.brief[5][0], d.skills];
+    if (Array.isArray(T.boot) && T.boot.length === 4) { T.boot[2] = ['info', d.b3]; T.boot[3] = ['info', d.b4]; }
+    if (Array.isArray(T.bootShort) && T.bootShort[3]) T.bootShort[3] = ['info', d.bs4];
+  }
+})(window.JG_I18N || {});
