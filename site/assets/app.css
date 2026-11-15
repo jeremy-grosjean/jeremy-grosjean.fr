@@ -1354,17 +1354,6 @@ body.deja-vu .hint, body.deja-vu .keys { display: none; }
 }
 
 /* ================= Lot 26 : m'embaucher (démarches et coût), délai de réponse ================= */
-#hirePanel .card { width: min(34rem, 100%); text-align: left; }
-#hirePanel .card > h2, #hirePanel .card > p:first-of-type { text-align: center; }
-.hire-h { margin: 1rem 0 .5rem; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--dim); }
-.hire-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: .55rem; counter-reset: hs; }
-.hire-steps li { display: grid; grid-template-columns: 1.6rem 1fr; column-gap: .6rem; counter-increment: hs; font-size: .9rem; line-height: 1.4; }
-.hire-steps li::before { content: counter(hs); grid-row: 1 / span 2; width: 1.6rem; height: 1.6rem; border-radius: 50%; display: grid; place-items: center; background: var(--violet); color: #fff; font-size: .8rem; font-weight: 700; }
-.hire-steps b { color: var(--ink); }
-.hire-steps span { color: var(--dim); font-size: .86rem; }
-.hire-cost { margin-bottom: .6rem; }
-.card .hire-src { font-size: .78rem; color: var(--dim); margin: 0 0 1rem; text-align: center; }
-.hire-src a { color: var(--cyan); }
 .card .ct-delay { display: flex; align-items: center; justify-content: center; gap: .4rem; width: fit-content; margin: -.4rem auto .8rem; padding: .25rem .8rem; border-radius: 999px; background: rgba(var(--ok-rgb), .12); color: var(--ok); font-size: .82rem; font-weight: 600; }
 
 /* ================= Lot 27 : créneaux de 8 h à 18 h, durée de 15 min à 3 h, pause de midi ================= */
@@ -1493,7 +1482,6 @@ html.app-mode[data-theme="light"] body::before { content: ""; position: fixed; z
 @keyframes availGlow { 0% { box-shadow: 0 0 0 0 rgba(var(--ok-rgb), .45); } 60% { box-shadow: 0 0 0 10px rgba(var(--ok-rgb), 0); } 100% { box-shadow: 0 0 0 0 rgba(var(--ok-rgb), 0); } }
 .avail.glow-once { animation: availGlow 1.4s ease-out 2; }
 @media (prefers-reduced-motion: reduce) { .avail.glow-once { animation: none; } }
-.card .hire-rncp { margin-bottom: .35rem; }
 .play-wrap, .play-link { pointer-events: auto; } /* l’accueil laisse passer les clics vers le fond animé : chaque bouton doit les reprendre */
 /* Onglets des jeux : depuis le passage à 44 px (affichage en flex), l'espace entre le nom et le nombre disparaissait (« Tous16 ») */
 .g-tabs button, .chip-btn { gap: .3em; }
@@ -1715,12 +1703,6 @@ html[data-theme="dark"] .forum-li a { color: #70B5F9; }
 }
 /* 26 · FAQ : deux colonnes de questions */
 @media (min-width: 1100px) and (min-height: 501px) { #faqPanel .card { width: min(54rem, 100%); } #faqPanel .faq-list { grid-template-columns: 1fr 1fr; align-items: start; } }
-/* 27 · M'embaucher : démarches à gauche, coût à droite (colonnes créées par app.js) */
-@media (min-width: 1100px) and (min-height: 501px) {
-  #hirePanel .card { width: min(56rem, 100%); }
-  #hirePanel .hire-cols { display: grid; grid-template-columns: 1.15fr 1fr; column-gap: 1.8rem; align-items: start; }
-  #hirePanel .hire-cols > div { min-width: 0; }
-}
 /* 28 · Largeur des fenêtres sur grand écran (28 rem partout avant) */
 @media (min-width: 1440px) and (min-height: 821px) { .card { width: min(32rem, 100%); } }
 /* 31 · Titre de la fenêtre qui reste visible pendant le défilement (longues fenêtres) */

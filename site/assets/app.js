@@ -426,7 +426,7 @@
     $('hScore').textContent = G.score; $('hBreach').textContent = G.breach + '/3'; $('hTime').textContent = Math.ceil(G.time);
   }
   const server = () => ({ x: W / 2, y: H / 2, s: Math.min(64, Math.max(46, W / 22)) });
-  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel', 'phPanel', 'snPanel', 'scPanel', 'glossPanel', 'pausePanel', 'resumePanel', 'slotPanel', 'skillsPanel', 'sharePanel', 'faqPanel', 'parcoursPanel', 'hirePanel', 'itPanel', 'psPanel', 'rjPanel', 'clPanel', 'dyPanel', 'prPanel', 'rwPanel', 'rpPanel', 'niPanel', 'bdPanel'];
+  const panels = ['intro', 'levelPanel', 'over', 'secPanel', 'contactPanel', 'keysPanel', 'gamesPanel', 'supportPanel', 'panPanel', 'quizPanel', 'newsPanel', 'briefPanel', 'supPanel', 'phPanel', 'snPanel', 'scPanel', 'glossPanel', 'pausePanel', 'resumePanel', 'slotPanel', 'skillsPanel', 'sharePanel', 'faqPanel', 'parcoursPanel', 'itPanel', 'psPanel', 'rjPanel', 'clPanel', 'dyPanel', 'prPanel', 'rwPanel', 'rpPanel', 'niPanel', 'bdPanel'];
   /* Fenêtre ouverte : la page derrière est mise hors d'atteinte (clavier, lecteurs d'écran), comme pendant la partie.
      À la fermeture, le focus revient sur le bouton qui l'avait ouverte. */
   let panelOpener = null;
@@ -441,7 +441,7 @@
     const tm = document.getElementById('term'); if (tm) { if (open || playing || !termOn) tm.setAttribute('inert', ''); else tm.removeAttribute('inert'); }
   }
   /* Fenêtres d'information inscrites dans l'historique : le geste retour (iPhone) ou le bouton ◀ (Android) les ferme */
-  const HIST = new Set(['secPanel', 'contactPanel', 'gamesPanel', 'glossPanel', 'slotPanel', 'skillsPanel', 'sharePanel', 'faqPanel', 'parcoursPanel', 'hirePanel', 'newsPanel', 'briefPanel', 'supPanel', 'keysPanel', 'bdPanel']);
+  const HIST = new Set(['secPanel', 'contactPanel', 'gamesPanel', 'glossPanel', 'slotPanel', 'skillsPanel', 'sharePanel', 'faqPanel', 'parcoursPanel', 'newsPanel', 'briefPanel', 'supPanel', 'keysPanel', 'bdPanel']);
   let popSkip = false;
   const histOn = () => !!(history.state && history.state.jgp);
   window.addEventListener('popstate', () => { if (popSkip) { popSkip = false; return; } if (document.querySelector('.panel.open')) closePanels(true); });
@@ -459,7 +459,7 @@
   /* La fenêtre s'ouvre toujours en haut de son contenu (sur un écran bas, le focus sur un bouton du bas la faisait défiler) */
   /* Fermer une fenêtre : clic sur le fond flou autour (même action que son bouton Fermer / Quitter), ou sur le ✕ en haut à droite.
      Un clic dans la fenêtre ne la ferme pas ; un glisser qui commence dans la fenêtre et finit dehors non plus. */
-  const PANEL_CLOSE = { prPanel: 'prQuit', rwPanel: 'rwQuit', rpPanel: 'rpQuit', niPanel: 'niQuit', bdPanel: 'bdClose', slotPanel: 'slotClose', skillsPanel: 'skClose', sharePanel: 'shClose', faqPanel: 'faqClose', parcoursPanel: 'pcClose', hirePanel: 'hireClose', itPanel: 'itQuit', psPanel: 'psQuit', rjPanel: 'rjQuit', clPanel: 'clQuit', dyPanel: 'dyClose', intro: 'cancel', over: 'back', secPanel: 'secClose', contactPanel: 'contactClose', keysPanel: 'keysClose', gamesPanel: 'gamesClose',
+  const PANEL_CLOSE = { prPanel: 'prQuit', rwPanel: 'rwQuit', rpPanel: 'rpQuit', niPanel: 'niQuit', bdPanel: 'bdClose', slotPanel: 'slotClose', skillsPanel: 'skClose', sharePanel: 'shClose', faqPanel: 'faqClose', parcoursPanel: 'pcClose', itPanel: 'itQuit', psPanel: 'psQuit', rjPanel: 'rjQuit', clPanel: 'clQuit', dyPanel: 'dyClose', intro: 'cancel', over: 'back', secPanel: 'secClose', contactPanel: 'contactClose', keysPanel: 'keysClose', gamesPanel: 'gamesClose',
     supportPanel: 'tkQuit', panPanel: 'pnQuit', quizPanel: 'qzQuit', newsPanel: 'newsClose', briefPanel: 'briefClose', supPanel: 'supClose',
     phPanel: 'phQuit', snPanel: 'snQuit', scPanel: 'scClose', glossPanel: 'glossClose', pausePanel: 'pzResume', resumePanel: 'rsBack' };
   let downOn = null;
@@ -2293,16 +2293,6 @@
     closeTerm(); openPanel('parcoursPanel', 'pcClose');
   }
   $('briefParcours').addEventListener('click', openParcours);
-  /* M'embaucher : les démarches du contrat de professionnalisation et son coût (sources officielles, date de vérification) */
-  function openHire() {
-    const ol = $('hireSteps'), dl = $('hireCost'); ol.textContent = ''; dl.textContent = '';
-    for (const [title, txt] of (t('hireSteps') || [])) { const li = document.createElement('li'), b = document.createElement('b'), p = document.createElement('span'); b.textContent = title; p.textContent = txt; li.append(b, p); ol.append(li); }
-    for (const [k, v, sub] of (t('hireCost') || [])) { const d = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; if (sub) { const s = document.createElement('span'); s.className = 'sub'; s.textContent = sub; dd.append(s); } d.append(dt, dd); dl.append(d); }
-    glossify(ol); closeTerm(); openPanel('hirePanel', 'hireClose');
-  }
-  $('briefHire').addEventListener('click', openHire);
-  $('hireClose').addEventListener('click', closePanels);
-  $('hireContact').addEventListener('click', () => $('contactBtn').click());
   $('pcClose').addEventListener('click', closePanels);
   $('pcContact').addEventListener('click', () => $('contactBtn').click());
   $('faqClose').addEventListener('click', closePanels);
@@ -2507,8 +2497,6 @@
     const cols = (card, lefts, rights, cls) => { if (!card || !lefts[0]) return; const l = wrap(lefts, 'col-l'), r = wrap(rights, 'col-r'); const c = document.createElement('div'); c.className = cls; l.parentElement.insertBefore(c, l); c.append(l, r); };
     const sec = document.querySelector('#secPanel .card');
     if (sec) { const titles = [...sec.querySelectorAll(':scope > .eco-title')]; cols(sec, [sec.querySelector(':scope > .sec-list'), sec.querySelector(':scope > .audit-score')], [titles[0], sec.querySelector(':scope > .ext-list'), titles[1], sec.querySelector(':scope > .eco-list'), sec.querySelector(':scope > .eco-note')], 'sec-cols'); }
-    const hire = document.querySelector('#hirePanel .card');
-    if (hire) { const hs = [...hire.querySelectorAll(':scope > .hire-h')]; cols(hire, [hs[0], hire.querySelector(':scope > .hire-steps')], [hs[1], hire.querySelector(':scope > .hire-cost')], 'hire-cols'); }
   })();
   /* Photo de l'accueil, écran par écran : téléphone (droit ou à l'horizontale) à gauche du nom ;
      ordinateur et tablettes à gauche des lignes « $ whoami » et « $ domaines » */
@@ -3496,7 +3484,7 @@
   (() => { try {
     if (FORUM || location.hash || REC_HASH.includes(location.hash) || !t('lastPanel')) return;
     const raw = store.get('jg-last') || '', [id, ts] = raw.split('|'); if (!id || !ts || Date.now() - +ts > 86400000) return;
-    const OPEN = { briefPanel: openBrief, parcoursPanel: openParcours, hirePanel: openBrief, skillsPanel: openSkills, faqPanel: openFaq, glossPanel: openGloss, contactPanel: () => $('contactBtn').click(), secPanel: () => $('secBtn').click() };
+    const OPEN = { briefPanel: openBrief, parcoursPanel: openParcours, skillsPanel: openSkills, faqPanel: openFaq, glossPanel: openGloss, contactPanel: () => $('contactBtn').click(), secPanel: () => $('secBtn').click() };
     if (!OPEN[id] || !$(id)) return;
     const h = $(id).querySelector('h2'); if (!h) return;
     setTimeout(() => {
