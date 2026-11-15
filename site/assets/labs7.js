@@ -645,3 +645,12 @@
     if (Array.isArray(T.bootShort) && T.bootShort[3]) T.bootShort[3] = ['info', d.bs4];
   }
 })(window.JG_I18N || {});
+/* Lot 77 : activité de Scopus en quelques mots (source : scopus.fr) */
+(function (L) {
+  const S = { fr: 'Scopus, spécialiste français des badges sécurisés et du contrôle d’accès · Jouy-en-Josas', en: 'Scopus, French specialist in secure ID badges and access control · Jouy-en-Josas', 'zh-Hans': 'Scopus（法国安全证件卡与门禁专业公司）· Jouy-en-Josas', 'zh-Hant': 'Scopus（法國安全識別證與門禁專業公司）· Jouy-en-Josas', yue: 'Scopus（法國安全識別證同門禁專門公司）· Jouy-en-Josas', ko: 'Scopus(프랑스 보안 사원증·출입 통제 전문 기업) · Jouy-en-Josas' };
+  for (const k of Object.keys(S)) {
+    const T = L[k]; if (!T || !Array.isArray(T.pcItems)) continue;
+    const j = T.pcItems.find(p => p[0] === 'job' && /^Scopus/.test(p[3] || ''));
+    if (j) j[3] = S[k];
+  }
+})(window.JG_I18N || {});
