@@ -850,7 +850,7 @@
     if (!heroStarted || whoDone) whoEl.textContent = whoText();
     if (heroStarted) startRotate(0);
     fitLines();
-    { const sn = $('srName'); if (sn) sn.textContent = 'Jérémy Grosjean, ' + (t('whoRole') || ''); const sd = $('srDomains'); if (sd) sd.textContent = (t('domainsLbl') || '') + ' ' + (t('domains') || []).join(', ') + '.'; }
+    { const cjk = /^(zh|yue)/.test(lang), sn = $('srName'); if (sn) sn.textContent = 'Jérémy Grosjean' + (cjk ? '，' : ', ') + (t('whoRole') || ''); const sd = $('srDomains'); if (sd) sd.textContent = cjk ? (t('domainsLbl') || '').trim() + (t('domains') || []).join('、') + '。' : (t('domainsLbl') || '') + ' ' + (t('domains') || []).join(', ') + '.'; } /* chinois et cantonais : virgule d'énumération 、 et point 。 */
   }
   /* Les deux lignes « $ whoami » et « $ domaines » gardent la largeur du domaine le plus long :
      pendant la frappe, le début de ligne ne bouge plus (avant : jusqu'à 91 px de décalage) */

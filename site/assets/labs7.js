@@ -423,7 +423,7 @@
     fr: {
       title: 'Jérémy Grosjean · Technicien support informatique', titleTab: 'Jérémy Grosjean · Technicien support informatique', whoRole: 'technicien support informatique',
       availLine: 'Disponible immédiatement · CDI (ou CDD)', fmAvail: 'Disponible immédiatement · CDI (ou CDD)', fmRole: 'Technicien support informatique · CDI (ou CDD)',
-      briefSub: 'Technicien support informatique · CDI (ou CDD) · disponible immédiatement',
+      briefSub: 'Technicien support informatique · CDI (ou CDD)',
       contactIntro: 'Pour un poste, une question ou un échange, écrivez-moi :',
       tWhoami: 'Jérémy Grosjean, technicien support informatique. Recherche un CDI (ou un CDD). Tapez boot ou contact.',
       tourBrief: 'Mon profil en 30 secondes : poste recherché, expérience, titre, disponibilité.',
@@ -446,8 +446,8 @@
     },
     en: {
       title: 'Jérémy Grosjean · IT Support Technician', titleTab: 'Jérémy Grosjean · IT Support Technician', whoRole: 'IT support technician',
-      availLine: 'Available now · permanent (or fixed-term)', fmAvail: 'Available now · permanent (or fixed-term)', fmRole: 'IT support technician · permanent (or fixed-term)',
-      briefSub: 'IT support technician · permanent (or fixed-term) contract · available now',
+      availLine: 'Available now · permanent (or fixed‑term)', fmAvail: 'Available now · permanent (or fixed‑term)', fmRole: 'IT support technician · permanent (or fixed‑term)',
+      briefSub: 'IT support technician · permanent (or fixed-term) contract',
       contactIntro: 'For a job, a question or a chat, write to me:',
       tWhoami: 'Jérémy Grosjean, IT support technician. Looking for a permanent (or fixed-term) job. Type boot or contact.',
       tourBrief: 'My profile in 30 seconds: job wanted, experience, title, availability.',
@@ -457,8 +457,8 @@
       mailBody: 'Hello Jérémy,\n\nI am contacting you about an IT support technician job.\n\nCompany:\nCity:\nContract type:\nPreferred start date:\nPhone:\n\nBest regards,\n',
       slotIcsTitle: 'Interview with Jérémy Grosjean (IT support technician)',
       domTip: 'The areas I work in scroll here', goalV: 'IT support technician, permanent (or fixed-term)',
-      boot: [['ok', 'French professional title TAI (level 4) earned'], ['wait', 'Looking for a permanent (or fixed-term) IT support job'], ['info', 'Windows 11, Microsoft 365, Active Directory'], ['info', 'Level 1/2 support, on-site and remote (GLPI, ITIL)']],
-      bootShort: [['ok', 'TAI level 4 earned'], ['ok', 'Almost 4 years in support'], ['wait', 'Seeking permanent/fixed-term'], ['info', 'Windows 11, M365, AD, GLPI']],
+      boot: [['ok', 'French professional title TAI (level 4) earned'], ['wait', 'Looking for a permanent (or fixed‑term) IT support job'], ['info', 'Windows 11, Microsoft 365, Active Directory'], ['info', 'Level 1/2 support, on-site and remote (GLPI, ITIL)']],
+      bootShort: [['ok', 'TAI level 4 earned'], ['ok', 'Almost 4 years in support'], ['wait', 'Seeking permanent/fixed‑term'], ['info', 'Windows 11, M365, AD, GLPI']],
       rows: [['Looking for', 'An IT support technician job (level 1/2 support, workstations, on-site support), ideally permanent, otherwise fixed-term, in a company or in the public sector'],
         ['Experience', 'Almost 4 years in IT support, including nearly 3 years at Bosch, until the site closed in September 2026'],
         ['Goal', 'Grow into systems and network administration, learning on the job'],
@@ -471,7 +471,7 @@
     'zh-Hans': {
       title: 'Jérémy Grosjean · IT 支持技术员', titleTab: 'Jérémy Grosjean · IT 支持技术员', whoRole: 'IT 支持技术员',
       availLine: '可立即入职 · 无固定期限（或固定期限）合同', fmAvail: '可立即入职 · 无固定期限（或固定期限）合同', fmRole: 'IT 支持技术员 · 无固定期限（或固定期限）合同',
-      briefSub: 'IT 支持技术员 · 无固定期限（或固定期限）合同 · 可立即入职',
+      briefSub: 'IT 支持技术员 · 无固定期限（或固定期限）合同',
       contactIntro: '求职、提问或交流，请给我写信：',
       tWhoami: 'Jérémy Grosjean，IT 支持技术员。正在寻找无固定期限（或固定期限）的工作。输入 boot 或 contact。',
       tourBrief: '30 秒了解我：求职岗位、经验、资格、入职时间。',
@@ -495,7 +495,7 @@
     'zh-Hant': {
       title: 'Jérémy Grosjean · IT 支援技術員', titleTab: 'Jérémy Grosjean · IT 支援技術員', whoRole: 'IT 支援技術員',
       availLine: '可立即到職 · 不定期（或定期）契約', fmAvail: '可立即到職 · 不定期（或定期）契約', fmRole: 'IT 支援技術員 · 不定期（或定期）契約',
-      briefSub: 'IT 支援技術員 · 不定期（或定期）契約 · 可立即到職',
+      briefSub: 'IT 支援技術員 · 不定期（或定期）契約',
       contactIntro: '求職、提問或交流，請寫信給我：',
       tWhoami: 'Jérémy Grosjean，IT 支援技術員。正在尋找不定期（或定期）契約的工作。輸入 boot 或 contact。',
       tourBrief: '30 秒認識我：應徵職位、經歷、資格、到職時間。',
@@ -519,7 +519,7 @@
     yue: {
       title: 'Jérémy Grosjean · IT 支援技術員', titleTab: 'Jérémy Grosjean · IT 支援技術員', whoRole: 'IT 支援技術員',
       availLine: '即刻可以開工 · 長期（或者定期）合約', fmAvail: '即刻可以開工 · 長期（或者定期）合約', fmRole: 'IT 支援技術員 · 長期（或者定期）合約',
-      briefSub: 'IT 支援技術員 · 長期（或者定期）合約 · 即刻可以開工',
+      briefSub: 'IT 支援技術員 · 長期（或者定期）合約',
       contactIntro: '搵工、問嘢或者傾偈，寫信畀我：',
       tWhoami: 'Jérémy Grosjean，IT 支援技術員。搵緊長期（或者定期）合約嘅工。打 boot 或者 contact。',
       tourBrief: '30 秒睇晒：想搵嘅職位、經驗、資格、幾時開工。',
@@ -543,7 +543,7 @@
     ko: {
       title: 'Jérémy Grosjean · IT 지원 기술자', titleTab: 'Jérémy Grosjean · IT 지원 기술자', whoRole: 'IT 지원 기술자',
       availLine: '즉시 근무 가능 · 정규직(또는 계약직)', fmAvail: '즉시 근무 가능 · 정규직(또는 계약직)', fmRole: 'IT 지원 기술자 · 정규직(또는 계약직)',
-      briefSub: 'IT 지원 기술자 · 정규직(또는 계약직) · 즉시 근무 가능',
+      briefSub: 'IT 지원 기술자 · 정규직(또는 계약직)',
       contactIntro: '채용, 문의 또는 교류를 원하시면 메일 주세요:',
       tWhoami: 'Jérémy Grosjean, IT 지원 기술자. 정규직(또는 계약직) 일자리를 찾고 있습니다. boot 또는 contact를 입력하세요.',
       tourBrief: '30초 요약: 희망 직무, 경력, 자격, 근무 가능 시기.',

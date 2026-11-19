@@ -1880,3 +1880,19 @@ body:has(.panel.open) .toast, body.term-open .toast { bottom: auto; top: calc(ma
   #contactPanel .c-main > p:first-child { margin-bottom: .4rem; }
 }
 #contactPanel .c-main > p:first-child, #briefPanel .brief-sub { text-wrap: balance; }
+
+/* ===== Lot 78 : la vue recruteur imprimée tient de nouveau sur une seule page A4 (le parcours s'est allongé) ===== */
+@media print {
+  @page { margin: 9mm 12mm; }
+  html { font-size: 11px !important; }
+  html:lang(zh), html:lang(yue), html:lang(ko) { font-size: 10.3px !important; } /* les caractères chinois et coréens prennent plus de hauteur */
+  .rec h3 { margin-top: .7rem; margin-bottom: .3rem; }
+}
+/* Accessibilité : heure, langue et thème dans un en-tête (repère « bannière ») ; display: contents garde la mise en page */
+.site-top, .site-foot { display: contents; }
+/* Mots du glossaire : zone cliquable d'au moins 24 px de haut (WCAG 2.5.8), sans changer la hauteur des lignes */
+.gl-t { padding-block: 3px; margin-block: -3px; }
+/* Petit téléphone (≤ 400 px) : « Chez vous : … (fuseau) » reste sur une ligne et ne chevauche plus le nom */
+@media (max-width: 400px) {
+  .c-local { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; font-size: .72rem; }
+}

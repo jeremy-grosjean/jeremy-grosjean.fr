@@ -31,7 +31,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="/site.webmanifest?v=f3b98af3eb">
 <link rel="preload" href="/assets/fonts/sora.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/app.css?v=89b1d4c227">
+<link rel="stylesheet" href="/assets/app.css?v=a9acb4d13b">
 <script src="/assets/i18n.js?v=a51a4e32c5" defer></script>
 <script src="/assets/labs.js?v=20998f7cc8" defer></script>
 <script src="/assets/labs2.js?v=1e3d821f80" defer></script>
@@ -39,10 +39,10 @@
 <script src="/assets/labs4.js?v=08596d3504" defer></script>
 <script src="/assets/labs5.js?v=60720498d6" defer></script>
 <script src="/assets/labs6.js?v=716e5179dc" defer></script>
-<script src="/assets/labs7.js?v=a4c9c4446c" defer></script>
+<script src="/assets/labs7.js?v=8d8cfd50a9" defer></script>
 <script src="/assets/status.js" defer></script>
 <script src="/assets/news.js?v=5b80be41d3" defer></script>
-<script src="/assets/app.js?v=7a62833fd5" defer></script>
+<script src="/assets/app.js?v=f205ab569b" defer></script>
 </head>
 <body>
 <a class="skip" id="skipLink" href="#domain" data-i="skipLink">Aller à l’essentiel</a>
@@ -126,6 +126,7 @@
   <div class="rep-foot"><img src="/qr.svg" width="72" height="72" alt=""><p><span id="repFoot"></span><br><b>https://jeremy-grosjean.fr</b></p></div>
 </section>
 
+<header class="site-top">
 <p class="clock"><b id="cTime">--:--</b><span id="cDate">Paris</span><span class="c-local" id="cLocal" hidden></span></p>
 
 <div class="topbar">
@@ -155,6 +156,8 @@
   </div>
 </div>
 
+</header>
+<footer class="site-foot">
 <div class="dock">
   <div class="dock-left">
     <button class="pill" id="secBtn" type="button" aria-haspopup="dialog">
@@ -191,6 +194,7 @@
     <span class="lbl" id="sLabel">Activer le son</span><span class="lbl-s" aria-hidden="true" data-i="soundShort">Son</span>
   </button>
 </div>
+</footer>
 
 <div class="hud" aria-live="polite">
   <span class="chip"><span data-i="level">Niveau</span> <b id="hLevel">1/3</b></span>
@@ -610,10 +614,10 @@
 </div>
 
 <div class="forum" id="forum" hidden>
-  <div class="forum-card">
+  <div class="forum-card" role="region" aria-labelledby="fmName">
     <p class="forum-clock" id="fmClock" aria-hidden="true"></p>
     <img class="forum-photo" src="/assets/jg.webp" width="160" height="160" alt="" decoding="async">
-    <p class="forum-name">Jérémy Grosjean</p>
+    <p class="forum-name" id="fmName">Jérémy Grosjean</p>
     <p class="forum-role" id="fmRole" data-i="fmRole"></p>
     <p class="forum-avail"><span class="avail-dot" aria-hidden="true"></span><span data-i="fmAvail">Disponible immédiatement · CDI (ou CDD)</span></p>
     <p class="forum-where" data-i="fmWhere">Lieux de travail possibles : Paris et Île-de-France · Pontarlier · Besançon</p>
@@ -656,7 +660,7 @@
   <div class="card">
     <h2 id="briefTitle" data-i="briefTitle">En 30 secondes</h2>
     <div class="brief-id"><img class="me-photo" id="briefPhoto" alt="" width="44" height="44" draggable="false" decoding="async" hidden><p class="brief-avail"><span class="avail-dot" aria-hidden="true"></span><span data-i="briefAvail">Disponible immédiatement</span></p></div>
-    <p class="brief-sub" id="briefSub">Technicien support informatique · CDI (ou CDD) · disponible immédiatement</p>
+    <p class="brief-sub" id="briefSub">Technicien support informatique · CDI (ou CDD)</p>
     <dl class="brief-tiles" id="briefList"></dl>
     <p class="brief-dom-lbl" id="briefDomLbl"></p>
     <ul class="brief-doms" id="briefDoms"></ul>
