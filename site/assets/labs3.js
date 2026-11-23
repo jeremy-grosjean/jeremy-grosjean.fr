@@ -21,7 +21,7 @@
         ['Intervenir sur les éléments de l’infrastructure', ['Installer et configurer les équipements et services réseau', 'Intervenir sur un réseau sécurisé', 'Intervenir sur un annuaire Active Directory']]
       ],
       shBtn: 'Partager', shTitle: 'Partager ce profil', shSub: 'Envoyez-le à un collègue ou au service RH.', shCopy: 'Copier le lien', shMail: 'E-mail', shCopied: 'Lien copié',
-      shMailSubject: 'Profil : Jérémy Grosjean, technicien informatique en alternance', shMailBody: (u) => `Bonjour,\n\nVoici le profil d’un candidat en alternance Technicien informatique :\n${u}\n`,
+      shMailSubject: 'Profil : Jérémy Grosjean, technicien informatique en alternance', shMailBody: (u) => `Bonjour,\n\nVoici le profil d’un candidat technicien support informatique, disponible immédiatement en CDI (ou CDD) :\n${u}\n`,
       shText: 'Jérémy Grosjean, technicien informatique, cherche une alternance',
       faqBtn: 'Questions fréquentes', faqTitle: 'Questions fréquentes', faqSub: 'Les réponses aux questions posées le plus souvent.',
       faqQ: ["Qu’avez-vous déjà validé ?", "Que recherchez-vous ?", "Quel est le rythme de l’alternance ?", "Combien de temps dure-t-elle ?", "Quand pouvez-vous commencer ?", "Quels domaines couvre la formation ?", "Avez-vous le permis et un véhicule ?", "Quelle expérience avez-vous ?", "Où pouvez-vous travailler ?", "Quel est votre objectif ?", "Quelles langues parlez-vous ?", "Comment vous joindre ?"],
@@ -111,7 +111,7 @@
         ['Work on the infrastructure', ['Install and configure network equipment and services', 'Work on a secured network', 'Work on an Active Directory']]
       ],
       shBtn: 'Share', shTitle: 'Share this profile', shSub: 'Send it to a colleague or to HR.', shCopy: 'Copy link', shMail: 'Email', shCopied: 'Link copied',
-      shMailSubject: 'Profile: Jérémy Grosjean, IT technician (work-study)', shMailBody: (u) => `Hello,\n\nHere is the profile of a work-study IT technician candidate:\n${u}\n`,
+      shMailSubject: 'Profile: Jérémy Grosjean, IT technician (work-study)', shMailBody: (u) => `Hello,\n\nHere is the profile of an IT support technician candidate, available now for a permanent (or fixed-term) job:\n${u}\n`,
       shText: 'Jérémy Grosjean, IT technician, is looking for a work-study contract',
       faqBtn: 'FAQ', faqTitle: 'Frequently asked questions', faqSub: 'Answers to the questions I am asked most often.',
       faqQ: ["What have you already achieved?", "What are you looking for?", "What is the work-study schedule?", "How long does it last?", "When can you start?", "What does the training cover?", "Do you have a driving licence and a vehicle?", "What experience do you have?", "Where can you work?", "What is your goal?", "Which languages do you speak?", "How can I reach you?"],
@@ -201,7 +201,7 @@
         ['维护基础设施', ['安装并配置网络设备和服务', '在安全网络上操作', '管理 Active Directory 目录']]
       ],
       shBtn: '分享', shTitle: '分享此简介', shSub: '发送给同事或人力资源部门。', shCopy: '复制链接', shMail: '邮件', shCopied: '链接已复制',
-      shMailSubject: '简介：Jérémy Grosjean，工学交替 IT 技术员', shMailBody: (u) => `您好，\n\n这是一位工学交替 IT 技术员候选人的简介：\n${u}\n`,
+      shMailSubject: '简介：Jérémy Grosjean，工学交替 IT 技术员', shMailBody: (u) => `您好，\n\n这是一位 IT 支持技术员候选人的简介，可立即入职（无固定期限或固定期限合同）：\n${u}\n`,
       shText: 'IT 技术员 Jérémy Grosjean 正在寻找工学交替岗位',
       faqBtn: '常见问题', faqTitle: '常见问题', faqSub: '最常被问到的问题及回答。',
       faqQ: ["您已经取得了什么证书？", "您在寻找什么？", "工学交替的节奏是怎样的？", "持续多长时间？", "什么时候可以开始？", "培训涵盖哪些领域？", "您有驾照和交通工具吗？", "您有什么工作经验？", "您可以在哪里工作？", "您的目标是什么？", "您会说哪些语言？", "怎样联系您？"],
@@ -291,7 +291,7 @@
         ['維護基礎架構', ['安裝並設定網路設備與服務', '在安全網路上作業', '管理 Active Directory 目錄']]
       ],
       shBtn: '分享', shTitle: '分享此簡介', shSub: '寄給同事或人資部門。', shCopy: '複製連結', shMail: '郵件', shCopied: '連結已複製',
-      shMailSubject: '簡介：Jérémy Grosjean，建教合作 IT 技術員', shMailBody: (u) => `您好：\n\n這是一位建教合作 IT 技術員候選人的簡介：\n${u}\n`,
+      shMailSubject: '簡介：Jérémy Grosjean，建教合作 IT 技術員', shMailBody: (u) => `您好：\n\n這是一位 IT 支援技術員候選人的簡介，可立即到職（不定期或定期契約）：\n${u}\n`,
       shText: 'IT 技術員 Jérémy Grosjean 正在尋找建教合作職缺',
       faqBtn: '常見問題', faqTitle: '常見問題', faqSub: '最常被問到的問題與回答。',
       faqQ: ["您已經取得什麼證照？", "您在尋找什麼？", "建教合作的節奏是怎樣的？", "持續多久？", "什麼時候可以開始？", "培訓涵蓋哪些領域？", "您有駕照和交通工具嗎？", "您有什麼工作經驗？", "您可以在哪裡工作？", "您的目標是什麼？", "您會說哪些語言？", "怎麼聯絡您？"],
@@ -381,7 +381,7 @@
         ['處理基礎設施', ['安裝同設定網絡設備同服務', '喺安全網絡上工作', '處理 Active Directory 目錄']]
       ],
       shBtn: '分享', shTitle: '分享呢份簡介', shSub: '寄俾同事或者人事部。', shCopy: '複製連結', shMail: '電郵', shCopied: '連結已複製',
-      shMailSubject: '簡介：Jérémy Grosjean，工讀 IT 技術員', shMailBody: (u) => `你好，\n\n呢份係一位工讀 IT 技術員候選人嘅簡介：\n${u}\n`,
+      shMailSubject: '簡介：Jérémy Grosjean，工讀 IT 技術員', shMailBody: (u) => `你好，\n\n呢份係一位 IT 支援技術員候選人嘅簡介，即刻可以開工（長期或者定期合約）：\n${u}\n`,
       shText: 'IT 技術員 Jérémy Grosjean 搵緊工讀職位',
       faqBtn: '常見問題', faqTitle: '常見問題', faqSub: '最常被問到嘅問題同答案。',
       faqQ: ["你已經考到咩資格？", "你搵緊咩？", "工讀嘅節奏係點？", "幾耐？", "幾時可以開始？", "培訓包括咩範疇？", "你有冇車牌同埋車？", "你有咩工作經驗？", "你可以喺邊度返工？", "你嘅目標係咩？", "你識講咩語言？", "點樣聯絡你？"],
@@ -471,7 +471,7 @@
         ['인프라 작업', ['네트워크 장비와 서비스 설치·설정', '보안 네트워크 작업', 'Active Directory 디렉터리 작업']]
       ],
       shBtn: '공유', shTitle: '이 프로필 공유', shSub: '동료나 인사팀에 보내세요.', shCopy: '링크 복사', shMail: '메일', shCopied: '링크가 복사되었습니다',
-      shMailSubject: '프로필: Jérémy Grosjean, 일·학습 병행 IT 기술자', shMailBody: (u) => `안녕하세요.\n\n일·학습 병행 IT 기술자 지원자의 프로필입니다:\n${u}\n`,
+      shMailSubject: '프로필: Jérémy Grosjean, 일·학습 병행 IT 기술자', shMailBody: (u) => `안녕하세요.\n\nIT 지원 기술자 지원자의 프로필입니다. 즉시 근무 가능하며 정규직(또는 계약직)을 찾고 있습니다:\n${u}\n`,
       shText: 'IT 기술자 Jérémy Grosjean이 일·학습 병행 자리를 찾고 있습니다',
       faqBtn: '자주 묻는 질문', faqTitle: '자주 묻는 질문', faqSub: '가장 자주 받는 질문과 답변입니다.',
       faqQ: ["이미 취득한 자격은?", "무엇을 찾고 있나요?", "일·학습 병행 일정은?", "기간은 얼마나 되나요?", "언제 시작할 수 있나요?", "교육 분야는?", "운전면허와 차량이 있나요?", "어떤 경력이 있나요?", "어디에서 일할 수 있나요?", "목표는 무엇인가요?", "어떤 언어를 하나요?", "어떻게 연락하나요?"],

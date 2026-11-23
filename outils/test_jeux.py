@@ -628,6 +628,34 @@ with sync_playwright() as p:
             for p_ in r: erreurs.append(f'{w}×{h} {lg} : fiche « En 30 secondes » : {p_}')
         ctx.close()
     ok('fiche « En 30 secondes » en tuiles : 8 tuiles, 6 domaines, 2 boutons, dans les 6 langues, du 320 px à l’ordinateur')
+    # Lot 79 : textes à jour dans les 6 langues (FAQ sans question en double, partage et « about » sans alternance ni « en construction »),
+    # focus sur le titre dès la 1re ouverture des fenêtres à bandeau, jours fériés mobiles exclus des créneaux
+    ctx = nav.new_context(viewport={'width': 1280, 'height': 800}, locale='fr-FR', timezone_id='Europe/Paris')
+    pg = ctx.new_page(); suivre(pg, 'lot 79'); pg.add_init_script("localStorage.setItem('jg-tour', '1'); localStorage.setItem('jg-lang', 'fr')")
+    pg.goto(BASE + '/'); pg.wait_for_timeout(700)
+    r = pg.evaluate("""(() => { const out = [], perime = /alternance|work-study|工学交替|建教合作|工讀|일·학습|construction|建设中|建置中|建設緊|준비 중/i;
+      for (const [lg, T] of Object.entries(window.JG_I18N)) {
+        if (new Set(T.faqQ).size !== T.faqQ.length) out.push(lg + ' : question en double dans la FAQ');
+        for (const [k, v] of [['shMailBody', T.shMailBody('U')], ['bdShareText', T.bdShareText(1, 2, 'x', 'U')], ['tAbout', T.tAbout], ['shMailSubject', T.shMailSubject]])
+          if (perime.test(v)) out.push(lg + ' : ' + k + ' périmé « ' + v.slice(0, 60) + ' »');
+      }
+      return out; })()""")
+    for p_ in r: erreurs.append('textes : ' + p_)
+    for btn, titre in (('secBtn', 'secTitle'), ('supBtn', 'supTitle'), ('contactBtn', 'contactTitle')):
+        pg.focus('#' + btn); pg.keyboard.press('Enter'); pg.wait_for_timeout(300)
+        f_ = pg.evaluate("document.activeElement.id || document.activeElement.className")
+        if f_ != titre: erreurs.append(f'1re ouverture de {btn} : focus sur « {f_} » au lieu du titre')
+        pg.keyboard.press('Escape'); pg.wait_for_timeout(300)
+    ctx.close()
+    ctx = nav.new_context(viewport={'width': 1280, 'height': 800}, locale='fr-FR', timezone_id='Europe/Paris')
+    pg = ctx.new_page(); suivre(pg, 'jours fériés'); pg.add_init_script("localStorage.setItem('jg-tour', '1'); localStorage.setItem('jg-lang', 'fr')")
+    pg.clock.install(time='2027-03-25T09:00:00+01:00')  # jeudi avant Pâques 2027 : le lundi 29 mars est férié
+    pg.goto(BASE + '/#fiche'); pg.wait_for_timeout(700)
+    jours = pg.evaluate("(() => { document.getElementById('briefSlot').click(); return [...document.querySelectorAll('#slotDays .slot-tab')].map(b => b.getAttribute('aria-label') || b.textContent); })()")
+    if len(jours) != 8 or any('29 mars' in j for j in jours):
+        erreurs.append(f'créneaux : lundi de Pâques proposé ou pas 8 jours {jours}')
+    ctx.close()
+    ok('textes à jour dans les 6 langues, focus sur le titre dès la 1re ouverture, lundi de Pâques exclu des créneaux')
     # Fluidité : le jeu va à la même vitesse sur un écran 30 Hz, 60 Hz, 144 Hz ou 240 Hz (hasard figé pour comparer)
     # Une machine surchargée (GitHub lance plusieurs vérifications à la fois) peut ralentir une seule mesure :
     # en cas d'écart, on refait la mesure (2 fois au plus) et on garde le meilleur temps de chaque fréquence.

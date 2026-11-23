@@ -61,7 +61,8 @@ def traiter_html(src):
     for part in re.split(r'(<script\b.*?</script>|<style\b.*?</style>|<[^>]+>)', src, flags=re.S):
         if part.startswith('<'):
             morceaux.append(part); continue
-        t, k = re.subn(rf"(?<={MOT})'(?={MOT})", TYPO, part); total += k; morceaux.append(t)
+        # l'apostrophe droite peut aussi être écrite en entité HTML (&#x27; &#39; &apos;) : même correction
+        t, k = re.subn(rf"(?<={MOT})(?:'|&#x27;|&#39;|&apos;)(?={MOT})", TYPO, part); total += k; morceaux.append(t)
     return ''.join(morceaux), total
 
 

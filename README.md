@@ -20,7 +20,7 @@ Site personnel de **Jérémy Grosjean**, technicien support informatique N1/N2 (
 ## Ce que contient le site
 
 - Page d'accueil animée (réseau interactif à la souris et au doigt), en **6 langues** : français, anglais, chinois simplifié et traditionnel, cantonais, coréen.
-- **Six mini-jeux** : « Protéger le serveur » (malware, DDoS, hameçonnage), un **simulateur de support N1/N2** (tickets réalistes : DHCP, DNS, Active Directory, GPO, droits NTFS…), **« Trouve la panne »** (diagnostic réseau avec `ipconfig`, `ping` et `nslookup` simulés), un **quiz Active Directory et GPO**, **« Repère l'hameçonnage »** (e-mails inventés, indices révélés après chaque réponse) et **« Sous-réseaux express »** (calcul de sous-réseaux contre la montre). Les meilleurs scores restent dans le navigateur du visiteur.
+- **16 mini-jeux**, dont « Protéger le serveur » (malware, DDoS, hameçonnage), un **simulateur de support N1/N2** (tickets réalistes : DHCP, DNS, Active Directory, GPO, droits NTFS…), **« Trouve la panne »** (diagnostic réseau avec `ipconfig`, `ping` et `nslookup` simulés), un **quiz Active Directory et GPO**, **« Repère l'hameçonnage »** (e-mails inventés, indices révélés après chaque réponse) et **« Sous-réseaux express »** (calcul de sous-réseaux contre la montre). Les meilleurs scores restent dans le navigateur du visiteur.
 - **Le jargon expliqué** : les mots techniques (DNS, GPO, DKIM…) sont soulignés et donnent leur définition au toucher ; glossaire complet de 28 termes dans les 6 langues.
 - **Terminal caché** (`Ctrl/⌘ + K`) : `help`, `cv`, `ipcalc`, `dig`, `curl -I`, `whois`, `traceroute`, `define`, `device`, `neofetch`, `htop`, `secrets`…
 - **Vue sur une page**, sans animation : [jeremy-grosjean.fr/#recruteur](https://jeremy-grosjean.fr/#recruteur). C'est aussi la fiche A4 imprimée avec `Ctrl/⌘ + P`.
@@ -121,10 +121,10 @@ L'hôte et l'identifiant SFTP ne sont **pas** dans ce dépôt : le script les li
 
 ## English
 
-Personal website of **Jérémy Grosjean**, IT technician, available for a work-study contract (IT Technician, 2-year degree).
+Personal website of **Jérémy Grosjean**, level 1/2 IT support technician (almost 4 years of experience: Bosch, Scopus), **available now for a permanent (or fixed-term) job**, in the private or public sector, in Paris and the Île-de-France region, Pontarlier or Besançon.
 
 - Hand-written HTML, CSS and JavaScript: **no framework, no dependency, no external request**.
-- **6 languages**, a one-page recruiter view (also the printed A4 sheet), four mini-games (server defense, a **level 1/2 IT support simulator**, a network fault-finding game and an Active Directory quiz), a hidden terminal (`ipcalc`, `dig`, `device`, `htop`…), service monitoring, offline mode.
+- **6 languages**, a one-page recruiter view (also the printed A4 sheet), 16 mini-games (including server defense, a **level 1/2 IT support simulator**, a network fault-finding game and an Active Directory quiz), a hidden terminal (`ipcalc`, `dig`, `device`, `htop`…), service monitoring, offline mode.
 - **0 cookies, 0 trackers, no forms.** Strict security headers (CSP without `unsafe-*`, Trusted Types, HSTS, COOP/COEP/CORP).
 - Grades: **A+** on SSL Labs, Mozilla Observatory and securityheaders.com; **100/100/100** on PageSpeed Insights.
 

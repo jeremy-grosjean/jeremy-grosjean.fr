@@ -60,7 +60,7 @@
       ],
       bdTitle: 'Badges', bdSub: 'Gagnez des badges en jouant : ils restent enregistrés dans ce navigateur.',
       bdCount: (n, t) => `${n}/${t} badges débloqués`, bdShare: 'Partager mon récapitulatif', bdCopied: 'Récapitulatif copié',
-      bdShareText: (n, t, list, url) => `J’ai débloqué ${n}/${t} badges sur le site de Jérémy Grosjean, technicien informatique en alternance${list ? ' : ' + list : ''}. À vous de jouer : ${url}`,
+      bdShareText: (n, t, list, url) => `J’ai débloqué ${n}/${t} badges sur le site de Jérémy Grosjean, technicien support informatique${list ? ' : ' + list : ''}. À vous de jouer : ${url}`,
       bdNew: (b) => `🏅 Nouveau badge : ${b}`, bdLocked: 'À débloquer',
       badges: [
         ['Premier pas', 'Terminer un premier jeu.'], ['Gardien du serveur', 'Terminer une partie de « Protéger le serveur ».'],
@@ -133,7 +133,7 @@
       ],
       bdTitle: 'Badges', bdSub: 'Earn badges by playing: they are saved in this browser.',
       bdCount: (n, t) => `${n}/${t} badges unlocked`, bdShare: 'Share my summary', bdCopied: 'Summary copied',
-      bdShareText: (n, t, list, url) => `I unlocked ${n}/${t} badges on the site of Jérémy Grosjean, IT technician looking for a work-study contract${list ? ': ' + list : ''}. Your turn: ${url}`,
+      bdShareText: (n, t, list, url) => `I unlocked ${n}/${t} badges on the site of Jérémy Grosjean, IT support technician${list ? ': ' + list : ''}. Your turn: ${url}`,
       bdNew: (b) => `🏅 New badge: ${b}`, bdLocked: 'Locked',
       badges: [
         ['First steps', 'Finish a first game.'], ['Server guardian', 'Finish a round of “Protect the server”.'],
@@ -206,7 +206,7 @@
       ],
       bdTitle: '徽章', bdSub: '玩游戏赢徽章：徽章保存在本浏览器中。',
       bdCount: (n, t) => `已解锁 ${n}/${t} 枚徽章`, bdShare: '分享我的成绩', bdCopied: '成绩已复制',
-      bdShareText: (n, t, list, url) => `我在 IT 技术员 Jérémy Grosjean（寻找工学交替岗位）的网站上解锁了 ${n}/${t} 枚徽章${list ? '：' + list : ''}。轮到你了：${url}`,
+      bdShareText: (n, t, list, url) => `我在 IT 支持技术员 Jérémy Grosjean 的网站上解锁了 ${n}/${t} 枚徽章${list ? '：' + list : ''}。轮到你了：${url}`,
       bdNew: (b) => `🏅 新徽章：${b}`, bdLocked: '未解锁',
       badges: [
         ['第一步', '完成第一个游戏。'], ['服务器守护者', '完成一局“保护服务器”。'],
@@ -279,7 +279,7 @@
       ],
       bdTitle: '徽章', bdSub: '玩遊戲贏徽章：徽章儲存在這個瀏覽器中。',
       bdCount: (n, t) => `已解鎖 ${n}/${t} 枚徽章`, bdShare: '分享我的成績', bdCopied: '成績已複製',
-      bdShareText: (n, t, list, url) => `我在 IT 技術員 Jérémy Grosjean（尋找建教合作職缺）的網站上解鎖了 ${n}/${t} 枚徽章${list ? '：' + list : ''}。換你了：${url}`,
+      bdShareText: (n, t, list, url) => `我在 IT 支援技術員 Jérémy Grosjean 的網站上解鎖了 ${n}/${t} 枚徽章${list ? '：' + list : ''}。換你了：${url}`,
       bdNew: (b) => `🏅 新徽章：${b}`, bdLocked: '未解鎖',
       badges: [
         ['第一步', '完成第一個遊戲。'], ['伺服器守護者', '完成一局「保護伺服器」。'],
@@ -352,7 +352,7 @@
       ],
       bdTitle: '徽章', bdSub: '玩遊戲贏徽章：徽章儲存喺呢個瀏覽器。',
       bdCount: (n, t) => `已經解鎖 ${n}/${t} 個徽章`, bdShare: '分享我嘅成績', bdCopied: '成績已經複製',
-      bdShareText: (n, t, list, url) => `我喺 IT 技術員 Jérémy Grosjean（搵緊工讀職位）嘅網站解鎖咗 ${n}/${t} 個徽章${list ? '：' + list : ''}。到你喇：${url}`,
+      bdShareText: (n, t, list, url) => `我喺 IT 支援技術員 Jérémy Grosjean 嘅網站解鎖咗 ${n}/${t} 個徽章${list ? '：' + list : ''}。到你喇：${url}`,
       bdNew: (b) => `🏅 新徽章：${b}`, bdLocked: '未解鎖',
       badges: [
         ['第一步', '完成第一個遊戲。'], ['伺服器守護者', '完成一局「保護伺服器」。'],
@@ -425,7 +425,7 @@
       ],
       bdTitle: '배지', bdSub: '게임을 하며 배지를 모으세요. 배지는 이 브라우저에 저장됩니다.',
       bdCount: (n, t) => `배지 ${n}/${t}개 획득`, bdShare: '내 결과 공유하기', bdCopied: '결과가 복사되었습니다',
-      bdShareText: (n, t, list, url) => `IT 기술자 Jérémy Grosjean(일·학습 병행 구직 중)의 사이트에서 배지 ${n}/${t}개를 얻었어요${list ? ': ' + list : ''}. 이제 당신 차례예요: ${url}`,
+      bdShareText: (n, t, list, url) => `IT 지원 기술자 Jérémy Grosjean의 사이트에서 배지 ${n}/${t}개를 얻었어요${list ? ': ' + list : ''}. 이제 당신 차례예요: ${url}`,
       bdNew: (b) => `🏅 새 배지: ${b}`, bdLocked: '잠김',
       badges: [
         ['첫걸음', '첫 게임을 끝내세요.'], ['서버 수호자', '“서버 지키기”를 한 판 끝내세요.'],

@@ -654,3 +654,18 @@
     if (j) j[3] = S[k];
   }
 })(window.JG_I18N || {});
+/* Lot 79 : la FAQ posait deux fois la question de l'objectif (questions 5 et 10) ; la 10e porte maintenant sur la fonction publique */
+(function (L) {
+  const D = {
+    fr: ['La fonction publique vous intéresse-t-elle ?', 'Oui : je postule aussi comme contractuel dans la fonction publique (ministères, collectivités, hôpitaux), en CDD comme en CDI.'],
+    en: ['Are you open to public-sector jobs?', 'Yes: I also apply as a contract agent in the French public sector (ministries, local authorities, hospitals), on fixed-term or permanent contracts.'],
+    'zh-Hans': ['您考虑公共部门的职位吗？', '考虑：我也以合同制人员身份申请法国公共部门的职位（部委、地方政府、医院），固定期限或无固定期限合同均可。'],
+    'zh-Hant': ['您考慮公部門的職缺嗎？', '考慮：我也以契約人員身分應徵法國公部門的職缺（部會、地方政府、醫院），定期或不定期契約皆可。'],
+    yue: ['你會唔會考慮公營機構嘅工？', '會：我都有以合約員工身份申請法國公營機構嘅職位（政府部門、地方政府、醫院），定期或者長期合約都得。'],
+    ko: ['공공 부문 일자리도 고려하나요?', '네: 프랑스 공공 부문(정부 부처, 지방자치단체, 병원)에도 계약 직원으로 지원하고 있으며, 계약직과 정규직 모두 가능합니다.']
+  };
+  for (const k of Object.keys(D)) {
+    const T = L[k]; if (!T || !Array.isArray(T.faqQ) || !Array.isArray(T.faqExtra) || T.faqQ.length !== 12) continue;
+    T.faqQ[9] = D[k][0]; T.faqExtra[3] = D[k][1];
+  }
+})(window.JG_I18N || {});

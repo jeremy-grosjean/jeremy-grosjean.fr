@@ -316,7 +316,7 @@ window.JG_I18N = {
     boot: [["ok", "Titre professionnel TAI (niveau 4) obtenu"], ["wait", "Recherche un contrat de professionnalisation de 12 mois"], ["info", "4 jours en entreprise, 1 jour de formation"], ["info", "Formation visée : bac+2 (niveau 5), OpenClassrooms"]],
     bootHelp: 'journal de démarrage',
     tWhoami: 'Jérémy Grosjean, technicien informatique. Recherche une alternance. Tapez boot ou contact.',
-    tAbout: 'jeremy-grosjean.fr, site personnel de Jérémy Grosjean, technicien informatique. En construction.'
+    tAbout: 'jeremy-grosjean.fr, site personnel de Jérémy Grosjean, technicien support informatique. HTML, CSS et JavaScript écrits à la main, en 6 langues, sans cookie.'
   });
   add('en', {
     availLine: 'Available now for a work-study contract',
@@ -330,7 +330,7 @@ window.JG_I18N = {
     boot: [["ok", "French professional title TAI, IT support technician (level 4)"], ["wait", "Seeking a 12-month professionalisation contract"], ["info", "4 days at work, 1 day of training"], ["info", "Target: 2-year degree (level 5), OpenClassrooms"]],
     bootHelp: 'boot log',
     tWhoami: 'Jérémy Grosjean, IT technician. Seeking a work-study contract. Type boot or contact.',
-    tAbout: "jeremy-grosjean.fr, personal site of Jérémy Grosjean, IT technician. Under construction."
+    tAbout: "jeremy-grosjean.fr, personal site of Jérémy Grosjean, IT support technician. Hand-written HTML, CSS and JavaScript, in 6 languages, cookie-free."
   });
   add('zh-Hans', {
     availLine: '可立即开始工学交替',
@@ -344,7 +344,7 @@ window.JG_I18N = {
     boot: [["ok", "已获得法国 TAI 职业资格（IT 支持技术员，4 级）"], ["wait", "寻找 12 个月职业化合同（工学交替）"], ["info", "每周 4 天在企业，1 天培训"], ["info", "目标：Bac+2（5 级），OpenClassrooms"]],
     bootHelp: '启动日志',
     tWhoami: 'Jérémy Grosjean，IT 技术员，正在寻找工学交替岗位。输入 boot 或 contact。',
-    tAbout: 'jeremy-grosjean.fr，IT 技术员 Jérémy Grosjean 的个人网站，正在建设中。'
+    tAbout: 'jeremy-grosjean.fr，IT 支持技术员 Jérémy Grosjean 的个人网站。HTML、CSS 和 JavaScript 均为手写，提供 6 种语言，不使用 Cookie。'
   });
   add('zh-Hant', {
     availLine: '可立即開始建教合作',
@@ -358,7 +358,7 @@ window.JG_I18N = {
     boot: [["ok", "已取得法國 TAI 職業資格（IT 支援技術員，第 4 級）"], ["wait", "尋找 12 個月職業化契約（建教合作）"], ["info", "每週 4 天在企業，1 天上課"], ["info", "目標：Bac+2（第 5 級），OpenClassrooms"]],
     bootHelp: '開機日誌',
     tWhoami: 'Jérémy Grosjean，IT 技術員，正在尋找建教合作職位。輸入 boot 或 contact。',
-    tAbout: 'jeremy-grosjean.fr，IT 技術員 Jérémy Grosjean 的個人網站，建置中。'
+    tAbout: 'jeremy-grosjean.fr，IT 支援技術員 Jérémy Grosjean 的個人網站。HTML、CSS 與 JavaScript 皆為手寫，提供 6 種語言，不使用 Cookie。'
   });
   add('yue', {
     availLine: '即刻可以開始工讀交替',
@@ -372,7 +372,7 @@ window.JG_I18N = {
     boot: [["ok", "已經攞咗法國 TAI 職業資格（IT 支援技術員，第 4 級）"], ["wait", "搵緊 12 個月職業化合約（工讀交替）"], ["info", "每星期 4 日返公司，1 日上堂"], ["info", "目標：Bac+2（第 5 級），OpenClassrooms"]],
     bootHelp: '開機日誌',
     tWhoami: 'Jérémy Grosjean，IT 技術員，搵緊工讀交替職位。打 boot 或者 contact。',
-    tAbout: 'jeremy-grosjean.fr，IT 技術員 Jérémy Grosjean 嘅個人網站，建設緊。'
+    tAbout: 'jeremy-grosjean.fr，IT 支援技術員 Jérémy Grosjean 嘅個人網站。HTML、CSS 同 JavaScript 全部親手寫，有 6 種語言，冇用 Cookie。'
   });
   add('ko', {
     availLine: '일·학습 병행 즉시 가능',
@@ -386,7 +386,7 @@ window.JG_I18N = {
     boot: [["ok", "프랑스 TAI 직업 자격 취득 (IT 지원 기술자, 4단계)"], ["wait", "12개월 직업화 계약(일·학습 병행) 구직 중"], ["info", "주 4일 근무, 1일 교육"], ["info", "목표: Bac+2(5단계), OpenClassrooms"]],
     bootHelp: '부팅 로그',
     tWhoami: 'Jérémy Grosjean, IT 기술자. 일·학습 병행 과정을 찾고 있습니다. boot 또는 contact를 입력하세요.',
-    tAbout: 'jeremy-grosjean.fr, IT 기술자 Jérémy Grosjean의 개인 사이트입니다. 준비 중입니다.'
+    tAbout: 'jeremy-grosjean.fr, IT 지원 기술자 Jérémy Grosjean의 개인 사이트입니다. HTML, CSS, JavaScript를 직접 작성했고 6개 언어를 지원하며 쿠키를 쓰지 않습니다.'
   });
   for (const k in L) if (L[k].tHelp && L[k].bootHelp && !L[k].tHelp.some(h => h[0] === 'boot')) L[k].tHelp.splice(2, 0, ['boot', L[k].bootHelp]);
   /* « Aucun traceur » devient « Vie privée (RGPD) » dans le panneau Sécurité */

@@ -2064,12 +2064,20 @@
     for (let k = 0; k < 2; k++) { const p = parisYMD(g), seen = Date.UTC(p.y, p.m - 1, p.d, p.h, p.mi); g -= seen - Date.UTC(y, m - 1, d, h, mi); }
     return g;
   }
+  /* Jours fériés mobiles : lundi de Pâques, Ascension et lundi de Pentecôte (date de Pâques : algorithme de Meeus) */
+  function frMovable(y) {
+    if (frMovable[y]) return frMovable[y];
+    const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3);
+    const h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
+    const easter = Date.UTC(y, Math.floor((h + l - 7 * m + 114) / 31) - 1, ((h + l - 7 * m + 114) % 31) + 1, 12);
+    return (frMovable[y] = [1, 39, 50].map(n => { const x = new Date(easter + n * 864e5); return String(x.getUTCMonth() + 1).padStart(2, '0') + '-' + String(x.getUTCDate()).padStart(2, '0'); }));
+  }
   function slotDays(n) {
     const t0 = parisYMD(Date.now()), out = [];
     for (let i = 1; out.length < n && i < 40; i++) {
       const dt = new Date(Date.UTC(t0.y, t0.m - 1, t0.d + i, 12)), wd = dt.getUTCDay();
       const md = String(dt.getUTCMonth() + 1).padStart(2, '0') + '-' + String(dt.getUTCDate()).padStart(2, '0');
-      if (wd === 0 || wd === 6 || FR_OFF.includes(md)) continue;
+      if (wd === 0 || wd === 6 || FR_OFF.includes(md) || frMovable(dt.getUTCFullYear()).includes(md)) continue;
       out.push({ y: dt.getUTCFullYear(), m: dt.getUTCMonth() + 1, d: dt.getUTCDate() });
     }
     return out;
@@ -2130,13 +2138,19 @@
     $('slotSend').hidden = false; $('slotMsg').hidden = true;
   }
   function icsDate(ts) { return new Date(ts).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); }
+  /* RFC 5545 : une ligne de plus de 75 octets continue sur la ligne suivante, qui commence par une espace */
+  function icsFold(line) {
+    const enc = new TextEncoder(), out = []; let cur = '', n = 0;
+    for (const ch of line) { const b = enc.encode(ch).length; if (n + b > (out.length ? 74 : 75)) { out.push(cur); cur = ''; n = 0; } cur += ch; n += b; }
+    out.push(cur); return out.join('\r\n ');
+  }
   const icsEsc = s => plainSp(s).replace(/\\/g, '\\\\').replace(/[,;]/g, m => '\\' + m).replace(/\n/g, '\\n');
   function slotIcs() {
     if (SL.pick === null) { const m = $('slotMsg'); m.hidden = false; m.className = 'tk-expl ko'; m.textContent = t('slotPick'); return; }
     const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//jeremy-grosjean.fr//entretien//FR', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT',
       'UID:' + icsDate(SL.pick) + '-' + Math.random().toString(36).slice(2, 10) + '@jeremy-grosjean.fr', 'DTSTAMP:' + icsDate(Date.now()),
       'DTSTART:' + icsDate(SL.pick), 'DTEND:' + icsDate(SL.pick + SL.dur * 60000), 'SUMMARY:' + icsEsc(t('slotIcsTitle') + (coName() ? ' · ' + coName() : '')),
-      'DESCRIPTION:' + icsEsc(t('slotModes')[SL.mode] + ' · ' + MAIL + ' · ' + SITE_URL), 'END:VEVENT', 'END:VCALENDAR'].join('\r\n') + '\r\n';
+      'DESCRIPTION:' + icsEsc(t('slotModes')[SL.mode] + ' · ' + MAIL + ' · ' + SITE_URL), 'END:VEVENT', 'END:VCALENDAR'].map(icsFold).join('\r\n') + '\r\n';
     try {
       const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' })), a = document.createElement('a');
       a.href = url; a.download = 'entretien-jeremy-grosjean.ics'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000);
@@ -3130,7 +3144,7 @@
     const mk = () => { const b = document.createElement('div'); b.className = 'g-band'; b.setAttribute('aria-hidden', 'true'); const xw = card.querySelector(':scope > .panel-x-wrap'); if (xw) xw.after(b); else card.prepend(b); return b; };
     if (BAND_ICON[pn.id]) {
       const [cat, parts] = BAND_ICON[pn.id]; pn.dataset.cat = cat;
-      if (!band) { const h2 = card.querySelector(':scope > h2'); band = mk(); band.classList.add('slim'); band.removeAttribute('aria-hidden'); const ic = document.createElement('span'); ic.className = 'gb-ic'; ic.setAttribute('aria-hidden', 'true'); const sv = svgEl('svg', { viewBox: '0 0 24 24' }); drawParts(sv, parts); ic.append(sv); band.append(ic); if (h2) band.append(h2); }
+      if (!band) { const h2 = card.querySelector(':scope > h2'); band = mk(); band.classList.add('slim'); band.removeAttribute('aria-hidden'); const ic = document.createElement('span'); ic.className = 'gb-ic'; ic.setAttribute('aria-hidden', 'true'); const sv = svgEl('svg', { viewBox: '0 0 24 24' }); drawParts(sv, parts); ic.append(sv); band.append(ic); if (h2) { const had = document.activeElement === h2; band.append(h2); if (had) h2.focus({ preventScroll: true }); } } /* le titre déplacé garde le focus clavier (sinon il tombait sur un mot du glossaire à la 1re ouverture) */
       return;
     }
     const id = gameOf(pn.id); if (!id) return; const m = gmeta(id); if (!m) return;
